@@ -1,0 +1,32 @@
+{
+    "name": "deinde.io",
+    "version": "1.0.0",
+    "description": "First attempt at multiplayer online io game",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node src/server/server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BananiumLabs/Deinde.io.git"
+    },
+    "keywords": [
+        "io",
+        "game"
+    ],
+    "author": "Bananium Labs",
+    "license": "MIT",
+    "contributors": [
+        "Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)",
+        "Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)"
+    ],
+    "bugs": {
+        "url": "https://github.com/BananiumLabs/Deinde.io/issues"
+    },
+    "homepage": "https://github.com/BananiumLabs/Deinde.io#readme",
+    "dependencies": {
+        "express": "^4.13.0",
+        "socket.io": "^1.3.5"
+    }
+}
