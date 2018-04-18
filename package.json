@@ -5,7 +5,10 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node src/server/server.js"
+        "watch": "watchify src/client/js/app.js -o src/client/js/public/app.js -v",
+        "lol": "npm run watch & nodemon src/server/server.js",
+        "start": "npm run watch",
+        "build": "browserify src/client/js/app.js -o  src/client/js/public/app.js"
     },
     "repository": {
         "type": "git",
@@ -28,5 +31,10 @@
     "dependencies": {
         "express": "^4.13.0",
         "socket.io": "^1.3.5"
+    },
+    "devDependencies": {
+        "browserify": "^16.2.0",
+        "nodemon": "^1.17.3",
+        "watchify": "^3.11.0"
     }
 }

@@ -1,5 +1,12 @@
+
+var GameModule = require('./game.js');
+var global = require('./global.js');
+var ChatClient = require('./chat-client.js');
+
 var playerName;
+var roomName;
 var playerNameInput = document.getElementById('playerNameInput');
+var roomNameInput = document.getElementById('roomNameInput');
 var socket;
 
 var screenWidth = window.innerWidth;
@@ -7,26 +14,39 @@ var screenHeight = window.innerHeight;
 
 var c = document.getElementById('cvs');
 var canvas = c.getContext('2d');
-c.width = screenWidth; c.height = screenHeight;
+c.width = global.screenWidth; c.height = global.screenHeight;
 
-var KEY_ENTER = 13;
-
-var game = new Game();
+var game =  new GameModule();
+var chat;
 
 function startGame() {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
+    global.playerName = playerName;
+    roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
+    global.room = roomName;
     document.getElementById('gameAreaWrapper').style.display = 'block';
     document.getElementById('startMenuWrapper').style.display = 'none';
-    socket = io();
-    SetupSocket(socket);
-    animloop();
-}
+    socket = io.connect(global.SERVER_IP + ":" + global.SERVER_PORT, {query: 'room=' + roomName});
+    
+    console.log("Socket: ");
+    console.log(socket);
+    
+    if(socket !== null)
+        SetupSocket(socket);
+    if(!global.animLoopHandle)
+        animloop();
+    
+    global.socket = socket;
+    chat = new ChatClient({socket: socket, player: playerName, room: roomName});
+    chat.socket = socket;
+    chat.registerFunctions();
+};
 
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
     var regex = /^\w*$/;
     console.log('Regex Test', regex.exec(playerNameInput.value));
-    return regex.exec(playerNameInput.value) !== null;
+    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
 window.onload = function() {
@@ -48,7 +68,7 @@ window.onload = function() {
     playerNameInput.addEventListener('keypress', function (e) {
         var key = e.which || e.keyCode;
 
-        if (key === KEY_ENTER) {
+        if (key === global.KEY_ENTER) {
             if (validNick()) {
                 startGame();
             } else {
@@ -59,7 +79,15 @@ window.onload = function() {
 };
 
 function SetupSocket(socket) {
-  game.handleNetwork(socket);
+    game.handleNetwork(socket);
+    //Chat system
+    socket.on('serverMSG', function (data) {
+        chat.addSystemLine(data);
+    });
+
+    socket.on('serverSendPlayerChat', function (data) {
+        chat.addChatLine(data.sender, data.message, false);
+    });
 }
 
 window.requestAnimFrame = (function(){
@@ -78,7 +106,7 @@ function animloop(){
 
 function gameLoop() {
   game.handleLogic();
-  game.handleGraphics(canvas);
+  game.handleGraphics(canvas, roomName);
 }
 
 window.addEventListener('resize', function() {
