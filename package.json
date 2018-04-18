@@ -6,8 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "watch": "watchify src/client/js/app.js -o src/client/js/public/app.js -v",
-        "lol": "npm run watch & nodemon src/server/server.js",
-        "start": "npm run watch",
+        "lol": "nodemon src/server/server.js",
+        "start": "npm run build & npm run watch & nodemon src/server/server.js",
         "build": "browserify src/client/js/app.js -o  src/client/js/public/app.js"
     },
     "repository": {

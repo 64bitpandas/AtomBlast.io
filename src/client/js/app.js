@@ -21,24 +21,20 @@ var chat;
 
 function startGame() {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-    global.playerName = playerName;
     roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
-    global.room = roomName;
     document.getElementById('gameAreaWrapper').style.display = 'block';
     document.getElementById('startMenuWrapper').style.display = 'none';
+
     socket = io.connect(global.SERVER_IP + ":" + global.SERVER_PORT, {query: 'room=' + roomName});
     
-    console.log("Socket: ");
-    console.log(socket);
+    console.log("Socket ID: " + socket.id);
     
     if(socket !== null)
         SetupSocket(socket);
     if(!global.animLoopHandle)
         animloop();
-    
-    global.socket = socket;
+
     chat = new ChatClient({socket: socket, player: playerName, room: roomName});
-    chat.socket = socket;
     chat.registerFunctions();
 };
 

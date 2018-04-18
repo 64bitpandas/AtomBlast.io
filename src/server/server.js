@@ -17,7 +17,7 @@ io.on('connection', function (socket) {
   socket.broadcast.emit('testEmit', 'attempt');
 
   socket.on('playerChat', function (data) {
-    console.log('sender: ' + data.sender);
+    // console.log('sender: ' + data.sender);
     var _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
     var _message = data.message.replace(/(<([^>]+)>)/ig, '');
 
