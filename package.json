@@ -1,5 +1,5 @@
 {
-    "name": "deinde.io",
+    "name": "atomblast.io",
     "version": "1.0.0",
     "description": "First attempt at multiplayer online io game",
     "main": "index.js",
@@ -12,7 +12,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/BananiumLabs/Deinde.io.git"
+        "url": "https://github.com/BananiumLabs/AtomBlast.io.git"
     },
     "keywords": [
         "io",
@@ -22,12 +22,13 @@
     "license": "MIT",
     "contributors": [
         "Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)",
-        "Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)"
+        "Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)",
+        "Eric Qian <eric@enumc.com> (https://github.com/EnumC)"
     ],
     "bugs": {
-        "url": "https://github.com/BananiumLabs/Deinde.io/issues"
+        "url": "https://github.com/BananiumLabs/AtomBlast.io/issues"
     },
-    "homepage": "https://github.com/BananiumLabs/Deinde.io#readme",
+    "homepage": "https://github.com/BananiumLabs/AtomBlast.io#readme",
     "dependencies": {
         "express": "^4.13.0",
         "socket.io": "^1.3.5"
