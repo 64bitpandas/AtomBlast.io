@@ -33,9 +33,6 @@ function startGame() {
         SetupSocket(socket);
     if(!global.animLoopHandle)
         animloop();
-
-    chat = new ChatClient({socket: socket, player: playerName, room: roomName});
-    chat.registerFunctions();
 };
 
 // check if nick is valid alphanumeric characters (and underscores)
@@ -76,14 +73,29 @@ window.onload = function() {
 
 function SetupSocket(socket) {
     game.handleNetwork(socket);
-    //Chat system
+
+    this.chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
+    this.chat.addLoginMessage(playerName, true);
+    this.chat.registerFunctions();
+    let _chat = this.chat;
+
+    //Chat system receiver
     socket.on('serverMSG', function (data) {
-        chat.addSystemLine(data);
+        _chat.addSystemLine(data);
     });
 
     socket.on('serverSendPlayerChat', function (data) {
-        chat.addChatLine(data.sender, data.message, false);
+        _chat.addChatLine(data.sender, data.message, false);
     });
+
+    socket.on('serverSendLoginMessage', function (data) {
+        _chat.addLoginMessage(data.sender, false);
+    });
+
+    //Emit join message
+   
+    console.log(this.chat);
+    socket.emit('playerJoin', {sender: this.chat.player});
 }
 
 window.requestAnimFrame = (function(){

@@ -11,10 +11,10 @@ io.on('connection', function (socket) {
   console.log("A player has connected!");
   // Write your code here
   console.log('Socket ' + socket.id + ' joining room ' + socket.handshake.query.room);
+  
   socket.join(socket.handshake.query.room, function() {
     console.log('Socket ' + socket.id + ' joined successfully!');
-  })
-  socket.broadcast.emit('testEmit', 'attempt');
+  });
 
   socket.on('playerChat', function (data) {
     // console.log('sender: ' + data.sender);
@@ -24,6 +24,12 @@ io.on('connection', function (socket) {
     console.log('[CHAT] [' + (new Date()).getHours() + ':' + (new Date()).getMinutes() + '] ' + _sender + ': ' + _message);
     
     socket.broadcast.emit('serverSendPlayerChat', { sender: _sender, message: _message.substring(0, 35) });
+  });
+
+  socket.on('playerJoin', function (data) {
+    // console.log('sender: ' + data.sender);
+    var _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
+    socket.broadcast.emit('serverSendLoginMessage', { sender: _sender });
   });
 });
 

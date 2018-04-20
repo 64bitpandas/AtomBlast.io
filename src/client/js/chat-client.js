@@ -1,4 +1,5 @@
 var global = require('./global');
+const PLACEHOLDER_NAME = 'Unnamed Player';
 
 class ChatClient {
 
@@ -73,7 +74,22 @@ class ChatClient {
 
         // Colours the chat input correctly.
         newline.className = (me) ? 'me' : 'friend';
-        newline.innerHTML = '<b>' + ((name.length < 1) ? 'An unnamed cell' : name) + '</b>: ' + message;
+        newline.innerHTML = '<b>' + ((name.length < 1) ? PLACEHOLDER_NAME : name) + '</b>: ' + message;
+
+        this.appendMessage(newline);
+    }
+
+    // Message to notify players when a new player joins
+    addLoginMessage(name, me) {
+        if (this.mobile) {
+            return;
+        }
+        var newline = document.createElement('li');
+
+        console.log(name + ' joined');
+        // Colours the chat input correctly.
+        newline.className = 'join';
+        newline.innerHTML = '<b>' + ((me) ? '</b>You have' : (name.length < 1) ? PLACEHOLDER_NAME : name + '</b> has') + ' joined the room!';
 
         this.appendMessage(newline);
     }
@@ -112,7 +128,7 @@ class ChatClient {
 
         key = key.which || key.keyCode;
 
-        if (key === global.KEY_ENTER) {;
+        if (key === global.KEY_ENTER) {
             var text = input.value.replace(/(<([^>]+)>)/ig,'');
             if (text !== '') {
 

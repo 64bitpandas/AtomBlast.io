@@ -134,6 +134,10 @@ canvas {
     color: #2ecc71;
 }
 
+.chatbox .chat-list li.join {
+	color: #1b47e5;
+}
+
 .chatbox .chat-list li.system {
     color: #9b59b6;
     font-style: italic;
