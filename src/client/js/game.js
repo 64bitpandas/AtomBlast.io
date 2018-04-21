@@ -34,7 +34,6 @@ function draw() {
   // console.log(stepX, stepY);
 
   clear();
-  ellipse(playerX, playerY, 2*playerRadius, 2*playerRadius);
   push();
   translate(-moveX, -moveY);
   ellipse(200, 200, 30, 30);
@@ -42,5 +41,6 @@ function draw() {
   ellipse(600, 600, 30, 30);
   ellipse(800, 800, 30, 30);
   pop();
+  ellipse(playerX, playerY, 2*playerRadius, 2*playerRadius);
 }
 
