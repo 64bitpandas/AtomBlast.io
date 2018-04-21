@@ -106,6 +106,4 @@ function animloop(){
 window.addEventListener('resize', function() {
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
-    c.width = screenWidth;
-    c.height = screenHeight;
 }, true);
