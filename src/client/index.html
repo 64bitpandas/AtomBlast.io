@@ -1,19 +1,24 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Deinde.io</title>
 
     <link rel="stylesheet" href="/css/main.css" />
-    
+
+    <script src="./lib/p5.min.js"></script>
+    <script src="./js/game.js"></script>
 </head>
+
 <body>
+
     <div id="gameAreaWrapper" style="display:none;">
+        <!-- <div id="p5CanvasHolder"></div> -->
         <div class="chatbox" id="chatbox">
             <ul id="chatList" class="chat-list"></ul>
             <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="35" />
         </div>
-        <canvas tabindex="1" id="cvs"></canvas>
     </div>
     <div id="startMenuWrapper">
         <div id="startMenu">
@@ -30,12 +35,10 @@
 
     <div id="playerListWrapper">
 
-
-        
     </div>
 
-
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./js/public/build.js"></script>   
+    <script src="./js/public/build.js"></script>
 </body>
+
 </html>

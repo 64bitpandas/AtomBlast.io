@@ -1,5 +1,4 @@
-
-var GameModule = require('./game.js');
+// var GameModule = require('./game.js');
 var global = require('./global.js');
 var ChatClient = require('./chat-client.js');
 
@@ -9,15 +8,9 @@ var playerNameInput = document.getElementById('playerNameInput');
 var roomNameInput = document.getElementById('roomNameInput');
 var socket;
 
+//Get screen dimensions
 var screenWidth = window.innerWidth;
 var screenHeight = window.innerHeight;
-
-var c = document.getElementById('cvs');
-var canvas = c.getContext('2d');
-c.width = global.screenWidth; c.height = global.screenHeight;
-
-var game =  new GameModule();
-var chat;
 
 function startGame() {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
@@ -72,30 +65,29 @@ window.onload = function() {
 };
 
 function SetupSocket(socket) {
-    game.handleNetwork(socket);
-
-    this.chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
-    this.chat.addLoginMessage(playerName, true);
-    this.chat.registerFunctions();
-    let _chat = this.chat;
+    //Instantiate Chat System
+    let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
+    chat.addLoginMessage(playerName, true);
+    chat.registerFunctions();
+    
+    console.log('Game connection process here');
+    console.log(socket);
 
     //Chat system receiver
     socket.on('serverMSG', function (data) {
-        _chat.addSystemLine(data);
+        chat.addSystemLine(data);
     });
 
     socket.on('serverSendPlayerChat', function (data) {
-        _chat.addChatLine(data.sender, data.message, false);
+        chat.addChatLine(data.sender, data.message, false);
     });
 
     socket.on('serverSendLoginMessage', function (data) {
-        _chat.addLoginMessage(data.sender, false);
+        chat.addLoginMessage(data.sender, false);
     });
 
     //Emit join message
-   
-    console.log(this.chat);
-    socket.emit('playerJoin', {sender: this.chat.player});
+    socket.emit('playerJoin', { sender: chat.player });
 }
 
 window.requestAnimFrame = (function(){
@@ -109,13 +101,8 @@ window.requestAnimFrame = (function(){
 
 function animloop(){
     requestAnimFrame(animloop);
-    gameLoop();
 }
 
-function gameLoop() {
-  game.handleLogic();
-  game.handleGraphics(canvas, roomName);
-}
 
 window.addEventListener('resize', function() {
     screenWidth = window.innerWidth;
