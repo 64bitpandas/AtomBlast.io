@@ -18,8 +18,6 @@ function draw() {
   // push();
   // translate(window.innerWidth / 2, window.innerHeight / 2);
   var shouldIncrement = false;
-  var stepX = 0;
-  var stepY = 0;
 
   var mouseXC = mouseX - window.innerWidth / 2;
   var mouseYC = mouseY - window.innerHeight / 2;
@@ -29,21 +27,20 @@ function draw() {
   var move = Math.sqrt(Math.pow(mouseXC, 2) + Math.pow(mouseYC, 2)) > playerRadius;
 
   if(move) {
-    stepX += Math.cos(theta) * playerSpeed;
-    stepY += Math.sin(theta) * playerSpeed;
+    stepX += Math.cos(theta);
+    stepY += Math.sin(theta);
   }
 
-  console.log(mouseXC + ", " + mouseYC);
+  // console.log(stepX, stepY);
 
   clear();
   ellipse(playerX, playerY, 2*playerRadius, 2*playerRadius);
   push();
-  if(move)
-    translate(stepX, stepY);
-  ellipse(20, 20, 300, 300);
-  ellipse(40, 40, 300, 300);
-  ellipse(60, 60, 300, 300);
-  ellipse(80, 80, 300, 300);
+  translate(-stepX, -stepY);
+  ellipse(200, 200, 30, 30);
+  ellipse(400, 400, 30, 30);
+  ellipse(600, 600, 30, 30);
+  ellipse(800, 800, 30, 30);
   pop();
 }
 
