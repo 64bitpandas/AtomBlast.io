@@ -19,7 +19,14 @@ function startGame() {
     document.getElementById('gameAreaWrapper').style.display = 'block';
     document.getElementById('startMenuWrapper').style.display = 'none';
 
-    socket = io.connect(global.SERVER_IP + ":" + global.SERVER_PORT, {query: 'room=' + roomName});
+    //Production
+    socket = io.connect(global.SERVER_IP, {query: 'room=' + roomName});
+
+    //Debugging and Local serving
+    if(socket.id === undefined) {
+        console.log('Failed to connect, falling back to localhost');
+        socket = io.connect(global.LOCAL_HOST, {query: 'room=' + roomName});
+    }
     
     if(socket !== null)
         SetupSocket(socket);
@@ -30,7 +37,7 @@ function startGame() {
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
     var regex = /^\w*$/;
-    console.log('Regex Test', regex.exec(playerNameInput.value));
+    // console.log('Regex Test', regex.exec(playerNameInput.value));
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
@@ -65,8 +72,7 @@ window.onload = function() {
 
 function SetupSocket(socket) {
     //Debug
-    console.log('Socket Info:');
-    console.log(socket);
+    console.log('Socket:',socket);
 
     //Instantiate Chat System
     let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
@@ -287,6 +293,7 @@ module.exports = {
     PLACEHOLDER_NAME: 'Unnamed Player',
 
     // Server
-    SERVER_IP: 'localhost:3000', // Change during production!!!!!
+    SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
+    LOCAL_HOST: 'localhost:3000'
 };
 },{}]},{},[1]);

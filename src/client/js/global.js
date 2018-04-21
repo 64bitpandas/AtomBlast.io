@@ -19,5 +19,6 @@ module.exports = {
     PLACEHOLDER_NAME: 'Unnamed Player',
 
     // Server
-    SERVER_IP: 'localhost:3000', // Change during production!!!!!
+    SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
+    LOCAL_HOST: 'localhost:3000'
 };
