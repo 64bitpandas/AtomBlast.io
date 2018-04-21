@@ -11,8 +11,8 @@ function setup() {
   
 }
 
-var stepX = 0;
-var stepY = 0;
+var stepX = 0.0;
+var stepY = 0.0;
 
 function draw() {
   // push();
@@ -27,8 +27,8 @@ function draw() {
   var move = Math.sqrt(Math.pow(mouseXC, 2) + Math.pow(mouseYC, 2)) > playerRadius;
 
   if(move) {
-    stepX += Math.cos(theta);
-    stepY += Math.sin(theta);
+    stepX += Math.cos(theta) * playerSpeed;
+    stepY += Math.sin(theta) * playerSpeed;
   }
 
   // console.log(stepX, stepY);
