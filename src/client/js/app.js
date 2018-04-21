@@ -20,8 +20,6 @@ function startGame() {
 
     socket = io.connect(global.SERVER_IP + ":" + global.SERVER_PORT, {query: 'room=' + roomName});
     
-    console.log("Socket ID: " + socket.id);
-    
     if(socket !== null)
         SetupSocket(socket);
     if(!global.animLoopHandle)
@@ -65,13 +63,14 @@ window.onload = function() {
 };
 
 function SetupSocket(socket) {
+    //Debug
+    console.log('Socket Info:');
+    console.log(socket);
+
     //Instantiate Chat System
     let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
-    
-    console.log('Game connection process here');
-    console.log(socket);
 
     //Chat system receiver
     socket.on('serverMSG', function (data) {

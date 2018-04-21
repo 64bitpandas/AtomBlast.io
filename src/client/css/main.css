@@ -100,7 +100,10 @@ canvas {
   font-size : 12px;
 }
 
-/* Chat */
+/* **********
+ * *  CHAT  *
+ * ********** */
+
 .chatbox {
     position: absolute;
     width: 300px;
@@ -156,4 +159,31 @@ canvas {
     border: none;
     border-top: 1px solid #DDD;
     outline: none;
+}
+
+/* *****************
+ * *  PLAYER LIST  *
+ * ***************** */
+.playerlistbox {
+    position: absolute;
+    width: 15vw;
+    background: rgba(255, 255, 255, 0.7);
+    top: 5px;
+    right: 5px;
+    border-radius: 5px;
+	pointer-events: none;
+	text-align: center;
+}
+
+.playerlistbox h3 {
+	font-size: 2vw;
+}
+
+.playerlistbox .playerlist {
+    padding: 5px;
+    margin: 0;
+    list-style: none;
+    box-sizing: border-box;
+    height: 285px;
+    overflow: hidden;
 }

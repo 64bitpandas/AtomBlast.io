@@ -1,4 +1,5 @@
 module.exports = {
+    
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,
@@ -9,31 +10,14 @@ module.exports = {
     KEY_UP: 38,
     KEY_RIGHT: 39,
     KEY_DOWN: 40,
-    borderDraw: false,
-    spin: -Math.PI,
-    enemySpin: -Math.PI,
-    mobile: false,
-    foodSides: 10,
-    virusSides: 20,
 
     // Canvas
-    screenWidth: window.innerWidth,
-    screenHeight: window.innerHeight,
-    gameWidth: 0,
-    gameHeight: 0,
-    xoffset: -0,
-    yoffset: -0,
-    gameStart: false,
-    disconnected: false,
-    died: false,
-    kicked: false,
-    continuity: false,
-    startPingTime: 0,
-    toggleMassState: 0,
     backgroundColor: '#f2fbff',
     lineColor: '#000000',
 
+    // Chat
+    PLACEHOLDER_NAME: 'Unnamed Player',
+
     // Server
-    SERVER_IP: 'localhost', // Change during production!!!!!
-    SERVER_PORT: 3000,
+    SERVER_IP: 'localhost:3000', // Change during production!!!!!
 };

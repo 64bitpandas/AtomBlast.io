@@ -8,12 +8,9 @@ var config  = require('./config.json');
 app.use(express.static(__dirname + '/../client'));
 
 io.on('connection', function (socket) {
-  console.log("A player has connected!");
-  // Write your code here
-  console.log('Socket ' + socket.id + ' joining room ' + socket.handshake.query.room);
   
   socket.join(socket.handshake.query.room, function() {
-    console.log('Socket ' + socket.id + ' joined successfully!');
+    console.log('Socket ' + socket.id + ' joined room ' + socket.handshake.query.room);
   });
 
   socket.on('playerChat', function (data) {
