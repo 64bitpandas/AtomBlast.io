@@ -8,7 +8,7 @@ function setup() {
   var canvas = createCanvas(window.innerWidth, window.innerHeight);
   canvas.parent('gameAreaWrapper');
   background(color(0, 255, 0));
-  
+  noStroke();
 }
 
 var moveX = 0.0;
@@ -43,4 +43,3 @@ function draw() {
   pop();
   ellipse(playerX, playerY, 2*playerRadius, 2*playerRadius);
 }
-

@@ -23,7 +23,7 @@ function startGame() {
     socket = io.connect(global.SERVER_IP, {query: 'room=' + roomName});
 
     //Debugging and Local serving
-    if(socket === undefined || socket === null) {
+    if(socket.id === undefined) {
         console.log('Failed to connect, falling back to localhost');
         socket = io.connect(global.LOCAL_HOST, {query: 'room=' + roomName});
     }
