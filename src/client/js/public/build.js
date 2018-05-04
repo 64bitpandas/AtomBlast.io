@@ -1,17 +1,20 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 // var GameModule = require('./game.js');
-var global = require('./global.js');
-var ChatClient = require('./chat-client.js');
+// import {global} from './global.js';
+// import {ChatClient} from './chat-client.js';
+let global = require('./global.js');
+let ChatClient = require('./chat-client.js');
 
-var playerName;
-var roomName;
-var playerNameInput = document.getElementById('playerNameInput');
-var roomNameInput = document.getElementById('roomNameInput');
-var socket;
+let playerName;
+let roomName;
+let socket;
+
+const playerNameInput = document.getElementById('playerNameInput');
+const roomNameInput = document.getElementById('roomNameInput');
 
 //Get screen dimensions
-var screenWidth = window.innerWidth;
-var screenHeight = window.innerHeight;
+let screenWidth = window.innerWidth;
+let screenHeight = window.innerHeight;
 
 function startGame() {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
@@ -20,34 +23,32 @@ function startGame() {
     document.getElementById('startMenuWrapper').style.display = 'none';
 
     //Production
-    socket = io.connect(global.SERVER_IP, {query: 'room=' + roomName});
+    socket = io.connect(global.SERVER_IP, { query: `room=${roomName}` });
 
     //Debugging and Local serving
-    if(socket === undefined || socket === null) {
+    if (socket.id === undefined) {
         console.log('Failed to connect, falling back to localhost');
-        socket = io.connect(global.LOCAL_HOST, {query: 'room=' + roomName});
+        socket = io.connect(global.LOCAL_HOST, { query: `room=${roomName}` });
     }
-    
-    if(socket !== null)
+
+    if (socket !== null)
         SetupSocket(socket);
-    if(!global.animLoopHandle)
+    if (!global.animLoopHandle)
         animloop();
-};
+}
 
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
-    var regex = /^\w*$/;
+    const regex = /^\w*$/;
     // console.log('Regex Test', regex.exec(playerNameInput.value));
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
-window.onload = function() {
-    'use strict';
+window.onload = () => {
+    const btn = document.getElementById('startButton');
+    const nickErrorText = document.querySelector('#startMenu .input-error');
 
-    var btn = document.getElementById('startButton'),
-        nickErrorText = document.querySelector('#startMenu .input-error');
-
-    btn.onclick = function () {
+    btn.onclick = () => {
 
         // check if the nick is valid
         if (validNick()) {
@@ -57,8 +58,8 @@ window.onload = function() {
         }
     };
 
-    playerNameInput.addEventListener('keypress', function (e) {
-        var key = e.which || e.keyCode;
+    playerNameInput.addEventListener('keypress', e => {
+        const key = e.which || e.keyCode;
 
         if (key === global.KEY_ENTER) {
             if (validNick()) {
@@ -72,23 +73,23 @@ window.onload = function() {
 
 function SetupSocket(socket) {
     //Debug
-    console.log('Socket:',socket);
+    console.log('Socket:', socket);
 
     //Instantiate Chat System
-    let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
+    let chat = new ChatClient({ socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
     //Chat system receiver
-    socket.on('serverMSG', function (data) {
+    socket.on('serverMSG', data => {
         chat.addSystemLine(data);
     });
 
-    socket.on('serverSendPlayerChat', function (data) {
+    socket.on('serverSendPlayerChat', data => {
         chat.addChatLine(data.sender, data.message, false);
     });
 
-    socket.on('serverSendLoginMessage', function (data) {
+    socket.on('serverSendLoginMessage', data => {
         chat.addLoginMessage(data.sender, false);
     });
 
@@ -96,21 +97,19 @@ function SetupSocket(socket) {
     socket.emit('playerJoin', { sender: chat.player });
 }
 
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            function( callback ){
-                window.setTimeout(callback, 1000 / 60);
-            };
-})();
+window.requestAnimFrame = ((() => window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    (callback => {
+        window.setTimeout(callback, 1000 / 60);
+    })))();
 
-function animloop(){
+function animloop() {
     requestAnimFrame(animloop);
 }
 
 
-window.addEventListener('resize', function() {
+window.addEventListener('resize', () => {
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
 }, true);
@@ -125,11 +124,11 @@ class ChatClient {
         this.socket = params.socket;
         // this.mobile = params.mobile;
         this.player = params.player;
-        var self = this;
+        const self = this;
         this.commands = {};
-        var input = document.getElementById('chatInput');
+        let input = document.getElementById('chatInput');
         input.addEventListener('keypress', this.sendChat.bind(this));
-        input.addEventListener('keyup', function(key) {
+        input.addEventListener('keyup', key => {
             input = document.getElementById('chatInput');
             key = key.which || key.keyCode;
             if (key === global.KEY_ESC) {
@@ -142,9 +141,9 @@ class ChatClient {
     // TODO: Break out many of these GameControls into separate classes.
 
     registerFunctions() {
-        var self = this;
+        const self = this;
 
-        this.registerCommand('help', 'Information about the chat commands.', function () {
+        this.registerCommand('help', 'Information about the chat commands.', () => {
             self.printHelp();
         });
 
@@ -163,11 +162,11 @@ class ChatClient {
         if (this.mobile) {
             return;
         }
-        var newline = document.createElement('li');
+        const newline = document.createElement('li');
 
         // Colours the chat input correctly.
         newline.className = (me) ? 'me' : 'friend';
-        newline.innerHTML = '<b>' + ((name.length < 1) ? global.PLACEHOLDER_NAME : name) + '</b>: ' + message;
+        newline.innerHTML = `<b>${(name.length < 1) ? global.PLACEHOLDER_NAME : name}</b>: ${message}`;
 
         this.appendMessage(newline);
     }
@@ -177,12 +176,12 @@ class ChatClient {
         if (this.mobile) {
             return;
         }
-        var newline = document.createElement('li');
+        const newline = document.createElement('li');
 
-        console.log(name + ' joined');
+        console.log(`${name} joined`);
         // Colours the chat input correctly.
         newline.className = 'join';
-        newline.innerHTML = '<b>' + ((me) ? '</b>You have' : (name.length < 1) ? global.PLACEHOLDER_NAME : name + '</b> has') + ' joined the room!';
+        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? global.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
 
         this.appendMessage(newline);
     }
@@ -192,7 +191,7 @@ class ChatClient {
         if (this.mobile) {
             return;
         }
-        var newline = document.createElement('li');
+        const newline = document.createElement('li');
 
         // Colours the chat input correctly.
         newline.className = 'system';
@@ -207,7 +206,7 @@ class ChatClient {
         if (this.mobile) {
             return;
         }
-        var chatList = document.getElementById('chatList');
+        const chatList = document.getElementById('chatList');
         if (chatList.childNodes.length > 10) {
             chatList.removeChild(chatList.childNodes[0]);
         }
@@ -216,25 +215,25 @@ class ChatClient {
 
     // Sends a message or executes a command on the click of enter.
     sendChat(key) {
-        var commands = this.commands,
-            input = document.getElementById('chatInput');
+        const commands = this.commands;
+        const input = document.getElementById('chatInput');
 
         key = key.which || key.keyCode;
 
         if (key === global.KEY_ENTER) {
-            var text = input.value.replace(/(<([^>]+)>)/ig,'');
+            const text = input.value.replace(/(<([^>]+)>)/ig, '');
             if (text !== '') {
 
                 // Chat command.
                 if (text.indexOf('-') === 0) {
-                    var args = text.substring(1).split(' ');
+                    const args = text.substring(1).split(' ');
                     if (commands[args[0]]) {
                         commands[args[0]].callback(args.slice(1));
                     } else {
-                        this.addSystemLine('Unrecognized Command: ' + text + ', type -help for more info.');
+                        this.addSystemLine(`Unrecognized Command: ${text}, type -help for more info.`);
                     }
 
-                // Allows for regular messages to be sent to the server.
+                    // Allows for regular messages to be sent to the server.
                 } else {
                     console.log(this.socket);
                     //Debug lines for messages - Remove on production
@@ -254,17 +253,17 @@ class ChatClient {
     // Allows for addition of commands.
     registerCommand(name, description, callback) {
         this.commands[name] = {
-            description: description,
-            callback: callback
+            description,
+            callback
         };
     }
 
     // Allows help to print the list of all the commands and their descriptions.
     printHelp() {
-        var commands = this.commands;
-        for (var cmd in commands) {
+        const commands = this.commands;
+        for (const cmd in commands) {
             if (commands.hasOwnProperty(cmd)) {
-                this.addSystemLine('-' + cmd + ': ' + commands[cmd].description);
+                this.addSystemLine(`-${cmd}: ${commands[cmd].description}`);
             }
         }
     }

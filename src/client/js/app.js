@@ -1,16 +1,19 @@
 // var GameModule = require('./game.js');
-var global = require('./global.js');
-var ChatClient = require('./chat-client.js');
+// import {global} from './global.js';
+// import {ChatClient} from './chat-client.js';
+let global = require('./global.js');
+let ChatClient = require('./chat-client.js');
 
-var playerName;
-var roomName;
-var playerNameInput = document.getElementById('playerNameInput');
-var roomNameInput = document.getElementById('roomNameInput');
-var socket;
+let playerName;
+let roomName;
+let socket;
+
+const playerNameInput = document.getElementById('playerNameInput');
+const roomNameInput = document.getElementById('roomNameInput');
 
 //Get screen dimensions
-var screenWidth = window.innerWidth;
-var screenHeight = window.innerHeight;
+let screenWidth = window.innerWidth;
+let screenHeight = window.innerHeight;
 
 function startGame() {
     playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
@@ -19,34 +22,32 @@ function startGame() {
     document.getElementById('startMenuWrapper').style.display = 'none';
 
     //Production
-    socket = io.connect(global.SERVER_IP, {query: 'room=' + roomName});
+    socket = io.connect(global.SERVER_IP, { query: `room=${roomName}` });
 
     //Debugging and Local serving
-    if(socket.id === undefined) {
+    if (socket.id === undefined) {
         console.log('Failed to connect, falling back to localhost');
-        socket = io.connect(global.LOCAL_HOST, {query: 'room=' + roomName});
+        socket = io.connect(global.LOCAL_HOST, { query: `room=${roomName}` });
     }
-    
-    if(socket !== null)
+
+    if (socket !== null)
         SetupSocket(socket);
-    if(!global.animLoopHandle)
+    if (!global.animLoopHandle)
         animloop();
-};
+}
 
 // check if nick is valid alphanumeric characters (and underscores)
 function validNick() {
-    var regex = /^\w*$/;
+    const regex = /^\w*$/;
     // console.log('Regex Test', regex.exec(playerNameInput.value));
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
-window.onload = function() {
-    'use strict';
+window.onload = () => {
+    const btn = document.getElementById('startButton');
+    const nickErrorText = document.querySelector('#startMenu .input-error');
 
-    var btn = document.getElementById('startButton'),
-        nickErrorText = document.querySelector('#startMenu .input-error');
-
-    btn.onclick = function () {
+    btn.onclick = () => {
 
         // check if the nick is valid
         if (validNick()) {
@@ -56,8 +57,8 @@ window.onload = function() {
         }
     };
 
-    playerNameInput.addEventListener('keypress', function (e) {
-        var key = e.which || e.keyCode;
+    playerNameInput.addEventListener('keypress', e => {
+        const key = e.which || e.keyCode;
 
         if (key === global.KEY_ENTER) {
             if (validNick()) {
@@ -71,23 +72,23 @@ window.onload = function() {
 
 function SetupSocket(socket) {
     //Debug
-    console.log('Socket:',socket);
+    console.log('Socket:', socket);
 
     //Instantiate Chat System
-    let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
+    let chat = new ChatClient({ socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
     //Chat system receiver
-    socket.on('serverMSG', function (data) {
+    socket.on('serverMSG', data => {
         chat.addSystemLine(data);
     });
 
-    socket.on('serverSendPlayerChat', function (data) {
+    socket.on('serverSendPlayerChat', data => {
         chat.addChatLine(data.sender, data.message, false);
     });
 
-    socket.on('serverSendLoginMessage', function (data) {
+    socket.on('serverSendLoginMessage', data => {
         chat.addLoginMessage(data.sender, false);
     });
 
@@ -95,21 +96,19 @@ function SetupSocket(socket) {
     socket.emit('playerJoin', { sender: chat.player });
 }
 
-window.requestAnimFrame = (function(){
-    return  window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            function( callback ){
-                window.setTimeout(callback, 1000 / 60);
-            };
-})();
+window.requestAnimFrame = ((() => window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    (callback => {
+        window.setTimeout(callback, 1000 / 60);
+    })))();
 
-function animloop(){
+function animloop() {
     requestAnimFrame(animloop);
 }
 
 
-window.addEventListener('resize', function() {
+window.addEventListener('resize', () => {
     screenWidth = window.innerWidth;
     screenHeight = window.innerHeight;
 }, true);

@@ -1,32 +1,32 @@
-var playerX = window.innerWidth / 2;
-var playerY = window.innerHeight / 2;
-var playerRadius = 100;
+const playerX = window.innerWidth / 2;
+const playerY = window.innerHeight / 2;
+const playerRadius = 100;
 
-var playerSpeed = 5;
+const playerSpeed = 5;
 
 function setup() {
-  var canvas = createCanvas(window.innerWidth, window.innerHeight);
+  const canvas = createCanvas(window.innerWidth, window.innerHeight);
   canvas.parent('gameAreaWrapper');
   background(color(0, 255, 0));
-  
+
 }
 
-var moveX = 0.0;
-var moveY = 0.0;
+let moveX = 0.0;
+let moveY = 0.0;
 
 function draw() {
   // push();
   // translate(window.innerWidth / 2, window.innerHeight / 2);
-  var shouldIncrement = false;
+  const shouldIncrement = false;
 
-  var mouseXC = mouseX - window.innerWidth / 2;
-  var mouseYC = mouseY - window.innerHeight / 2;
+  const mouseXC = mouseX - window.innerWidth / 2;
+  const mouseYC = mouseY - window.innerHeight / 2;
 
-  var theta = Math.atan2(mouseYC, mouseXC);
+  const theta = Math.atan2(mouseYC, mouseXC);
 
-  var move = Math.sqrt(Math.pow(mouseXC, 2) + Math.pow(mouseYC, 2)) > playerRadius;
+  const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > playerRadius;
 
-  if(move) {
+  if (move) {
     moveX += Math.cos(theta) * playerSpeed;
     moveY += Math.sin(theta) * playerSpeed;
   }
@@ -41,6 +41,5 @@ function draw() {
   ellipse(600, 600, 30, 30);
   ellipse(800, 800, 30, 30);
   pop();
-  ellipse(playerX, playerY, 2*playerRadius, 2*playerRadius);
+  ellipse(playerX, playerY, 2 * playerRadius, 2 * playerRadius);
 }
-
