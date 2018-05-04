@@ -8,7 +8,7 @@ function setup() {
   const canvas = createCanvas(window.innerWidth, window.innerHeight);
   canvas.parent('gameAreaWrapper');
   background(color(0, 255, 0));
-
+  noStroke();
 }
 
 let moveX = 0.0;
