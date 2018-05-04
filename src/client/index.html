@@ -17,7 +17,7 @@
         <!-- <div id="p5CanvasHolder"></div> -->
         <div class="chatbox" id="chatbox">
             <ul id="chatList" class="chat-list"></ul>
-            <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="35" />
+            <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="35" spellcheck="false"/>
         </div>
 
         <div class="playerlistbox" id="playerlistbox">
@@ -28,8 +28,8 @@
     <div id="startMenuWrapper">
         <div id="startMenu">
             <p>Enter Name</p>
-            <input class="menuInputBox" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" />
-            <input class="menuInputBox" type="text" tabindex="0" autofocus placeholder="Enter room name here" id="roomNameInput" />
+            <input class="menuInputBox" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" spellcheck="false"/>
+            <input class="menuInputBox" type="text" tabindex="0" placeholder="Enter room name here" id="roomNameInput" spellcheck="false"/>
             <b class="input-error">Name must be alphanumeric characters only!</b>
             <br />
             <button id="startButton">Play</button>

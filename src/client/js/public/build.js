@@ -4,6 +4,8 @@
 // import {ChatClient} from './chat-client.js';
 let global = require('./global.js');
 let ChatClient = require('./chat-client.js');
+let CookieUtil = require('./cookies.js');
+let cookies = new CookieUtil();
 
 let playerName;
 let roomName;
@@ -16,25 +18,41 @@ const roomNameInput = document.getElementById('roomNameInput');
 let screenWidth = window.innerWidth;
 let screenHeight = window.innerHeight;
 
+// Starts the game if the name is valid.
 function startGame() {
-    playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-    roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
-    document.getElementById('gameAreaWrapper').style.display = 'block';
-    document.getElementById('startMenuWrapper').style.display = 'none';
+    // check if the nick is valid
+    if (validNick()) {
 
-    //Production
-    socket = io.connect(global.SERVER_IP, { query: `room=${roomName}` });
+        // Start game sequence
+        playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
+        roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
-    //Debugging and Local serving
-    if (!socket.connected) {
-        console.log('Failed to connect, falling back to localhost');
-        socket = io.connect(global.LOCAL_HOST, { query: `room=${roomName}` });
+        // Set cookies
+        cookies.setCookie(global.NAME_COOKIE, playerName, global.COOKIE_DAYS);
+        cookies.setCookie(global.ROOM_COOKIE, roomName, global.COOKIE_DAYS);
+
+        // Show game window
+        document.getElementById('gameAreaWrapper').style.display = 'block';
+        document.getElementById('startMenuWrapper').style.display = 'none';
+
+        //Production server
+        socket = io.connect(global.SERVER_IP, { query: `room=${roomName}` });
+
+        //Debugging and Local serving
+        if (!socket.connected) {
+            console.log('Failed to connect, falling back to localhost');
+            socket = io.connect(global.LOCAL_HOST, { query: `room=${roomName}` });
+        }
+
+        if (socket !== null)
+            SetupSocket(socket);
+        if (!global.animLoopHandle)
+            animloop();
+
+    } else {
+        nickErrorText.style.display = 'inline';
     }
-
-    if (socket !== null)
-        SetupSocket(socket);
-    if (!global.animLoopHandle)
-        animloop();
+    
 }
 
 // check if nick is valid alphanumeric characters (and underscores)
@@ -48,26 +66,24 @@ window.onload = () => {
     const btn = document.getElementById('startButton');
     const nickErrorText = document.querySelector('#startMenu .input-error');
 
-    btn.onclick = () => {
+    // Cookie loading
+    const playerCookie = cookies.getCookie(global.NAME_COOKIE);
+    const roomCookie = cookies.getCookie(global.ROOM_COOKIE);
 
-        // check if the nick is valid
-        if (validNick()) {
-            startGame();
-        } else {
-            nickErrorText.style.display = 'inline';
-        }
+    if(playerCookie !== null && playerCookie.length > 0)
+        playerNameInput.value = playerCookie;
+    if(roomCookie !== null && roomCookie.length > 0)
+        roomNameInput.value = roomCookie;
+
+    btn.onclick = () => {
+        startGame();
     };
 
     playerNameInput.addEventListener('keypress', e => {
         const key = e.which || e.keyCode;
 
-        if (key === global.KEY_ENTER) {
-            if (validNick()) {
-                startGame();
-            } else {
-                nickErrorText.style.display = 'inline';
-            }
-        }
+        if (key === global.KEY_ENTER)
+           startGame();
     });
 };
 
@@ -114,7 +130,7 @@ window.addEventListener('resize', () => {
     screenHeight = window.innerHeight;
 }, true);
 
-},{"./chat-client.js":2,"./global.js":3}],2:[function(require,module,exports){
+},{"./chat-client.js":2,"./cookies.js":3,"./global.js":4}],2:[function(require,module,exports){
 var global = require('./global.js');
 
 class ChatClient {
@@ -270,7 +286,35 @@ class ChatClient {
 }
 
 module.exports = ChatClient;
-},{"./global.js":3}],3:[function(require,module,exports){
+},{"./global.js":4}],3:[function(require,module,exports){
+class Cookies {
+    setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = `; expires=${date.toUTCString()}`;
+        }
+        document.cookie = `${name}=${value || ""}${expires}; path=/`;
+    }
+    getCookie(name) {
+        const nameEQ = `${name}=`;
+        const ca = document.cookie.split(';');
+
+        for (let c of ca) {
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+
+        return null;
+    }
+    eraseCookie(name) {
+        document.cookie = `${name}=; Max-Age=-99999999;`;
+    }
+}
+
+module.exports = Cookies;
+},{}],4:[function(require,module,exports){
 module.exports = {
     
     // Keys and other mathematical constants
@@ -293,6 +337,11 @@ module.exports = {
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
-    LOCAL_HOST: 'localhost:3000'
+    LOCAL_HOST: 'localhost:3000',
+
+    // Cookies
+    NAME_COOKIE: 'name',
+    ROOM_COOKIE: 'room',
+    COOKIE_DAYS: 14
 };
 },{}]},{},[1]);

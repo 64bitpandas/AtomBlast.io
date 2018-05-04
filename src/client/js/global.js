@@ -20,5 +20,10 @@ module.exports = {
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
-    LOCAL_HOST: 'localhost:3000'
+    LOCAL_HOST: 'localhost:3000',
+
+    // Cookies
+    NAME_COOKIE: 'name',
+    ROOM_COOKIE: 'room',
+    COOKIE_DAYS: 14
 };
