@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     
     // Keys and other mathematical constants
     KEY_ESC: 27,

@@ -1,7 +1,22 @@
-var global = require('./global.js');
+/** 
+ * MISSING FILE HEADER
+ *
+ *
+ *
+ *
+ */
 
-class ChatClient {
+import * as global from './global.js';
 
+/** 
+ * MISSING CLASS HEADER
+ *
+ *
+ */
+export class ChatClient {
+    /** 
+    * MISSING COMMENT
+    */
     constructor(params) {
         // this.canvas = params.canvas;
         this.socket = params.socket;
@@ -22,7 +37,9 @@ class ChatClient {
     }
 
     // TODO: Break out many of these GameControls into separate classes.
-
+    /** 
+    * MISSING COMMENT
+    */
     registerFunctions() {
         const self = this;
 

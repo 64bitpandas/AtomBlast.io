@@ -28,6 +28,11 @@ io.on('connection', socket => {
     const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
     socket.broadcast.emit('serverSendLoginMessage', { sender: _sender });
   });
+
+  socket.on('mouse',
+    function(data) {
+      console.log("Received: 'mouse' " + data.x + " " + data.y);
+    })
 });
 
 const serverPort = process.env.PORT || config.port;
