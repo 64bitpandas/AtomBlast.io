@@ -7,16 +7,15 @@
  */
 
 import * as global from './global.js';
-
+let socket, player, room;
 /** 
  * MISSING CLASS HEADER
  *
  *
  */
-export class ChatClient {
-    /** 
-    * MISSING COMMENT
-    */
+export default class ChatClient {
+    
+    // Use this constructor during init to connect ChatClient to the server
     constructor(params) {
         // this.canvas = params.canvas;
         this.socket = params.socket;
@@ -25,7 +24,7 @@ export class ChatClient {
         const self = this;
         this.commands = {};
         let input = document.getElementById('chatInput');
-        input.addEventListener('keypress', this.sendChat.bind(this));
+        input.addEventListener('keypress', key => {this.sendChat(key);}); //This works WTF
         input.addEventListener('keyup', key => {
             input = document.getElementById('chatInput');
             key = key.which || key.keyCode;
@@ -66,7 +65,7 @@ export class ChatClient {
 
         // Colours the chat input correctly.
         newline.className = (me) ? 'me' : 'friend';
-        newline.innerHTML = `<b>${(name.length < 1) ? global.PLACEHOLDER_NAME : name}</b>: ${message}`;
+        newline.innerHTML = `<b>${(name.length < 1) ? global.default.PLACEHOLDER_NAME : name}</b>: ${message}`;
 
         this.appendMessage(newline);
     }
@@ -81,7 +80,7 @@ export class ChatClient {
         console.log(`${name} joined`);
         // Colours the chat input correctly.
         newline.className = 'join';
-        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? global.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
+        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? global.default.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
 
         this.appendMessage(newline);
     }
@@ -120,7 +119,7 @@ export class ChatClient {
 
         key = key.which || key.keyCode;
 
-        if (key === global.KEY_ENTER) {
+        if (key === global.default.KEY_ENTER) {
             const text = input.value.replace(/(<([^>]+)>)/ig, '');
             if (text !== '') {
 
@@ -135,7 +134,6 @@ export class ChatClient {
 
                     // Allows for regular messages to be sent to the server.
                 } else {
-                    console.log(this.socket);
                     //Debug lines for messages - Remove on production
                     // console.log("This Player: " + this.player);
                     // console.log("This message: " + text);
@@ -168,5 +166,3 @@ export class ChatClient {
         }
     }
 }
-
-module.exports = ChatClient;

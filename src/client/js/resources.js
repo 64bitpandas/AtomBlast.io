@@ -1,11 +1,13 @@
 // Contains list of resources (images, assets, stats, etc) and methods to access, load, and modify them
 // Created by Ben Cuan on 5 May 2018
-export class Resources {
+
 
     /** 
-    * MISSING COMMENT
+    * Private list of resources.
+    *  - fileName: name and/or path of file within the 'assets' directory
+    *  - type: 
     */
-    #resources = {
+    const resources = {
         sample: {
             fileName: 'sample.png'
         },
@@ -18,14 +20,13 @@ export class Resources {
     /** 
     * MISSING COMMENT
     */
-    getResource(resourceName) {
+    export function getResource(resourceName) {
         return resources[resourceName];
     }
 
     // Loads all assets for p5
-    loadResources() {
+    export function loadResources() {
         for(let item of resources) {
             loadImage('assets/' + item.fileName);
         }
     }
-}

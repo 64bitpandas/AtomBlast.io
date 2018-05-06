@@ -29,6 +29,16 @@ io.on('connection', socket => {
     socket.broadcast.emit('serverSendLoginMessage', { sender: _sender });
   });
 
+  // Handle socket disconnect
+  socket.on('disconnect', data => {
+    // console.log('sender: ' + data.sender);
+    const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
+    socket.broadcast.emit('serverSendDisconnectMessage', {
+      sender: _sender,
+      reason: data
+    });
+  });
+
   socket.on('mouse',
     function(data) {
       console.log("Received: 'mouse' " + data.x + " " + data.y);

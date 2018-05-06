@@ -10,7 +10,7 @@ import * as global from './global.js';
 import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
 import game from './game.js';
-import p5 from './lib/p5.min.js';
+// import p5 from './lib/p5.min.js';
 
 let playerName;
 let roomName;
@@ -51,11 +51,11 @@ function startGame() {
 
         if (socket !== null)
             SetupSocket(socket);
-        if (!global.animLoopHandle)
-            animloop();
+        // if (!global.animLoopHandle)
+        //     animloop();
         
-        // Init p5
-        new p5(game);
+        // // Init p5
+        // new p5(game);
 
     } else {
         nickErrorText.style.display = 'inline';
@@ -82,12 +82,13 @@ window.onload = () => {
     const playerCookie = cookies.getCookie(global.NAME_COOKIE);
     const roomCookie = cookies.getCookie(global.ROOM_COOKIE);
 
-    // Missing Comment
+    // Continue loading cookie only if it exists
     if(playerCookie !== null && playerCookie.length > 0)
         playerNameInput.value = playerCookie;
     if(roomCookie !== null && roomCookie.length > 0)
         roomNameInput.value = roomCookie;
 
+    // Add listeners to start game to enter key and button click
     btn.onclick = () => {
         startGame();
     };
@@ -106,9 +107,9 @@ window.onload = () => {
 function SetupSocket(socket) {
     //Debug
     console.log('Socket:', socket);
-
+    
     //Instantiate Chat System
-    let chat = new ChatClient({ socket, player: playerName, room: roomName });
+    let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
@@ -125,14 +126,16 @@ function SetupSocket(socket) {
         chat.addLoginMessage(data.sender, false);
     });
 
+    // Event Trigger When Player Disconnects
+    socket.on('serverSendDisconnectMessage', data => {
+        chat.addLoginMessage(data.sender, false);
+        chat.addLoginMessage(data.reason, false);
+    });
+
     
     //Emit mouse movement events
-    socket.on("mouse", 
-        function(data) {
+    socket.on("mouse", function(data) {
             console.log("Received: " + data.x + " " + data.y);
-            fill(0,0,255);
-            noStroke();
-            ellipse(data.x,data.y,20,20);
         });
     //Emit join message
     socket.emit('playerJoin', { sender: chat.player });
@@ -162,22 +165,22 @@ function sendmouse(xpos, ypos) {
     socket.emit('mouse', data);
 }
 
-/** 
- * MISSING COMMENT
- */
-window.requestAnimFrame = ((() => window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
-    (callback => {
-        window.setTimeout(callback, 1000 / 60);
-    })))();
+// /** 
+//  * MISSING COMMENT
+//  */
+// window.requestAnimFrame = ((() => window.requestAnimationFrame ||
+//     window.webkitRequestAnimationFrame ||
+//     window.mozRequestAnimationFrame ||
+//     (callback => {
+//         window.setTimeout(callback, 1000 / 60);
+//     })))();
 
-/** 
- * MISSING COMMENT
- */
-function animloop() {
-    requestAnimFrame(animloop);
-}
+// /** 
+//  * MISSING COMMENT
+//  */
+// function animloop() {
+//     requestAnimFrame(animloop);
+// }
 
 /** 
  * MISSING COMMENT
