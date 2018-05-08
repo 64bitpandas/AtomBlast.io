@@ -19,20 +19,15 @@ const game = (p5) => {
 
   }
 
-  /** 
-   * MISSING COMMENT
-   */
+  // Processing.js Setup Function
   p5.setup = () => {
-    const canvas = p5.createCanvas(window.innerWidth, window.innerHeight);
-    canvas.parent('gameAreaWrapper');
-    p5.background(p5.color(0, 255, 0));
-    p5.noStroke();
+    const canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+    p5.background(p5.color(0, 255, 0)); // background color will be green
+    p5.noStroke(); // Removes stroke on objects
   }
 
-
-  /** 
-   * MISSING COMMENT
-   */
+  // Processing.js Draw Loop
   p5.draw = () => {
     // push();
     // translate(window.innerWidth / 2, window.innerHeight / 2);
