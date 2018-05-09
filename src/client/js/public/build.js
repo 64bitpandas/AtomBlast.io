@@ -210,11 +210,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /** 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * MISSING FILE HEADER
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * Created 17 April 2018
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
 var _global = require('./global.js');
@@ -228,11 +225,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var socket = void 0,
     player = void 0,
     room = void 0;
-/** 
- * MISSING CLASS HEADER
- *
- *
- */
 
 var ChatClient = function () {
 
@@ -488,11 +480,25 @@ var PIXI = _interopRequireWildcard(_pixiMin);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+// Initialize Pixi
 var type = "WebGL"; // Main script for the clientside rendering of the game using Pixi.js.
 
 if (!PIXI.utils.isWebGLSupported()) type = "canvas";
 
+// Print welcome message to console :)
 PIXI.utils.sayHello(type);
+
+// Create Application
+var app = new PIXI.Application({ width: window.innerWidth, height: window.innerHeight });
+
+// Add canvas to HTML document
+document.getElementById('gameAreaWrapper').appendChild(app.view);
+
+// On resize, resize the canvas dynamically
+window.addEventListener('resize', function () {
+    app.view.style.width = window.innerWidth;
+    app.view.style.height = window.innerHeight;
+}, true);
 
 },{"./lib/pixi.min.js":6}],5:[function(require,module,exports){
 'use strict';

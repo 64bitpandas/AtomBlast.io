@@ -1,18 +1,10 @@
 /** 
- * MISSING FILE HEADER
- *
- *
- *
- *
+ * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan
+ * Created 17 April 2018
  */
 
 import * as global from './global.js';
 let socket, player, room;
-/** 
- * MISSING CLASS HEADER
- *
- *
- */
 export default class ChatClient {
     
     // Use this constructor during init to connect ChatClient to the server
