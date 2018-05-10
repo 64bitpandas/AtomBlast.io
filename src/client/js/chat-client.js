@@ -3,10 +3,10 @@
  * Created 17 April 2018
  */
 
-import * as global from './global.js';
+import {GLOBAL} from './global.js';
 let socket, player, room;
 export default class ChatClient {
-    
+
     // Use this constructor during init to connect ChatClient to the server
     constructor(params) {
         // this.canvas = params.canvas;
@@ -57,7 +57,7 @@ export default class ChatClient {
 
         // Colours the chat input correctly.
         newline.className = (me) ? 'me' : 'friend';
-        newline.innerHTML = `<b>${(name.length < 1) ? global.default.PLACEHOLDER_NAME : name}</b>: ${message}`;
+        newline.innerHTML = `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`;
 
         this.appendMessage(newline);
     }
@@ -72,7 +72,7 @@ export default class ChatClient {
         console.log(`${name} joined`);
         // Colours the chat input correctly.
         newline.className = 'join';
-        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? global.default.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
+        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
 
         this.appendMessage(newline);
     }
@@ -111,7 +111,7 @@ export default class ChatClient {
 
         key = key.which || key.keyCode;
 
-        if (key === global.default.KEY_ENTER) {
+        if (key === GLOBAL.KEY_ENTER) {
             const text = input.value.replace(/(<([^>]+)>)/ig, '');
             if (text !== '') {
 

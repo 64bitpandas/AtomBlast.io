@@ -42,6 +42,17 @@ io.on('connection', socket => {
     });
   });
 
+  //On Player Movement
+  socket.on('move', data => {
+    //Debug Logging REMOVE FOR PRODUCTION
+    console.log("Socket: " + socket.id + " has moved");
+    console.log(data.sender.x + "\n" + data.sender.y);
+
+    
+
+  }); 
+
+
   // Handle socket disconnect
   // socket.on('disconnect', data => {
   //   console.log('Received disconnect'); //don't use double quotes
@@ -57,6 +68,7 @@ io.on('connection', socket => {
     function (data) {
       console.log("Received: 'mouse' " + data.x + " " + data.y);
     });
+
 });
 
 if (debug) {

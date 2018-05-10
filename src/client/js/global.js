@@ -1,4 +1,4 @@
-export default {
+export const GLOBAL = {
     
     // Keys and other mathematical constants
     KEY_ESC: 27,
@@ -25,5 +25,11 @@ export default {
     // Cookies
     NAME_COOKIE: 'name',
     ROOM_COOKIE: 'room',
-    COOKIE_DAYS: 14
+    COOKIE_DAYS: 14,
+
+    // Player Movement
+    MAX_SPEED: 5,
+    PLAYER_RADIUS: 100,
+    VELOCITY_STEP: 5/60
+
 };

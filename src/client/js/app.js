@@ -6,11 +6,12 @@
  *
  */
 // var GameModule = require('./game.js');
-import * as global from './global.js';
+import {GLOBAL} from './global.js';
 import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
-import game from './game.js';
-// import p5 from './lib/p5.min.js';
+// import game from './game.js';
+import p5game from './p5game.js';
+import p5 from './lib/p5.min.js';
 
 let playerName;
 let roomName;
@@ -18,10 +19,6 @@ let socket;
 
 const playerNameInput = document.getElementById('playerNameInput');
 const roomNameInput = document.getElementById('roomNameInput');
-
-//Get screen dimensions
-let screenWidth = window.innerWidth;
-let screenHeight = window.innerHeight;
 
 // Starts the game if the name is valid.
 function startGame() {
@@ -33,29 +30,30 @@ function startGame() {
         roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
         // Set cookies
-        cookies.setCookie(global.NAME_COOKIE, playerName, global.COOKIE_DAYS);
-        cookies.setCookie(global.ROOM_COOKIE, roomName, global.COOKIE_DAYS);
+        console.log(GLOBAL);
+        cookies.setCookie(GLOBAL.NAME_COOKIE, playerName, GLOBAL.COOKIE_DAYS);
+        cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
 
         // Show game window
         document.getElementById('gameAreaWrapper').style.display = 'block';
         document.getElementById('startMenuWrapper').style.display = 'none';
 
         //Production server
-        // socket = io.connect(global.SERVER_IP, { query: `room=${roomName}` });
+        // socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}` });
 
         //Debugging and Local serving
         // if (!socket.connected) {
             console.log('Failed to connect, falling back to localhost');
-            socket = io.connect(global.LOCAL_HOST, { query: `room=${roomName}` });
+            socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}` });
         // }
 
         if (socket !== null)
             SetupSocket(socket);
-        // if (!global.animLoopHandle)
+        // if (!GLOBAL.animLoopHandle)
         //     animloop();
         
-        // // Init p5
-        // new p5(game);
+        // Init p5
+        new p5(p5game);
 
     } else {
         nickErrorText.style.display = 'inline';
@@ -79,8 +77,9 @@ window.onload = () => {
     const nickErrorText = document.querySelector('#startMenu .input-error');
 
     // Cookie loading
-    const playerCookie = cookies.getCookie(global.NAME_COOKIE);
-    const roomCookie = cookies.getCookie(global.ROOM_COOKIE);
+    console.log(GLOBAL);
+    const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
+    const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
 
     // Continue loading cookie only if it exists
     if(playerCookie !== null && playerCookie.length > 0)
@@ -96,7 +95,7 @@ window.onload = () => {
     playerNameInput.addEventListener('keypress', e => {
         const key = e.which || e.keyCode;
 
-        if (key === global.KEY_ENTER)
+        if (key === GLOBAL.KEY_ENTER)
            startGame();
     });
 };
@@ -185,7 +184,7 @@ function sendmouse(xpos, ypos) {
 /** 
  * MISSING COMMENT
  */
-window.addEventListener('resize', () => {
-    screenWidth = window.innerWidth;
-    screenHeight = window.innerHeight;
-}, true);
+// window.addEventListener('resize', () => {
+//     screenWidth = window.innerWidth;
+//     screenHeight = window.innerHeight;
+// }, true);
