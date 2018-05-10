@@ -474,6 +474,7 @@ function eraseCookie(name) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+// Contains all global constants for the client.
 var GLOBAL = exports.GLOBAL = {
 
     // Keys and other mathematical constants
@@ -506,7 +507,7 @@ var GLOBAL = exports.GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 5 / 60
+    VELOCITY_STEP: 0.2
 
 };
 
@@ -7126,21 +7127,22 @@ var _global = require('./global.js');
 
 var game = function game(p5) {
 
-  var playerSpeed = _global.GLOBAL.MAX_VELOCITY;
+  var playerSpeed = _global.GLOBAL.MAX_SPEED;
 
   // dx & dy
   var posX = 0.0;
   var posY = 0.0;
   var theta = 0.0;
 
-  var canvas = void 0;
+  // Mouse is pressed down
+  var mouse = false;
 
   // Load all resource files
   p5.preload = function () {};
 
   // Processing.js Setup Function
   p5.setup = function () {
-    canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
     p5.background(p5.color(0, 255, 0)); // background color will be green
     p5.noStroke(); // Removes stroke on objects
@@ -7157,12 +7159,15 @@ var game = function game(p5) {
     // If the mouse is outside of the player onscreen (boolean)
     var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
 
-    if (move && document.activeElement !== document.getElementById('chatClient')) {
+    // Set speed and direction
+    if (move && mouse) {
       playerSpeed = _global.GLOBAL.MAX_SPEED;
       theta = Math.atan2(mouseYC, mouseXC);
     } else {
       if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
     }
+
+    // Change position based on speed and direction
     posX += Math.cos(theta) * playerSpeed;
     posY += Math.sin(theta) * playerSpeed;
 
@@ -7192,9 +7197,13 @@ var game = function game(p5) {
   //   canvas.focus();
   // }
 
-  p5.mouseClicked = function () {
-    console.log('hi');
-    document.getElementById('gameAreaWrapper').focus();
+  // Mouse press/release actions
+  p5.mousePressed = function () {
+    mouse = true;
+  };
+
+  p5.mouseReleased = function () {
+    mouse = false;
   };
 };
 exports.default = game;

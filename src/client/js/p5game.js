@@ -4,14 +4,15 @@ import {GLOBAL} from './global.js';
 
 const game = (p5) => {
 
-  let playerSpeed = GLOBAL.MAX_VELOCITY;
+  let playerSpeed = GLOBAL.MAX_SPEED;
 
   // dx & dy
   let posX = 0.0;
   let posY = 0.0;
   let theta = 0.0;
 
-  let canvas;
+  // Mouse is pressed down
+  let mouse = false;
 
   // Load all resource files
   p5.preload = () => {
@@ -20,7 +21,7 @@ const game = (p5) => {
 
   // Processing.js Setup Function
   p5.setup = () => {
-    canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    let canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
     p5.background(p5.color(0, 255, 0)); // background color will be green
     p5.noStroke(); // Removes stroke on objects
@@ -33,12 +34,12 @@ const game = (p5) => {
 
     const mouseXC = p5.mouseX - window.innerWidth / 2;
     const mouseYC = p5.mouseY - window.innerHeight / 2;
-   
 
     // If the mouse is outside of the player onscreen (boolean)
     const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
     
-    if (move && document.activeElement !== document.getElementById('chatClient')) {
+    // Set speed and direction
+    if (move && mouse) {
       playerSpeed = GLOBAL.MAX_SPEED;
       theta = Math.atan2(mouseYC, mouseXC);
     }
@@ -46,6 +47,8 @@ const game = (p5) => {
       if(playerSpeed > 0)
         playerSpeed -= GLOBAL.VELOCITY_STEP;
     }
+
+    // Change position based on speed and direction
     posX += Math.cos(theta) * playerSpeed;
     posY += Math.sin(theta) * playerSpeed;
 
@@ -75,9 +78,13 @@ const game = (p5) => {
   //   canvas.focus();
   // }
 
-  p5.mouseClicked = () => {
-    console.log('hi');
-    document.getElementById('gameAreaWrapper').focus();
+  // Mouse press/release actions
+  p5.mousePressed = () => {
+    mouse = true;
+  }
+
+  p5.mouseReleased = () => {
+    mouse = false;
   }
   
 }

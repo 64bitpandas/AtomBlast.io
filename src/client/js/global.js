@@ -1,3 +1,4 @@
+// Contains all global constants for the client.
 export const GLOBAL = {
     
     // Keys and other mathematical constants
@@ -30,6 +31,6 @@ export const GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 5/60
+    VELOCITY_STEP: 0.2
 
 };
