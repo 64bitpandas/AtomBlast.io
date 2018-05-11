@@ -13,9 +13,45 @@ import * as cookies from './cookies.js';
 import p5game from './p5game.js';
 import p5 from './lib/p5.min.js';
 
+// Socket. Yes this is a var, and this is intentional because it is a global variable.
+export var socket;
+
+/* Array of all connected players in the form of Player objects */
+export var players = [];
+
+/* Player class, contains the following information:
+ * id: Socket id
+ * name: Player name
+ * room: Room that player is currently in
+ * x: Current x-position on map
+ * y: Current y-position on map
+*/
+var Player = function(newID, newName, newRoom, startX, startY, startAngle) {
+    this.id = newID;
+    this.name = newName; // Player Name
+    this.x = startX; // Intial Starting X location
+    this.y = startY; // Intial Starting Y location
+    this.angle = startAngle; // player facing direction in degrees(Use 0-360)
+}
+
+function updateCoords() {
+    
+}
+// TEMPORARY!!!!!!
+// players.push(new Player(0, 'Test Player', 'foo', 500, 500, 0));
+// setInterval(() => {
+//     players.push(1);
+//     if(players.length > 10)
+//         players = [];
+// })
+
+
+
+
+
 let playerName;
 let roomName;
-let socket;
+
 
 const playerNameInput = document.getElementById('playerNameInput');
 const roomNameInput = document.getElementById('roomNameInput');
@@ -111,6 +147,21 @@ function SetupSocket(socket) {
     let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
+
+    // Method called to create a new instance of Player object. 
+    // socket.on('createPlayer', (data) => {
+    //     // Populate Field!!!
+    //     var newPlayer = new Player(0, "placeholde", "roomName", data.x, data.y, 0);
+    //     console.log("New Player Created: " + newPlayer.id);
+    //     players.push(newPlayer);
+    // });
+
+    // Sync players between server and client
+    socket.on('playerSync', (data) => {
+        players = data;
+        // Remove player if it is you
+        // players[socket.id] = null;
+    })
 
     //Chat system receiver
     socket.on('serverMSG', data => {

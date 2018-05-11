@@ -1,22 +1,18 @@
+/// <reference path="./lib/p5.global-mode.d.ts" />
 import {p5} from './lib/p5.min.js';
 import {GLOBAL} from './global.js';
+import { players, socket } from './app.js';
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 const game = (p5) => {
-
   let playerSpeed = GLOBAL.MAX_SPEED;
-
   // dx & dy
   let posX = 0.0;
   let posY = 0.0;
   let theta = 0.0;
 
-  // Mouse is pressed down
-  let mouse = false;
-
   // Load all resource files
   p5.preload = () => {
-
   }
 
   // Processing.js Setup Function
@@ -39,7 +35,7 @@ const game = (p5) => {
     const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
     
     // Set speed and direction
-    if (move && mouse) {
+    if (move && p5.mouseIsPressed) {
       playerSpeed = GLOBAL.MAX_SPEED;
       theta = Math.atan2(mouseYC, mouseXC);
     }
@@ -59,6 +55,7 @@ const game = (p5) => {
     p5.push();
     
     // Translate coordinate space
+    p5.translate(window.innerWidth / 2, window.innerHeight / 2);  
     p5.translate(-posX, -posY);
 
     // Temporary testing orbs
@@ -66,26 +63,40 @@ const game = (p5) => {
     p5.ellipse(400, 400, 30, 30);
     p5.ellipse(600, 600, 30, 30);
     p5.ellipse(800, 800, 30, 30);
+
+    // Draw other players
+    // console.log(players);
+    for(let player in players) {
+      let pl = players[player];
+      if(pl !== null) {
+        // console.log(pl);
+        p5.ellipse(pl.x, pl.y, 2 * GLOBAL.PLAYER_RADIUS);
+        p5.text(pl.name, pl.x, pl.y);
+
+
+        // Debug lines
+        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
+        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
+        p5.text("ID: " + pl.id.substring(0,6), pl.x, pl.y + 15);
+      }
+      
+    }
+
     
     // End Transformations
     p5.pop();
-
+    
     // Draw player in the center of the screen
-    p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
+    // p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
+    // p5.text("x: " + Math.round(posX), window.innerWidth / 2, window.innerHeight / 2 - 15);
+    // p5.text("y: " + Math.round(posY), window.innerWidth / 2, window.innerHeight / 2 + 15);
+    // Send coordinates
+    socket.emit('move', {id: socket.id, x: posX, y: posY});
   }
 
   // document.getElementById('').onclick = () => {
   //   canvas.focus();
   // }
-
-  // Mouse press/release actions
-  p5.mousePressed = () => {
-    mouse = true;
-  }
-
-  p5.mouseReleased = () => {
-    mouse = false;
-  }
   
 }
 export default game;

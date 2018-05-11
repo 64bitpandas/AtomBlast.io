@@ -1,6 +1,11 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.players = exports.socket = undefined;
+
 var _global = require('./global.js');
 
 var _chatClient = require('./chat-client.js');
@@ -23,18 +28,49 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import game from './game.js';
-var playerName = void 0; /** 
-                          * MISSING FILE HEADER
-                          *
-                          *
-                          *
-                          *
-                          */
-// var GameModule = require('./game.js');
+// Socket. Yes this is a var, and this is intentional because it is a global variable.
 
+// import game from './game.js';
+var socket = exports.socket = undefined;
+
+/* Array of all connected players in the form of Player objects */
+/** 
+ * MISSING FILE HEADER
+ *
+ *
+ *
+ *
+ */
+// var GameModule = require('./game.js');
+var players = exports.players = [];
+
+/* Player class, contains the following information:
+ * id: Socket id
+ * name: Player name
+ * room: Room that player is currently in
+ * x: Current x-position on map
+ * y: Current y-position on map
+*/
+var Player = function Player(newID, newName, newRoom, startX, startY, startAngle) {
+    this.id = newID;
+    this.name = newName; // Player Name
+    this.x = startX; // Intial Starting X location
+    this.y = startY; // Intial Starting Y location
+    this.angle = startAngle; // player facing direction in degrees(Use 0-360)
+};
+
+function updateCoords() {}
+// TEMPORARY!!!!!!
+// players.push(new Player(0, 'Test Player', 'foo', 500, 500, 0));
+// setInterval(() => {
+//     players.push(1);
+//     if(players.length > 10)
+//         players = [];
+// })
+
+
+var playerName = void 0;
 var roomName = void 0;
-var socket = void 0;
 
 var playerNameInput = document.getElementById('playerNameInput');
 var roomNameInput = document.getElementById('roomNameInput');
@@ -63,7 +99,7 @@ function startGame() {
         //Debugging and Local serving
         // if (!socket.connected) {
         console.log('Failed to connect, falling back to localhost');
-        socket = io.connect(_global.GLOBAL.LOCAL_HOST, { query: 'room=' + roomName + '&name=' + playerName });
+        exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, { query: 'room=' + roomName + '&name=' + playerName });
         // }
 
         if (socket !== null) SetupSocket(socket);
@@ -124,6 +160,21 @@ function SetupSocket(socket) {
     var chat = new _chatClient2.default({ socket: socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
+
+    // Method called to create a new instance of Player object. 
+    // socket.on('createPlayer', (data) => {
+    //     // Populate Field!!!
+    //     var newPlayer = new Player(0, "placeholde", "roomName", data.x, data.y, 0);
+    //     console.log("New Player Created: " + newPlayer.id);
+    //     players.push(newPlayer);
+    // });
+
+    // Sync players between server and client
+    socket.on('playerSync', function (data) {
+        exports.players = players = data;
+        // Remove player if it is you
+        // players[socket.id] = null;
+    });
 
     //Chat system receiver
     socket.on('serverMSG', function (data) {
@@ -7123,19 +7174,16 @@ var _p5Min = require('./lib/p5.min.js');
 
 var _global = require('./global.js');
 
+var _app = require('./app.js');
+
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-
   var playerSpeed = _global.GLOBAL.MAX_SPEED;
-
   // dx & dy
   var posX = 0.0;
   var posY = 0.0;
   var theta = 0.0;
-
-  // Mouse is pressed down
-  var mouse = false;
 
   // Load all resource files
   p5.preload = function () {};
@@ -7160,7 +7208,7 @@ var game = function game(p5) {
     var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
 
     // Set speed and direction
-    if (move && mouse) {
+    if (move && p5.mouseIsPressed) {
       playerSpeed = _global.GLOBAL.MAX_SPEED;
       theta = Math.atan2(mouseYC, mouseXC);
     } else {
@@ -7178,6 +7226,7 @@ var game = function game(p5) {
     p5.push();
 
     // Translate coordinate space
+    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
     p5.translate(-posX, -posY);
 
     // Temporary testing orbs
@@ -7186,26 +7235,37 @@ var game = function game(p5) {
     p5.ellipse(600, 600, 30, 30);
     p5.ellipse(800, 800, 30, 30);
 
+    // Draw other players
+    // console.log(players);
+    for (var player in _app.players) {
+      var pl = _app.players[player];
+      if (pl !== null) {
+        // console.log(pl);
+        p5.ellipse(pl.x, pl.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
+        p5.text(pl.name, pl.x, pl.y);
+
+        // Debug lines
+        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
+        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
+        p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
+      }
+    }
+
     // End Transformations
     p5.pop();
 
     // Draw player in the center of the screen
-    p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * _global.GLOBAL.PLAYER_RADIUS, 2 * _global.GLOBAL.PLAYER_RADIUS);
+    // p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
+    // p5.text("x: " + Math.round(posX), window.innerWidth / 2, window.innerHeight / 2 - 15);
+    // p5.text("y: " + Math.round(posY), window.innerWidth / 2, window.innerHeight / 2 + 15);
+    // Send coordinates
+    _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY });
   };
 
   // document.getElementById('').onclick = () => {
   //   canvas.focus();
   // }
-
-  // Mouse press/release actions
-  p5.mousePressed = function () {
-    mouse = true;
-  };
-
-  p5.mouseReleased = function () {
-    mouse = false;
-  };
-};
+}; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
-},{"./global.js":4,"./lib/p5.min.js":5}]},{},[1]);
+},{"./app.js":1,"./global.js":4,"./lib/p5.min.js":5}]},{},[1]);
