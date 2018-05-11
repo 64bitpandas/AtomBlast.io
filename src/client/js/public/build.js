@@ -558,7 +558,7 @@ var GLOBAL = exports.GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.2
+    VELOCITY_STEP: 0.3
 
 };
 
@@ -7167,7 +7167,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7179,92 +7179,111 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-  var playerSpeed = _global.GLOBAL.MAX_SPEED;
-  // dx & dy
-  var posX = 0.0;
-  var posY = 0.0;
-  var theta = 0.0;
+    var playerSpeed = _global.GLOBAL.MAX_SPEED;
+    // dx & dy
+    var posX = 0.0;
+    var posY = 0.0;
+    var theta = 0.0;
 
-  // Load all resource files
-  p5.preload = function () {};
+    // Load all resource files
+    p5.preload = function () {};
 
-  // Processing.js Setup Function
-  p5.setup = function () {
-    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-    p5.background(p5.color(0, 255, 0)); // background color will be green
-    p5.noStroke(); // Removes stroke on objects
-  };
+    // Processing.js Setup Function
+    p5.setup = function () {
+        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+        p5.background(p5.color(0, 255, 0)); // background color will be green
+        p5.noStroke(); // Removes stroke on objects
+    };
 
-  // Processing.js Draw Loop
-  p5.draw = function () {
-    // push();
-    // translate(window.innerWidth / 2, window.innerHeight / 2);
+    // Processing.js Draw Loop
+    p5.draw = function () {
+        // push();
+        // translate(window.innerWidth / 2, window.innerHeight / 2);
 
-    var mouseXC = p5.mouseX - window.innerWidth / 2;
-    var mouseYC = p5.mouseY - window.innerHeight / 2;
+        var mouseXC = p5.mouseX - window.innerWidth / 2;
+        var mouseYC = p5.mouseY - window.innerHeight / 2;
 
-    // If the mouse is outside of the player onscreen (boolean)
-    var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
+        // If the mouse is outside of the player onscreen (boolean)
+        var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
 
-    // Set speed and direction
-    if (move && p5.mouseIsPressed) {
-      playerSpeed = _global.GLOBAL.MAX_SPEED;
-      theta = Math.atan2(mouseYC, mouseXC);
-    } else {
-      if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
-    }
+        // Set speed and direction
+        if (move && p5.mouseIsPressed) {
+            playerSpeed = _global.GLOBAL.MAX_SPEED;
+            theta = Math.atan2(mouseYC, mouseXC);
+        } else {
+            if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
+        }
 
-    // Change position based on speed and direction
-    posX += Math.cos(theta) * playerSpeed;
-    posY += Math.sin(theta) * playerSpeed;
+        // Prevent drifting due to minimal negative values
+        if (playerSpeed < 0) playerSpeed = 0;
 
-    // Clears the frame
-    p5.clear();
+        // Change position based on speed and direction
+        posX += Math.cos(theta) * playerSpeed;
+        posY += Math.sin(theta) * playerSpeed;
 
-    // Start Transformations
-    p5.push();
+        // Clears the frame
+        p5.clear();
 
-    // Translate coordinate space
-    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    p5.translate(-posX, -posY);
+        // Start Transformations
+        p5.push();
 
-    // Temporary testing orbs
-    p5.ellipse(200, 200, 30, 30);
-    p5.ellipse(400, 400, 30, 30);
-    p5.ellipse(600, 600, 30, 30);
-    p5.ellipse(800, 800, 30, 30);
+        // Translate coordinate space
+        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+        p5.translate(-posX, -posY);
 
-    // Draw other players
-    // console.log(players);
-    for (var player in _app.players) {
-      var pl = _app.players[player];
-      if (pl !== null) {
-        // console.log(pl);
-        p5.ellipse(pl.x, pl.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
-        p5.text(pl.name, pl.x, pl.y);
+        // Temporary testing orbs
+        p5.ellipse(200, 200, 30, 30);
+        p5.ellipse(400, 400, 30, 30);
+        p5.ellipse(600, 600, 30, 30);
+        p5.ellipse(800, 800, 30, 30);
 
-        // Debug lines
-        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
-        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
-        p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
-      }
-    }
+        // // Draw player in the center of the screen 0,0 doesnt work at all
+        // p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
+        // p5.text(pl.name, posX, posY);
 
-    // End Transformations
-    p5.pop();
+        // // Debug lines
+        // p5.text("x: " + Math.round(posX), posX, posY - 30);
+        // p5.text("y: " + Math.round(posY), posX, posY - 15);
+        // p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
 
-    // Draw player in the center of the screen
-    // p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
-    // p5.text("x: " + Math.round(posX), window.innerWidth / 2, window.innerHeight / 2 - 15);
-    // p5.text("y: " + Math.round(posY), window.innerWidth / 2, window.innerHeight / 2 + 15);
-    // Send coordinates
-    _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY });
-  };
+        // Draw other players
+        // console.log(players);
+        for (var player in _app.players) {
+            var pl = _app.players[player];
+            if (pl !== null && pl.id !== _app.socket.id) {
+                // console.log(pl);
+                p5.ellipse(pl.x, pl.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
+                p5.text(pl.name, pl.x, pl.y);
 
-  // document.getElementById('').onclick = () => {
-  //   canvas.focus();
-  // }
+                // Debug lines
+                p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
+                p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
+                p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
+            }
+        }
+
+        // Draw player in the center of the screen 0,0 doesnt work at all
+        if (_app.socket.id !== undefined) {
+            p5.ellipse(posX, posY, 2 * _global.GLOBAL.PLAYER_RADIUS, 2 * _global.GLOBAL.PLAYER_RADIUS);
+            p5.text(_app.players[_app.socket.id].name, posX, posY);
+
+            // Debug lines
+            p5.text("x: " + Math.round(posX), posX, posY - 30);
+            p5.text("y: " + Math.round(posY), posX, posY - 15);
+            p5.text("ID: " + _app.socket.id.substring(0, 6), posX, posY + 15);
+
+            // End Transformations
+            p5.pop();
+
+            // Send coordinates
+            _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY });
+        }
+    };
+
+    // document.getElementById('').onclick = () => {
+    //   canvas.focus();
+    // }
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 

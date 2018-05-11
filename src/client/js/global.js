@@ -31,6 +31,6 @@ export const GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.2
+    VELOCITY_STEP: 0.3
 
 };
