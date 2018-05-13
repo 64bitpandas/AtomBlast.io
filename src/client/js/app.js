@@ -43,7 +43,12 @@ function startGame() {
         document.getElementById('startMenuWrapper').style.display = 'none';
 
         //Debugging and Local serving
-        socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}` });
+        socket = io.connect(GLOBAL.LOCAL_HOST, {
+            query: `room=${roomName}&name=${playerName}`,
+            reconnectionAttempts: 3
+        });
+
+        
         
         //Production server
         setTimeout(() => {
@@ -111,6 +116,23 @@ function SetupSocket(socket) {
     let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
+
+    // On Connection Failure
+    socket.on('reconnect_failed', () => {
+        alert("You have lost connection to the server!");
+    });
+
+    socket.on('reconnecting', (attempt) => {
+        console.log("Lost connection. Reconnecting on attempt: " + attempt);
+    });
+
+    socket.on('reconnect_error', (err) => {
+        console.log("CRITICAL: Reconnect failed! " + err);
+    });
+
+    socket.on('pong', (ping) => {
+        console.log("Your Ping Is: " + ping);
+    });
 
     // Sync players between server and client
     socket.on('playerSync', (data) => {

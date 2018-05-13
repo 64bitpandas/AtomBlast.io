@@ -76,10 +76,11 @@ io.on('connection', socket => {
    *  - id: index of player that moved
    *  - x: new x position
    *  - y: new y position
+   *  - theta: angle of player
+   *  - speed: how fast the player is going
    */
   socket.on('move', data => {
     if(players[data.id] !== undefined) {
-      // console.log(data);
       players[data.id].x = data.x;
       players[data.id].y = data.y;
       players[data.id].theta = data.theta;
