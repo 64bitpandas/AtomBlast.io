@@ -67,7 +67,7 @@ const game = (p5) => {
     p5.ellipse(400, 400, 30, 30);
     p5.ellipse(600, 600, 30, 30);
     p5.ellipse(800, 800, 30, 30);
-
+ 
     // // Draw player in the center of the screen 0,0 doesnt work at all
     // p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
     // p5.text(pl.name, posX, posY);
@@ -81,20 +81,31 @@ const game = (p5) => {
     // console.log(players);
     for (let player in players) {
       let pl = players[player];
-      if (pl !== null && pl.id !== socket.id) {
-          // console.log(pl);
-          p5.ellipse(pl.x, pl.y, 2 * GLOBAL.PLAYER_RADIUS);
-          p5.text(pl.name, pl.x, pl.y);
 
-          // Debug lines
-          p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
-          p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
-          p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
+      if (pl !== null && pl.id !== socket.id) {
+        // Predict positions of other player
+        pl.x += Math.cos(pl.theta) * pl.speed;
+        pl.y += Math.sin(pl.theta) * pl.speed;
+
+        // console.log(pl);
+        //Replace pl.x with lerp function?
+        //console.log(playersOld[pl.id].x + " vs. " + pl.x);
+        if(players[pl.id].x != pl.x){
+          console.log(p5.lerp(players[pl.id].x, pl.x, 0.3) + " vs. " + pl.x);
+        }
+        p5.ellipse(p5.lerp(players[pl.id].x, pl.x, GLOBAL.LERP_VALUE), p5.lerp(players[pl.id].y, pl.y, GLOBAL.LERP_VALUE), 2 * GLOBAL.PLAYER_RADIUS);
+        p5.text(pl.name, pl.x, pl.y);
+
+        // Debug lines
+        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
+        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
+        p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
       }
     }
 
-    // Draw player in the center of the screen 0,0 doesnt work at all
-    if(socket.id !== undefined) {
+    // Draw player in the center of the screen
+    if(socket.id !== undefined && players[socket.id] !== undefined) {
+      
       p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
       p5.text(players[socket.id].name, posX, posY);
 
@@ -103,12 +114,12 @@ const game = (p5) => {
       p5.text("y: " + Math.round(posY), posX, posY - 15);
       p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
 
-      // End Transformations
-      p5.pop();
-
       // Send coordinates
-      socket.emit('move', { id: socket.id, x: posX, y: posY });
+      socket.emit('move', { id: socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
     }
+
+    // End Transformations
+    p5.pop();
     
   }
 

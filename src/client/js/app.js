@@ -17,7 +17,7 @@ import p5 from './lib/p5.min.js';
 export var socket;
 
 /* Array of all connected players in the form of Player objects */
-export var players = [];
+export var players;
 
 /* Player class, contains the following information:
  * id: Socket id
@@ -44,10 +44,6 @@ function updateCoords() {
 //     if(players.length > 10)
 //         players = [];
 // })
-
-
-
-
 
 let playerName;
 let roomName;
@@ -106,7 +102,7 @@ function validNick() {
 }
 
 /** 
- * MISSING COMMENT
+ * Onload function. Initializes the menu screen and loads cookies.
  */
 window.onload = () => {
     const btn = document.getElementById('startButton');
@@ -137,7 +133,7 @@ window.onload = () => {
 };
 
 /** 
- * MISSING COMMENT
+ * First time setup when connection starts.
  */
 function SetupSocket(socket) {
     //Debug
@@ -148,19 +144,10 @@ function SetupSocket(socket) {
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
-    // Method called to create a new instance of Player object. 
-    // socket.on('createPlayer', (data) => {
-    //     // Populate Field!!!
-    //     var newPlayer = new Player(0, "placeholde", "roomName", data.x, data.y, 0);
-    //     console.log("New Player Created: " + newPlayer.id);
-    //     players.push(newPlayer);
-    // });
-
     // Sync players between server and client
     socket.on('playerSync', (data) => {
+        //assigning local array to data sent by server
         players = data;
-        // Remove player if it is you
-        // players[socket.id] = null;
     })
 
     //Chat system receiver
@@ -214,28 +201,3 @@ function sendmouse(xpos, ypos) {
     // Send that object to the socket
     socket.emit('mouse', data);
 }
-
-// /** 
-//  * MISSING COMMENT
-//  */
-// window.requestAnimFrame = ((() => window.requestAnimationFrame ||
-//     window.webkitRequestAnimationFrame ||
-//     window.mozRequestAnimationFrame ||
-//     (callback => {
-//         window.setTimeout(callback, 1000 / 60);
-//     })))();
-
-// /** 
-//  * MISSING COMMENT
-//  */
-// function animloop() {
-//     requestAnimFrame(animloop);
-// }
-
-/** 
- * MISSING COMMENT
- */
-// window.addEventListener('resize', () => {
-//     screenWidth = window.innerWidth;
-//     screenHeight = window.innerHeight;
-// }, true);

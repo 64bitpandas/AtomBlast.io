@@ -15,6 +15,8 @@ app.use(express.static(`${__dirname}/../client`));
  * room: Room that player is currently in
  * x: Current x-position on map
  * y: Current y-position on map
+ * theta: Current direction of travel to use in client prediction
+ * speed: Current speed of player to use in client prediction
 */
 let players = {};
 
@@ -33,12 +35,14 @@ io.on('connection', socket => {
     room: socket.handshake.query.room,
     x: Math.random() * 1000,
     y: Math.random() * 1000,
+    theta: 0,
+    speed: 0
   };
 
   // Setup player array sync- once a frame
   setInterval(() => {
     socket.emit('playerSync', players);
-  }, 1000/60);
+  }, 10);
 
   // Receives a chat from a player, then broadcasts it to other players
   socket.on('playerChat', data => {
@@ -85,12 +89,6 @@ io.on('connection', socket => {
     console.log("Disconnect Received: " + data);
     players[socket.id] = null;
   });
-
-  // MISSING COMMENT
-  socket.on('mouse',
-    function (data) {
-      console.log("Received: 'mouse' " + data.x + " " + data.y);
-    });
 
 });
 
