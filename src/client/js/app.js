@@ -64,7 +64,6 @@ function startGame() {
         roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
         // Set cookies
-        console.log(GLOBAL);
         cookies.setCookie(GLOBAL.NAME_COOKIE, playerName, GLOBAL.COOKIE_DAYS);
         cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
 
@@ -72,28 +71,31 @@ function startGame() {
         document.getElementById('gameAreaWrapper').style.display = 'block';
         document.getElementById('startMenuWrapper').style.display = 'none';
 
-        //Production server
         // socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}` });
-
+        
         // console.log('Failed to connect, falling back to localhost');
-        socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}` });
-
         //Debugging and Local serving
+        socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}` });
+        
+        //Production server
         setTimeout(() => {
-            if(!socket.connected)
-            socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}` });
-        }, 2000);
+            if(!socket.connected) {
+                console.log('connecting to main server');
+                socket.disconnect();
+                socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}` });
+            }
+            if (socket !== null)
+                SetupSocket(socket);
+            // Init p5
+            new p5(p5game);
+        }, 1000);
         // if (!socket.connected) {
             
         // }
 
-        if (socket !== null)
-            SetupSocket(socket);
+       
         // if (!GLOBAL.animLoopHandle)
         //     animloop();
-        
-        // Init p5
-        new p5(p5game);
 
     } else {
         nickErrorText.style.display = 'inline';
@@ -117,7 +119,6 @@ window.onload = () => {
     
 
     // Cookie loading
-    console.log(GLOBAL);
     const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
     const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
 
@@ -164,7 +165,7 @@ function SetupSocket(socket) {
             // Do the lerping
             for(let pl in players) {
                 if(oldPlayers[pl] != null) {
-                    console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
+                    // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
