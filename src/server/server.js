@@ -42,7 +42,7 @@ io.on('connection', socket => {
   // Setup player array sync- once a frame
   setInterval(() => {
     socket.emit('playerSync', players);
-  }, 10);
+  }, 50);
 
   // Receives a chat from a player, then broadcasts it to other players
   socket.on('playerChat', data => {
@@ -82,6 +82,8 @@ io.on('connection', socket => {
       // console.log(data);
       players[data.id].x = data.x;
       players[data.id].y = data.y;
+      players[data.id].theta = data.theta;
+      players[data.id].speed = data.speed;
     }
   }); 
 

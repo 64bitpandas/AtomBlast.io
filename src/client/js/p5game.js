@@ -55,6 +55,9 @@ const game = (p5) => {
     // Clears the frame
     p5.clear();
 
+    // Send coordinates
+    socket.emit('move', { id: socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
+
     // Start Transformations
     p5.push();
 
@@ -87,13 +90,15 @@ const game = (p5) => {
         pl.x += Math.cos(pl.theta) * pl.speed;
         pl.y += Math.sin(pl.theta) * pl.speed;
 
-        // console.log(pl);
+        // console.log(pl.name + ' ' + pl.x + ' ' + pl.y);
+
         //Replace pl.x with lerp function?
         //console.log(playersOld[pl.id].x + " vs. " + pl.x);
-        if(players[pl.id].x != pl.x){
-          console.log(p5.lerp(players[pl.id].x, pl.x, 0.3) + " vs. " + pl.x);
-        }
-        p5.ellipse(p5.lerp(players[pl.id].x, pl.x, GLOBAL.LERP_VALUE), p5.lerp(players[pl.id].y, pl.y, GLOBAL.LERP_VALUE), 2 * GLOBAL.PLAYER_RADIUS);
+        // if(players[pl.id].x !== pl.x){
+        //   console.log(p5.lerp(players[pl.id].x, pl.x, 0.3) + " vs. " + pl.x);
+        // }
+        // p5.ellipse(p5.lerp(pl.x, newX, GLOBAL.LERP_VALUE), p5.lerp(pl.y, newY, GLOBAL.LERP_VALUE), 2 * GLOBAL.PLAYER_RADIUS);
+        p5.ellipse(pl.x, pl.y, 2 * GLOBAL.PLAYER_RADIUS);
         p5.text(pl.name, pl.x, pl.y);
 
         // Debug lines
@@ -104,7 +109,7 @@ const game = (p5) => {
     }
 
     // Draw player in the center of the screen
-    if(socket.id !== undefined && players[socket.id] !== undefined) {
+    if(socket.id !== undefined && players !== undefined && players[socket.id] !== undefined) {
       
       p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
       p5.text(players[socket.id].name, posX, posY);
@@ -113,9 +118,6 @@ const game = (p5) => {
       p5.text("x: " + Math.round(posX), posX, posY - 30);
       p5.text("y: " + Math.round(posY), posX, posY - 15);
       p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
-
-      // Send coordinates
-      socket.emit('move', { id: socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
     }
 
     // End Transformations

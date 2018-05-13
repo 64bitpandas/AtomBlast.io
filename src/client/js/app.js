@@ -19,6 +19,8 @@ export var socket;
 /* Array of all connected players in the form of Player objects */
 export var players;
 
+const nickErrorText = document.getElementById('nickErrorText');
+
 /* Player class, contains the following information:
  * id: Socket id
  * name: Player name
@@ -73,10 +75,16 @@ function startGame() {
         //Production server
         // socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}` });
 
+        // console.log('Failed to connect, falling back to localhost');
+        socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}` });
+
         //Debugging and Local serving
+        setTimeout(() => {
+            if(!socket.connected)
+            socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}` });
+        }, 2000);
         // if (!socket.connected) {
-            console.log('Failed to connect, falling back to localhost');
-            socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}`});
+            
         // }
 
         if (socket !== null)
@@ -106,7 +114,7 @@ function validNick() {
  */
 window.onload = () => {
     const btn = document.getElementById('startButton');
-    const nickErrorText = document.querySelector('#startMenu .input-error');
+    
 
     // Cookie loading
     console.log(GLOBAL);
@@ -146,9 +154,25 @@ function SetupSocket(socket) {
 
     // Sync players between server and client
     socket.on('playerSync', (data) => {
+        // Create temp array for lerping
+        let oldPlayers = players;
         //assigning local array to data sent by server
         players = data;
-    })
+
+        if(oldPlayers !== undefined && players !== undefined) {
+            
+            // Do the lerping
+            for(let pl in players) {
+                if(oldPlayers[pl] != null) {
+                    console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
+                    players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
+                    players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
+                    players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
+                    players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, GLOBAL.LERP_VALUE);
+                } 
+            }
+        }
+    });
 
     //Chat system receiver
     socket.on('serverMSG', data => {
@@ -200,4 +224,8 @@ function sendmouse(xpos, ypos) {
 
     // Send that object to the socket
     socket.emit('mouse', data);
+}
+
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t
 }

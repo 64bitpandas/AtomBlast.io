@@ -44,6 +44,8 @@ var socket = exports.socket = undefined;
 // var GameModule = require('./game.js');
 var players = exports.players = undefined;
 
+var nickErrorText = document.getElementById('nickErrorText');
+
 /* Player class, contains the following information:
  * id: Socket id
  * name: Player name
@@ -95,10 +97,15 @@ function startGame() {
         //Production server
         // socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}` });
 
-        //Debugging and Local serving
-        // if (!socket.connected) {
-        console.log('Failed to connect, falling back to localhost');
+        // console.log('Failed to connect, falling back to localhost');
         exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, { query: 'room=' + roomName + '&name=' + playerName });
+
+        //Debugging and Local serving
+        setTimeout(function () {
+            if (!socket.connected) exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, { query: 'room=' + roomName + '&name=' + playerName });
+        }, 2000);
+        // if (!socket.connected) {
+
         // }
 
         if (socket !== null) SetupSocket(socket);
@@ -125,7 +132,6 @@ function validNick() {
  */
 window.onload = function () {
     var btn = document.getElementById('startButton');
-    var nickErrorText = document.querySelector('#startMenu .input-error');
 
     // Cookie loading
     console.log(_global.GLOBAL);
@@ -162,8 +168,24 @@ function SetupSocket(socket) {
 
     // Sync players between server and client
     socket.on('playerSync', function (data) {
+        // Create temp array for lerping
+        var oldPlayers = players;
         //assigning local array to data sent by server
         exports.players = players = data;
+
+        if (oldPlayers !== undefined && players !== undefined) {
+
+            // Do the lerping
+            for (var pl in players) {
+                if (oldPlayers[pl] != null) {
+                    console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
+                    players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, _global.GLOBAL.LERP_VALUE);
+                    players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, _global.GLOBAL.LERP_VALUE);
+                    players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, _global.GLOBAL.LERP_VALUE);
+                    players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, _global.GLOBAL.LERP_VALUE);
+                }
+            }
+        }
     });
 
     //Chat system receiver
@@ -215,6 +237,10 @@ function sendmouse(xpos, ypos) {
 
     // Send that object to the socket
     socket.emit('mouse', data);
+}
+
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t;
 }
 
 },{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6}],2:[function(require,module,exports){
@@ -524,7 +550,7 @@ var GLOBAL = exports.GLOBAL = {
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
     VELOCITY_STEP: 0.3,
-    LERP_VALUE: 0.3
+    LERP_VALUE: 0.5
 
 };
 
@@ -7133,7 +7159,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7145,122 +7171,124 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-  var playerSpeed = _global.GLOBAL.MAX_SPEED;
-  // dx & dy
-  var posX = 0.0;
-  var posY = 0.0;
-  var theta = 0.0;
+    var playerSpeed = _global.GLOBAL.MAX_SPEED;
+    // dx & dy
+    var posX = 0.0;
+    var posY = 0.0;
+    var theta = 0.0;
 
-  // Load all resource files
-  p5.preload = function () {};
+    // Load all resource files
+    p5.preload = function () {};
 
-  // Processing.js Setup Function
-  p5.setup = function () {
-    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-    p5.background(p5.color(0, 255, 0)); // background color will be green
-    p5.noStroke(); // Removes stroke on objects
-  };
+    // Processing.js Setup Function
+    p5.setup = function () {
+        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+        p5.background(p5.color(0, 255, 0)); // background color will be green
+        p5.noStroke(); // Removes stroke on objects
+    };
 
-  // Processing.js Draw Loop
-  p5.draw = function () {
-    // push();
-    // translate(window.innerWidth / 2, window.innerHeight / 2);
+    // Processing.js Draw Loop
+    p5.draw = function () {
+        // push();
+        // translate(window.innerWidth / 2, window.innerHeight / 2);
 
-    var mouseXC = p5.mouseX - window.innerWidth / 2;
-    var mouseYC = p5.mouseY - window.innerHeight / 2;
+        var mouseXC = p5.mouseX - window.innerWidth / 2;
+        var mouseYC = p5.mouseY - window.innerHeight / 2;
 
-    // If the mouse is outside of the player onscreen (boolean)
-    var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
+        // If the mouse is outside of the player onscreen (boolean)
+        var move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > _global.GLOBAL.PLAYER_RADIUS;
 
-    // Set speed and direction
-    if (move && p5.mouseIsPressed) {
-      playerSpeed = _global.GLOBAL.MAX_SPEED;
-      theta = Math.atan2(mouseYC, mouseXC);
-    } else {
-      if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
-    }
-
-    // Prevent drifting due to minimal negative values
-    if (playerSpeed < 0) playerSpeed = 0;
-
-    // Change position based on speed and direction
-    posX += Math.cos(theta) * playerSpeed;
-    posY += Math.sin(theta) * playerSpeed;
-
-    // Clears the frame
-    p5.clear();
-
-    // Start Transformations
-    p5.push();
-
-    // Translate coordinate space
-    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    p5.translate(-posX, -posY);
-
-    // Temporary testing orbs
-    p5.ellipse(200, 200, 30, 30);
-    p5.ellipse(400, 400, 30, 30);
-    p5.ellipse(600, 600, 30, 30);
-    p5.ellipse(800, 800, 30, 30);
-
-    // // Draw player in the center of the screen 0,0 doesnt work at all
-    // p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
-    // p5.text(pl.name, posX, posY);
-
-    // // Debug lines
-    // p5.text("x: " + Math.round(posX), posX, posY - 30);
-    // p5.text("y: " + Math.round(posY), posX, posY - 15);
-    // p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
-
-    // Draw other players
-    // console.log(players);
-    for (var player in _app.players) {
-      var pl = _app.players[player];
-
-      if (pl !== null && pl.id !== _app.socket.id) {
-        // Predict positions of other player
-        pl.x += Math.cos(pl.theta) * pl.speed;
-        pl.y += Math.sin(pl.theta) * pl.speed;
-
-        // console.log(pl);
-        //Replace pl.x with lerp function?
-        //console.log(playersOld[pl.id].x + " vs. " + pl.x);
-        if (_app.players[pl.id].x != pl.x) {
-          console.log(p5.lerp(_app.players[pl.id].x, pl.x, 0.3) + " vs. " + pl.x);
+        // Set speed and direction
+        if (move && p5.mouseIsPressed) {
+            playerSpeed = _global.GLOBAL.MAX_SPEED;
+            theta = Math.atan2(mouseYC, mouseXC);
+        } else {
+            if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
         }
-        p5.ellipse(p5.lerp(_app.players[pl.id].x, pl.x, _global.GLOBAL.LERP_VALUE), p5.lerp(_app.players[pl.id].y, pl.y, _global.GLOBAL.LERP_VALUE), 2 * _global.GLOBAL.PLAYER_RADIUS);
-        p5.text(pl.name, pl.x, pl.y);
 
-        // Debug lines
-        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
-        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
-        p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
-      }
-    }
+        // Prevent drifting due to minimal negative values
+        if (playerSpeed < 0) playerSpeed = 0;
 
-    // Draw player in the center of the screen
-    if (_app.socket.id !== undefined && _app.players[_app.socket.id] !== undefined) {
+        // Change position based on speed and direction
+        posX += Math.cos(theta) * playerSpeed;
+        posY += Math.sin(theta) * playerSpeed;
 
-      p5.ellipse(posX, posY, 2 * _global.GLOBAL.PLAYER_RADIUS, 2 * _global.GLOBAL.PLAYER_RADIUS);
-      p5.text(_app.players[_app.socket.id].name, posX, posY);
+        // Clears the frame
+        p5.clear();
 
-      // Debug lines
-      p5.text("x: " + Math.round(posX), posX, posY - 30);
-      p5.text("y: " + Math.round(posY), posX, posY - 15);
-      p5.text("ID: " + _app.socket.id.substring(0, 6), posX, posY + 15);
+        // Send coordinates
+        _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
 
-      // Send coordinates
-      _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
-    }
+        // Start Transformations
+        p5.push();
 
-    // End Transformations
-    p5.pop();
-  };
+        // Translate coordinate space
+        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+        p5.translate(-posX, -posY);
 
-  // document.getElementById('').onclick = () => {
-  //   canvas.focus();
-  // }
+        // Temporary testing orbs
+        p5.ellipse(200, 200, 30, 30);
+        p5.ellipse(400, 400, 30, 30);
+        p5.ellipse(600, 600, 30, 30);
+        p5.ellipse(800, 800, 30, 30);
+
+        // // Draw player in the center of the screen 0,0 doesnt work at all
+        // p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
+        // p5.text(pl.name, posX, posY);
+
+        // // Debug lines
+        // p5.text("x: " + Math.round(posX), posX, posY - 30);
+        // p5.text("y: " + Math.round(posY), posX, posY - 15);
+        // p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
+
+        // Draw other players
+        // console.log(players);
+        for (var player in _app.players) {
+            var pl = _app.players[player];
+
+            if (pl !== null && pl.id !== _app.socket.id) {
+                // Predict positions of other player
+                pl.x += Math.cos(pl.theta) * pl.speed;
+                pl.y += Math.sin(pl.theta) * pl.speed;
+
+                // console.log(pl.name + ' ' + pl.x + ' ' + pl.y);
+
+                //Replace pl.x with lerp function?
+                //console.log(playersOld[pl.id].x + " vs. " + pl.x);
+                // if(players[pl.id].x !== pl.x){
+                //   console.log(p5.lerp(players[pl.id].x, pl.x, 0.3) + " vs. " + pl.x);
+                // }
+                // p5.ellipse(p5.lerp(pl.x, newX, GLOBAL.LERP_VALUE), p5.lerp(pl.y, newY, GLOBAL.LERP_VALUE), 2 * GLOBAL.PLAYER_RADIUS);
+                p5.ellipse(pl.x, pl.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
+                p5.text(pl.name, pl.x, pl.y);
+
+                // Debug lines
+                p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
+                p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
+                p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
+            }
+        }
+
+        // Draw player in the center of the screen
+        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+
+            p5.ellipse(posX, posY, 2 * _global.GLOBAL.PLAYER_RADIUS, 2 * _global.GLOBAL.PLAYER_RADIUS);
+            p5.text(_app.players[_app.socket.id].name, posX, posY);
+
+            // Debug lines
+            p5.text("x: " + Math.round(posX), posX, posY - 30);
+            p5.text("y: " + Math.round(posY), posX, posY - 15);
+            p5.text("ID: " + _app.socket.id.substring(0, 6), posX, posY + 15);
+        }
+
+        // End Transformations
+        p5.pop();
+    };
+
+    // document.getElementById('').onclick = () => {
+    //   canvas.focus();
+    // }
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
