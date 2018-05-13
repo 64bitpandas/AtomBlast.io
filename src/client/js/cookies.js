@@ -1,4 +1,14 @@
+/**
+ * Cookies.js was adopted from a StackOverflow answer 
+ * (https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript).
+ */
 
+/**
+ * Sets the value of a cookie.
+ * @param {string} name Name of cookie
+ * @param {string} value New value of cookie
+ * @param {number} days Number of days this cookie will last for
+ */
 export function setCookie(name, value, days) {
     let expires = "";
     if (days) {
@@ -8,6 +18,12 @@ export function setCookie(name, value, days) {
     }
     document.cookie = `${name}=${value || ""}${expires}; path=/`;
 }
+
+/**
+ * Sets the value of a cookie.
+ * @param {string} name Name of cookie
+ * @return {string} The value of the cookie. Returns null if the cookie is not found.
+ */
 export function getCookie(name) {
     const nameEQ = `${name}=`;
     const ca = document.cookie.split(';');
@@ -19,6 +35,11 @@ export function getCookie(name) {
 
     return null;
 }
+
+/**
+ * Removes the given cookie.
+ * @param {string} name The name of the cookie to erase.
+ */
 export function eraseCookie(name) {
     document.cookie = `${name}=; Max-Age=-99999999;`;
 }

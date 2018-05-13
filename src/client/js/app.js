@@ -1,15 +1,13 @@
 /** 
- * MISSING FILE HEADER
- *
+ * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
+ * Uses socket.io to set up listeners in the setupSocket() function.
  *
  *
  *
  */
-// var GameModule = require('./game.js');
 import {GLOBAL} from './global.js';
 import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
-// import game from './game.js';
 import p5game from './p5game.js';
 import p5 from './lib/p5.min.js';
 
@@ -21,35 +19,8 @@ export var players;
 
 const nickErrorText = document.getElementById('nickErrorText');
 
-/* Player class, contains the following information:
- * id: Socket id
- * name: Player name
- * room: Room that player is currently in
- * x: Current x-position on map
- * y: Current y-position on map
-*/
-var Player = function(newID, newName, newRoom, startX, startY, startAngle) {
-    this.id = newID;
-    this.name = newName; // Player Name
-    this.x = startX; // Intial Starting X location
-    this.y = startY; // Intial Starting Y location
-    this.angle = startAngle; // player facing direction in degrees(Use 0-360)
-}
-
-function updateCoords() {
-    
-}
-// TEMPORARY!!!!!!
-// players.push(new Player(0, 'Test Player', 'foo', 500, 500, 0));
-// setInterval(() => {
-//     players.push(1);
-//     if(players.length > 10)
-//         players = [];
-// })
-
 let playerName;
 let roomName;
-
 
 const playerNameInput = document.getElementById('playerNameInput');
 const roomNameInput = document.getElementById('roomNameInput');
@@ -71,9 +42,6 @@ function startGame() {
         document.getElementById('gameAreaWrapper').style.display = 'block';
         document.getElementById('startMenuWrapper').style.display = 'none';
 
-        // socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}` });
-        
-        // console.log('Failed to connect, falling back to localhost');
         //Debugging and Local serving
         socket = io.connect(GLOBAL.LOCAL_HOST, { query: `room=${roomName}&name=${playerName}` });
         
@@ -89,18 +57,9 @@ function startGame() {
             // Init p5
             new p5(p5game);
         }, 1000);
-        // if (!socket.connected) {
-            
-        // }
-
-       
-        // if (!GLOBAL.animLoopHandle)
-        //     animloop();
-
     } else {
         nickErrorText.style.display = 'inline';
     }
-    
 }
 
 // check if nick is valid alphanumeric characters (and underscores)
@@ -164,8 +123,8 @@ function SetupSocket(socket) {
             
             // Do the lerping
             for(let pl in players) {
-                if(oldPlayers[pl] != null) {
                     // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
+                if(players[pl] !== null || oldPlayers[pl] !== null) {
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
@@ -194,39 +153,11 @@ function SetupSocket(socket) {
         chat.addLoginMessage(data.reason, false);
     });
 
-    
-    //Emit mouse movement events
-    socket.on("mouse", function(data) {
-            console.log("Received: " + data.x + " " + data.y);
-        });
     //Emit join message
     socket.emit('playerJoin', { sender: chat.player });
 }
 
-function mouseDragged() {
-    // Draw some white circles
-    fill(255);
-    noStroke();
-    ellipse(mouseX, mouseY, 20, 20);
-    // Send the mouse coordinates
-    sendmouse(mouseX, mouseY);
-}
-
-// Function for sending to the socket
-function sendmouse(xpos, ypos) {
-    // We are sending!
-    console.log("sendmouse: " + xpos + " " + ypos);
-
-    // Make a little object with  and y
-    var data = {
-        x: xpos,
-        y: ypos
-    };
-
-    // Send that object to the socket
-    socket.emit('mouse', data);
-}
-
+// Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t
 }
