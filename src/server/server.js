@@ -18,7 +18,7 @@ app.use(express.static(`${__dirname}/../client`));
  * theta: Current direction of travel to use in client prediction
  * speed: Current speed of player to use in client prediction
 */
-let players = {};
+let rooms = {};
 
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
@@ -28,8 +28,16 @@ io.on('connection', socket => {
     console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${socket.handshake.query.room}`.yellow);
   });
 
+  // Player room name
+  let room = socket.handshake.query.room;
+  console.log(room);
+  console.log(rooms);
+
   // Add player to array
-  players[socket.id] = {
+  if(rooms[room] === undefined || rooms[room] === null)
+    rooms[room] = {};
+
+  rooms[room][socket.id] = {
     id: socket.id,
     name: socket.handshake.query.name,
     room: socket.handshake.query.room,
@@ -39,33 +47,34 @@ io.on('connection', socket => {
     speed: 0
   };
 
+
   // Setup player array sync- once a frame
   setInterval(() => {
-    socket.emit('playerSync', players);
+      socket.emit('playerSync', rooms[room]);
   }, 1000/60);
 
   // Receives a chat from a player, then broadcasts it to other players
-  socket.on('playerChat', data => {
+  socket.to(room).on('playerChat', data => {
     // console.log('sender: ' + data.sender);
     const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
     const _message = data.message.replace(/(<([^>]+)>)/ig, '');
 
     console.log('[CHAT] '.bold.blue + `${(new Date()).getHours()}:${(new Date()).getMinutes()} ${_sender}: ${_message}`.magenta);
 
-    socket.broadcast.emit('serverSendPlayerChat', { sender: _sender, message: _message.substring(0, 35) });
+    socket.to(room).broadcast.emit('serverSendPlayerChat', { sender: _sender, message: _message.substring(0, 35) });
   });
 
-  // Other player joins the room
-  socket.on('playerJoin', data => {
+  // Other player joins the socket.to(room)
+  socket.to(room).on('playerJoin', data => {
     // console.log('sender: ' + data.sender);
     const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
-    socket.broadcast.emit('serverSendLoginMessage', { sender: _sender });
+    socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender });
   });
 
   // Broadcasts player join message
-  socket.on('connect', () => {
+  socket.to(room).on('connect', () => {
     console.log(socket.id);
-    socket.broadcast.emit('serverSendLoginMessage', {
+    socket.to(room).broadcast.emit('serverSendLoginMessage', {
       sender: socket.id
     });
   });
@@ -79,18 +88,18 @@ io.on('connection', socket => {
    *  - theta: angle of player
    *  - speed: how fast the player is going
    */
-  socket.on('move', data => {
-    if(players[data.id] !== undefined) {
-      players[data.id].x = data.x;
-      players[data.id].y = data.y;
-      players[data.id].theta = data.theta;
-      players[data.id].speed = data.speed;
+  socket.to(room).on('move', data => {
+    if(rooms[room][data.id] !== undefined) {
+      rooms[room][data.id].x = data.x;
+      rooms[room][data.id].y = data.y;
+      rooms[room][data.id].theta = data.theta;
+      rooms[room][data.id].speed = data.speed;
     }
   }); 
 
   socket.on('disconnect', data => {
     console.log("Disconnect Received: " + data);
-    players[socket.id] = null;
+    rooms[room][socket.id] = null;
   });
 
 });

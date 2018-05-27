@@ -136,6 +136,7 @@ function SetupSocket(socket) {
 
     // Sync players between server and client
     socket.on('playerSync', (data) => {
+        console.log(data);
         // Create temp array for lerping
         let oldPlayers = players;
         //assigning local array to data sent by server
