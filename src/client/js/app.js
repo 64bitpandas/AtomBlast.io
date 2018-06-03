@@ -128,6 +128,8 @@ function SetupSocket(socket) {
 
     socket.on('reconnecting', (attempt) => {
         console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        socket.disconnect();
+        quitGame('Lost connection to server');
     });
 
     socket.on('reconnect_error', (err) => {
@@ -187,3 +189,15 @@ function SetupSocket(socket) {
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t
 }
+
+/**
+ * 
+ * @param {string} msg The message to be displayed in the menu after disconnect. 
+ */
+function quitGame(msg) {
+    // menu
+    document.getElementById('gameAreaWrapper').style.display = 'none';
+    document.getElementById('startMenuWrapper').style.display = 'block';
+    document.getElementById('startMenuMessage').style.display = 'block';
+    document.getElementById('startMenuMessage').innerHTML = msg;
+} 

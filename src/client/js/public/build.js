@@ -147,6 +147,8 @@ function SetupSocket(socket) {
 
     socket.on('reconnecting', function (attempt) {
         console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        socket.disconnect();
+        quitGame('Lost connection to server');
     });
 
     socket.on('reconnect_error', function (err) {
@@ -205,6 +207,18 @@ function SetupSocket(socket) {
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
+}
+
+/**
+ * 
+ * @param {string} msg The message to be displayed in the menu after disconnect. 
+ */
+function quitGame(msg) {
+    // menu
+    document.getElementById('gameAreaWrapper').style.display = 'none';
+    document.getElementById('startMenuWrapper').style.display = 'block';
+    document.getElementById('startMenuMessage').style.display = 'block';
+    document.getElementById('startMenuMessage').innerHTML = msg;
 }
 
 },{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6}],2:[function(require,module,exports){

@@ -30,8 +30,6 @@ io.on('connection', socket => {
 
   // Player room name
   let room = socket.handshake.query.room;
-  console.log(room);
-  console.log(rooms);
 
   // Add player to array
   if(rooms[room] === undefined || rooms[room] === null)
@@ -73,7 +71,6 @@ io.on('connection', socket => {
 
   // Broadcasts player join message
   socket.to(room).on('connect', () => {
-    console.log(socket.id);
     socket.to(room).broadcast.emit('serverSendLoginMessage', {
       sender: socket.id
     });

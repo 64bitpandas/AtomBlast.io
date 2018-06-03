@@ -1,12 +1,17 @@
+/* Using https://mycolor.space/?hex=%23311B92&sub=1 */
+
+/* *******************
+ * *  GLOBAL STYLES  *
+ * ******************* */
 * {
-	font-family: sans-serif;
+	font-family: 'Aldrich', sans-serif;
 	font-size: 14px;
 }
 
 html, body {
 	margin: 0; padding: 0;
 	width: 100%; height: 100%;
-	background-color: #222;
+	background: linear-gradient(to top left, #311B92, black);
 	overflow: hidden;
 }
 
@@ -15,15 +20,29 @@ canvas {
 	margin: 0; padding: 0;
 }
 
+/* **************************
+ * *  STANDARD CONTENT BOX  *
+ * ************************** */
+.box {
+	padding: 2rem;
+	border-radius: 7px 7px 7px 7px;
+	-moz-border-radius: 7px 7px 7px 7px;
+	-webkit-border-radius: 7px 7px 7px 7px;
+	background-color: white;
+	-webkit-box-shadow: 0px 0px 1rem 0px rgb(180, 180, 180);
+	-moz-box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
+	box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
+	box-sizing: border-box;
+}
+
+/* ***************
+ * * START MENU  *
+ * *************** */
 #startMenu {
 	margin:auto;
 	margin-top:100px;
-	width: 350px;
-	padding: 20px;
-	border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
-	background-color: white;
+	width: 30rem;
+	
 	box-sizing: border-box;
 }
 
@@ -34,6 +53,18 @@ canvas {
 	font-weight: bold;
 }
 
+#startMenuMessage {
+	width: 30rem;
+	margin: auto;
+	box-sizing: border-box;
+	margin-top: 2vh;
+	color:red;
+	height: 2vh;
+	text-align: center;
+	/* Hidden on start */
+	display: none;
+}
+
 .menuInputBox {
 	width: 100%;
 	text-align: center;
@@ -41,9 +72,6 @@ canvas {
 	border: solid 1px #dcdcdc;
 	transition: box-shadow 0.3s, border 0.3s;
 	box-sizing: border-box;
-	border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
 	margin-bottom: 10px;
 	outline: none;
 }
@@ -108,27 +136,27 @@ canvas {
 	position: absolute;
 	/* Hidden until game starts */
 	display: none;
-    width: 300px;
-    height: 320px;
-    background: rgba(255, 255, 255, 0.7);
-    bottom: 5px;
-    left: 5px;
-    border-radius: 5px;
-    pointer-events: none;
+    width: 25vw;
+    height: 45vh;
+    bottom: 2rem;
+    left: 2rem;
+	pointer-events: none;
+	padding: 1.5rem;
 }
 
 .chatbox .chat-list {
-    padding: 5px;
+    padding: 0;
     margin: 0;
     list-style: none;
     box-sizing: border-box;
-    height: 285px;
-    overflow: hidden;
+	height: 37vh;
+	overflow-wrap: normal;
+	overflow-y: scroll;
 }
 
 .chatbox .chat-list li {
     padding: 2px;
-    margin: 3px;
+    margin: 2px;
 }
 
 .chatbox .chat-list li.me b {
@@ -155,12 +183,10 @@ canvas {
 .chatbox .chat-input {
     pointer-events: all;
     box-sizing: border-box;
-    width: 100%;
-    padding: 8px;
     background: transparent;
     border: none;
     border-top: 1px solid #DDD;
-    outline: none;
+	outline: none;
 }
 
 /* ***************************************************
@@ -170,14 +196,10 @@ canvas {
     position: absolute;
 	width: 50%;
 	height: 50%;
-	margin-top: 25%;
-	margin-left: 25%;
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 5px;
+	margin-top: 25vh;
+	margin-left: 25vw;
 	pointer-events: none;
 	text-align: center;
-	padding: 5px;
-    box-sizing: border-box;
 	overflow: hidden;
 	/* Hidden until game starts */
 	display: none;
@@ -185,12 +207,11 @@ canvas {
 
 .loadingbox h3 {
 	font-size: 5vw;
-	font-family: Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
+  width: 8vw;
+  height: 8vw;
 
   position: relative;
   margin: 100px auto;
@@ -229,3 +250,7 @@ canvas {
     -webkit-transform: scale(1.0);
   }
 }
+
+/* ****************
+ * *  Ingame Menu *
+ * **************** */
