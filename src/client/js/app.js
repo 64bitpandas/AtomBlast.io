@@ -42,13 +42,14 @@ function startGame() {
         document.getElementById('gameAreaWrapper').style.display = 'block';
         document.getElementById('startMenuWrapper').style.display = 'none';
 
+        // Show loading screen
+        document.getElementById('loading').style.display = 'block';
+
         //Debugging and Local serving
         socket = io.connect(GLOBAL.LOCAL_HOST, {
             query: `room=${roomName}&name=${playerName}`,
             reconnectionAttempts: 3
         });
-
-        
         
         //Production server
         setTimeout(() => {
@@ -61,6 +62,10 @@ function startGame() {
                 SetupSocket(socket);
             // Init p5
             new p5(p5game);
+            // Hide loading screen
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('chatbox').style.display = 'block';
+            
         }, 1000);
     } else {
         nickErrorText.style.display = 'inline';
@@ -81,7 +86,6 @@ function validNick() {
 window.onload = () => {
     const btn = document.getElementById('startButton');
     
-
     // Cookie loading
     const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
     const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
@@ -136,7 +140,6 @@ function SetupSocket(socket) {
 
     // Sync players between server and client
     socket.on('playerSync', (data) => {
-        console.log(data);
         // Create temp array for lerping
         let oldPlayers = players;
         //assigning local array to data sent by server

@@ -97,33 +97,18 @@ const game = (p5) => {
     for (let player in players) {
       let pl = players[player];
 
-      if (pl !== null && pl.id !== socket.id) {
-        // Predict positions of other player
-        pl.x += Math.cos(pl.theta) * pl.speed;
-        pl.y += Math.sin(pl.theta) * pl.speed;
-
-        // Draw player
-        p5.ellipse(pl.x, pl.y, 2 * GLOBAL.PLAYER_RADIUS);
-        p5.text(pl.name, pl.x, pl.y);
-
-        // Debug lines
-        p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
-        p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
-        p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
-      }
+      if (pl !== null && pl.id !== socket.id)
+        drawPlayer(p5, pl, false);
     }
 
     // Draw player in the center of the screen
-    if (socket.id !== undefined && players !== undefined && players[socket.id] !== undefined) {
-
-      p5.ellipse(posX, posY, 2 * GLOBAL.PLAYER_RADIUS, 2 * GLOBAL.PLAYER_RADIUS);
-      p5.text(players[socket.id].name, posX, posY);
-
-      // Debug lines
-      p5.text("x: " + Math.round(posX), posX, posY - 30);
-      p5.text("y: " + Math.round(posY), posX, posY - 15);
-      p5.text("ID: " + socket.id.substring(0, 6), posX, posY + 15);
-    }
+    if (socket.id !== undefined && players !== undefined && players[socket.id] !== undefined)
+      drawPlayer(p5, {
+        id: socket.id,
+        name: players[socket.id].name,
+        x: posX,
+        y: posY
+      }, true);
 
     // End Transformations
     p5.pop();
@@ -131,3 +116,27 @@ const game = (p5) => {
   }
 }
 export default game;
+
+/**
+ * Draws all components of a given player, including all powerups and atoms held.
+ * @param {any} p5 The p5 renderer reference
+ * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
+ * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
+ */
+function drawPlayer(p5, player, isThisPlayer) {
+
+  // Predict positions of other player
+  if(!isThisPlayer) {
+    player.x += Math.cos(player.theta) * player.speed;
+    player.y += Math.sin(player.theta) * player.speed;
+  }
+
+  // Draw player
+  p5.ellipse(player.x, player.y, 2 * GLOBAL.PLAYER_RADIUS);
+  p5.text(player.name, player.x, player.y);
+
+  // Debug lines
+  p5.text("x: " + Math.round(player.x), player.x, player.y - 30);
+  p5.text("y: " + Math.round(player.y), player.x, player.y - 15);
+  p5.text("ID: " + player.id.substring(0, 6), player.x, player.y + 15);
+}

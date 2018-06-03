@@ -66,6 +66,9 @@ function startGame() {
         document.getElementById('gameAreaWrapper').style.display = 'block';
         document.getElementById('startMenuWrapper').style.display = 'none';
 
+        // Show loading screen
+        document.getElementById('loading').style.display = 'block';
+
         //Debugging and Local serving
         exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
             query: 'room=' + roomName + '&name=' + playerName,
@@ -82,6 +85,9 @@ function startGame() {
             if (socket !== null) SetupSocket(socket);
             // Init p5
             new _p5Min2.default(_p5game2.default);
+            // Hide loading screen
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('chatbox').style.display = 'block';
         }, 1000);
     } else {
         nickErrorText.style.display = 'inline';
@@ -153,7 +159,6 @@ function SetupSocket(socket) {
 
     // Sync players between server and client
     socket.on('playerSync', function (data) {
-        console.log(data);
         // Create temp array for lerping
         var oldPlayers = players;
         //assigning local array to data sent by server
@@ -7138,7 +7143,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7150,129 +7155,137 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-    var playerSpeed = _global.GLOBAL.MAX_SPEED;
-    // dx & dy
-    var posX = 0.0;
-    var posY = 0.0;
-    var theta = 0.0;
+  var playerSpeed = _global.GLOBAL.MAX_SPEED;
+  // dx & dy
+  var posX = 0.0;
+  var posY = 0.0;
+  var theta = 0.0;
 
-    // Processing.js Setup Function
-    p5.setup = function () {
-        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-        p5.background(p5.color(0, 255, 0)); // background color will be green
-        p5.noStroke(); // Removes stroke on objects
-    };
+  // Processing.js Setup Function
+  p5.setup = function () {
+    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+    p5.background(p5.color(0, 255, 0)); // background color will be green
+    p5.noStroke(); // Removes stroke on objects
+  };
 
-    // Processing.js Draw Loop
-    p5.draw = function () {
+  // Processing.js Draw Loop
+  p5.draw = function () {
 
-        var mouseXC = p5.mouseX - window.innerWidth / 2;
-        var mouseYC = p5.mouseY - window.innerHeight / 2;
+    var mouseXC = p5.mouseX - window.innerWidth / 2;
+    var mouseYC = p5.mouseY - window.innerHeight / 2;
 
-        // // If the mouse is outside of the player onscreen (boolean)
-        // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
+    // // If the mouse is outside of the player onscreen (boolean)
+    // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
 
-        // // Set speed and direction
-        // if (move && p5.mouseIsPressed) {
-        //   playerSpeed = GLOBAL.MAX_SPEED;
-        //   theta = Math.atan2(mouseYC, mouseXC);
-        // }
+    // // Set speed and direction
+    // if (move && p5.mouseIsPressed) {
+    //   playerSpeed = GLOBAL.MAX_SPEED;
+    //   theta = Math.atan2(mouseYC, mouseXC);
+    // }
 
-        // X and Y components of theta, value equal to -1 or 1 depending on direction
-        var xDir = 0,
-            yDir = 0;
+    // X and Y components of theta, value equal to -1 or 1 depending on direction
+    var xDir = 0,
+        yDir = 0;
 
-        // W (up)
-        if (p5.keyIsDown(_global.GLOBAL.KEY_W)) {
-            playerSpeed = _global.GLOBAL.MAX_SPEED;
-            yDir = 1;
-        }
-        // A (left)
-        if (p5.keyIsDown(_global.GLOBAL.KEY_A)) {
-            playerSpeed = _global.GLOBAL.MAX_SPEED;
-            xDir = -1;
-        }
-        // S (down)
-        if (p5.keyIsDown(_global.GLOBAL.KEY_S)) {
-            yDir = -1;
-            playerSpeed = _global.GLOBAL.MAX_SPEED;
-        }
-        // D (right)
-        if (p5.keyIsDown(_global.GLOBAL.KEY_D)) {
-            xDir = 1;
-            playerSpeed = _global.GLOBAL.MAX_SPEED;
-        }
+    // W (up)
+    if (p5.keyIsDown(_global.GLOBAL.KEY_W)) {
+      playerSpeed = _global.GLOBAL.MAX_SPEED;
+      yDir = 1;
+    }
+    // A (left)
+    if (p5.keyIsDown(_global.GLOBAL.KEY_A)) {
+      playerSpeed = _global.GLOBAL.MAX_SPEED;
+      xDir = -1;
+    }
+    // S (down)
+    if (p5.keyIsDown(_global.GLOBAL.KEY_S)) {
+      yDir = -1;
+      playerSpeed = _global.GLOBAL.MAX_SPEED;
+    }
+    // D (right)
+    if (p5.keyIsDown(_global.GLOBAL.KEY_D)) {
+      xDir = 1;
+      playerSpeed = _global.GLOBAL.MAX_SPEED;
+    }
 
-        // Set direction- if no keys pressed, retains previous direction
-        if (yDir !== 0 || xDir !== 0) {
-            theta = Math.atan2(-yDir, xDir);
-        }
-        // Reduce speed (inertia)
-        else if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
+    // Set direction- if no keys pressed, retains previous direction
+    if (yDir !== 0 || xDir !== 0) {
+      theta = Math.atan2(-yDir, xDir);
+    }
+    // Reduce speed (inertia)
+    else if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
 
-        // Prevent drifting due to minimal negative values
-        if (playerSpeed < 0) playerSpeed = 0;
+    // Prevent drifting due to minimal negative values
+    if (playerSpeed < 0) playerSpeed = 0;
 
-        // Change position based on speed and direction
-        posX += Math.cos(theta) * playerSpeed;
-        posY += Math.sin(theta) * playerSpeed;
+    // Change position based on speed and direction
+    posX += Math.cos(theta) * playerSpeed;
+    posY += Math.sin(theta) * playerSpeed;
 
-        // Clears the frame
-        p5.clear();
+    // Clears the frame
+    p5.clear();
 
-        // Send coordinates
-        _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
+    // Send coordinates
+    _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
 
-        // Start Transformations
-        p5.push();
+    // Start Transformations
+    p5.push();
 
-        // Translate coordinate space
-        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-        p5.translate(-posX, -posY);
+    // Translate coordinate space
+    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+    p5.translate(-posX, -posY);
 
-        // Temporary testing orbs
-        p5.ellipse(200, 200, 30, 30);
-        p5.ellipse(400, 400, 30, 30);
-        p5.ellipse(600, 600, 30, 30);
-        p5.ellipse(800, 800, 30, 30);
+    // Temporary testing orbs
+    p5.ellipse(200, 200, 30, 30);
+    p5.ellipse(400, 400, 30, 30);
+    p5.ellipse(600, 600, 30, 30);
+    p5.ellipse(800, 800, 30, 30);
 
-        // Draw other players
-        for (var player in _app.players) {
-            var pl = _app.players[player];
+    // Draw other players
+    for (var player in _app.players) {
+      var pl = _app.players[player];
 
-            if (pl !== null && pl.id !== _app.socket.id) {
-                // Predict positions of other player
-                pl.x += Math.cos(pl.theta) * pl.speed;
-                pl.y += Math.sin(pl.theta) * pl.speed;
+      if (pl !== null && pl.id !== _app.socket.id) drawPlayer(p5, pl, false);
+    }
 
-                // Draw player
-                p5.ellipse(pl.x, pl.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
-                p5.text(pl.name, pl.x, pl.y);
+    // Draw player in the center of the screen
+    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) drawPlayer(p5, {
+      id: _app.socket.id,
+      name: _app.players[_app.socket.id].name,
+      x: posX,
+      y: posY
+    }, true);
 
-                // Debug lines
-                p5.text("x: " + Math.round(pl.x), pl.x, pl.y - 30);
-                p5.text("y: " + Math.round(pl.y), pl.x, pl.y - 15);
-                p5.text("ID: " + pl.id.substring(0, 6), pl.x, pl.y + 15);
-            }
-        }
-
-        // Draw player in the center of the screen
-        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-
-            p5.ellipse(posX, posY, 2 * _global.GLOBAL.PLAYER_RADIUS, 2 * _global.GLOBAL.PLAYER_RADIUS);
-            p5.text(_app.players[_app.socket.id].name, posX, posY);
-
-            // Debug lines
-            p5.text("x: " + Math.round(posX), posX, posY - 30);
-            p5.text("y: " + Math.round(posY), posX, posY - 15);
-            p5.text("ID: " + _app.socket.id.substring(0, 6), posX, posY + 15);
-        }
-
-        // End Transformations
-        p5.pop();
-    };
+    // End Transformations
+    p5.pop();
+  };
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
+
+/**
+ * Draws all components of a given player, including all powerups and atoms held.
+ * @param {any} p5 The p5 renderer reference
+ * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
+ * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
+ */
+
+function drawPlayer(p5, player, isThisPlayer) {
+
+  // Predict positions of other player
+  if (!isThisPlayer) {
+    player.x += Math.cos(player.theta) * player.speed;
+    player.y += Math.sin(player.theta) * player.speed;
+  }
+
+  // Draw player
+  p5.ellipse(player.x, player.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
+  p5.text(player.name, player.x, player.y);
+
+  // Debug lines
+  p5.text("x: " + Math.round(player.x), player.x, player.y - 30);
+  p5.text("y: " + Math.round(player.y), player.x, player.y - 15);
+  p5.text("ID: " + player.id.substring(0, 6), player.x, player.y + 15);
+}
 
 },{"./app.js":1,"./global.js":4,"./lib/p5.min.js":5}]},{},[1]);
