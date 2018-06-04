@@ -221,7 +221,7 @@ function quitGame(msg) {
  * @param {string} el The id of the element to toggle
  */
 function toggleElement(el) {
-    document.getElementById(el).style.display = document.getElementById(el).style.display === 'none' ? 'block' : 'none';
+    document.getElementById(el).style.display = document.getElementById(el).offsetParent === null ? 'block' : 'none';
 }
 
 },{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6}],2:[function(require,module,exports){

@@ -202,5 +202,5 @@ function quitGame(msg) {
  * @param {string} el The id of the element to toggle
  */
 function toggleElement(el) {
-    document.getElementById(el).style.display = (document.getElementById(el).style.display === 'none') ? 'block' : 'none';
+    document.getElementById(el).style.display = (document.getElementById(el).offsetParent === null) ? 'block' : 'none';
 }
