@@ -1,9 +1,6 @@
 /** 
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
- *
- *
- *
  */
 import {GLOBAL} from './global.js';
 import ChatClient from './chat-client.js';
@@ -18,12 +15,11 @@ export var socket;
 export var players;
 
 const nickErrorText = document.getElementById('nickErrorText');
+const playerNameInput = document.getElementById('playerNameInput');
+const roomNameInput = document.getElementById('roomNameInput');
 
 let playerName;
 let roomName;
-
-const playerNameInput = document.getElementById('playerNameInput');
-const roomNameInput = document.getElementById('roomNameInput');
 
 // Starts the game if the name is valid.
 function startGame() {
@@ -39,11 +35,11 @@ function startGame() {
         cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
 
         // Show game window
-        document.getElementById('gameAreaWrapper').style.display = 'block';
-        document.getElementById('startMenuWrapper').style.display = 'none';
+        toggleElement('gameAreaWrapper');
+        toggleElement('startMenuWrapper');
 
         // Show loading screen
-        document.getElementById('loading').style.display = 'block';
+        toggleElement('loading');
 
         //Debugging and Local serving
         socket = io.connect(GLOBAL.LOCAL_HOST, {
@@ -63,8 +59,8 @@ function startGame() {
             // Init p5
             new p5(p5game);
             // Hide loading screen
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('chatbox').style.display = 'block';
+            toggleElement('loading');
+            toggleElement('chatbox');
             
         }, 1000);
     } else {
@@ -84,8 +80,6 @@ function validNick() {
  * Onload function. Initializes the menu screen and loads cookies.
  */
 window.onload = () => {
-    const btn = document.getElementById('startButton');
-    
     // Cookie loading
     const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
     const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
@@ -97,7 +91,7 @@ window.onload = () => {
         roomNameInput.value = roomCookie;
 
     // Add listeners to start game to enter key and button click
-    btn.onclick = () => {
+    document.getElementById('startButton').onclick = () => {
         startGame();
     };
 
@@ -152,7 +146,7 @@ function SetupSocket(socket) {
             // Do the lerping
             for(let pl in players) {
                     // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if(players[pl] !== undefined && oldPlayers[pl] !== undefined) {
+                if(players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined) {
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
@@ -191,14 +185,22 @@ function lerp(v0, v1, t) {
 }
 
 /**
- * 
+ * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
 function quitGame(msg) {
     // menu
-    document.getElementById('gameAreaWrapper').style.display = 'none';
-    document.getElementById('startMenuWrapper').style.display = 'block';
-    document.getElementById('startMenuMessage').style.display = 'block';
-    document.getElementById('chatbox').style.display = 'none';
+    toggleElement('gameAreaWrapper');
+    toggleElement('startMenuWrapper');
+    toggleElement('startMenuMessage');
+    toggleElement('chatbox').style.display = 'none';
     document.getElementById('startMenuMessage').innerHTML = msg;
 } 
+
+/**
+ * Displays a hidden element, or hides a visible element.
+ * @param {string} el The id of the element to toggle
+ */
+function toggleElement(el) {
+    document.getElementById(el).style.display = (document.getElementById(el).style.display === 'none') ? 'block' : 'none';
+}

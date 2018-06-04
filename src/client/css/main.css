@@ -35,14 +35,26 @@ canvas {
 	box-sizing: border-box;
 }
 
+.centered {
+	margin-top: 25vh;
+	margin-left: 25vw;
+	position: absolute;
+}
+
+.hidden {
+	/* Hidden until game starts */
+	display: none;
+}
+
 /* ***************
  * * START MENU  *
  * *************** */
+
+/* box */
 #startMenu {
 	margin:auto;
 	margin-top:100px;
 	width: 30rem;
-	
 	box-sizing: border-box;
 }
 
@@ -128,14 +140,21 @@ canvas {
   font-size : 12px;
 }
 
+/* *****************
+ * *  INGAME MENU  *
+ * ***************** */
+ .menubox {
+	position: absolute;
+	z-index: 100;
+	
+ }
+
 /* **********
  * *  CHAT  *
  * ********** */
 
 .chatbox {
 	position: absolute;
-	/* Hidden until game starts */
-	display: none;
     width: 25vw;
     height: 45vh;
     bottom: 2rem;
@@ -193,16 +212,11 @@ canvas {
  * *  LOADING - adapted from tobiasahlin.com/spinkit *
  * *************************************************** */
 .loadingbox {
-    position: absolute;
 	width: 50%;
 	height: 50%;
-	margin-top: 25vh;
-	margin-left: 25vw;
 	pointer-events: none;
 	text-align: center;
 	overflow: hidden;
-	/* Hidden until game starts */
-	display: none;
 }
 
 .loadingbox h3 {
