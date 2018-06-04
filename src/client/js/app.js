@@ -152,7 +152,7 @@ function SetupSocket(socket) {
             // Do the lerping
             for(let pl in players) {
                     // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if(players[pl] !== null || oldPlayers[pl] !== null) {
+                if(players[pl] !== undefined && oldPlayers[pl] !== undefined) {
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
@@ -199,5 +199,6 @@ function quitGame(msg) {
     document.getElementById('gameAreaWrapper').style.display = 'none';
     document.getElementById('startMenuWrapper').style.display = 'block';
     document.getElementById('startMenuMessage').style.display = 'block';
+    document.getElementById('chatbox').style.display = 'none';
     document.getElementById('startMenuMessage').innerHTML = msg;
 } 

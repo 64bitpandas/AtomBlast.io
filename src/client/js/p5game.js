@@ -17,6 +17,10 @@ const game = (p5) => {
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
     p5.background(p5.color(0, 255, 0)); // background color will be green
     p5.noStroke(); // Removes stroke on objects
+
+    socket.on('disconnect', () => {
+      p5.remove();
+    })
   }
 
   // Processing.js Draw Loop
