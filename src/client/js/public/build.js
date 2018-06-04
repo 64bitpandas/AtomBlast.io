@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.players = exports.socket = undefined;
+exports.showElement = showElement;
+exports.hideElement = hideElement;
 
 var _global = require('./global.js');
 
@@ -59,11 +61,11 @@ function startGame() {
         cookies.setCookie(_global.GLOBAL.ROOM_COOKIE, roomName, _global.GLOBAL.COOKIE_DAYS);
 
         // Show game window
-        toggleElement('gameAreaWrapper');
-        toggleElement('startMenuWrapper');
+        showElement('gameAreaWrapper');
+        hideElement('startMenuWrapper');
 
         // Show loading screen
-        toggleElement('loading');
+        showElement('loading');
 
         //Debugging and Local serving
         exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
@@ -82,8 +84,8 @@ function startGame() {
             // Init p5
             new _p5Min2.default(_p5game2.default);
             // Hide loading screen
-            toggleElement('loading');
-            toggleElement('chatbox');
+            hideElement('loading');
+            showElement('chatbox');
         }, 1000);
     } else {
         nickErrorText.style.display = 'inline';
@@ -115,6 +117,14 @@ window.onload = function () {
         startGame();
     };
 
+    document.getElementById('quitButton').onclick = function () {
+        quitGame('You have left the game.');
+    };
+
+    document.getElementById('resumeButton').onclick = function () {
+        toggleElement('menubox');
+    };
+
     playerNameInput.addEventListener('keypress', function (e) {
         var key = e.which || e.keyCode;
 
@@ -141,7 +151,6 @@ function SetupSocket(socket) {
 
     socket.on('reconnecting', function (attempt) {
         console.log("Lost connection. Reconnecting on attempt: " + attempt);
-        socket.disconnect();
         quitGame('Lost connection to server');
     });
 
@@ -208,20 +217,32 @@ function lerp(v0, v1, t) {
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
 function quitGame(msg) {
+    // Disconnect from server
+    socket.disconnect();
+
     // menu
-    toggleElement('gameAreaWrapper');
-    toggleElement('startMenuWrapper');
-    toggleElement('startMenuMessage');
-    toggleElement('chatbox').style.display = 'none';
+    hideElement('gameAreaWrapper');
+    hideElement('chatbox');
+    hideElement('menubox');
+    showElement('startMenuMessage');
+    showElement('startMenuWrapper');
     document.getElementById('startMenuMessage').innerHTML = msg;
 }
 
 /**
- * Displays a hidden element, or hides a visible element.
- * @param {string} el The id of the element to toggle
+ * Displays a hidden element
+ * @param {string} el The id of the element to show
  */
-function toggleElement(el) {
-    document.getElementById(el).style.display = document.getElementById(el).offsetParent === null ? 'block' : 'none';
+function showElement(el) {
+    document.getElementById(el).style.display = 'block';
+}
+
+/**
+ * Hides a visible element
+ * @param {string} el The id of the element to hide
+ */
+function hideElement(el) {
+    document.getElementById(el).style.display = 'none';
 }
 
 },{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6}],2:[function(require,module,exports){
@@ -7188,6 +7209,13 @@ var game = function game(p5) {
     _app.socket.on('disconnect', function () {
       p5.remove();
     });
+  };
+
+  // P5 Key Listener
+  p5.keyPressed = function () {
+    if (p5.keyCode === p5.ESCAPE) {
+      if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+    }
   };
 
   // Processing.js Draw Loop

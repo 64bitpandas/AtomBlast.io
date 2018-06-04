@@ -1,7 +1,7 @@
 /// <reference path="./lib/p5.global-mode.d.ts" />
 import { p5 } from './lib/p5.min.js';
 import { GLOBAL } from './global.js';
-import { players, socket } from './app.js';
+import { players, socket, showElement, hideElement } from './app.js';
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 const game = (p5) => {
@@ -21,6 +21,17 @@ const game = (p5) => {
     socket.on('disconnect', () => {
       p5.remove();
     })
+  }
+
+  // P5 Key Listener
+  p5.keyPressed = () => {
+    if(p5.keyCode === p5.ESCAPE) {
+      if(document.getElementById('menubox').offsetParent === null)
+        showElement('menubox');
+      else
+        hideElement('menubox');
+
+    }
   }
 
   // Processing.js Draw Loop

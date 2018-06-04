@@ -22,15 +22,18 @@
         </div>
 
         <div class="loadingbox box centered hidden" id="loading">
-            <h3>Joining Game...</h3>
+            <h3 class="title">Joining Game...</h3>
             <div class="spinner">
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>
             </div>
         </div>
 
-        <div class="menubox box centered hidden" id="menu">
-            Test
+        <div class="menubox box centered hidden" id="menubox">
+            <h3 class="title">Menu</h3>
+            <button id="resumeButton" class="button btn-primary">Resume</button>
+            <button id="optionsButton" class="button btn-invert">Options</button>
+            <button id="quitButton" class="button btn-error">Quit</button>
         </div>
 
     </div>
@@ -41,9 +44,9 @@
             <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="roomNameInput" spellcheck="false"/>
             <b class="input-error" id="nickErrorText">Name must be alphanumeric characters only!</b>
             <br />
-            <button id="startButton">Play</button>
-            <button id="startButton">Controls</button>
-            <button id="startButton">Credits</button>
+            <button id="startButton" class="button btn-primary">Play</button>
+            <button class="button btn-secondary">Controls</button>
+            <button class="button btn-secondary">Credits</button>
         </div>
         <div id="startMenuMessage" class="box">
            
