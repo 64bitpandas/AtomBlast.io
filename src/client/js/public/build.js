@@ -7203,7 +7203,6 @@ var game = function game(p5) {
   p5.setup = function () {
     var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-    p5.background(p5.color(0, 255, 0)); // background color will be green
     p5.noStroke(); // Removes stroke on objects
 
     _app.socket.on('disconnect', function () {
@@ -7220,7 +7219,6 @@ var game = function game(p5) {
 
   // Processing.js Draw Loop
   p5.draw = function () {
-
     var mouseXC = p5.mouseX - window.innerWidth / 2;
     var mouseYC = p5.mouseY - window.innerHeight / 2;
 
@@ -7278,6 +7276,9 @@ var game = function game(p5) {
     // Clears the frame
     p5.clear();
 
+    // Draw background
+    p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / 5000));
+
     // Send coordinates
     _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
 
@@ -7289,7 +7290,6 @@ var game = function game(p5) {
     p5.translate(-posX, -posY);
 
     // Temporary testing orbs
-    p5.ellipse(200, 200, 30, 30);
     p5.ellipse(400, 400, 30, 30);
     p5.ellipse(600, 600, 30, 30);
     p5.ellipse(800, 800, 30, 30);
@@ -7338,6 +7338,14 @@ function drawPlayer(p5, player, isThisPlayer) {
   p5.text("x: " + Math.round(player.x), player.x, player.y - 30);
   p5.text("y: " + Math.round(player.y), player.x, player.y - 15);
   p5.text("ID: " + player.id.substring(0, 6), player.x, player.y + 15);
+}
+
+function drawGradient(p5, x, y) {
+  var radius = 500;
+  for (var r = radius; r > 0; r--) {
+    p5.fill(p5.color(r / 500 * 255, r / 500 * 255, r / 500 * 255));
+    p5.ellipse(0, 0, r, r);
+  }
 }
 
 },{"./app.js":1,"./global.js":4,"./lib/p5.min.js":5}]},{},[1]);
