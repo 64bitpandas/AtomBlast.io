@@ -52,25 +52,28 @@ const game = (p5) => {
     // X and Y components of theta, value equal to -1 or 1 depending on direction
     let xDir = 0, yDir = 0;
 
-    // W (up)
-    if (p5.keyIsDown(GLOBAL.KEY_W)) {
-      playerSpeed = GLOBAL.MAX_SPEED;
-      yDir = 1;
-    }
-    // A (left)
-    if (p5.keyIsDown(GLOBAL.KEY_A)) {
-      playerSpeed = GLOBAL.MAX_SPEED;
-      xDir = -1;
-    }
-    // S (down)
-    if (p5.keyIsDown(GLOBAL.KEY_S)) {
-      yDir = -1;
-      playerSpeed = GLOBAL.MAX_SPEED;
-    }
-    // D (right)
-    if (p5.keyIsDown(GLOBAL.KEY_D)) {
-      xDir = 1;
-      playerSpeed = GLOBAL.MAX_SPEED;
+    // Make sure player is not in chat
+    if(document.activeElement !== document.getElementById('chatInput')) {
+      // W (up)
+      if (p5.keyIsDown(GLOBAL.KEY_W)) {
+        playerSpeed = GLOBAL.MAX_SPEED;
+        yDir = 1;
+      }
+      // A (left)
+      if (p5.keyIsDown(GLOBAL.KEY_A)) {
+        playerSpeed = GLOBAL.MAX_SPEED;
+        xDir = -1;
+      }
+      // S (down)
+      if (p5.keyIsDown(GLOBAL.KEY_S)) {
+        yDir = -1;
+        playerSpeed = GLOBAL.MAX_SPEED;
+      }
+      // D (right)
+      if (p5.keyIsDown(GLOBAL.KEY_D)) {
+        xDir = 1;
+        playerSpeed = GLOBAL.MAX_SPEED;
+      }
     }
 
     // Set direction- if no keys pressed, retains previous direction
