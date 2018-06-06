@@ -7,12 +7,13 @@ import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
 import p5game from './p5game.js';
 import p5 from './lib/p5.min.js';
+import { Player } from './player.js';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
 export var socket;
 
 /* Array of all connected players in the form of Player objects */
-export var players;
+export var players = {};
 
 const nickErrorText = document.getElementById('nickErrorText');
 const playerNameInput = document.getElementById('playerNameInput');
@@ -146,7 +147,17 @@ function SetupSocket(socket) {
         // Create temp array for lerping
         let oldPlayers = players;
         //assigning local array to data sent by server
-        players = data;
+        
+        // Reconstruct player objects based on transferred data
+        for(let player in data) {
+            let pl = data[player];
+            // Player already exists in database
+            if (players[player] !== undefined && players[player] !== null)
+                players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
+            // Does not exist - need to create new player
+            else
+                players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+        }
 
         if(oldPlayers !== undefined && players !== undefined) {
             

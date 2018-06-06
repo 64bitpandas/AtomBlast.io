@@ -26,19 +26,21 @@ var _p5Min = require('./lib/p5.min.js');
 
 var _p5Min2 = _interopRequireDefault(_p5Min);
 
+var _player = require('./player.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
-var socket = exports.socket = undefined;
-
-/* Array of all connected players in the form of Player objects */
 /** 
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
-var players = exports.players = undefined;
+var socket = exports.socket = undefined;
+
+/* Array of all connected players in the form of Player objects */
+var players = exports.players = {};
 
 var nickErrorText = document.getElementById('nickErrorText');
 var playerNameInput = document.getElementById('playerNameInput');
@@ -167,18 +169,26 @@ function SetupSocket(socket) {
         // Create temp array for lerping
         var oldPlayers = players;
         //assigning local array to data sent by server
-        exports.players = players = data;
+
+        // Reconstruct player objects based on transferred data
+        for (var player in data) {
+            var pl = data[player];
+            // Player already exists in database
+            if (players[player] !== undefined && players[player] !== null) players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
+            // Does not exist - need to create new player
+            else players[player] = new _player.Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+        }
 
         if (oldPlayers !== undefined && players !== undefined) {
 
             // Do the lerping
-            for (var pl in players) {
+            for (var _pl in players) {
                 // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined) {
-                    players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, _global.GLOBAL.LERP_VALUE);
-                    players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, _global.GLOBAL.LERP_VALUE);
-                    players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, _global.GLOBAL.LERP_VALUE);
-                    players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, _global.GLOBAL.LERP_VALUE);
+                if (players[_pl] !== null && players[_pl] !== undefined && oldPlayers[_pl] !== undefined) {
+                    players[_pl].x = lerp(players[_pl].x, oldPlayers[_pl].x, _global.GLOBAL.LERP_VALUE);
+                    players[_pl].y = lerp(players[_pl].y, oldPlayers[_pl].y, _global.GLOBAL.LERP_VALUE);
+                    players[_pl].theta = lerp(players[_pl].theta, oldPlayers[_pl].theta, _global.GLOBAL.LERP_VALUE);
+                    players[_pl].speed = lerp(players[_pl].speed, oldPlayers[_pl].speed, _global.GLOBAL.LERP_VALUE);
                 }
             }
         }
@@ -245,7 +255,7 @@ function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
 
-},{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6}],2:[function(require,module,exports){
+},{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6,"./player.js":7}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -572,7 +582,13 @@ var GLOBAL = exports.GLOBAL = {
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
     VELOCITY_STEP: 0.3,
-    LERP_VALUE: 0.2
+    LERP_VALUE: 0.2,
+
+    // Powerups
+    POWERUP_RADIUS: 30,
+
+    // Map
+    MAP_SIZE: 5000
 
 };
 
@@ -7181,7 +7197,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7193,159 +7209,251 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-  var playerSpeed = _global.GLOBAL.MAX_SPEED;
-  // dx & dy
-  var posX = 0.0;
-  var posY = 0.0;
-  var theta = 0.0;
+    var playerSpeed = _global.GLOBAL.MAX_SPEED;
+    // dx & dy
+    var posX = 0.0;
+    var posY = 0.0;
+    var theta = 0.0;
 
-  // Processing.js Setup Function
-  p5.setup = function () {
-    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-    p5.noStroke(); // Removes stroke on objects
+    // Processing.js Setup Function
+    p5.setup = function () {
+        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+        p5.noStroke(); // Removes stroke on objects
 
-    _app.socket.on('disconnect', function () {
-      p5.remove();
-    });
-  };
+        _app.socket.on('disconnect', function () {
+            p5.remove();
+        });
+    };
 
-  // P5 Key Listener
-  p5.keyPressed = function () {
-    if (p5.keyCode === p5.ESCAPE) {
-      if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
-    }
-  };
+    // P5 Key Listener
+    p5.keyPressed = function () {
+        if (p5.keyCode === p5.ESCAPE) {
+            if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+        }
+    };
 
-  // Processing.js Draw Loop
-  p5.draw = function () {
-    var mouseXC = p5.mouseX - window.innerWidth / 2;
-    var mouseYC = p5.mouseY - window.innerHeight / 2;
+    // Processing.js Draw Loop
+    p5.draw = function () {
+        // const mouseXC = p5.mouseX - window.innerWidth / 2;
+        // const mouseYC = p5.mouseY - window.innerHeight / 2;
 
-    // // If the mouse is outside of the player onscreen (boolean)
-    // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
+        // // If the mouse is outside of the player onscreen (boolean)
+        // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
 
-    // // Set speed and direction
-    // if (move && p5.mouseIsPressed) {
-    //   playerSpeed = GLOBAL.MAX_SPEED;
-    //   theta = Math.atan2(mouseYC, mouseXC);
-    // }
+        // // Set speed and direction
+        // if (move && p5.mouseIsPressed) {
+        //   playerSpeed = GLOBAL.MAX_SPEED;
+        //   theta = Math.atan2(mouseYC, mouseXC);
+        // }
 
-    // X and Y components of theta, value equal to -1 or 1 depending on direction
-    var xDir = 0,
-        yDir = 0;
+        // X and Y components of theta, value equal to -1 or 1 depending on direction
+        var xDir = 0,
+            yDir = 0;
 
-    // Make sure player is not in chat
-    if (document.activeElement !== document.getElementById('chatInput')) {
-      // W (up)
-      if (p5.keyIsDown(_global.GLOBAL.KEY_W)) {
-        playerSpeed = _global.GLOBAL.MAX_SPEED;
-        yDir = 1;
-      }
-      // A (left)
-      if (p5.keyIsDown(_global.GLOBAL.KEY_A)) {
-        playerSpeed = _global.GLOBAL.MAX_SPEED;
-        xDir = -1;
-      }
-      // S (down)
-      if (p5.keyIsDown(_global.GLOBAL.KEY_S)) {
-        yDir = -1;
-        playerSpeed = _global.GLOBAL.MAX_SPEED;
-      }
-      // D (right)
-      if (p5.keyIsDown(_global.GLOBAL.KEY_D)) {
-        xDir = 1;
-        playerSpeed = _global.GLOBAL.MAX_SPEED;
-      }
-    }
+        // Make sure player is not in chat before checking move
+        if (document.activeElement !== document.getElementById('chatInput')) {
+            if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+                _app.players[_app.socket.id].move(p5);
+                // Send coordinates
+                _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].getX(), y: _app.players[_app.socket.id].getY(), theta: _app.players[_app.socket.id].getTheta(), speed: _app.players[_app.socket.id].getSpeed() });
+            }
+        }
 
-    // Set direction- if no keys pressed, retains previous direction
-    if (yDir !== 0 || xDir !== 0) {
-      theta = Math.atan2(-yDir, xDir);
-    }
-    // Reduce speed (inertia)
-    else if (playerSpeed > 0) playerSpeed -= _global.GLOBAL.VELOCITY_STEP;
+        // Clears the frame
+        p5.clear();
 
-    // Prevent drifting due to minimal negative values
-    if (playerSpeed < 0) playerSpeed = 0;
+        // Draw background
+        p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
 
-    // Change position based on speed and direction
-    posX += Math.cos(theta) * playerSpeed;
-    posY += Math.sin(theta) * playerSpeed;
+        // Start Transformations
+        p5.push();
 
-    // Clears the frame
-    p5.clear();
+        // Translate coordinate space
+        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+        if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].getX(), -_app.players[_app.socket.id].getY());
 
-    // Draw background
-    p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / 5000));
+        // Draw other players
+        for (var player in _app.players) {
+            var pl = _app.players[player];
 
-    // Send coordinates
-    _app.socket.emit('move', { id: _app.socket.id, x: posX, y: posY, theta: theta, speed: playerSpeed });
+            if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
+        }
 
-    // Start Transformations
-    p5.push();
+        // Temporary testing orbs
+        p5.ellipse(800, 800, 30, 30);
+        p5.ellipse(400, 400, 30, 30);
+        p5.ellipse(600, 600, 30, 30);
 
-    // Translate coordinate space
-    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    p5.translate(-posX, -posY);
+        // Draw player in the center of the screen
+        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+            _app.players[_app.socket.id].draw(true, p5);
+        }
 
-    // Temporary testing orbs
-    p5.ellipse(400, 400, 30, 30);
-    p5.ellipse(600, 600, 30, 30);
-    p5.ellipse(800, 800, 30, 30);
-
-    // Draw other players
-    for (var player in _app.players) {
-      var pl = _app.players[player];
-
-      if (pl !== null && pl.id !== _app.socket.id) drawPlayer(p5, pl, false);
-    }
-
-    // Draw player in the center of the screen
-    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) drawPlayer(p5, {
-      id: _app.socket.id,
-      name: _app.players[_app.socket.id].name,
-      x: posX,
-      y: posY
-    }, true);
-
-    // End Transformations
-    p5.pop();
-  };
+        // End Transformations
+        p5.pop();
+    };
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
-/**
- * Draws all components of a given player, including all powerups and atoms held.
- * @param {any} p5 The p5 renderer reference
- * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
- * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
- */
+},{"./app.js":1,"./global.js":4,"./lib/p5.min.js":5}],7:[function(require,module,exports){
+"use strict";
 
-function drawPlayer(p5, player, isThisPlayer) {
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Player = undefined;
 
-  // Predict positions of other player
-  if (!isThisPlayer) {
-    player.x += Math.cos(player.theta) * player.speed;
-    player.y += Math.sin(player.theta) * player.speed;
-  }
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  // Draw player
-  p5.ellipse(player.x, player.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
-  p5.text(player.name, player.x, player.y);
+var _global = require("./global.js");
 
-  // Debug lines
-  p5.text("x: " + Math.round(player.x), player.x, player.y - 30);
-  p5.text("y: " + Math.round(player.y), player.x, player.y - 15);
-  p5.text("ID: " + player.id.substring(0, 6), player.x, player.y + 15);
-}
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function drawGradient(p5, x, y) {
-  var radius = 500;
-  for (var r = radius; r > 0; r--) {
-    p5.fill(p5.color(r / 500 * 255, r / 500 * 255, r / 500 * 255));
-    p5.ellipse(0, 0, r, r);
-  }
-}
+var Player = exports.Player = function () {
 
-},{"./app.js":1,"./global.js":4,"./lib/p5.min.js":5}]},{},[1]);
+    /**
+     * Constructor for creating a new Player in the server side
+     * @param {*} id 
+     * @param {*} name 
+     * @param {*} room 
+     */
+    function Player(id, name, room, x, y, theta, speed, powerups) {
+        _classCallCheck(this, Player);
+
+        this.id = id;
+        this.name = name;
+        this.room = room;
+
+        // Create new player
+        if (arguments.length === 3) {
+            this.x = 500; //Math.random() * 1000;
+            this.y = 500; //Math.random() * 1000;
+            this.theta = 0;
+            this.speed = _global.GLOBAL.playerSpeed;
+            this.powerups = [];
+        }
+
+        // Constructor for reconstructing a player on the Client side
+        else {
+                this.x = x;
+                this.y = y;
+                this.theta = theta;
+                this.speed = speed;
+                this.powerups = [];
+            }
+    }
+
+    /** 
+    * Draws all components of a given player, including all powerups and atoms held.
+    * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
+    * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
+    */
+
+
+    _createClass(Player, [{
+        key: "draw",
+        value: function draw(isThisPlayer, p5) {
+
+            // Predict positions of other player
+            if (!isThisPlayer) {
+                this.x += Math.cos(this.theta) * this.speed;
+                this.y += Math.sin(this.theta) * this.speed;
+            }
+            // Draw player
+            p5.ellipse(this.x, this.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
+            // }
+            // else {
+            // p5.translate(-this.x, -this.y);
+            // p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS);
+            // }
+
+
+            // p5.translate(this.x, this.y);
+            p5.text(this.name, this.x, this.y);
+
+            // Debug lines
+            p5.text("x: " + Math.round(this.x), this.x, this.y - 30);
+            p5.text("y: " + Math.round(this.y), this.x, this.y - 15);
+            p5.text("ID: " + this.id.substring(0, 6), this.x, this.y + 15);
+        }
+    }, {
+        key: "move",
+        value: function move(p5) {
+
+            // X and Y components of theta, value equal to -1 or 1 depending on direction
+            var xDir = 0,
+                yDir = 0;
+            // W (up)
+            if (p5.keyIsDown(_global.GLOBAL.KEY_W)) {
+                this.speed = _global.GLOBAL.MAX_SPEED;
+                yDir = 1;
+            }
+            // A (left)
+            if (p5.keyIsDown(_global.GLOBAL.KEY_A)) {
+                this.speed = _global.GLOBAL.MAX_SPEED;
+                xDir = -1;
+            }
+            // S (down)
+            if (p5.keyIsDown(_global.GLOBAL.KEY_S)) {
+                yDir = -1;
+                this.speed = _global.GLOBAL.MAX_SPEED;
+            }
+            // D (right)
+            if (p5.keyIsDown(_global.GLOBAL.KEY_D)) {
+                xDir = 1;
+                this.speed = _global.GLOBAL.MAX_SPEED;
+            }
+            // Set direction- if no keys pressed, retains previous direction
+            if (yDir !== 0 || xDir !== 0) {
+                this.theta = Math.atan2(-yDir, xDir);
+            }
+            // Reduce speed (inertia)
+            else if (this.speed > 0) this.speed -= _global.GLOBAL.VELOCITY_STEP;
+
+            // Prevent drifting due to minimal negative values
+            if (this.speed < 0) this.speed = 0;
+
+            // Change position based on speed and direction
+            this.x += Math.cos(this.theta) * this.speed;
+            this.y += Math.sin(this.theta) * this.speed;
+        }
+    }, {
+        key: "setCoordinates",
+        value: function setCoordinates(newX, newY) {
+            this.x = newX;
+            this.y = newY;
+        }
+    }, {
+        key: "setData",
+        value: function setData(newX, newY, newTheta, newSpeed) {
+            this.setCoordinates(newX, newY);
+            this.theta = newTheta;
+            this.speed = newSpeed;
+        }
+    }, {
+        key: "getTheta",
+        value: function getTheta() {
+            return this.theta;
+        }
+    }, {
+        key: "getSpeed",
+        value: function getSpeed() {
+            return this.speed;
+        }
+    }, {
+        key: "getX",
+        value: function getX() {
+            return this.x;
+        }
+    }, {
+        key: "getY",
+        value: function getY() {
+            return this.y;
+        }
+    }]);
+
+    return Player;
+}();
+
+},{"./global.js":4}]},{},[1]);

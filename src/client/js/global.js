@@ -30,6 +30,12 @@ export const GLOBAL = {
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
     VELOCITY_STEP: 0.3,
-    LERP_VALUE: 0.2
+    LERP_VALUE: 0.2,
+
+    // Powerups
+    POWERUP_RADIUS: 30,
+
+    // Map
+    MAP_SIZE: 5000,
 
 };

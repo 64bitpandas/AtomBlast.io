@@ -2,11 +2,13 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const colors = require('colors'); // Conosle colors :D
-const debug = true;
+import colors from 'colors'; // Console colors :D
+import {Player} from '../client/js/player.js';
 
 var config = require('./config.json');
 
+
+const debug = true;
 app.use(express.static(`${__dirname}/../client`));
 
 /* Array of all connected players. All players must contain:
@@ -17,6 +19,7 @@ app.use(express.static(`${__dirname}/../client`));
  * y: Current y-position on map
  * theta: Current direction of travel to use in client prediction
  * speed: Current speed of player to use in client prediction
+ * powerups: Object containing all powerups that the player has
 */
 let rooms = {};
 
@@ -35,16 +38,17 @@ io.on('connection', socket => {
   if(rooms[room] === undefined || rooms[room] === null)
     rooms[room] = {};
 
-  rooms[room][socket.id] = {
-    id: socket.id,
-    name: socket.handshake.query.name,
-    room: socket.handshake.query.room,
-    x: Math.random() * 1000,
-    y: Math.random() * 1000,
-    theta: 0,
-    speed: 0
-  };
+  // rooms[room][socket.id] = {
+  //   id: socket.id,
+  //   name: socket.handshake.query.name,
+  //   room: socket.handshake.query.room,
+  //   x: Math.random() * 1000,
+  //   y: Math.random() * 1000,
+  //   theta: 0,
+  //   speed: 0
+  // };
 
+  rooms[room][socket.id] = new Player(socket.id, socket.handshake.query.name, socket.handshake.query.room);
 
   // Setup player array sync- once a frame
   setInterval(() => {
@@ -86,11 +90,9 @@ io.on('connection', socket => {
    *  - speed: how fast the player is going
    */
   socket.to(room).on('move', data => {
+    // Player exists in database already because it was created serverside - no need for extra checking
     if(rooms[room][data.id] !== undefined) {
-      rooms[room][data.id].x = data.x;
-      rooms[room][data.id].y = data.y;
-      rooms[room][data.id].theta = data.theta;
-      rooms[room][data.id].speed = data.speed;
+      rooms[room][data.id].setData(data.x, data.y, data.theta, data.speed);
     }
   }); 
 
