@@ -142,7 +142,7 @@ function SetupSocket(socket) {
     console.log('Socket:', socket);
 
     //Instantiate Chat System
-    var chat = new _chatClient2.default({ socket: socket, player: playerName, room: roomName });
+    var chat = new _chatClient2.default({ player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
@@ -239,6 +239,9 @@ function quitGame(msg) {
     // Disconnect from server
     socket.disconnect();
 
+    // Wipe players list
+    exports.players = players = {};
+
     // menu
     hideElement('gameAreaWrapper');
     hideElement('chatbox');
@@ -279,10 +282,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _global = require('./global.js');
 
+var _app = require('./app.js');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var socket = void 0,
-    player = void 0,
+var player = void 0,
     room = void 0;
 
 var ChatClient = function () {
@@ -294,7 +298,6 @@ var ChatClient = function () {
         _classCallCheck(this, ChatClient);
 
         // this.canvas = params.canvas;
-        this.socket = params.socket;
         // this.mobile = params.mobile;
         this.player = params.player;
         var self = this;
@@ -338,21 +341,45 @@ var ChatClient = function () {
             global.chatClient = this;
         }
 
-        // Chat box implementation for the users.
+        /**
+         * Places the message DOM node into the chat box.
+         * @param {string} innerHTML The message to be displayed.
+         * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
+         */
+
+    }, {
+        key: 'appendMessage',
+        value: function appendMessage(innerHTML, styleClass) {
+            if (this.mobile) return;
+
+            var newline = document.createElement('li');
+
+            // Colours the chat input correctly.
+            newline.className = styleClass;
+            // Add content
+            newline.innerHTML = innerHTML;
+
+            var chatList = document.getElementById('chatList');
+            // Remove old chats
+            if (chatList.childNodes.length > _global.GLOBAL.MAX_CHATS) {
+                chatList.removeChild(chatList.childNodes[0]);
+            }
+            chatList.appendChild(newline);
+            //Scroll to view new chat
+            chatList.scrollTop += 100;
+        }
+
+        /**
+         * Chat box implementation for the users.
+         * @param {string} name Name of the player who sent the message
+         * @param {string} message Message that was sent
+         * @param {boolean} me True if the sender matches the receiver
+         */
 
     }, {
         key: 'addChatLine',
         value: function addChatLine(name, message, me) {
-            if (this.mobile) {
-                return;
-            }
-            var newline = document.createElement('li');
-
-            // Colours the chat input correctly.
-            newline.className = me ? 'me' : 'friend';
-            newline.innerHTML = '<b>' + (name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name) + '</b>: ' + message;
-
-            this.appendMessage(newline);
+            this.appendMessage('<b>' + (name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name) + '</b>: ' + message, me ? 'me' : 'friend');
         }
 
         // Message to notify players when a new player joins
@@ -360,17 +387,9 @@ var ChatClient = function () {
     }, {
         key: 'addLoginMessage',
         value: function addLoginMessage(name, me) {
-            if (this.mobile) {
-                return;
-            }
-            var newline = document.createElement('li');
-
             console.log(name + ' joined');
-            // Colours the chat input correctly.
-            newline.className = 'join';
-            newline.innerHTML = '<b>' + (me ? '</b>You have' : name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name + '</b> has') + ' joined the room!';
 
-            this.appendMessage(newline);
+            this.appendMessage('<b>' + (me ? '</b>You have' : name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name + '</b> has') + ' joined the room!', 'join');
         }
 
         // Chat box implementation for the system.
@@ -378,33 +397,20 @@ var ChatClient = function () {
     }, {
         key: 'addSystemLine',
         value: function addSystemLine(message) {
-            if (this.mobile) {
-                return;
-            }
-            var newline = document.createElement('li');
-
-            // Colours the chat input correctly.
-            newline.className = 'system';
-            newline.innerHTML = message;
-
-            // Append messages to the logs.
-            this.appendMessage(newline);
+            this.appendMessage(message, 'system');
         }
 
         // Places the message DOM node into the chat box.
-
-    }, {
-        key: 'appendMessage',
-        value: function appendMessage(node) {
-            if (this.mobile) {
-                return;
-            }
-            var chatList = document.getElementById('chatList');
-            if (chatList.childNodes.length > 10) {
-                chatList.removeChild(chatList.childNodes[0]);
-            }
-            chatList.appendChild(node);
-        }
+        // appendMessage(node) {
+        //     if (this.mobile) {
+        //         return;
+        //     }
+        // const chatList = document.getElementById('chatList');
+        // // if (chatList.childNodes.length > 10) {
+        // //     chatList.removeChild(chatList.childNodes[0]);
+        // // }
+        // chatList.appendChild(node);
+        // }
 
         // Sends a message or executes a command on the click of enter.
 
@@ -434,7 +440,7 @@ var ChatClient = function () {
                         //Debug lines for messages - Remove on production
                         // console.log("This Player: " + this.player);
                         // console.log("This message: " + text);
-                        this.socket.emit('playerChat', { sender: this.player, message: text });
+                        _app.socket.emit('playerChat', { sender: this.player, message: text });
                         this.addChatLine(this.player, text, true);
                     }
 
@@ -476,7 +482,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./global.js":4}],3:[function(require,module,exports){
+},{"./app.js":1,"./global.js":4}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -577,6 +583,7 @@ var GLOBAL = exports.GLOBAL = {
 
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
+    MAX_CHATS: 50, // Max number of chats to be displayed before deleting
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!

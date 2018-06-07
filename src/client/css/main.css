@@ -242,7 +242,7 @@ canvas {
     height: 45vh;
     bottom: 2rem;
     left: 2rem;
-	padding: 1.5rem;
+	padding: 1.2rem;
 }
 
 .chatbox .chat-list {
@@ -250,7 +250,7 @@ canvas {
     margin: 0;
     list-style: none;
     box-sizing: border-box;
-	height: 37vh;
+	height: 38vh;
 	overflow-wrap: break-word;
 	overflow-y: scroll;
 }
@@ -274,7 +274,6 @@ canvas {
 
 .chatbox .chat-list li.system {
     color: #9b59b6;
-    font-style: italic;
 }
 
 .chatbox .chat-list li.system:before {
@@ -289,6 +288,7 @@ canvas {
     border: none;
     border-top: 1px solid #DDD;
 	outline: none;
+	height: 5vh;
 }
 
 /* ***************************************************

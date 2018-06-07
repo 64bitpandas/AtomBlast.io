@@ -70,16 +70,7 @@ io.on('connection', socket => {
 
   }
 
-  // rooms[room][socket.id] = {
-  //   id: socket.id,
-  //   name: socket.handshake.query.name,
-  //   room: socket.handshake.query.room,
-  //   x: Math.random() * 1000,
-  //   y: Math.random() * 1000,
-  //   theta: 0,
-  //   speed: 0
-  // };
-
+  // Create new player in rooms object
   rooms[room].players[socket.id] = new Player(socket.id, socket.handshake.query.name, socket.handshake.query.room);
 
   // Setup player array sync- once a frame
@@ -139,5 +130,6 @@ io.on('connection', socket => {
 // Notify on console when server has started
 const serverPort = process.env.PORT || config.port;
 http.listen(serverPort, () => {
+  rooms = {};
   console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.yellow);
 });

@@ -4,13 +4,14 @@
  */
 
 import {GLOBAL} from './global.js';
-let socket, player, room;
+import { socket } from './app.js';
+
+let player, room;
 export default class ChatClient {
 
     // Use this constructor during init to connect ChatClient to the server
     constructor(params) {
         // this.canvas = params.canvas;
-        this.socket = params.socket;
         // this.mobile = params.mobile;
         this.player = params.player;
         const self = this;
@@ -48,61 +49,74 @@ export default class ChatClient {
         global.chatClient = this;
     }
 
-    // Chat box implementation for the users.
-    addChatLine(name, message, me) {
-        if (this.mobile) {
+    /**
+     * Places the message DOM node into the chat box.
+     * @param {string} innerHTML The message to be displayed.
+     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
+     */
+    appendMessage(innerHTML, styleClass) {
+        if (this.mobile)
             return;
-        }
+
         const newline = document.createElement('li');
 
         // Colours the chat input correctly.
-        newline.className = (me) ? 'me' : 'friend';
-        newline.innerHTML = `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`;
+        newline.className = styleClass;
+        // Add content
+        newline.innerHTML = innerHTML;
 
-        this.appendMessage(newline);
+        const chatList = document.getElementById('chatList');
+        // Remove old chats
+        if (chatList.childNodes.length > GLOBAL.MAX_CHATS) {
+            chatList.removeChild(chatList.childNodes[0]);
+        }
+        chatList.appendChild(newline);
+        //Scroll to view new chat
+        chatList.scrollTop += 100;
+    }
+
+    /**
+     * Chat box implementation for the users.
+     * @param {string} name Name of the player who sent the message
+     * @param {string} message Message that was sent
+     * @param {boolean} me True if the sender matches the receiver
+     */
+    addChatLine(name, message, me) {
+       this.appendMessage(
+           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,
+           (me) ? 'me' : 'friend'
+        );
     }
 
     // Message to notify players when a new player joins
     addLoginMessage(name, me) {
-        if (this.mobile) {
-            return;
-        }
-        const newline = document.createElement('li');
-
         console.log(`${name} joined`);
-        // Colours the chat input correctly.
-        newline.className = 'join';
-        newline.innerHTML = `<b>${(me) ? '</b>You have' : (name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`;
-
-        this.appendMessage(newline);
+       
+        this.appendMessage(
+            `<b>${(me) ? '</b>You have' : (name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`,
+            'join'
+        );
     }
 
     // Chat box implementation for the system.
     addSystemLine(message) {
-        if (this.mobile) {
-            return;
-        }
-        const newline = document.createElement('li');
-
-        // Colours the chat input correctly.
-        newline.className = 'system';
-        newline.innerHTML = message;
-
-        // Append messages to the logs.
-        this.appendMessage(newline);
+        this.appendMessage(
+            message,
+            'system'
+        );
     }
 
     // Places the message DOM node into the chat box.
-    appendMessage(node) {
-        if (this.mobile) {
-            return;
-        }
-        const chatList = document.getElementById('chatList');
-        if (chatList.childNodes.length > 10) {
-            chatList.removeChild(chatList.childNodes[0]);
-        }
-        chatList.appendChild(node);
-    }
+    // appendMessage(node) {
+    //     if (this.mobile) {
+    //         return;
+    //     }
+        // const chatList = document.getElementById('chatList');
+        // // if (chatList.childNodes.length > 10) {
+        // //     chatList.removeChild(chatList.childNodes[0]);
+        // // }
+        // chatList.appendChild(node);
+    // }
 
     // Sends a message or executes a command on the click of enter.
     sendChat(key) {
@@ -129,7 +143,7 @@ export default class ChatClient {
                     //Debug lines for messages - Remove on production
                     // console.log("This Player: " + this.player);
                     // console.log("This message: " + text);
-                    this.socket.emit('playerChat', { sender: this.player, message: text });
+                    socket.emit('playerChat', { sender: this.player, message: text });
                     this.addChatLine(this.player, text, true);
                 }
 

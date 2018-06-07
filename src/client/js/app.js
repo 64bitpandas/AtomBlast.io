@@ -120,7 +120,7 @@ function SetupSocket(socket) {
     console.log('Socket:', socket);
     
     //Instantiate Chat System
-    let chat = new ChatClient({ socket: socket, player: playerName, room: roomName });
+    let chat = new ChatClient({ player: playerName, room: roomName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
@@ -219,6 +219,9 @@ function quitGame(msg) {
 
     // Disconnect from server
     socket.disconnect();
+
+    // Wipe players list
+    players = {};
 
     // menu
     hideElement('gameAreaWrapper');

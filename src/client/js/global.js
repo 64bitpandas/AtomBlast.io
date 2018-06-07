@@ -16,6 +16,7 @@ export const GLOBAL = {
 
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
+    MAX_CHATS: 50, // Max number of chats to be displayed before deleting
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
