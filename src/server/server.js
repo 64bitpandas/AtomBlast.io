@@ -4,6 +4,8 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {Player} from '../client/js/player.js';
+import {GLOBAL} from '../client/js/global.js';
+import { HealthPowerup } from '../client/js/powerup.js';
 
 var config = require('./config.json');
 
@@ -11,7 +13,7 @@ var config = require('./config.json');
 const debug = true;
 app.use(express.static(`${__dirname}/../client`));
 
-/* Array of all connected players. All players must contain:
+/* Array of all connected players and powerups in respective rooms. All players must contain:
  * id: Socket id
  * name: Player name
  * room: Room that player is currently in
@@ -20,6 +22,20 @@ app.use(express.static(`${__dirname}/../client`));
  * theta: Current direction of travel to use in client prediction
  * speed: Current speed of player to use in client prediction
  * powerups: Object containing all powerups that the player has
+ * 
+ * Structure of Rooms object:
+ * rooms: {
+ *    players: {
+ *      sampleID: {
+ *        Insert Player object here
+ *      }
+ *    }
+ *    powerups: [
+ *       0: {
+ *          Insert Powerup object here
+ *       }
+ *    ]
+ * }
 */
 let rooms = {};
 
@@ -34,9 +50,25 @@ io.on('connection', socket => {
   // Player room name
   let room = socket.handshake.query.room;
 
-  // Add player to array
-  if(rooms[room] === undefined || rooms[room] === null)
+  // Initialize room array and spawn powerups on first player join
+  if(rooms[room] === undefined || rooms[room] === null) {
+    console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red);
     rooms[room] = {};
+    rooms[room].players = {};
+    rooms[room].powerups = [];
+    // Generate Powerups
+    for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
+      let type = Math.floor(Math.random() * GLOBAL.POWERUP_TYPES);
+      let powerup;
+      switch(type) {
+        case 0:
+          powerup = new HealthPowerup();
+          break;
+      }
+      rooms[room].powerups.push(powerup);
+    }
+
+  }
 
   // rooms[room][socket.id] = {
   //   id: socket.id,
@@ -48,11 +80,12 @@ io.on('connection', socket => {
   //   speed: 0
   // };
 
-  rooms[room][socket.id] = new Player(socket.id, socket.handshake.query.name, socket.handshake.query.room);
+  rooms[room].players[socket.id] = new Player(socket.id, socket.handshake.query.name, socket.handshake.query.room);
 
   // Setup player array sync- once a frame
   setInterval(() => {
-      socket.emit('playerSync', rooms[room]);
+      socket.emit('playerSync', rooms[room].players);
+      socket.emit('powerupSync', rooms[room].powerups);
   }, 1000/60);
 
   // Receives a chat from a player, then broadcasts it to other players
@@ -91,14 +124,14 @@ io.on('connection', socket => {
    */
   socket.to(room).on('move', data => {
     // Player exists in database already because it was created serverside - no need for extra checking
-    if(rooms[room][data.id] !== undefined) {
-      rooms[room][data.id].setData(data.x, data.y, data.theta, data.speed);
+    if(rooms[room].players[data.id] !== undefined) {
+      rooms[room].players[data.id].setData(data.x, data.y, data.theta, data.speed);
     }
   }); 
 
   socket.on('disconnect', data => {
     console.log("Disconnect Received: " + data);
-    rooms[room][socket.id] = null;
+    rooms[room].players[socket.id] = null;
   });
 
 });

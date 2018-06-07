@@ -1,17 +1,23 @@
+import {GLOBAL} from './global.js';
+
 export class Powerup {
-    
-    protected x, y, image, isEquipped;
 
     /**
      * 
      * @param {*} x X Coordinate of the Powerup 
      * @param {*} y Y Coordinate of the Powerup 
-     * @param {*} type Type of the powerup
      */
     constructor (x, y) {
-        this.x = x;
-        this.y = y;
-        isEquipped = false;
+        if(x !== undefined && y !== undefined) {
+            this.x = x;
+            this.y = y;
+        }
+        else {
+            this.x = Math.random() * GLOBAL.MAP_SIZE;
+            this.y = Math.random() * GLOBAL.MAP_SIZE;
+        }
+        
+        this.isEquipped = false;
     }
 
     /**
@@ -21,7 +27,8 @@ export class Powerup {
     draw(p5) {
         if(this.isEquipped)
             return;
-        p5.ellipse(x, y, GLOBAL.POWERUP_RADIUS, GLOBAL.POWERUP_RADIUS);
+        // TODO fill with image
+        p5.ellipse(this.x, this.y, GLOBAL.POWERUP_RADIUS, GLOBAL.POWERUP_RADIUS);
     }
     
     /**
@@ -33,7 +40,7 @@ export class Powerup {
             return; 
         if(Math.pow((this.y - player.y), 2) + Math.pow((this.x - player.x), 2) < Math.pow(r+GLOBAL.PLAYER_RADIUS, 2)) {
             isEquipped = true;
-            player.
+            // player.
         }
     }
 
@@ -47,7 +54,7 @@ export class HealthPowerup extends Powerup {
     
     constructor(x,y) {
         super(x,y);
-        image = ''; //TODO
+        this.image = ''; //TODO
     }
 
     use() {

@@ -147,31 +147,40 @@ function SetupSocket(socket) {
         // Create temp array for lerping
         let oldPlayers = players;
         //assigning local array to data sent by server
-        
+
         // Reconstruct player objects based on transferred data
-        for(let player in data) {
+        for (let player in data) {
             let pl = data[player];
-            // Player already exists in database
-            if (players[player] !== undefined && players[player] !== null)
-                players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
-            // Does not exist - need to create new player
-            else
-                players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+
+            // Valid player
+            if(pl !== null) {
+                // Player already exists in database
+                if (players[player] !== undefined && players[player] !== null)
+                    players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
+                // Does not exist - need to create new player
+                else
+                    players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+            }
+            // Player that has disconnected
+            else {
+                players[player] = null;
+            }
         }
 
-        if(oldPlayers !== undefined && players !== undefined) {
-            
+        if (oldPlayers !== undefined && players !== undefined) {
+
             // Do the lerping
-            for(let pl in players) {
-                    // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if(players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined) {
+            for (let pl in players) {
+                // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
+                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined) {
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
                     players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, GLOBAL.LERP_VALUE);
-                } 
+                }
             }
         }
+        
     });
 
     //Chat system receiver
@@ -207,6 +216,7 @@ function lerp(v0, v1, t) {
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
 function quitGame(msg) {
+
     // Disconnect from server
     socket.disconnect();
 

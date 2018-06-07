@@ -33,7 +33,10 @@ export const GLOBAL = {
     LERP_VALUE: 0.2,
 
     // Powerups
-    POWERUP_RADIUS: 30,
+    POWERUP_RADIUS: 30, // size of spawned powerups
+    MIN_POWERUPS: 50, // minimum number of powerups to be spawned
+    MAX_POWERUPS: 100, // maximum number of powerups to be spawned
+    POWERUP_TYPES: 1, // number of types of powerups
 
     // Map
     MAP_SIZE: 5000,

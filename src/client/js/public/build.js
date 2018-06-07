@@ -173,10 +173,18 @@ function SetupSocket(socket) {
         // Reconstruct player objects based on transferred data
         for (var player in data) {
             var pl = data[player];
-            // Player already exists in database
-            if (players[player] !== undefined && players[player] !== null) players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
-            // Does not exist - need to create new player
-            else players[player] = new _player.Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+
+            // Valid player
+            if (pl !== null) {
+                // Player already exists in database
+                if (players[player] !== undefined && players[player] !== null) players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
+                // Does not exist - need to create new player
+                else players[player] = new _player.Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+            }
+            // Player that has disconnected
+            else {
+                    players[player] = null;
+                }
         }
 
         if (oldPlayers !== undefined && players !== undefined) {
@@ -227,6 +235,7 @@ function lerp(v0, v1, t) {
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
 function quitGame(msg) {
+
     // Disconnect from server
     socket.disconnect();
 
@@ -585,7 +594,10 @@ var GLOBAL = exports.GLOBAL = {
     LERP_VALUE: 0.2,
 
     // Powerups
-    POWERUP_RADIUS: 30,
+    POWERUP_RADIUS: 30, // size of spawned powerups
+    MIN_POWERUPS: 50, // minimum number of powerups to be spawned
+    MAX_POWERUPS: 100, // maximum number of powerups to be spawned
+    POWERUP_TYPES: 1, // number of types of powerups
 
     // Map
     MAP_SIZE: 5000
