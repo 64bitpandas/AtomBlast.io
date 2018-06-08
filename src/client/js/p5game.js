@@ -55,7 +55,7 @@ const game = (p5) => {
       if(players !== undefined && players[socket.id] !== undefined) {
         players[socket.id].move(p5);
         // Send coordinates
-        socket.emit('move', { id: socket.id, x: players[socket.id].getX(), y: players[socket.id].getY(), theta: players[socket.id].getTheta(), speed: players[socket.id].getSpeed() });
+        socket.emit('move', { id: socket.id, x: players[socket.id].x, y: players[socket.id].y, theta: players[socket.id].theta, speed: players[socket.id].speed });
       }
     }
 
@@ -71,7 +71,7 @@ const game = (p5) => {
     // Translate coordinate space
     p5.translate(window.innerWidth / 2, window.innerHeight / 2);
     if(players[socket.id] !== undefined)
-    p5.translate(-players[socket.id].getX(), -players[socket.id].getY());
+    p5.translate(-players[socket.id].x, -players[socket.id].y);
 
     // Draw powerups
 
@@ -82,7 +82,7 @@ const game = (p5) => {
       if(powerup.checkCollision(players[socket.id]))
         socket.emit('powerupChange', {index: powerup.index});
     }
-    
+
     // Draw other players
     for (let player in players) {
       let pl = players[player];

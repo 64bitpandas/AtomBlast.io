@@ -73,11 +73,11 @@ function startGame() {
     }
 }
 
-// check if nick is valid alphanumeric characters (and underscores)
+/** check if nick is valid alphanumeric characters (and underscores)
+ * @returns true if the nickname is valid, false otherwise
+ */
 function validNick() {
     const regex = /^\w*$/;
-    // console.log('Regex Test', regex.exec(playerNameInput.value));
-    
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
@@ -165,9 +165,9 @@ function SetupSocket(socket) {
                 else
                     players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
             }
-            // Player that has disconnected
+            // Delete if it is a player that has disconnected
             else {
-                players[player] = null;
+                delete players[player];
             }
         }
 
@@ -239,6 +239,8 @@ function quitGame(msg) {
 
     // Wipe players list
     players = {};
+    // Wipe powerups list
+    powerups = [];
 
     // menu
     hideElement('gameAreaWrapper');

@@ -99,11 +99,11 @@ function startGame() {
     }
 }
 
-// check if nick is valid alphanumeric characters (and underscores)
+/** check if nick is valid alphanumeric characters (and underscores)
+ * @returns true if the nickname is valid, false otherwise
+ */
 function validNick() {
     var regex = /^\w*$/;
-    // console.log('Regex Test', regex.exec(playerNameInput.value));
-
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
 }
 
@@ -186,9 +186,9 @@ function SetupSocket(socket) {
                 // Does not exist - need to create new player
                 else players[player] = new _player.Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
             }
-            // Player that has disconnected
+            // Delete if it is a player that has disconnected
             else {
-                    players[player] = null;
+                    delete players[player];
                 }
         }
 
@@ -280,6 +280,8 @@ function quitGame(msg) {
 
     // Wipe players list
     exports.players = players = {};
+    // Wipe powerups list
+    exports.powerups = powerups = [];
 
     // menu
     hideElement('gameAreaWrapper');
@@ -7256,7 +7258,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7268,116 +7270,116 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-  var playerSpeed = _global.GLOBAL.MAX_SPEED;
-  // dx & dy
-  var posX = 0.0;
-  var posY = 0.0;
-  var theta = 0.0;
+    var playerSpeed = _global.GLOBAL.MAX_SPEED;
+    // dx & dy
+    var posX = 0.0;
+    var posY = 0.0;
+    var theta = 0.0;
 
-  // Processing.js Setup Function
-  p5.setup = function () {
-    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-    p5.noStroke(); // Removes stroke on objects
+    // Processing.js Setup Function
+    p5.setup = function () {
+        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+        p5.noStroke(); // Removes stroke on objects
 
-    _app.socket.on('disconnect', function () {
-      p5.remove();
-    });
-  };
+        _app.socket.on('disconnect', function () {
+            p5.remove();
+        });
+    };
 
-  // P5 Key Listener
-  p5.keyPressed = function () {
-    if (p5.keyCode === p5.ESCAPE) {
-      if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
-    }
-  };
-
-  // Processing.js Draw Loop
-  p5.draw = function () {
-    // const mouseXC = p5.mouseX - window.innerWidth / 2;
-    // const mouseYC = p5.mouseY - window.innerHeight / 2;
-
-    // // If the mouse is outside of the player onscreen (boolean)
-    // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
-
-    // // Set speed and direction
-    // if (move && p5.mouseIsPressed) {
-    //   playerSpeed = GLOBAL.MAX_SPEED;
-    //   theta = Math.atan2(mouseYC, mouseXC);
-    // }
-
-    // X and Y components of theta, value equal to -1 or 1 depending on direction
-    var xDir = 0,
-        yDir = 0;
-
-    // Make sure player is not in chat before checking move
-    if (document.activeElement !== document.getElementById('chatInput')) {
-      if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-        _app.players[_app.socket.id].move(p5);
-        // Send coordinates
-        _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].getX(), y: _app.players[_app.socket.id].getY(), theta: _app.players[_app.socket.id].getTheta(), speed: _app.players[_app.socket.id].getSpeed() });
-      }
-    }
-
-    // Clears the frame
-    p5.clear();
-
-    // Draw background - bright pink in the center, black at the edges
-    p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
-
-    // Start Transformations
-    p5.push();
-
-    // Translate coordinate space
-    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].getX(), -_app.players[_app.socket.id].getY());
-
-    // Draw powerups
-
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
-
-    try {
-      for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-        var powerup = _step.value;
-
-        powerup.draw(p5);
-
-        // Check powerup collision TODO! This is VERY INEFFICIENT
-        if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
-      }
-
-      // Draw other players
-    } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
-    } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return) {
-          _iterator.return();
+    // P5 Key Listener
+    p5.keyPressed = function () {
+        if (p5.keyCode === p5.ESCAPE) {
+            if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
         }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
+    };
+
+    // Processing.js Draw Loop
+    p5.draw = function () {
+        // const mouseXC = p5.mouseX - window.innerWidth / 2;
+        // const mouseYC = p5.mouseY - window.innerHeight / 2;
+
+        // // If the mouse is outside of the player onscreen (boolean)
+        // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
+
+        // // Set speed and direction
+        // if (move && p5.mouseIsPressed) {
+        //   playerSpeed = GLOBAL.MAX_SPEED;
+        //   theta = Math.atan2(mouseYC, mouseXC);
+        // }
+
+        // X and Y components of theta, value equal to -1 or 1 depending on direction
+        var xDir = 0,
+            yDir = 0;
+
+        // Make sure player is not in chat before checking move
+        if (document.activeElement !== document.getElementById('chatInput')) {
+            if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+                _app.players[_app.socket.id].move(p5);
+                // Send coordinates
+                _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].x, y: _app.players[_app.socket.id].y, theta: _app.players[_app.socket.id].theta, speed: _app.players[_app.socket.id].speed });
+            }
         }
-      }
-    }
 
-    for (var player in _app.players) {
-      var pl = _app.players[player];
+        // Clears the frame
+        p5.clear();
 
-      if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
-    }
+        // Draw background - bright pink in the center, black at the edges
+        p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
 
-    // Draw player in the center of the screen
-    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-      _app.players[_app.socket.id].draw(true, p5);
-    }
+        // Start Transformations
+        p5.push();
 
-    // End Transformations
-    p5.pop();
-  };
+        // Translate coordinate space
+        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+        if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].x, -_app.players[_app.socket.id].y);
+
+        // Draw powerups
+
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var powerup = _step.value;
+
+                powerup.draw(p5);
+
+                // Check powerup collision TODO! This is VERY INEFFICIENT
+                if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
+            }
+
+            // Draw other players
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
+        for (var player in _app.players) {
+            var pl = _app.players[player];
+
+            if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
+        }
+
+        // Draw player in the center of the screen
+        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+            _app.players[_app.socket.id].draw(true, p5);
+        }
+
+        // End Transformations
+        p5.pop();
+    };
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
@@ -7399,9 +7401,14 @@ var Player = exports.Player = function () {
 
     /**
      * Constructor for creating a new Player in the server side
-     * @param {*} id 
-     * @param {*} name 
-     * @param {*} room 
+     * @param {string} id Socket ID of the player
+     * @param {string} name Name of the player
+     * @param {string} room Room that the player belongs to
+     * @param {number} x (optional) x-coordinate of player
+     * @param {number} y (optional) y-coordinate of player
+     * @param {number} theta (optional) rotation of player
+     * @param {number} speed (optional) speed of player
+     * @param {*} powerups (optional) powerups held by player
      */
     function Player(id, name, room, x, y, theta, speed, powerups) {
         _classCallCheck(this, Player);
@@ -7430,10 +7437,10 @@ var Player = exports.Player = function () {
     }
 
     /** 
-    * Draws all components of a given player, including all powerups and atoms held.
-    * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
-    * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
-    */
+     * Draws all components of a given player, including all powerups and atoms held.
+     * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
+     * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
+     */
 
 
     _createClass(Player, [{
@@ -7516,26 +7523,6 @@ var Player = exports.Player = function () {
             this.theta = newTheta;
             this.speed = newSpeed;
         }
-    }, {
-        key: "getTheta",
-        value: function getTheta() {
-            return this.theta;
-        }
-    }, {
-        key: "getSpeed",
-        value: function getSpeed() {
-            return this.speed;
-        }
-    }, {
-        key: "getX",
-        value: function getX() {
-            return this.x;
-        }
-    }, {
-        key: "getY",
-        value: function getY() {
-            return this.y;
-        }
     }]);
 
     return Player;
@@ -7586,14 +7573,15 @@ var Powerup = exports.Powerup = function () {
     }
 
     /**
-     * 
-     * @param {*} p5 
+     * Draws the powerup either near the player or on the map. Call once per frame.
+     * @param {*} p5 P5 reference to use
+     * @param {*} player (optional) The player reference to use - needed only if powerup is equipped
      */
 
 
     _createClass(Powerup, [{
         key: 'draw',
-        value: function draw(p5) {
+        value: function draw(p5, player) {
             if (this.isEquipped) return; //TODO draw around player
             // TODO fill with image
             p5.ellipse(this.x, this.y, _global.GLOBAL.POWERUP_RADIUS, _global.GLOBAL.POWERUP_RADIUS);

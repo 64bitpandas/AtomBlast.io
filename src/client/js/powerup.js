@@ -24,10 +24,11 @@ export class Powerup {
     }
 
     /**
-     * 
-     * @param {*} p5 
+     * Draws the powerup either near the player or on the map. Call once per frame.
+     * @param {*} p5 P5 reference to use
+     * @param {*} player (optional) The player reference to use - needed only if powerup is equipped
      */
-    draw(p5) {
+    draw(p5, player) {
         if(this.isEquipped)
             return; //TODO draw around player
         // TODO fill with image

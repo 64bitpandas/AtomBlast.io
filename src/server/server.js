@@ -69,12 +69,14 @@ io.on('connection', socket => {
 
   // Setup player array sync- once a frame
   setInterval(() => {
+    if(rooms[room] !== undefined)
       socket.emit('playerSync', rooms[room].players);
-    }, 1000/60);
+  }, 1000/60);
   
   setTimeout(() => {
     // Send powerups to player
-    socket.emit('serverSendPowerupArray', { powerups: rooms[room].powerups });
+    if(rooms[room] !== undefined)
+      socket.emit('serverSendPowerupArray', { powerups: rooms[room].powerups });
   }, 1500);
     
 
@@ -127,7 +129,14 @@ io.on('connection', socket => {
 
   socket.on('disconnect', data => {
     console.log("Disconnect Received: " + data);
-    rooms[room].players[socket.id] = null;
+    delete rooms[room].players[socket.id];
+
+    // Delete room if there is nobody inside
+    if(Object.keys(rooms[room].players).length === 0)  {
+      console.log('[Server] '.bold.blue + ' Closing room '.red + (room + '').bold.red);
+      delete io.sockets.adapter.rooms[socket.id];
+      delete rooms[room];
+    }
   });
 
 });
@@ -136,5 +145,5 @@ io.on('connection', socket => {
 const serverPort = process.env.PORT || config.port;
 http.listen(serverPort, () => {
   rooms = {};
-  console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.yellow);
+  console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);
 });

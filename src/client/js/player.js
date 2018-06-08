@@ -4,9 +4,14 @@ export class Player {
 
     /**
      * Constructor for creating a new Player in the server side
-     * @param {*} id 
-     * @param {*} name 
-     * @param {*} room 
+     * @param {string} id Socket ID of the player
+     * @param {string} name Name of the player
+     * @param {string} room Room that the player belongs to
+     * @param {number} x (optional) x-coordinate of player
+     * @param {number} y (optional) y-coordinate of player
+     * @param {number} theta (optional) rotation of player
+     * @param {number} speed (optional) speed of player
+     * @param {*} powerups (optional) powerups held by player
      */
     constructor(id, name, room, x, y, theta, speed, powerups) {
         this.id = id;
@@ -33,7 +38,7 @@ export class Player {
         
     }
     
-      /** 
+  /** 
    * Draws all components of a given player, including all powerups and atoms held.
    * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
    * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
@@ -114,21 +119,5 @@ export class Player {
         this.setCoordinates(newX, newY);
         this.theta = newTheta;
         this.speed = newSpeed;
-    }
-
-    getTheta() {
-        return this.theta;
-    }
-
-    getSpeed() {
-        return this.speed;
-    }
-
-    getX() {
-        return this.x;
-    }
-
-    getY() {
-        return this.y;
     }
 }
