@@ -47,6 +47,8 @@ canvas {
 
 .title {
 	font-size: 4vw;
+	text-shadow: 1px 1px 0 rgb(36, 36, 36);
+	text-align: center;
 }
 
 /* ************
@@ -175,37 +177,6 @@ canvas {
 	border: solid 1px #CCCCCC;
 	box-shadow: 0 0 3px 1px #DDDDDD;
 }
-
-/* #startButton {
-	position: relative;
-	margin: auto;
-	margin-top: 10px;
-	width: 100%;
-	height: 40px;
-	box-sizing: border-box;
-	font-size: large;
-	color: white;
-	text-align: center;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	background: #2ecc71;
-	border: 0;
-	border-bottom: 2px solid #28be68;
-	cursor: pointer;
-	-webkit-box-shadow: inset 0 -2px #28be68;
-	box-shadow: inset 0 -2px #28be68;
-	border-radius: 5px 5px 5px 5px;
-	-moz-border-radius: 5px 5px 5px 5px;
-	-webkit-border-radius: 5px 5px 5px 5px;
-	margin-bottom: 10px;
-}
-
-#startButton:active, #startButton:hover {
-	top: 1px;
-	background: #55D88B;
-	outline: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-} */
 
 #startMenu h3 {
 	padding-bottom: 0;
@@ -368,4 +339,19 @@ canvas {
 									   color-stop(0.44, rgba(58, 45, 241, 0.6)),
 									   color-stop(0.72, rgba(60, 26, 214, 0.6)),
 									   color-stop(0.86, rgba(26, 0, 172, 0.6)));
+}
+
+/* ********************
+ * * CUSTOM SELECTION *
+ * ******************** */
+::selection {
+  background: transparent; /* WebKit/Blink Browsers */
+  color: rgb(60, 26, 214);
+  text-shadow: 0 0 0.5rem rgba(26, 0, 172, 0.8);
+
+}
+::-moz-selection {
+  background: transparent; /* Gecko Browsers */
+  color: rgb(60, 26, 214);
+  text-shadow: 0 0 0.5rem rgba(26, 0, 172, 0.8);
 }

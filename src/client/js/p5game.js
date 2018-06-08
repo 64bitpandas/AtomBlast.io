@@ -1,7 +1,7 @@
 /// <reference path="./lib/p5.global-mode.d.ts" />
 import { p5 } from './lib/p5.min.js';
 import { GLOBAL } from './global.js';
-import { players, socket, showElement, hideElement } from './app.js';
+import { players, socket, powerups, showElement, hideElement } from './app.js';
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 const game = (p5) => {
@@ -62,7 +62,7 @@ const game = (p5) => {
     // Clears the frame
     p5.clear();
 
-    // Draw background
+    // Draw background - bright pink in the center, black at the edges
     p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / GLOBAL.MAP_SIZE));
 
     // Start Transformations
@@ -73,6 +73,16 @@ const game = (p5) => {
     if(players[socket.id] !== undefined)
     p5.translate(-players[socket.id].getX(), -players[socket.id].getY());
 
+    // Draw powerups
+
+    for(let powerup of powerups) {
+      powerup.draw(p5);
+
+      // Check powerup collision TODO! This is VERY INEFFICIENT
+      if(powerup.checkCollision(players[socket.id]))
+        socket.emit('powerupChange', {index: powerup.index});
+    }
+    
     // Draw other players
     for (let player in players) {
       let pl = players[player];
@@ -80,11 +90,6 @@ const game = (p5) => {
       if (pl !== null && pl.id !== socket.id)
        pl.draw(false, p5);
     }
-
-    // Temporary testing orbs
-    p5.ellipse(800, 800, 30, 30);
-    p5.ellipse(400, 400, 30, 30);
-    p5.ellipse(600, 600, 30, 30);
 
     // Draw player in the center of the screen
     if (socket.id !== undefined && players !== undefined && players[socket.id] !== undefined) {

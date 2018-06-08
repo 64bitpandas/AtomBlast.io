@@ -5,7 +5,7 @@ const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {Player} from '../client/js/player.js';
 import {GLOBAL} from '../client/js/global.js';
-import { HealthPowerup } from '../client/js/powerup.js';
+import { createPowerup } from '../client/js/powerup.js';
 
 var config = require('./config.json');
 
@@ -59,15 +59,9 @@ io.on('connection', socket => {
     // Generate Powerups
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
       let type = Math.floor(Math.random() * GLOBAL.POWERUP_TYPES);
-      let powerup;
-      switch(type) {
-        case 0:
-          powerup = new HealthPowerup();
-          break;
-      }
+      let powerup = createPowerup(type);
       rooms[room].powerups.push(powerup);
     }
-
   }
 
   // Create new player in rooms object
@@ -76,8 +70,13 @@ io.on('connection', socket => {
   // Setup player array sync- once a frame
   setInterval(() => {
       socket.emit('playerSync', rooms[room].players);
-      socket.emit('powerupSync', rooms[room].powerups);
-  }, 1000/60);
+    }, 1000/60);
+  
+  setTimeout(() => {
+    // Send powerups to player
+    socket.emit('serverSendPowerupArray', { powerups: rooms[room].powerups });
+  }, 1500);
+    
 
   // Receives a chat from a player, then broadcasts it to other players
   socket.to(room).on('playerChat', data => {
@@ -119,6 +118,12 @@ io.on('connection', socket => {
       rooms[room].players[data.id].setData(data.x, data.y, data.theta, data.speed);
     }
   }); 
+
+  // A powerup was equipped or changed
+  socket.to(room).on('powerupChange', data => {
+    rooms[room].powerups.splice(data.index, 1);
+    socket.to(room).broadcast.emit('serverSendPowerupChange', {index: data.index});
+  })
 
   socket.on('disconnect', data => {
     console.log("Disconnect Received: " + data);

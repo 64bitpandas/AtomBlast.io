@@ -8,12 +8,16 @@ import * as cookies from './cookies.js';
 import p5game from './p5game.js';
 import p5 from './lib/p5.min.js';
 import { Player } from './player.js';
+import { createPowerup } from './powerup.js';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
 export var socket;
 
 /* Array of all connected players in the form of Player objects */
 export var players = {};
+
+// Array of all powerups that have not been picked up, in the form of Powerup objects\
+export var powerups = [];
 
 const nickErrorText = document.getElementById('nickErrorText');
 const playerNameInput = document.getElementById('playerNameInput');
@@ -101,7 +105,7 @@ window.onload = () => {
     };
 
     document.getElementById('resumeButton').onclick = () => {
-        toggleElement('menubox');
+        hideElement('menubox');
     };
 
     playerNameInput.addEventListener('keypress', e => {
@@ -168,11 +172,9 @@ function SetupSocket(socket) {
         }
 
         if (oldPlayers !== undefined && players !== undefined) {
-
-            // Do the lerping
+            // Lerp predictions with actual for other players
             for (let pl in players) {
-                // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined) {
+                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined && pl !== socket.id) {
                     players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
                     players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
                     players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
@@ -182,6 +184,21 @@ function SetupSocket(socket) {
         }
         
     });
+
+    // Sync powerups that have not been picked up
+    socket.on('serverSendPowerupChange', (data) => {
+        //A powerup was removed (TODO create new powerups?)
+            powerups.splice(data.index, 1);
+    });
+
+    // Sync powerups on first connect
+    socket.on('serverSendPowerupArray', (data) => {
+        // First time sync - copy over entire array data
+        console.log('Generating powerups...');
+        for (let powerup of data.powerups) {
+            powerups.push(createPowerup(powerup.typeID, powerups.length));
+        }
+    })
 
     //Chat system receiver
     socket.on('serverMSG', data => {

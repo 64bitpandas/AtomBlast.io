@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.players = exports.socket = undefined;
+exports.powerups = exports.players = exports.socket = undefined;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 
@@ -28,19 +28,24 @@ var _p5Min2 = _interopRequireDefault(_p5Min);
 
 var _player = require('./player.js');
 
+var _powerup = require('./powerup.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
+var socket = exports.socket = undefined;
+
+/* Array of all connected players in the form of Player objects */
 /** 
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
-var socket = exports.socket = undefined;
-
-/* Array of all connected players in the form of Player objects */
 var players = exports.players = {};
+
+// Array of all powerups that have not been picked up, in the form of Powerup objects\
+var powerups = exports.powerups = [];
 
 var nickErrorText = document.getElementById('nickErrorText');
 var playerNameInput = document.getElementById('playerNameInput');
@@ -124,7 +129,7 @@ window.onload = function () {
     };
 
     document.getElementById('resumeButton').onclick = function () {
-        toggleElement('menubox');
+        hideElement('menubox');
     };
 
     playerNameInput.addEventListener('keypress', function (e) {
@@ -188,15 +193,49 @@ function SetupSocket(socket) {
         }
 
         if (oldPlayers !== undefined && players !== undefined) {
-
-            // Do the lerping
+            // Lerp predictions with actual for other players
             for (var _pl in players) {
-                // console.log(players[pl].name + ' ' + players[pl].x + ' ' + players[pl].y);
-                if (players[_pl] !== null && players[_pl] !== undefined && oldPlayers[_pl] !== undefined) {
+                if (players[_pl] !== null && players[_pl] !== undefined && oldPlayers[_pl] !== undefined && _pl !== socket.id) {
                     players[_pl].x = lerp(players[_pl].x, oldPlayers[_pl].x, _global.GLOBAL.LERP_VALUE);
                     players[_pl].y = lerp(players[_pl].y, oldPlayers[_pl].y, _global.GLOBAL.LERP_VALUE);
                     players[_pl].theta = lerp(players[_pl].theta, oldPlayers[_pl].theta, _global.GLOBAL.LERP_VALUE);
                     players[_pl].speed = lerp(players[_pl].speed, oldPlayers[_pl].speed, _global.GLOBAL.LERP_VALUE);
+                }
+            }
+        }
+    });
+
+    // Sync powerups that have not been picked up
+    socket.on('serverSendPowerupChange', function (data) {
+        //A powerup was removed (TODO create new powerups?)
+        powerups.splice(data.index, 1);
+    });
+
+    // Sync powerups on first connect
+    socket.on('serverSendPowerupArray', function (data) {
+        // First time sync - copy over entire array data
+        console.log('Generating powerups...');
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+            for (var _iterator = data.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var powerup = _step.value;
+
+                powerups.push((0, _powerup.createPowerup)(powerup.typeID, powerups.length));
+            }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
                 }
             }
         }
@@ -267,7 +306,7 @@ function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
 
-},{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6,"./player.js":7}],2:[function(require,module,exports){
+},{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6,"./player.js":7,"./powerup.js":8}],2:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -605,6 +644,7 @@ var GLOBAL = exports.GLOBAL = {
     MIN_POWERUPS: 50, // minimum number of powerups to be spawned
     MAX_POWERUPS: 100, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
+    P_HEALTH: 0, // HealthPowerup
 
     // Map
     MAP_SIZE: 5000
@@ -7216,7 +7256,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7228,90 +7268,116 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-    var playerSpeed = _global.GLOBAL.MAX_SPEED;
-    // dx & dy
-    var posX = 0.0;
-    var posY = 0.0;
-    var theta = 0.0;
+  var playerSpeed = _global.GLOBAL.MAX_SPEED;
+  // dx & dy
+  var posX = 0.0;
+  var posY = 0.0;
+  var theta = 0.0;
 
-    // Processing.js Setup Function
-    p5.setup = function () {
-        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-        p5.noStroke(); // Removes stroke on objects
+  // Processing.js Setup Function
+  p5.setup = function () {
+    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+    p5.noStroke(); // Removes stroke on objects
 
-        _app.socket.on('disconnect', function () {
-            p5.remove();
-        });
-    };
+    _app.socket.on('disconnect', function () {
+      p5.remove();
+    });
+  };
 
-    // P5 Key Listener
-    p5.keyPressed = function () {
-        if (p5.keyCode === p5.ESCAPE) {
-            if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+  // P5 Key Listener
+  p5.keyPressed = function () {
+    if (p5.keyCode === p5.ESCAPE) {
+      if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+    }
+  };
+
+  // Processing.js Draw Loop
+  p5.draw = function () {
+    // const mouseXC = p5.mouseX - window.innerWidth / 2;
+    // const mouseYC = p5.mouseY - window.innerHeight / 2;
+
+    // // If the mouse is outside of the player onscreen (boolean)
+    // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
+
+    // // Set speed and direction
+    // if (move && p5.mouseIsPressed) {
+    //   playerSpeed = GLOBAL.MAX_SPEED;
+    //   theta = Math.atan2(mouseYC, mouseXC);
+    // }
+
+    // X and Y components of theta, value equal to -1 or 1 depending on direction
+    var xDir = 0,
+        yDir = 0;
+
+    // Make sure player is not in chat before checking move
+    if (document.activeElement !== document.getElementById('chatInput')) {
+      if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+        _app.players[_app.socket.id].move(p5);
+        // Send coordinates
+        _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].getX(), y: _app.players[_app.socket.id].getY(), theta: _app.players[_app.socket.id].getTheta(), speed: _app.players[_app.socket.id].getSpeed() });
+      }
+    }
+
+    // Clears the frame
+    p5.clear();
+
+    // Draw background - bright pink in the center, black at the edges
+    p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
+
+    // Start Transformations
+    p5.push();
+
+    // Translate coordinate space
+    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+    if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].getX(), -_app.players[_app.socket.id].getY());
+
+    // Draw powerups
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var powerup = _step.value;
+
+        powerup.draw(p5);
+
+        // Check powerup collision TODO! This is VERY INEFFICIENT
+        if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
+      }
+
+      // Draw other players
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
         }
-    };
-
-    // Processing.js Draw Loop
-    p5.draw = function () {
-        // const mouseXC = p5.mouseX - window.innerWidth / 2;
-        // const mouseYC = p5.mouseY - window.innerHeight / 2;
-
-        // // If the mouse is outside of the player onscreen (boolean)
-        // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
-
-        // // Set speed and direction
-        // if (move && p5.mouseIsPressed) {
-        //   playerSpeed = GLOBAL.MAX_SPEED;
-        //   theta = Math.atan2(mouseYC, mouseXC);
-        // }
-
-        // X and Y components of theta, value equal to -1 or 1 depending on direction
-        var xDir = 0,
-            yDir = 0;
-
-        // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput')) {
-            if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-                _app.players[_app.socket.id].move(p5);
-                // Send coordinates
-                _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].getX(), y: _app.players[_app.socket.id].getY(), theta: _app.players[_app.socket.id].getTheta(), speed: _app.players[_app.socket.id].getSpeed() });
-            }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
         }
+      }
+    }
 
-        // Clears the frame
-        p5.clear();
+    for (var player in _app.players) {
+      var pl = _app.players[player];
 
-        // Draw background
-        p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
+      if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
+    }
 
-        // Start Transformations
-        p5.push();
+    // Draw player in the center of the screen
+    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+      _app.players[_app.socket.id].draw(true, p5);
+    }
 
-        // Translate coordinate space
-        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-        if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].getX(), -_app.players[_app.socket.id].getY());
-
-        // Draw other players
-        for (var player in _app.players) {
-            var pl = _app.players[player];
-
-            if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
-        }
-
-        // Temporary testing orbs
-        p5.ellipse(800, 800, 30, 30);
-        p5.ellipse(400, 400, 30, 30);
-        p5.ellipse(600, 600, 30, 30);
-
-        // Draw player in the center of the screen
-        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-            _app.players[_app.socket.id].draw(true, p5);
-        }
-
-        // End Transformations
-        p5.pop();
-    };
+    // End Transformations
+    p5.pop();
+  };
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
@@ -7474,5 +7540,134 @@ var Player = exports.Player = function () {
 
     return Player;
 }();
+
+},{"./global.js":4}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.HealthPowerup = exports.Powerup = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.createPowerup = createPowerup;
+
+var _global = require('./global.js');
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Powerup = exports.Powerup = function () {
+
+    /**
+     * Creates a Powerup at the given coordinates. If no coordinates are given, then 
+     * the powerup spawns in a random location.
+     * @param {number} index The index of the powerup in the powerups array
+     * @param {number} x (optional) X Coordinate of the Powerup 
+     * @param {number} y (optional) Y Coordinate of the Powerup 
+     */
+    function Powerup(index, x, y) {
+        _classCallCheck(this, Powerup);
+
+        if (x !== undefined && y !== undefined) {
+            this.x = x;
+            this.y = y;
+        } else {
+            this.x = Math.random() * _global.GLOBAL.MAP_SIZE;
+            this.y = Math.random() * _global.GLOBAL.MAP_SIZE;
+        }
+
+        this.isEquipped = false;
+        this.typeID = -1;
+    }
+
+    /**
+     * 
+     * @param {*} p5 
+     */
+
+
+    _createClass(Powerup, [{
+        key: 'draw',
+        value: function draw(p5) {
+            if (this.isEquipped) return; //TODO draw around player
+            // TODO fill with image
+            p5.ellipse(this.x, this.y, _global.GLOBAL.POWERUP_RADIUS, _global.GLOBAL.POWERUP_RADIUS);
+        }
+
+        /**
+         * Run when players are nearby to check if they picked this powerup up.
+         * @param {*} player Player to check collision against
+         * @returns true if collision detected, false otherwise
+         */
+
+    }, {
+        key: 'checkCollision',
+        value: function checkCollision(player) {
+            if (this.isEquipped) return false;
+            if (Math.pow(this.y - player.y, 2) + Math.pow(this.x - player.x, 2) < Math.pow(_global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS, 2)) {
+                this.isEquipped = true;
+                return true;
+            }
+
+            return false;
+        }
+    }, {
+        key: 'use',
+        value: function use() {
+            throw new Error('This Powerup must implement use()!');
+        }
+    }]);
+
+    return Powerup;
+}();
+
+var HealthPowerup = exports.HealthPowerup = function (_Powerup) {
+    _inherits(HealthPowerup, _Powerup);
+
+    function HealthPowerup(index, x, y) {
+        _classCallCheck(this, HealthPowerup);
+
+        var _this = _possibleConstructorReturn(this, (HealthPowerup.__proto__ || Object.getPrototypeOf(HealthPowerup)).call(this, index, x, y));
+
+        _this.image = ''; //TODO
+        _this.typeID = _global.GLOBAL.P_HEALTH;
+        return _this;
+    }
+
+    _createClass(HealthPowerup, [{
+        key: 'use',
+        value: function use() {}
+    }]);
+
+    return HealthPowerup;
+}(Powerup);
+
+/**
+ * Returns a new powerup object of the given type.
+ * @param {number} typeID ID of the powerup to be created. ID's are as follows:
+ * 0: HealthPowerup
+ * To be Continued
+ * @param {number} index The index of the powerup in the powerups array
+ * @param {number} x (optional) x-coordinate of the powerup
+ * @param {number} y (optional) y-coordinate of the powerup
+ */
+
+
+function createPowerup(typeID, index, x, y) {
+    switch (typeID) {
+        case 0:
+            return new HealthPowerup(index, x, y);
+        // Tried to create a generic Powerup
+        case -1:
+            throw new Error('The Powerup object cannot be created without specifying behavior.');
+    }
+
+    throw new Error('Powerup of type ' + typeID + ' could not be found!');
+}
 
 },{"./global.js":4}]},{},[1]);

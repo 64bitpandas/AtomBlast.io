@@ -38,6 +38,7 @@ export const GLOBAL = {
     MIN_POWERUPS: 50, // minimum number of powerups to be spawned
     MAX_POWERUPS: 100, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
+    P_HEALTH: 0, // HealthPowerup
 
     // Map
     MAP_SIZE: 5000,
