@@ -5,8 +5,7 @@
 import {GLOBAL} from './global.js';
 import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
-import p5game from './p5game.js';
-import p5 from './lib/p5.min.js';
+import init from './pixigame.js';
 import { Player } from './player.js';
 import { createPowerup } from './powerup.js';
 
@@ -62,7 +61,7 @@ function startGame() {
             if (socket !== null)
                 SetupSocket(socket);
             // Init p5
-            new p5(p5game);
+            init();
             // Hide loading screen
             hideElement('loading');
             showElement('chatbox');

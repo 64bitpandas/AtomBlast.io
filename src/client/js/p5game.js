@@ -1,4 +1,3 @@
-/// <reference path="./lib/p5.global-mode.d.ts" />
 import { p5 } from './lib/p5.min.js';
 import { GLOBAL } from './global.js';
 import { players, socket, powerups, showElement, hideElement, distanceBetween } from './app.js';
