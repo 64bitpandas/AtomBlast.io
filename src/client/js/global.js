@@ -40,6 +40,8 @@ export const GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    SPAWN_RADIUS: 500 // Radius around player in which to draw other players and powerups
+    SPAWN_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    GRID_SPACING: 200, // space between each line on the grid
+    FRAME_RATE: 60
 
 };

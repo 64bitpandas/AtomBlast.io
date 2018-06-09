@@ -16,7 +16,8 @@ const game = (p5) => {
     let canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
     p5.noStroke(); // Removes stroke on objects
-
+    p5.frameRate(GLOBAL.FRAME_RATE);
+    
     socket.on('disconnect', () => {
       p5.remove();
     })
@@ -51,16 +52,19 @@ const game = (p5) => {
     //   playerSpeed = GLOBAL.MAX_SPEED;
     //   theta = Math.atan2(mouseYC, mouseXC);
     // }
+    
+    // Shorthand for referencing player
+    let player = players[socket.id];
 
     // X and Y components of theta, value equal to -1 or 1 depending on direction
     let xDir = 0, yDir = 0;
 
     // Make sure player is not in chat before checking move
     if (document.activeElement !== document.getElementById('chatInput')) {
-      if(players !== undefined && players[socket.id] !== undefined) {
-        players[socket.id].move(p5);
+      if(players !== undefined && player !== undefined) {
+        player.move(p5);
         // Send coordinates
-        socket.emit('move', { id: socket.id, x: players[socket.id].x, y: players[socket.id].y, theta: players[socket.id].theta, speed: players[socket.id].speed });
+        socket.emit('move', { id: socket.id, x: player.x, y: player.y, theta: player.theta, speed: player.speed });
       }
     }
 
@@ -75,24 +79,40 @@ const game = (p5) => {
 
     // Translate coordinate space
     p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    if(players[socket.id] !== undefined)
-    p5.translate(-players[socket.id].x, -players[socket.id].y);
+    if(player !== undefined)
+      p5.translate(-player.x, -player.y);
+
+
+    // Draw grid
+    p5.stroke(70);
+    p5.strokeWeight(1);
+
+    if(player !== undefined) {
+      for (let x = player.x - GLOBAL.SPAWN_RADIUS; x < player.x + GLOBAL.SPAWN_RADIUS; x += GLOBAL.GRID_SPACING) {
+        for (let y = player.y - GLOBAL.SPAWN_RADIUS; y < player.y + GLOBAL.SPAWN_RADIUS; y += GLOBAL.GRID_SPACING) {
+          p5.line(x - (x % GLOBAL.GRID_SPACING), player.y - GLOBAL.SPAWN_RADIUS, x - (x % GLOBAL.GRID_SPACING), player.y + GLOBAL.SPAWN_RADIUS);
+          p5.line(player.x - GLOBAL.SPAWN_RADIUS, y - (y % GLOBAL.GRID_SPACING), player.x + GLOBAL.SPAWN_RADIUS, y - (y % GLOBAL.GRID_SPACING));
+        }
+      }
+    }
+
+    p5.strokeWeight(0);
 
     // Draw powerups
 
     for(let powerup of powerups) {
-      if(distanceBetween(players[socket.id], powerup) < GLOBAL.SPAWN_RADIUS) {
+      if(distanceBetween(player, powerup) < GLOBAL.SPAWN_RADIUS) {
         powerup.draw(p5);
   
         // Check powerup collision
-        if(powerup.checkCollision(players[socket.id]))
+        if(powerup.checkCollision(player))
           socket.emit('powerupChange', {index: powerup.index});
       }
     }
 
     // Draw other players
     for (let player in players) {
-      if(distanceBetween(players[socket.id], player) < GLOBAL.SPAWN_RADIUS) {
+      if(distanceBetween(player, player) < GLOBAL.SPAWN_RADIUS) {
         let pl = players[player];
 
         if (pl !== null && pl.id !== socket.id)
@@ -101,8 +121,8 @@ const game = (p5) => {
     }
 
     // Draw player in the center of the screen
-    if (socket.id !== undefined && players !== undefined && players[socket.id] !== undefined) {
-      players[socket.id].draw(true, p5);
+    if (socket.id !== undefined && players !== undefined && player !== undefined) {
+      player.draw(true, p5);
     }
 
     // End Transformations

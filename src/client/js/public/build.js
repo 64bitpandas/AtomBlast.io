@@ -659,7 +659,9 @@ var GLOBAL = exports.GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    SPAWN_RADIUS: 500 // Radius around player in which to draw other players and powerups
+    SPAWN_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    GRID_SPACING: 200, // space between each line on the grid
+    FRAME_RATE: 60
 
 };
 
@@ -7291,6 +7293,7 @@ var game = function game(p5) {
     var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
     canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
     p5.noStroke(); // Removes stroke on objects
+    p5.frameRate(_global.GLOBAL.FRAME_RATE);
 
     _app.socket.on('disconnect', function () {
       p5.remove();
@@ -7323,16 +7326,19 @@ var game = function game(p5) {
     //   theta = Math.atan2(mouseYC, mouseXC);
     // }
 
+    // Shorthand for referencing player
+    var player = _app.players[_app.socket.id];
+
     // X and Y components of theta, value equal to -1 or 1 depending on direction
     var xDir = 0,
         yDir = 0;
 
     // Make sure player is not in chat before checking move
     if (document.activeElement !== document.getElementById('chatInput')) {
-      if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-        _app.players[_app.socket.id].move(p5);
+      if (_app.players !== undefined && player !== undefined) {
+        player.move(p5);
         // Send coordinates
-        _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].x, y: _app.players[_app.socket.id].y, theta: _app.players[_app.socket.id].theta, speed: _app.players[_app.socket.id].speed });
+        _app.socket.emit('move', { id: _app.socket.id, x: player.x, y: player.y, theta: player.theta, speed: player.speed });
       }
     }
 
@@ -7347,7 +7353,22 @@ var game = function game(p5) {
 
     // Translate coordinate space
     p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-    if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].x, -_app.players[_app.socket.id].y);
+    if (player !== undefined) p5.translate(-player.x, -player.y);
+
+    // Draw grid
+    p5.stroke(70);
+    p5.strokeWeight(1);
+
+    if (player !== undefined) {
+      for (var x = player.x - _global.GLOBAL.SPAWN_RADIUS; x < player.x + _global.GLOBAL.SPAWN_RADIUS; x += _global.GLOBAL.GRID_SPACING) {
+        for (var y = player.y - _global.GLOBAL.SPAWN_RADIUS; y < player.y + _global.GLOBAL.SPAWN_RADIUS; y += _global.GLOBAL.GRID_SPACING) {
+          p5.line(x - x % _global.GLOBAL.GRID_SPACING, player.y - _global.GLOBAL.SPAWN_RADIUS, x - x % _global.GLOBAL.GRID_SPACING, player.y + _global.GLOBAL.SPAWN_RADIUS);
+          p5.line(player.x - _global.GLOBAL.SPAWN_RADIUS, y - y % _global.GLOBAL.GRID_SPACING, player.x + _global.GLOBAL.SPAWN_RADIUS, y - y % _global.GLOBAL.GRID_SPACING);
+        }
+      }
+    }
+
+    p5.strokeWeight(0);
 
     // Draw powerups
 
@@ -7359,11 +7380,11 @@ var game = function game(p5) {
       for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var powerup = _step.value;
 
-        if ((0, _app.distanceBetween)(_app.players[_app.socket.id], powerup) < _global.GLOBAL.SPAWN_RADIUS) {
+        if ((0, _app.distanceBetween)(player, powerup) < _global.GLOBAL.SPAWN_RADIUS) {
           powerup.draw(p5);
 
           // Check powerup collision
-          if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
+          if (powerup.checkCollision(player)) _app.socket.emit('powerupChange', { index: powerup.index });
         }
       }
 
@@ -7383,17 +7404,17 @@ var game = function game(p5) {
       }
     }
 
-    for (var player in _app.players) {
-      if ((0, _app.distanceBetween)(_app.players[_app.socket.id], player) < _global.GLOBAL.SPAWN_RADIUS) {
-        var pl = _app.players[player];
+    for (var _player in _app.players) {
+      if ((0, _app.distanceBetween)(_player, _player) < _global.GLOBAL.SPAWN_RADIUS) {
+        var pl = _app.players[_player];
 
         if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
       }
     }
 
     // Draw player in the center of the screen
-    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-      _app.players[_app.socket.id].draw(true, p5);
+    if (_app.socket.id !== undefined && _app.players !== undefined && player !== undefined) {
+      player.draw(true, p5);
     }
 
     // End Transformations
