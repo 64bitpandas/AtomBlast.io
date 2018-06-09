@@ -266,3 +266,13 @@ export function showElement(el) {
 export function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
+
+/**
+ * Returns the distance between two objects.
+ * Both objects must have a 'x' and 'y' field.
+ * @param {*} obj1 First object 
+ * @param {*} obj2 Second object
+ */
+export function distanceBetween(obj1, obj2) {
+    return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
+}

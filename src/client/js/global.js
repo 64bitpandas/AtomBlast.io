@@ -10,10 +10,6 @@ export const GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
-    // Canvas
-    backgroundColor: '#f2fbff',
-    lineColor: '#000000',
-
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
     MAX_CHATS: 50, // Max number of chats to be displayed before deleting
@@ -42,5 +38,8 @@ export const GLOBAL = {
 
     // Map
     MAP_SIZE: 5000,
+
+    // Drawing
+    SPAWN_RADIUS: 500 // Radius around player in which to draw other players and powerups
 
 };

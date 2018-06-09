@@ -1,7 +1,7 @@
 /// <reference path="./lib/p5.global-mode.d.ts" />
 import { p5 } from './lib/p5.min.js';
 import { GLOBAL } from './global.js';
-import { players, socket, powerups, showElement, hideElement } from './app.js';
+import { players, socket, powerups, showElement, hideElement, distanceBetween } from './app.js';
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 const game = (p5) => {
@@ -76,19 +76,23 @@ const game = (p5) => {
     // Draw powerups
 
     for(let powerup of powerups) {
-      powerup.draw(p5);
-
-      // Check powerup collision TODO! This is VERY INEFFICIENT
-      if(powerup.checkCollision(players[socket.id]))
-        socket.emit('powerupChange', {index: powerup.index});
+      if(distanceBetween(players[socket.id], powerup) < GLOBAL.SPAWN_RADIUS) {
+        powerup.draw(p5);
+  
+        // Check powerup collision
+        if(powerup.checkCollision(players[socket.id]))
+          socket.emit('powerupChange', {index: powerup.index});
+      }
     }
 
     // Draw other players
     for (let player in players) {
-      let pl = players[player];
+      if(distanceBetween(players[socket.id], player) < GLOBAL.SPAWN_RADIUS) {
+        let pl = players[player];
 
-      if (pl !== null && pl.id !== socket.id)
-       pl.draw(false, p5);
+        if (pl !== null && pl.id !== socket.id)
+          pl.draw(false, p5);
+      }
     }
 
     // Draw player in the center of the screen

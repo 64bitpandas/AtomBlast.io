@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.powerups = exports.players = exports.socket = undefined;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
+exports.distanceBetween = distanceBetween;
 
 var _global = require('./global.js');
 
@@ -306,6 +307,16 @@ function showElement(el) {
  */
 function hideElement(el) {
     document.getElementById(el).style.display = 'none';
+}
+
+/**
+ * Returns the distance between two objects.
+ * Both objects must have a 'x' and 'y' field.
+ * @param {*} obj1 First object 
+ * @param {*} obj2 Second object
+ */
+function distanceBetween(obj1, obj2) {
+    return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
 }
 
 },{"./chat-client.js":2,"./cookies.js":3,"./global.js":4,"./lib/p5.min.js":5,"./p5game.js":6,"./player.js":7,"./powerup.js":8}],2:[function(require,module,exports){
@@ -618,10 +629,6 @@ var GLOBAL = exports.GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
-    // Canvas
-    backgroundColor: '#f2fbff',
-    lineColor: '#000000',
-
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
     MAX_CHATS: 50, // Max number of chats to be displayed before deleting
@@ -649,7 +656,10 @@ var GLOBAL = exports.GLOBAL = {
     P_HEALTH: 0, // HealthPowerup
 
     // Map
-    MAP_SIZE: 5000
+    MAP_SIZE: 5000,
+
+    // Drawing
+    SPAWN_RADIUS: 500 // Radius around player in which to draw other players and powerups
 
 };
 
@@ -7258,7 +7268,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _p5Min = require('./lib/p5.min.js');
@@ -7270,116 +7280,120 @@ var _app = require('./app.js');
 // Please comment YOUR CODE! <---- yes PLEASE !
 
 var game = function game(p5) {
-    var playerSpeed = _global.GLOBAL.MAX_SPEED;
-    // dx & dy
-    var posX = 0.0;
-    var posY = 0.0;
-    var theta = 0.0;
+  var playerSpeed = _global.GLOBAL.MAX_SPEED;
+  // dx & dy
+  var posX = 0.0;
+  var posY = 0.0;
+  var theta = 0.0;
 
-    // Processing.js Setup Function
-    p5.setup = function () {
-        var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
-        canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
-        p5.noStroke(); // Removes stroke on objects
+  // Processing.js Setup Function
+  p5.setup = function () {
+    var canvas = p5.createCanvas(window.innerWidth, window.innerHeight); // Creates a Processing.js canvas
+    canvas.parent('gameAreaWrapper'); // Makes the canvas a child component of the gameAreaWrapper div tag 
+    p5.noStroke(); // Removes stroke on objects
 
-        _app.socket.on('disconnect', function () {
-            p5.remove();
-        });
-    };
+    _app.socket.on('disconnect', function () {
+      p5.remove();
+    });
+  };
 
-    // P5 Key Listener
-    p5.keyPressed = function () {
-        if (p5.keyCode === p5.ESCAPE) {
-            if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+  // P5 Key Listener
+  p5.keyPressed = function () {
+    if (p5.keyCode === p5.ESCAPE) {
+      if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+    }
+  };
+
+  // Processing.js Draw Loop
+  p5.draw = function () {
+    // const mouseXC = p5.mouseX - window.innerWidth / 2;
+    // const mouseYC = p5.mouseY - window.innerHeight / 2;
+
+    // // If the mouse is outside of the player onscreen (boolean)
+    // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
+
+    // // Set speed and direction
+    // if (move && p5.mouseIsPressed) {
+    //   playerSpeed = GLOBAL.MAX_SPEED;
+    //   theta = Math.atan2(mouseYC, mouseXC);
+    // }
+
+    // X and Y components of theta, value equal to -1 or 1 depending on direction
+    var xDir = 0,
+        yDir = 0;
+
+    // Make sure player is not in chat before checking move
+    if (document.activeElement !== document.getElementById('chatInput')) {
+      if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+        _app.players[_app.socket.id].move(p5);
+        // Send coordinates
+        _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].x, y: _app.players[_app.socket.id].y, theta: _app.players[_app.socket.id].theta, speed: _app.players[_app.socket.id].speed });
+      }
+    }
+
+    // Clears the frame
+    p5.clear();
+
+    // Draw background - bright pink in the center, black at the edges
+    p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
+
+    // Start Transformations
+    p5.push();
+
+    // Translate coordinate space
+    p5.translate(window.innerWidth / 2, window.innerHeight / 2);
+    if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].x, -_app.players[_app.socket.id].y);
+
+    // Draw powerups
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var powerup = _step.value;
+
+        if ((0, _app.distanceBetween)(_app.players[_app.socket.id], powerup) < _global.GLOBAL.SPAWN_RADIUS) {
+          powerup.draw(p5);
+
+          // Check powerup collision
+          if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
         }
-    };
+      }
 
-    // Processing.js Draw Loop
-    p5.draw = function () {
-        // const mouseXC = p5.mouseX - window.innerWidth / 2;
-        // const mouseYC = p5.mouseY - window.innerHeight / 2;
-
-        // // If the mouse is outside of the player onscreen (boolean)
-        // const move = Math.sqrt(mouseXC ** 2 + mouseYC ** 2) > GLOBAL.PLAYER_RADIUS;
-
-        // // Set speed and direction
-        // if (move && p5.mouseIsPressed) {
-        //   playerSpeed = GLOBAL.MAX_SPEED;
-        //   theta = Math.atan2(mouseYC, mouseXC);
-        // }
-
-        // X and Y components of theta, value equal to -1 or 1 depending on direction
-        var xDir = 0,
-            yDir = 0;
-
-        // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput')) {
-            if (_app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-                _app.players[_app.socket.id].move(p5);
-                // Send coordinates
-                _app.socket.emit('move', { id: _app.socket.id, x: _app.players[_app.socket.id].x, y: _app.players[_app.socket.id].y, theta: _app.players[_app.socket.id].theta, speed: _app.players[_app.socket.id].speed });
-            }
+      // Draw other players
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
         }
-
-        // Clears the frame
-        p5.clear();
-
-        // Draw background - bright pink in the center, black at the edges
-        p5.background(p5.lerpColor(p5.color(229, 46, 106), p5.color(0, 0, 0), posX / _global.GLOBAL.MAP_SIZE));
-
-        // Start Transformations
-        p5.push();
-
-        // Translate coordinate space
-        p5.translate(window.innerWidth / 2, window.innerHeight / 2);
-        if (_app.players[_app.socket.id] !== undefined) p5.translate(-_app.players[_app.socket.id].x, -_app.players[_app.socket.id].y);
-
-        // Draw powerups
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var powerup = _step.value;
-
-                powerup.draw(p5);
-
-                // Check powerup collision TODO! This is VERY INEFFICIENT
-                if (powerup.checkCollision(_app.players[_app.socket.id])) _app.socket.emit('powerupChange', { index: powerup.index });
-            }
-
-            // Draw other players
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
         }
+      }
+    }
 
-        for (var player in _app.players) {
-            var pl = _app.players[player];
+    for (var player in _app.players) {
+      if ((0, _app.distanceBetween)(_app.players[_app.socket.id], player) < _global.GLOBAL.SPAWN_RADIUS) {
+        var pl = _app.players[player];
 
-            if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
-        }
+        if (pl !== null && pl.id !== _app.socket.id) pl.draw(false, p5);
+      }
+    }
 
-        // Draw player in the center of the screen
-        if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
-            _app.players[_app.socket.id].draw(true, p5);
-        }
+    // Draw player in the center of the screen
+    if (_app.socket.id !== undefined && _app.players !== undefined && _app.players[_app.socket.id] !== undefined) {
+      _app.players[_app.socket.id].draw(true, p5);
+    }
 
-        // End Transformations
-        p5.pop();
-    };
+    // End Transformations
+    p5.pop();
+  };
 }; /// <reference path="./lib/p5.global-mode.d.ts" />
 exports.default = game;
 
@@ -7564,8 +7578,8 @@ var Powerup = exports.Powerup = function () {
             this.x = x;
             this.y = y;
         } else {
-            this.x = Math.random() * _global.GLOBAL.MAP_SIZE;
-            this.y = Math.random() * _global.GLOBAL.MAP_SIZE;
+            this.x = Math.random() * _global.GLOBAL.MAP_SIZE * 2 - _global.GLOBAL.MAP_SIZE;
+            this.y = Math.random() * _global.GLOBAL.MAP_SIZE * 2 - _global.GLOBAL.MAP_SIZE;
         }
 
         this.isEquipped = false;

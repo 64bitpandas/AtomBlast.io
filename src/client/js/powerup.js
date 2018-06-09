@@ -15,8 +15,8 @@ export class Powerup {
             this.y = y;
         }
         else {
-            this.x = Math.random() * GLOBAL.MAP_SIZE;
-            this.y = Math.random() * GLOBAL.MAP_SIZE;
+            this.x = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
+            this.y = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
         }
         
         this.isEquipped = false;
