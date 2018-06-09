@@ -22,6 +22,11 @@ const game = (p5) => {
     })
   }
 
+  p5.windowResized = () => {
+      p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+      console.log('resize');
+  }
+
   // P5 Key Listener
   p5.keyPressed = () => {
     if (p5.keyCode === p5.ESCAPE) {

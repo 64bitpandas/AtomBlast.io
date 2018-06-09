@@ -7297,6 +7297,11 @@ var game = function game(p5) {
     });
   };
 
+  p5.windowResized = function () {
+    p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
+    console.log('resize');
+  };
+
   // P5 Key Listener
   p5.keyPressed = function () {
     if (p5.keyCode === p5.ESCAPE) {
