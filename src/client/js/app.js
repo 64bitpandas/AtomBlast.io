@@ -5,7 +5,7 @@
 import {GLOBAL} from './global.js';
 import ChatClient from './chat-client.js';
 import * as cookies from './cookies.js';
-import init from './pixigame.js';
+import {init, createPlayer, isSetup } from './pixigame.js';
 import { Player } from './player.js';
 import { createPowerup } from './powerup.js';
 
@@ -60,11 +60,8 @@ function startGame() {
             }
             if (socket !== null)
                 SetupSocket(socket);
-            // Init p5
+            // Init pixi
             init();
-            // Hide loading screen
-            hideElement('loading');
-            showElement('chatbox');
             
         }, 1000);
     } else {
@@ -159,10 +156,10 @@ function SetupSocket(socket) {
             if(pl !== null) {
                 // Player already exists in database
                 if (players[player] !== undefined && players[player] !== null)
-                    players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
+                    players[player].setData()
                 // Does not exist - need to create new player
-                else
-                    players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
+                else if(isSetup)
+                    players[player] = createPlayer(pl);
             }
             // Delete if it is a player that has disconnected
             else {
@@ -174,10 +171,10 @@ function SetupSocket(socket) {
             // Lerp predictions with actual for other players
             for (let pl in players) {
                 if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined && pl !== socket.id) {
-                    players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
-                    players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
-                    players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
-                    players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, GLOBAL.LERP_VALUE);
+                    players[pl].posX = lerp(players[pl].posX, oldPlayers[pl].posX, GLOBAL.LERP_VALUE);
+                    players[pl].posY = lerp(players[pl].posY, oldPlayers[pl].posY, GLOBAL.LERP_VALUE);
+                    players[pl].vx = lerp(players[pl].vx, oldPlayers[pl].vx, GLOBAL.LERP_VALUE);
+                    players[pl].vy = lerp(players[pl].vy, oldPlayers[pl].vy, GLOBAL.LERP_VALUE);
                 }
             }
         }

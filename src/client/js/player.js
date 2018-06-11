@@ -1,38 +1,42 @@
 import {GLOBAL} from './global.js';
+import * as PIXI from 'pixi.js';
 
-export class Player {
+export class Player extends PIXI.Sprite {
 
     /**
-     * Constructor for creating a new Player in the server side
+     * Constructor for creating a new Player in the server side.
+     * Player is a Graphics instance for drawing primitives,
+     * but will eventually be a Sprite instance that can be added to the stage.
+     * @param {PIXI.Texture} texture The texture associated with this sprite
      * @param {string} id Socket ID of the player
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
-     * @param {number} x (optional) x-coordinate of player
-     * @param {number} y (optional) y-coordinate of player
-     * @param {number} theta (optional) rotation of player
-     * @param {number} speed (optional) speed of player
-     * @param {*} powerups (optional) powerups held by player
      */
-    constructor(id, name, room, x, y, theta, speed, powerups) {
+    constructor(texture, id, name, room, x, y, vx, vy, powerups) {
+        super(texture);
         this.id = id;
         this.name = name;
         this.room = room;
+        this.width = GLOBAL.PLAYER_RADIUS * 2;
+        this.height = GLOBAL.PLAYER_RADIUS * 2;
 
-        // Create new player
-        if(arguments.length === 3) {
-            this.x = 500; //Math.random() * 1000;
-            this.y = 500; //Math.random() * 1000;
-            this.theta = 0;
-            this.speed = GLOBAL.playerSpeed;
+        // Creating local player
+        if(arguments.length <= 4) {
+            this.x = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+            this.y = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+            this.posX = 0;
+            this.posY = 0;
+            this.vx = 0;
+            this.vy = 0;
             this.powerups = [];
         }
 
         // Constructor for reconstructing a player on the Client side
         else {
-            this.x = x;
-            this.y = y;
-            this.theta = theta;
-            this.speed = speed;
+            this.posX = x;
+            this.posY = y;
+            this.vx = vx;
+            this.vy = vy;
             this.powerups = [];
         }
         
@@ -68,36 +72,15 @@ export class Player {
         p5.text("ID: " + this.id.substring(0, 6), this.x, this.y + 15);
     }
 
-    move(p5) {
+    move(delta) {
 
-        // X and Y components of theta, value equal to -1 or 1 depending on direction
-        let xDir = 0, yDir = 0;
-        // W (up)
-        if (p5.keyIsDown(GLOBAL.KEY_W)) {
-            this.speed = GLOBAL.MAX_SPEED;
-            yDir = 1;
-        }
-        // A (left)
-        if (p5.keyIsDown(GLOBAL.KEY_A)) {
-            this.speed = GLOBAL.MAX_SPEED;
-            xDir = -1;
-        }
-        // S (down)
-        if (p5.keyIsDown(GLOBAL.KEY_S)) {
-            yDir = -1;
-            this.speed = GLOBAL.MAX_SPEED;
-        }
-        // D (right)
-        if (p5.keyIsDown(GLOBAL.KEY_D)) {
-            xDir = 1;
-            this.speed = GLOBAL.MAX_SPEED;
-        }
         // Set direction- if no keys pressed, retains previous direction
-        if (yDir !== 0 || xDir !== 0) {
-            this.theta = Math.atan2(-yDir, xDir);
+        let theta;
+        if (vx !== 0 && vy !== 0) {
+            theta = Math.atan2(-vy, vx);
         } 
         // Reduce speed (inertia)
-        else if (this.speed > 0)
+        if (this.speed > 0 && vx === 0 && vy === 0)
             this.speed -= GLOBAL.VELOCITY_STEP;
 
         // Prevent drifting due to minimal negative values
@@ -105,19 +88,19 @@ export class Player {
             this.speed = 0;
         
         // Change position based on speed and direction
-        this.x += Math.cos(this.theta) * this.speed;
-        this.y += Math.sin(this.theta) * this.speed;
+        this.posX += this.vx + delta;
+        this.posY += this.vy + delta;
         
     }
 
     setCoordinates(newX, newY) {
-        this.x = newX;
-        this.y = newY;
+        this.posX = newX;
+        this.posY = newY;
     }
 
-    setData(newX, newY, newTheta, newSpeed) {
+    setData(newX, newY, vx, vy) {
         this.setCoordinates(newX, newY);
-        this.theta = newTheta;
-        this.speed = newSpeed;
+        this.vx = vx;
+        this.vx = vy;
     }
 }

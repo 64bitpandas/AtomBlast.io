@@ -18,6 +18,8 @@ html, body {
 canvas {
 	width: 100%; height: 100%;
 	margin: 0; padding: 0;
+	position: absolute;
+	z-index: 0;
 }
 
 .box {
@@ -214,6 +216,7 @@ canvas {
     bottom: 2rem;
     left: 2rem;
 	padding: 1.2rem;
+	z-index: 20;
 }
 
 .chatbox .chat-list {
@@ -260,6 +263,7 @@ canvas {
     border-top: 1px solid #DDD;
 	outline: none;
 	height: 5vh;
+	z-index: 50;
 }
 
 /* ***************************************************

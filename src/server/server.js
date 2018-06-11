@@ -3,7 +3,6 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
-import {Player} from '../client/js/player.js';
 import {GLOBAL} from '../client/js/global.js';
 import { createPowerup } from '../client/js/powerup.js';
 
@@ -65,7 +64,7 @@ io.on('connection', socket => {
   }
 
   // Create new player in rooms object
-  rooms[room].players[socket.id] = new Player(socket.id, socket.handshake.query.name, socket.handshake.query.room);
+  rooms[room].players[socket.id] = {id: socket.id, name: socket.handshake.query.name, room: socket.handshake.query.room};
 
   // Setup player array sync- once a frame
   setInterval(() => {
