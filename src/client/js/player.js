@@ -2,8 +2,9 @@ import {GLOBAL} from './global.js';
 import * as PIXI from 'pixi.js';
 import { textStyle, player, screenCenterX, screenCenterY } from './pixigame.js';
 import { socket } from './app.js';
+import { GameObject } from './gameobject.js';
 
-export class Player extends PIXI.Sprite {
+export class Player extends GameObject {
 
     /**
      * Constructor for creating a new Player in the server side.
@@ -21,8 +22,10 @@ export class Player extends PIXI.Sprite {
      */
     constructor(texture, id, name, room, x, y, vx, vy) {
 
-        // PIXI values
-        super(texture);
+        // Call GameObject
+        super(texture, id, room, x, y);
+
+        // Pixi Values
         this.width = GLOBAL.PLAYER_RADIUS * 2;
         this.height = GLOBAL.PLAYER_RADIUS * 2;
 
@@ -36,12 +39,8 @@ export class Player extends PIXI.Sprite {
         }
 
         // Custom fields
-        this.id = id;
         this.name = name;
-        this.room = room;
         this.isMoving = false;
-        this.posX = x;
-        this.posY = y;
         this.vx = vx;
         this.vy = vy;
         this.powerups = [];
@@ -83,13 +82,20 @@ export class Player extends PIXI.Sprite {
             this.vx = 0;
         if (Math.abs(this.vy) < GLOBAL.DEADZONE)
             this.vy = 0;
+
+        // Slow down gradually
+        if(!this.isMoving) {
+            this.vy *= GLOBAL.VELOCITY_STEP;
+            this.vx *= GLOBAL.VELOCITY_STEP;
+        }
+
         
         // Change position based on speed and direction
-        this.posX = Math.round(this.posX + this.vx);
-        this.posY = Math.round(this.posY + this.vy);
+        this.posX += this.vx;
+        this.posY += this.vy;
         
         // Update text
-        this.textObjects.postext.text = '(' + this.posX + ', ' + this.posY + ')';
+        this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
 
         // Draw other player
         if(this.id !== socket.id) {
@@ -98,35 +104,6 @@ export class Player extends PIXI.Sprite {
         }
     }
 
-    /**
-     * Sets global coordinates of this player
-     * @param {number} newX New x-coordinate to move to
-     * @param {number} newY New y-coordinate to move to
-     */
-    setCoordinates(newX, newY) {
-        this.posX = newX;
-        this.posY = newY;
-    }
 
-    /**
-     * Sets global coordinates and speeds of this player
-     * @param {number} newX New x-coordinate to move to
-     * @param {number} newY New y-coordinate to move to
-     * @param {number} newX New x velocity
-     * @param {number} newY New y velocity
-     */
-    setData(newX, newY, vx, vy) {
-        this.setCoordinates(newX, newY);
-        this.vx = vx;
-        this.vy = vy;
-    }
 
-    /**
-     * Moves this player to (9999, 9999) on local screen space, effectively
-     * hiding it from view.
-     */
-    hide() {
-        this.x = 9999;
-        this.y = 9999;
-    }
 }

@@ -41890,7 +41890,7 @@ function distanceBetween(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
 }
 
-},{"./chat-client.js":191,"./cookies.js":192,"./global.js":193,"./pixigame.js":195,"./player.js":196,"./powerup.js":197}],191:[function(require,module,exports){
+},{"./chat-client.js":191,"./cookies.js":192,"./global.js":194,"./pixigame.js":196,"./player.js":197,"./powerup.js":198}],191:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -42105,7 +42105,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./app.js":190,"./global.js":193}],192:[function(require,module,exports){
+},{"./app.js":190,"./global.js":194}],192:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42188,6 +42188,125 @@ function eraseCookie(name) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.GameObject = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = require('pixi.js');
+
+var PIXI = _interopRequireWildcard(_pixi);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * GameObject class that all objects in the game space should inherit.
+ * Provides standard field variables such as posX and posY, as well as 
+ * standard methods to manipulate them.
+ * 
+ * A GameObject cannot be added directly; it must be inherited.
+ * setup() and tick() must be overridden.
+ */
+var GameObject = exports.GameObject = function (_PIXI$Sprite) {
+    _inherits(GameObject, _PIXI$Sprite);
+
+    /**
+     * Creates a new GameObject.
+     * @param {PIXI.Texture} texture The texture associated with this sprite
+     * @param {*} id Unique identifier- for example, socket ID for players, numerical ID for powerups
+     * @param {*} room Room that the object is in
+     * @param {*} x Global x-coordinate
+     * @param {*} y Global y-coordinate
+     */
+    function GameObject(texture, id, room, x, y) {
+        _classCallCheck(this, GameObject);
+
+        var _this = _possibleConstructorReturn(this, (GameObject.__proto__ || Object.getPrototypeOf(GameObject)).call(this, texture));
+
+        _this.id = id;
+        _this.room = room;
+        _this.posX = x;
+        _this.posY = y;
+        return _this;
+    }
+
+    /**
+     * Sets global coordinates of this player
+     * @param {number} newX New x-coordinate to move to
+     * @param {number} newY New y-coordinate to move to
+     */
+
+
+    _createClass(GameObject, [{
+        key: 'setCoordinates',
+        value: function setCoordinates(newX, newY) {
+            this.posX = newX;
+            this.posY = newY;
+        }
+
+        /**
+         * Sets global coordinates and speeds of this player
+         * @param {number} newX New x-coordinate to move to
+         * @param {number} newY New y-coordinate to move to
+         * @param {number} newX New x velocity
+         * @param {number} newY New y velocity
+         */
+
+    }, {
+        key: 'setData',
+        value: function setData(newX, newY, vx, vy) {
+            this.setCoordinates(newX, newY);
+            this.vx = vx;
+            this.vy = vy;
+        }
+
+        /**
+         * Moves this player to (9999, 9999) on local screen space, effectively
+         * hiding it from view.
+         */
+
+    }, {
+        key: 'hide',
+        value: function hide() {
+            this.x = 9999;
+            this.y = 9999;
+        }
+
+        /**
+         * MUST OVERRIDE! Called once, during game setup phase.
+         */
+
+    }, {
+        key: 'setup',
+        value: function setup() {
+            throw new Error('setup() must be overridden! in this GameObject!');
+        }
+
+        /**
+         * MUST OVERRIDE! Called once a frame after setup.
+         */
+
+    }, {
+        key: 'tick',
+        value: function tick() {
+            throw new Error('tick() must be overridden! in this GameObject!');
+        }
+    }]);
+
+    return GameObject;
+}(PIXI.Sprite);
+
+},{"pixi.js":142}],194:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 // Contains all global constants for the client.
 var GLOBAL = exports.GLOBAL = {
 
@@ -42240,7 +42359,7 @@ var GLOBAL = exports.GLOBAL = {
 
 };
 
-},{}],194:[function(require,module,exports){
+},{}],195:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42285,7 +42404,7 @@ function keyboard(keyCode) {
   return key;
 }
 
-},{}],195:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42412,13 +42531,6 @@ function draw(delta) {
             if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
             if (down.isDown) player.vy = -_global.GLOBAL.MAX_SPEED;
 
-            if (!up.isDown && !down.isDown) {
-                player.vy *= _global.GLOBAL.VELOCITY_STEP;
-            }
-            if (!left.isDown && !right.isDown) {
-                player.vx *= _global.GLOBAL.VELOCITY_STEP;
-            }
-
             player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
         } else player.isMoving = false;
 
@@ -42459,7 +42571,7 @@ function createPlayer(data) {
     }
 }
 
-},{"./app":190,"./global":193,"./keyboard":194,"./player":196,"pixi.js":142}],196:[function(require,module,exports){
+},{"./app":190,"./global":194,"./keyboard":195,"./player":197,"pixi.js":142}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42479,6 +42591,8 @@ var _pixigame = require('./pixigame.js');
 
 var _app = require('./app.js');
 
+var _gameobject = require('./gameobject.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42487,8 +42601,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Player = exports.Player = function (_PIXI$Sprite) {
-    _inherits(Player, _PIXI$Sprite);
+var Player = exports.Player = function (_GameObject) {
+    _inherits(Player, _GameObject);
 
     /**
      * Constructor for creating a new Player in the server side.
@@ -42507,9 +42621,10 @@ var Player = exports.Player = function (_PIXI$Sprite) {
     function Player(texture, id, name, room, x, y, vx, vy) {
         _classCallCheck(this, Player);
 
-        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture));
+        // Pixi Values
+        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture, id, room, x, y));
 
-        // PIXI values
+        // Call GameObject
 
 
         _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
@@ -42525,12 +42640,8 @@ var Player = exports.Player = function (_PIXI$Sprite) {
         }
 
         // Custom fields
-        _this.id = id;
         _this.name = name;
-        _this.room = room;
         _this.isMoving = false;
-        _this.posX = x;
-        _this.posY = y;
         _this.vx = vx;
         _this.vy = vy;
         _this.powerups = [];
@@ -42580,12 +42691,18 @@ var Player = exports.Player = function (_PIXI$Sprite) {
             if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
             if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
 
+            // Slow down gradually
+            if (!this.isMoving) {
+                this.vy *= _global.GLOBAL.VELOCITY_STEP;
+                this.vx *= _global.GLOBAL.VELOCITY_STEP;
+            }
+
             // Change position based on speed and direction
-            this.posX = Math.round(this.posX + this.vx);
-            this.posY = Math.round(this.posY + this.vy);
+            this.posX += this.vx;
+            this.posY += this.vy;
 
             // Update text
-            this.textObjects.postext.text = '(' + this.posX + ', ' + this.posY + ')';
+            this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
 
             // Draw other player
             if (this.id !== _app.socket.id) {
@@ -42593,53 +42710,12 @@ var Player = exports.Player = function (_PIXI$Sprite) {
                 this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
             }
         }
-
-        /**
-         * Sets global coordinates of this player
-         * @param {number} newX New x-coordinate to move to
-         * @param {number} newY New y-coordinate to move to
-         */
-
-    }, {
-        key: 'setCoordinates',
-        value: function setCoordinates(newX, newY) {
-            this.posX = newX;
-            this.posY = newY;
-        }
-
-        /**
-         * Sets global coordinates and speeds of this player
-         * @param {number} newX New x-coordinate to move to
-         * @param {number} newY New y-coordinate to move to
-         * @param {number} newX New x velocity
-         * @param {number} newY New y velocity
-         */
-
-    }, {
-        key: 'setData',
-        value: function setData(newX, newY, vx, vy) {
-            this.setCoordinates(newX, newY);
-            this.vx = vx;
-            this.vy = vy;
-        }
-
-        /**
-         * Moves this player to (9999, 9999) on local screen space, effectively
-         * hiding it from view.
-         */
-
-    }, {
-        key: 'hide',
-        value: function hide() {
-            this.x = 9999;
-            this.y = 9999;
-        }
     }]);
 
     return Player;
-}(PIXI.Sprite);
+}(_gameobject.GameObject);
 
-},{"./app.js":190,"./global.js":193,"./pixigame.js":195,"pixi.js":142}],197:[function(require,module,exports){
+},{"./app.js":190,"./gameobject.js":193,"./global.js":194,"./pixigame.js":196,"pixi.js":142}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42769,4 +42845,4 @@ function createPowerup(typeID, index, x, y) {
     throw new Error('Powerup of type ' + typeID + ' could not be found!');
 }
 
-},{"./global.js":193}]},{},[190]);
+},{"./global.js":194}]},{},[190]);

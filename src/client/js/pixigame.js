@@ -108,13 +108,6 @@ function draw(delta) {
                 player.vy = GLOBAL.MAX_SPEED;
             if (down.isDown)
                 player.vy = -GLOBAL.MAX_SPEED;
-
-            if(!up.isDown && !down.isDown) {
-                player.vy *= GLOBAL.VELOCITY_STEP;
-            }
-            if(!left.isDown && !right.isDown) {
-                player.vx *= GLOBAL.VELOCITY_STEP;
-            }
             
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
         } else
