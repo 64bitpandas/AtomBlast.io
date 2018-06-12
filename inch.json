@@ -1,11 +1,10 @@
 {
     "files": {
         "included": [
-            "src/client/*.js"
+            "src/client/js/*.js"
         ],
         "excluded": [
-            "src/client/js/public/*.js",
-            "src/client/js/lib/*.js"
+            "src/client/js/public/*.js"
         ]
     }
 }
