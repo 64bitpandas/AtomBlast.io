@@ -1,6 +1,7 @@
 import {GLOBAL} from './global.js';
 import * as PIXI from 'pixi.js';
-import { textStyle } from './pixigame.js';
+import { textStyle, player, screenCenterX, screenCenterY } from './pixigame.js';
+import { socket } from './app.js';
 
 export class Player extends PIXI.Sprite {
 
@@ -24,8 +25,15 @@ export class Player extends PIXI.Sprite {
         super(texture);
         this.width = GLOBAL.PLAYER_RADIUS * 2;
         this.height = GLOBAL.PLAYER_RADIUS * 2;
-        this.x = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-        this.y = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+
+        if(id === socket.id) {
+            console.log('this player');
+            this.x = screenCenterX;
+            this.y = screenCenterY;
+        }
+        else { // take this player off screen until it can be processed
+            this.hide();
+        }
 
         // Custom fields
         this.id = id;
@@ -82,6 +90,12 @@ export class Player extends PIXI.Sprite {
         
         // Update text
         this.textObjects.postext.text = '(' + this.posX + ', ' + this.posY + ')';
+
+        // Draw other player
+        if(this.id !== socket.id) {
+            this.x = screenCenterX + this.posX - player.posX;
+            this.y = screenCenterY + player.posY - this.posY;
+        }
     }
 
     /**
@@ -105,5 +119,14 @@ export class Player extends PIXI.Sprite {
         this.setCoordinates(newX, newY);
         this.vx = vx;
         this.vy = vy;
+    }
+
+    /**
+     * Moves this player to (9999, 9999) on local screen space, effectively
+     * hiding it from view.
+     */
+    hide() {
+        this.x = 9999;
+        this.y = 9999;
     }
 }

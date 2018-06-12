@@ -2,10 +2,13 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './keyboard';
 import { GLOBAL } from './global';
 import { Player } from './player';
-import { hideElement, showElement, socket } from './app';
+import { hideElement, showElement, socket, players, distanceBetween } from './app';
 
-export var isSetup;
-let player;
+export var isSetup; // True after the stage is fully set up
+export var player; // The player being controlled by this client
+export var screenCenterX; // X-coordinate of the center of the screen
+export var screenCenterY; // Y-coordinate of the center of the screen
+
 let app;
 let sprites = []; // Sprites on the stage
 
@@ -31,6 +34,8 @@ export function init() {
     // Renderer settings
     app.renderer.autoResize = true;
     app.renderer.resize(window.innerWidth, window.innerHeight);
+    screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+    screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
     // Load resources
     PIXI.loader
@@ -69,11 +74,12 @@ function setup() {
     // Resize
     document.getElementsByTagName('body')[0].onresize = () => {
         app.renderer.resize(window.innerWidth, window.innerHeight);
-        player.x = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-        player.y = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+        player.x = screenCenterX;
+        player.y = screenCenterY;
     }
 
-    // createPlayer({id: 0, name: 0, room: 0});
     isSetup = true; 
 
     // Begin game loop
@@ -122,6 +128,14 @@ function draw(delta) {
     }
     
     // Handle other players
+    for(let pl in players) {
+        if(players[pl] !== player) {
+            if(distanceBetween(players[pl], player) < GLOBAL.DRAW_RADIUS)
+                players[pl].tick();
+            else
+                players[pl].hide();
+        }
+    }
 }
 
 /**
@@ -141,9 +155,11 @@ function toggleMenu() {
  */
 export function createPlayer(data) {
     if(isSetup) {
-        console.log('create player');
-        player = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
-        app.stage.addChild(player);
-        return player;
+        console.log('create player ' + data.id);
+        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
+        if(data.id === socket.id)
+            player = newPlayer;
+        app.stage.addChild(newPlayer);
+        return newPlayer;
     }
 }

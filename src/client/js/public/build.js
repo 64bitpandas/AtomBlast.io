@@ -42231,7 +42231,7 @@ var GLOBAL = exports.GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    SPAWN_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    DRAW_RADIUS: 800, // Radius around player in which to draw other players and powerups
     GRID_SPACING: 200, // space between each line on the grid
     FRAME_RATE: 60,
 
@@ -42291,7 +42291,7 @@ function keyboard(keyCode) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.textStyle = exports.isSetup = undefined;
+exports.textStyle = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
 exports.createPlayer = createPlayer;
 
@@ -42309,8 +42309,11 @@ var _app = require('./app');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-var isSetup = exports.isSetup = undefined;
-var player = void 0;
+var isSetup = exports.isSetup = undefined; // True after the stage is fully set up
+var player = exports.player = undefined; // The player being controlled by this client
+var screenCenterX = exports.screenCenterX = undefined; // X-coordinate of the center of the screen
+var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the center of the screen
+
 var app = void 0;
 var sprites = []; // Sprites on the stage
 
@@ -42340,6 +42343,8 @@ function init() {
     // Renderer settings
     app.renderer.autoResize = true;
     app.renderer.resize(window.innerWidth, window.innerHeight);
+    exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
+    exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
     // Load resources
     PIXI.loader.add(_global.GLOBAL.SPRITES).load(setup);
@@ -42375,11 +42380,12 @@ function setup() {
     // Resize
     document.getElementsByTagName('body')[0].onresize = function () {
         app.renderer.resize(window.innerWidth, window.innerHeight);
-        player.x = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
-        player.y = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        player.x = screenCenterX;
+        player.y = screenCenterY;
     };
 
-    // createPlayer({id: 0, name: 0, room: 0});
     exports.isSetup = isSetup = true;
 
     // Begin game loop
@@ -42424,6 +42430,11 @@ function draw(delta) {
     }
 
     // Handle other players
+    for (var pl in _app.players) {
+        if (_app.players[pl] !== player) {
+            if ((0, _app.distanceBetween)(_app.players[pl], player) < _global.GLOBAL.DRAW_RADIUS) _app.players[pl].tick();else _app.players[pl].hide();
+        }
+    }
 }
 
 /**
@@ -42440,10 +42451,11 @@ function toggleMenu() {
  */
 function createPlayer(data) {
     if (isSetup) {
-        console.log('create player');
-        player = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
-        app.stage.addChild(player);
-        return player;
+        console.log('create player ' + data.id);
+        var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
+        if (data.id === _app.socket.id) exports.player = player = newPlayer;
+        app.stage.addChild(newPlayer);
+        return newPlayer;
     }
 }
 
@@ -42464,6 +42476,8 @@ var _pixi = require('pixi.js');
 var PIXI = _interopRequireWildcard(_pixi);
 
 var _pixigame = require('./pixigame.js');
+
+var _app = require('./app.js');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -42500,8 +42514,15 @@ var Player = exports.Player = function (_PIXI$Sprite) {
 
         _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
         _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
-        _this.x = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
-        _this.y = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+
+        if (id === _app.socket.id) {
+            console.log('this player');
+            _this.x = _pixigame.screenCenterX;
+            _this.y = _pixigame.screenCenterY;
+        } else {
+            // take this player off screen until it can be processed
+            _this.hide();
+        }
 
         // Custom fields
         _this.id = id;
@@ -42565,6 +42586,12 @@ var Player = exports.Player = function (_PIXI$Sprite) {
 
             // Update text
             this.textObjects.postext.text = '(' + this.posX + ', ' + this.posY + ')';
+
+            // Draw other player
+            if (this.id !== _app.socket.id) {
+                this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
+                this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
+            }
         }
 
         /**
@@ -42595,12 +42622,24 @@ var Player = exports.Player = function (_PIXI$Sprite) {
             this.vx = vx;
             this.vy = vy;
         }
+
+        /**
+         * Moves this player to (9999, 9999) on local screen space, effectively
+         * hiding it from view.
+         */
+
+    }, {
+        key: 'hide',
+        value: function hide() {
+            this.x = 9999;
+            this.y = 9999;
+        }
     }]);
 
     return Player;
 }(PIXI.Sprite);
 
-},{"./global.js":193,"./pixigame.js":195,"pixi.js":142}],197:[function(require,module,exports){
+},{"./app.js":190,"./global.js":193,"./pixigame.js":195,"pixi.js":142}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

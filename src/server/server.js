@@ -68,8 +68,10 @@ io.on('connection', socket => {
     id: socket.id, 
     name: socket.handshake.query.name, 
     room: socket.handshake.query.room,
-    posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
-    posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
+    posX: 0,
+    posY: 0,
+    // posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
+    // posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
     vx: 0,
     vy: 0
   };
