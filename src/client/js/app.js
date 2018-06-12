@@ -156,7 +156,7 @@ function SetupSocket(socket) {
             if(pl !== null) {
                 // Player already exists in database
                 if (players[player] !== undefined && players[player] !== null)
-                    players[player].setData()
+                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
                 // Does not exist - need to create new player
                 else if(isSetup)
                     players[player] = createPlayer(pl);
@@ -169,12 +169,13 @@ function SetupSocket(socket) {
 
         if (oldPlayers !== undefined && players !== undefined) {
             // Lerp predictions with actual for other players
-            for (let pl in players) {
-                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined && pl !== socket.id) {
-                    players[pl].posX = lerp(players[pl].posX, oldPlayers[pl].posX, GLOBAL.LERP_VALUE);
-                    players[pl].posY = lerp(players[pl].posY, oldPlayers[pl].posY, GLOBAL.LERP_VALUE);
-                    players[pl].vx = lerp(players[pl].vx, oldPlayers[pl].vx, GLOBAL.LERP_VALUE);
-                    players[pl].vy = lerp(players[pl].vy, oldPlayers[pl].vy, GLOBAL.LERP_VALUE);
+            for (let player in players) {
+                let pl = players[player], oldPl = oldPlayers[player];
+                if (pl !== null && pl !== undefined && oldPl !== undefined && pl !== socket.id) {
+                    pl.posX = lerp(pl.posX, oldPl.posX, GLOBAL.LERP_VALUE);
+                    pl.posY = lerp(pl.posY, oldPl.posY, GLOBAL.LERP_VALUE);
+                    pl.vx = lerp(pl.vx, oldPl.vx, GLOBAL.LERP_VALUE);
+                    pl.vy = lerp(pl.vy, oldPl.vy, GLOBAL.LERP_VALUE);
                 }
             }
         }
@@ -270,5 +271,5 @@ export function hideElement(el) {
  * @param {*} obj2 Second object
  */
 export function distanceBetween(obj1, obj2) {
-    return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
+    return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
 }

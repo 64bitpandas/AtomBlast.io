@@ -26,8 +26,9 @@ export const GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.3,
+    VELOCITY_STEP: 0.8, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
+    DEADZONE: 0.1,
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups

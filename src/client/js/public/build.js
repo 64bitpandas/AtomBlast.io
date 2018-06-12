@@ -41599,7 +41599,7 @@ var cookies = _interopRequireWildcard(_cookies);
 
 var _pixigame = require('./pixigame.js');
 
-var _player = require('./player.js');
+var _player2 = require('./player.js');
 
 var _powerup = require('./powerup.js');
 
@@ -41752,7 +41752,7 @@ function SetupSocket(socket) {
             // Valid player
             if (pl !== null) {
                 // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null) players[player].setData();
+                if (players[player] !== undefined && players[player] !== null) players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
                 // Does not exist - need to create new player
                 else if (_pixigame.isSetup) players[player] = (0, _pixigame.createPlayer)(pl);
             }
@@ -41764,12 +41764,14 @@ function SetupSocket(socket) {
 
         if (oldPlayers !== undefined && players !== undefined) {
             // Lerp predictions with actual for other players
-            for (var _pl in players) {
-                if (players[_pl] !== null && players[_pl] !== undefined && oldPlayers[_pl] !== undefined && _pl !== socket.id) {
-                    players[_pl].posX = lerp(players[_pl].posX, oldPlayers[_pl].posX, _global.GLOBAL.LERP_VALUE);
-                    players[_pl].posY = lerp(players[_pl].posY, oldPlayers[_pl].posY, _global.GLOBAL.LERP_VALUE);
-                    players[_pl].vx = lerp(players[_pl].vx, oldPlayers[_pl].vx, _global.GLOBAL.LERP_VALUE);
-                    players[_pl].vy = lerp(players[_pl].vy, oldPlayers[_pl].vy, _global.GLOBAL.LERP_VALUE);
+            for (var _player in players) {
+                var _pl = players[_player],
+                    oldPl = oldPlayers[_player];
+                if (_pl !== null && _pl !== undefined && oldPl !== undefined && _pl !== socket.id) {
+                    _pl.posX = lerp(_pl.posX, oldPl.posX, _global.GLOBAL.LERP_VALUE);
+                    _pl.posY = lerp(_pl.posY, oldPl.posY, _global.GLOBAL.LERP_VALUE);
+                    _pl.vx = lerp(_pl.vx, oldPl.vx, _global.GLOBAL.LERP_VALUE);
+                    _pl.vy = lerp(_pl.vy, oldPl.vy, _global.GLOBAL.LERP_VALUE);
                 }
             }
         }
@@ -41885,7 +41887,7 @@ function hideElement(el) {
  * @param {*} obj2 Second object
  */
 function distanceBetween(obj1, obj2) {
-    return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
+    return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
 }
 
 },{"./chat-client.js":191,"./cookies.js":192,"./global.js":193,"./pixigame.js":195,"./player.js":196,"./powerup.js":197}],191:[function(require,module,exports){
@@ -42214,8 +42216,9 @@ var GLOBAL = exports.GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.3,
+    VELOCITY_STEP: 0.8, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
+    DEADZONE: 0.1,
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups
@@ -42263,7 +42266,7 @@ function keyboard(keyCode) {
       key.isDown = true;
       key.isUp = false;
     }
-    event.preventDefault();
+    // event.preventDefault();
   };
 
   //The `upHandler`
@@ -42273,7 +42276,7 @@ function keyboard(keyCode) {
       key.isDown = false;
       key.isUp = true;
     }
-    event.preventDefault();
+    // event.preventDefault();
   };
 
   //Attach event listeners
@@ -42338,7 +42341,6 @@ function init() {
 
 function setup() {
 
-    exports.isSetup = isSetup = true;
     // Set up key listeners
     esc = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_ESC);
     up = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_W);
@@ -42355,19 +42357,23 @@ function setup() {
     (0, _app.showElement)('chatbox');
 
     // Add text
-    sprites.nametext = new PIXI.Text('name');
-    sprites.idtext = new PIXI.Text('id');
-    sprites.xtext = new PIXI.Text('x');
-    sprites.ytext = new PIXI.Text('y');
+    var textStyle = new PIXI.TextStyle({
+        fill: 'white',
+        fontSize: 80
+    });
+
+    sprites.player = {};
+    sprites.player.nametext = new PIXI.Text('name', textStyle);
+    sprites.player.idtext = new PIXI.Text('id', textStyle);
+    sprites.player.xtext = new PIXI.Text('x', textStyle);
+    sprites.player.ytext = new PIXI.Text('y', textStyle);
+
     // sprites.nametext.position.set()
 
     // Load sprites into stage
     for (var sprite in sprites) {
-        app.stage.addChild(sprites[sprite]);
-    } // Begin game loop
-    app.ticker.add(function (delta) {
-        return draw(delta);
-    });
+        if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
+    }
 
     // Load player
     // player = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITE].texture);
@@ -42381,6 +42387,12 @@ function setup() {
     };
 
     // createPlayer({id: 0, name: 0, room: 0});
+    exports.isSetup = isSetup = true;
+
+    // Begin game loop
+    app.ticker.add(function (delta) {
+        return draw(delta);
+    });
 }
 
 // Game loop
@@ -42388,10 +42400,34 @@ function draw(delta) {
     // Background
     app.renderer.backgroundColor = 0x000000;
     // Handle this player
-    if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
-    if (down.isDown) player.vy = -_global.GLOBAL.MAX_SPEED;
-    if (left.isDown) player.vx = -_global.GLOBAL.MAX_SPEED;
-    if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
+    if (player !== undefined) {
+
+        // Make sure player is not in chat before checking move
+        if (document.activeElement !== document.getElementById('chatInput')) {
+            if (left.isDown) player.vx = -_global.GLOBAL.MAX_SPEED;
+            if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
+            if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
+            if (down.isDown) player.vy = -_global.GLOBAL.MAX_SPEED;
+
+            if (!up.isDown && !down.isDown) {
+                player.vy *= _global.GLOBAL.VELOCITY_STEP;
+            }
+            if (!left.isDown && !right.isDown) {
+                player.vx *= _global.GLOBAL.VELOCITY_STEP;
+            }
+
+            player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
+        } else player.isMoving = false;
+
+        sprites.player.ytext.text = player.posY;
+        sprites.player.xtext.text = player.posX;
+
+        // Move player
+        player.move();
+
+        // Send coordinates
+        _app.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+    }
 
     // Handle other players
 }
@@ -42401,12 +42437,21 @@ function toggleMenu() {
 }
 
 function createPlayer(data) {
-    if (PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITE] !== undefined) {
+    if (PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITE] !== undefined && isSetup) {
         console.log('create player');
         player = new _player.Player(PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITE].texture, data.id, data.name, data.room);
         app.stage.addChild(player);
 
-        console.log(player);
+        // Create text
+        for (var item in sprites.player) {
+            player.addChild(sprites.player[item]);
+        }sprites.player.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
+        sprites.player.idtext.text = data.id;
+        sprites.player.nametext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 100);
+        sprites.player.nametext.text = data.name;
+        sprites.player.xtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 200);
+        sprites.player.ytext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 300);
+
         return player;
     }
 }
@@ -42457,6 +42502,7 @@ var Player = exports.Player = function (_PIXI$Sprite) {
         _this.room = room;
         _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
         _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
+        _this.isMoving = false;
 
         // Creating local player
         if (arguments.length <= 4) {
@@ -42516,22 +42562,17 @@ var Player = exports.Player = function (_PIXI$Sprite) {
         }
     }, {
         key: 'move',
-        value: function move(delta) {
-
-            // Set direction- if no keys pressed, retains previous direction
-            var theta = void 0;
-            if (vx !== 0 && vy !== 0) {
-                theta = Math.atan2(-vy, vx);
-            }
-            // Reduce speed (inertia)
-            if (this.speed > 0 && vx === 0 && vy === 0) this.speed -= _global.GLOBAL.VELOCITY_STEP;
+        value: function move() {
 
             // Prevent drifting due to minimal negative values
-            if (this.speed < 0) this.speed = 0;
+            if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
+            if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
 
             // Change position based on speed and direction
-            this.posX += this.vx + delta;
-            this.posY += this.vy + delta;
+            this.posX += this.vx;
+            this.posY += this.vy;
+
+            // console.log(this.vx + ' ' + this.vy);
         }
     }, {
         key: 'setCoordinates',
@@ -42544,7 +42585,7 @@ var Player = exports.Player = function (_PIXI$Sprite) {
         value: function setData(newX, newY, vx, vy) {
             this.setCoordinates(newX, newY);
             this.vx = vx;
-            this.vx = vy;
+            this.vy = vy;
         }
     }]);
 

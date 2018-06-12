@@ -19,6 +19,7 @@ export class Player extends PIXI.Sprite {
         this.room = room;
         this.width = GLOBAL.PLAYER_RADIUS * 2;
         this.height = GLOBAL.PLAYER_RADIUS * 2;
+        this.isMoving = false;
 
         // Creating local player
         if(arguments.length <= 4) {
@@ -72,25 +73,19 @@ export class Player extends PIXI.Sprite {
         p5.text("ID: " + this.id.substring(0, 6), this.x, this.y + 15);
     }
 
-    move(delta) {
-
-        // Set direction- if no keys pressed, retains previous direction
-        let theta;
-        if (vx !== 0 && vy !== 0) {
-            theta = Math.atan2(-vy, vx);
-        } 
-        // Reduce speed (inertia)
-        if (this.speed > 0 && vx === 0 && vy === 0)
-            this.speed -= GLOBAL.VELOCITY_STEP;
-
+    move() {
+        
         // Prevent drifting due to minimal negative values
-        if (this.speed < 0)
-            this.speed = 0;
+        if (Math.abs(this.vx) < GLOBAL.DEADZONE)
+            this.vx = 0;
+        if (Math.abs(this.vy) < GLOBAL.DEADZONE)
+            this.vy = 0;
         
         // Change position based on speed and direction
-        this.posX += this.vx + delta;
-        this.posY += this.vy + delta;
+        this.posX += this.vx;
+        this.posY += this.vy;
         
+        // console.log(this.vx + ' ' + this.vy);
     }
 
     setCoordinates(newX, newY) {
@@ -101,6 +96,6 @@ export class Player extends PIXI.Sprite {
     setData(newX, newY, vx, vy) {
         this.setCoordinates(newX, newY);
         this.vx = vx;
-        this.vx = vy;
+        this.vy = vy;
     }
 }

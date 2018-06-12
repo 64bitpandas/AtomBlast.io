@@ -116,7 +116,10 @@ io.on('connection', socket => {
   socket.to(room).on('move', data => {
     // Player exists in database already because it was created serverside - no need for extra checking
     if(rooms[room].players[data.id] !== undefined) {
-      rooms[room].players[data.id].setData(data.x, data.y, data.theta, data.speed);
+      rooms[room].players[data.id].posX = data.posX;
+      rooms[room].players[data.id].posY = data.posY;
+      rooms[room].players[data.id].vx = data.vx;
+      rooms[room].players[data.id].vy = data.vy;
     }
   }); 
 
