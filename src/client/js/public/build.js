@@ -42236,7 +42236,7 @@ var GLOBAL = exports.GLOBAL = {
     FRAME_RATE: 60,
 
     // Sprites
-    PLAYER_SPRITE: '../assets/testplayer.png'
+    SPRITES: ['../assets/testplayer.png']
 
 };
 
@@ -42291,7 +42291,7 @@ function keyboard(keyCode) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.isSetup = undefined;
+exports.textStyle = exports.isSetup = undefined;
 exports.init = init;
 exports.createPlayer = createPlayer;
 
@@ -42312,13 +42312,19 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var isSetup = exports.isSetup = undefined;
 var player = void 0;
 var app = void 0;
-var sprites = [];
+var sprites = []; // Sprites on the stage
 
 var esc = void 0,
     up = void 0,
     down = void 0,
     left = void 0,
-    right = void 0;
+    right = void 0; // Key handlers
+
+// Add text
+var textStyle = exports.textStyle = new PIXI.TextStyle({
+    fill: 'black',
+    fontSize: 120
+});
 
 function init() {
     //Initialization
@@ -42336,9 +42342,12 @@ function init() {
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
     // Load resources
-    PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITE).load(setup);
+    PIXI.loader.add(_global.GLOBAL.SPRITES).load(setup);
 }
 
+/**
+ * Sets up the stage. Call after init(), and begins the draw() loop once complete.
+ */
 function setup() {
 
     // Set up key listeners
@@ -42356,28 +42365,12 @@ function setup() {
     (0, _app.hideElement)('loading');
     (0, _app.showElement)('chatbox');
 
-    // Add text
-    var textStyle = new PIXI.TextStyle({
-        fill: 'white',
-        fontSize: 80
-    });
-
-    sprites.player = {};
-    sprites.player.nametext = new PIXI.Text('name', textStyle);
-    sprites.player.idtext = new PIXI.Text('id', textStyle);
-    sprites.player.xtext = new PIXI.Text('x', textStyle);
-    sprites.player.ytext = new PIXI.Text('y', textStyle);
-
     // sprites.nametext.position.set()
 
     // Load sprites into stage
     for (var sprite in sprites) {
         if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
     }
-
-    // Load player
-    // player = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITE].texture);
-
 
     // Resize
     document.getElementsByTagName('body')[0].onresize = function () {
@@ -42395,11 +42388,15 @@ function setup() {
     });
 }
 
-// Game loop
+/**
+ * Called once per frame. Updates all moving sprites on the stage.
+ * @param {number} delta Time value from Pixi
+ */
 function draw(delta) {
     // Background
-    app.renderer.backgroundColor = 0x000000;
-    // Handle this player
+    app.renderer.backgroundColor = 0xFFFFFF;
+
+    // Handle this player and movement
     if (player !== undefined) {
 
         // Make sure player is not in chat before checking move
@@ -42419,11 +42416,8 @@ function draw(delta) {
             player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
         } else player.isMoving = false;
 
-        sprites.player.ytext.text = player.posY;
-        sprites.player.xtext.text = player.posX;
-
         // Move player
-        player.move();
+        player.tick();
 
         // Send coordinates
         _app.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
@@ -42432,26 +42426,23 @@ function draw(delta) {
     // Handle other players
 }
 
+/**
+ * Shows or hides the in-game menu box
+ */
 function toggleMenu() {
     if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
 }
 
+/**
+ * Creates a Player instance once the stage is fully set up and ready.
+ * @param {*} data Starting values to assign to the player. Generated from server
+ * @returns {Player} The Player object that was created
+ */
 function createPlayer(data) {
-    if (PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITE] !== undefined && isSetup) {
+    if (isSetup) {
         console.log('create player');
-        player = new _player.Player(PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITE].texture, data.id, data.name, data.room);
+        player = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
         app.stage.addChild(player);
-
-        // Create text
-        for (var item in sprites.player) {
-            player.addChild(sprites.player[item]);
-        }sprites.player.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
-        sprites.player.idtext.text = data.id;
-        sprites.player.nametext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 100);
-        sprites.player.nametext.text = data.name;
-        sprites.player.xtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 200);
-        sprites.player.ytext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 300);
-
         return player;
     }
 }
@@ -42472,6 +42463,8 @@ var _pixi = require('pixi.js');
 
 var PIXI = _interopRequireWildcard(_pixi);
 
+var _pixigame = require('./pixigame.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42485,101 +42478,116 @@ var Player = exports.Player = function (_PIXI$Sprite) {
 
     /**
      * Constructor for creating a new Player in the server side.
-     * Player is a Graphics instance for drawing primitives,
-     * but will eventually be a Sprite instance that can be added to the stage.
+     * Player is a Sprite instance that can be added to the stage.
+     * Each Player should only be created once, and updated subsequently with
+     * setData().
      * @param {PIXI.Texture} texture The texture associated with this sprite
      * @param {string} id Socket ID of the player
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
+     * @param {number} x Global x-coordinate
+     * @param {number} y Global y-coordinate
+     * @param {number} vx Horizontal velocity
+     * @param {number} vy Vertical velocity
      */
-    function Player(texture, id, name, room, x, y, vx, vy, powerups) {
+    function Player(texture, id, name, room, x, y, vx, vy) {
         _classCallCheck(this, Player);
 
         var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture));
 
+        // PIXI values
+
+
+        _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
+        _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
+        _this.x = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        _this.y = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+
+        // Custom fields
         _this.id = id;
         _this.name = name;
         _this.room = room;
-        _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
-        _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
         _this.isMoving = false;
+        _this.posX = x;
+        _this.posY = y;
+        _this.vx = vx;
+        _this.vy = vy;
+        _this.powerups = [];
+        _this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
-        // Creating local player
-        if (arguments.length <= 4) {
-            _this.x = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
-            _this.y = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
-            _this.posX = 0;
-            _this.posY = 0;
-            _this.vx = 0;
-            _this.vy = 0;
-            _this.powerups = [];
-        }
-
-        // Constructor for reconstructing a player on the Client side
-        else {
-                _this.posX = x;
-                _this.posY = y;
-                _this.vx = vx;
-                _this.vy = vy;
-                _this.powerups = [];
-            }
-
+        _this.setup();
         return _this;
     }
 
-    /** 
-     * Draws all components of a given player, including all powerups and atoms held.
-     * @param {any} player Player object containing all playerdata. See `server.js` for a detailed list of required fields
-     * @param {boolean} isThisPlayer True if the player to be drawn is owned by this client.
+    /**
+     * First-time setup for this player. All of the functions in this method will only be called once.
      */
 
 
     _createClass(Player, [{
-        key: 'draw',
-        value: function draw(isThisPlayer, p5) {
+        key: 'setup',
+        value: function setup() {
+            // Create text objects
+            this.textObjects.nametext = new PIXI.Text('name: ', _pixigame.textStyle);
+            this.textObjects.idtext = new PIXI.Text('id: ', _pixigame.textStyle);
+            this.textObjects.postext = new PIXI.Text('x', _pixigame.textStyle);
 
-            // Predict positions of other player
-            if (!isThisPlayer) {
-                this.x += Math.cos(this.theta) * this.speed;
-                this.y += Math.sin(this.theta) * this.speed;
+            // Assign values and positions
+            this.textObjects.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
+            this.textObjects.idtext.text += this.id;
+            this.textObjects.nametext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 100);
+            this.textObjects.nametext.text += this.name;
+            this.textObjects.postext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 200);
+
+            // Create text
+            for (var item in this.textObjects) {
+                this.addChild(this.textObjects[item]);
             }
-            // Draw player
-            p5.ellipse(this.x, this.y, 2 * _global.GLOBAL.PLAYER_RADIUS);
-            // }
-            // else {
-            // p5.translate(-this.x, -this.y);
-            // p5.ellipse(window.innerWidth / 2, window.innerHeight / 2, 2 * GLOBAL.PLAYER_RADIUS);
-            // }
-
-
-            // p5.translate(this.x, this.y);
-            p5.text(this.name, this.x, this.y);
-
-            // Debug lines
-            p5.text("x: " + Math.round(this.x), this.x, this.y - 30);
-            p5.text("y: " + Math.round(this.y), this.x, this.y - 15);
-            p5.text("ID: " + this.id.substring(0, 6), this.x, this.y + 15);
         }
+
+        /** 
+         * Draws all components of a given player and handles movement.
+         * This method should be included in the ticker and called once a frame.
+         * Therefore, all setup tasks should be called in setup().
+         */
+
     }, {
-        key: 'move',
-        value: function move() {
+        key: 'tick',
+        value: function tick() {
 
             // Prevent drifting due to minimal negative values
             if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
             if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
 
             // Change position based on speed and direction
-            this.posX += this.vx;
-            this.posY += this.vy;
+            this.posX = Math.round(this.posX + this.vx);
+            this.posY = Math.round(this.posY + this.vy);
 
-            // console.log(this.vx + ' ' + this.vy);
+            // Update text
+            this.textObjects.postext.text = '(' + this.posX + ', ' + this.posY + ')';
         }
+
+        /**
+         * Sets global coordinates of this player
+         * @param {number} newX New x-coordinate to move to
+         * @param {number} newY New y-coordinate to move to
+         */
+
     }, {
         key: 'setCoordinates',
         value: function setCoordinates(newX, newY) {
             this.posX = newX;
             this.posY = newY;
         }
+
+        /**
+         * Sets global coordinates and speeds of this player
+         * @param {number} newX New x-coordinate to move to
+         * @param {number} newY New y-coordinate to move to
+         * @param {number} newX New x velocity
+         * @param {number} newY New y velocity
+         */
+
     }, {
         key: 'setData',
         value: function setData(newX, newY, vx, vy) {
@@ -42592,7 +42600,7 @@ var Player = exports.Player = function (_PIXI$Sprite) {
     return Player;
 }(PIXI.Sprite);
 
-},{"./global.js":193,"pixi.js":142}],197:[function(require,module,exports){
+},{"./global.js":193,"./pixigame.js":195,"pixi.js":142}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

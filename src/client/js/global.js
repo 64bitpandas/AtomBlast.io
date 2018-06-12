@@ -46,6 +46,9 @@ export const GLOBAL = {
     FRAME_RATE: 60,
 
     // Sprites
-    PLAYER_SPRITE: '../assets/testplayer.png'
+    SPRITES: [
+        '../assets/testplayer.png',
+    ]
+   
 
 };

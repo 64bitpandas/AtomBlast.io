@@ -64,7 +64,15 @@ io.on('connection', socket => {
   }
 
   // Create new player in rooms object
-  rooms[room].players[socket.id] = {id: socket.id, name: socket.handshake.query.name, room: socket.handshake.query.room};
+  rooms[room].players[socket.id] = {
+    id: socket.id, 
+    name: socket.handshake.query.name, 
+    room: socket.handshake.query.room,
+    posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
+    posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
+    vx: 0,
+    vy: 0
+  };
 
   // Setup player array sync- once a frame
   setInterval(() => {

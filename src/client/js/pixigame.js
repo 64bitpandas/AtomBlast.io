@@ -7,9 +7,15 @@ import { hideElement, showElement, socket } from './app';
 export var isSetup;
 let player;
 let app;
-let sprites = [];
+let sprites = []; // Sprites on the stage
 
-let esc, up, down, left, right;
+let esc, up, down, left, right; // Key handlers
+
+// Add text
+export let textStyle = new PIXI.TextStyle({
+    fill: 'black',
+    fontSize: 120
+})
 
 export function init() {
     //Initialization
@@ -28,14 +34,14 @@ export function init() {
 
     // Load resources
     PIXI.loader
-        .add(GLOBAL.PLAYER_SPRITE)
+        .add(GLOBAL.SPRITES)
         .load(setup);
-
-
 }
 
+/**
+ * Sets up the stage. Call after init(), and begins the draw() loop once complete.
+ */
 function setup() {
-
    
     // Set up key listeners
     esc = keyboard(GLOBAL.KEY_ESC);
@@ -52,18 +58,6 @@ function setup() {
     hideElement('loading');
     showElement('chatbox');
 
-    // Add text
-    let textStyle = new PIXI.TextStyle({
-        fill: 'white',
-        fontSize: 80
-    })
-    
-    sprites.player = {};
-    sprites.player.nametext = new PIXI.Text('name', textStyle);
-    sprites.player.idtext = new PIXI.Text('id', textStyle);
-    sprites.player.xtext = new PIXI.Text('x', textStyle);
-    sprites.player.ytext = new PIXI.Text('y', textStyle);
-
     // sprites.nametext.position.set()
 
     // Load sprites into stage
@@ -71,10 +65,6 @@ function setup() {
         if(sprite !== 'player')
             app.stage.addChild(sprites[sprite]);
     }
-
-    // Load player
-    // player = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITE].texture);
-
 
     // Resize
     document.getElementsByTagName('body')[0].onresize = () => {
@@ -91,11 +81,15 @@ function setup() {
 
 }
 
-// Game loop
+/**
+ * Called once per frame. Updates all moving sprites on the stage.
+ * @param {number} delta Time value from Pixi
+ */
 function draw(delta) {
     // Background
-    app.renderer.backgroundColor = 0x000000;
-    // Handle this player
+    app.renderer.backgroundColor = 0xFFFFFF;
+
+    // Handle this player and movement
     if(player !== undefined) {
 
         // Make sure player is not in chat before checking move
@@ -115,27 +109,24 @@ function draw(delta) {
             if(!left.isDown && !right.isDown) {
                 player.vx *= GLOBAL.VELOCITY_STEP;
             }
-
             
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
         } else
             player.isMoving = false;
 
-        sprites.player.ytext.text = player.posY;
-        sprites.player.xtext.text = player.posX;
-
         // Move player
-        player.move();
+        player.tick();
 
         // Send coordinates
         socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
-
-    
     
     // Handle other players
 }
 
+/**
+ * Shows or hides the in-game menu box
+ */
 function toggleMenu() {
     if (document.getElementById('menubox').offsetParent === null)
         showElement('menubox');
@@ -143,22 +134,16 @@ function toggleMenu() {
         hideElement('menubox');
 }
 
+/**
+ * Creates a Player instance once the stage is fully set up and ready.
+ * @param {*} data Starting values to assign to the player. Generated from server
+ * @returns {Player} The Player object that was created
+ */
 export function createPlayer(data) {
-    if(PIXI.loader.resources[GLOBAL.PLAYER_SPRITE] !== undefined && isSetup) {
+    if(isSetup) {
         console.log('create player');
-        player = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITE].texture, data.id, data.name, data.room);
+        player = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
         app.stage.addChild(player);
-
-        // Create text
-        for (let item in sprites.player)
-            player.addChild(sprites.player[item]);
-        sprites.player.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);
-        sprites.player.idtext.text = data.id;
-        sprites.player.nametext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 100);
-        sprites.player.nametext.text = data.name;
-        sprites.player.xtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200);
-        sprites.player.ytext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);
-
         return player;
     }
 }
