@@ -1,49 +1,37 @@
 import {GLOBAL} from './global.js';
+import { GameObject } from './gameobject.js';
+import { Player } from './player.js';
+import * as PIXI from 'pixi.js';
+import { distanceBetween } from './app.js';
+import { screenCenterX, screenCenterY, player } from './pixigame.js';
 
-export class Powerup {
+export class Powerup extends GameObject {
 
     /**
      * Creates a Powerup at the given coordinates. If no coordinates are given, then 
      * the powerup spawns in a random location.
+     * @param {PIXI.Texture} texture The texture of the powerup
      * @param {number} index The index of the powerup in the powerups array
      * @param {number} x (optional) X Coordinate of the Powerup 
      * @param {number} y (optional) Y Coordinate of the Powerup 
      */
-    constructor (index, x, y) {
-        if(x !== undefined && y !== undefined) {
-            this.x = x;
-            this.y = y;
-        }
-        else {
-            this.x = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-            this.y = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-        }
-        
+    constructor (texture, index, x, y) {
+        super(texture, index, x, y);
+        this.height = GLOBAL.POWERUP_RADIUS * 2;
+        this.width = GLOBAL.POWERUP_RADIUS * 2;
         this.isEquipped = false;
         this.typeID = -1;
     }
 
     /**
-     * Draws the powerup either near the player or on the map. Call once per frame.
-     * @param {*} p5 P5 reference to use
-     * @param {*} player (optional) The player reference to use - needed only if powerup is equipped
-     */
-    draw(p5, player) {
-        if(this.isEquipped)
-            return; //TODO draw around player
-        // TODO fill with image
-        p5.ellipse(this.x, this.y, GLOBAL.POWERUP_RADIUS, GLOBAL.POWERUP_RADIUS);
-    }
-    
-    /**
      * Run when players are nearby to check if they picked this powerup up.
-     * @param {*} player Player to check collision against
+     * @param {Player} player Player to check collision against
      * @returns true if collision detected, false otherwise
      */
     checkCollision(player) {
         if(this.isEquipped)
             return false; 
-        if(Math.pow((this.y - player.y), 2) + Math.pow((this.x - player.x), 2) < Math.pow(GLOBAL.POWERUP_RADIUS+GLOBAL.PLAYER_RADIUS, 2)) {
+        if(distanceBetween(this, player) < GLOBAL.POWERUP_RADIUS+GLOBAL.PLAYER_RADIUS) {
             this.isEquipped = true;
             return true;
         }
@@ -51,6 +39,14 @@ export class Powerup {
         return false;
     }
 
+    tick() {
+        this.checkCollision(player);
+        this.draw();
+    }
+
+    /**
+     * MUST OVERRIDE! Consumes the powerup and applies effects
+     */
     use() {
         throw new Error('This Powerup must implement use()!');
     }
@@ -60,8 +56,7 @@ export class Powerup {
 export class HealthPowerup extends Powerup {
     
     constructor(index,x,y) {
-        super(index,x,y);
-        this.image = ''; //TODO
+        super(PIXI.loader.resources[GLOBAL.SPRITES[GLOBAL.P_HEALTH]].texture, index, x, y);
         this.typeID = GLOBAL.P_HEALTH;
     }
 

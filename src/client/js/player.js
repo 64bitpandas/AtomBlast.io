@@ -23,7 +23,7 @@ export class Player extends GameObject {
     constructor(texture, id, name, room, x, y, vx, vy) {
 
         // Call GameObject
-        super(texture, id, room, x, y);
+        super(texture, id, x, y);
 
         // Pixi Values
         this.width = GLOBAL.PLAYER_RADIUS * 2;
@@ -40,6 +40,7 @@ export class Player extends GameObject {
 
         // Custom fields
         this.name = name;
+        this.room = room;
         this.isMoving = false;
         this.vx = vx;
         this.vy = vy;
@@ -82,13 +83,6 @@ export class Player extends GameObject {
             this.vx = 0;
         if (Math.abs(this.vy) < GLOBAL.DEADZONE)
             this.vy = 0;
-
-        // Slow down gradually
-        if(!this.isMoving) {
-            this.vy *= GLOBAL.VELOCITY_STEP;
-            this.vx *= GLOBAL.VELOCITY_STEP;
-        }
-
         
         // Change position based on speed and direction
         this.posX += this.vx;
@@ -99,8 +93,7 @@ export class Player extends GameObject {
 
         // Draw other player
         if(this.id !== socket.id) {
-            this.x = screenCenterX + this.posX - player.posX;
-            this.y = screenCenterY + player.posY - this.posY;
+            this.draw();
         }
     }
 

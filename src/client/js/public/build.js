@@ -41603,18 +41603,20 @@ var _player2 = require('./player.js');
 
 var _powerup = require('./powerup.js');
 
+var _gameobject = require('./gameobject.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
+var socket = exports.socket = undefined;
+
+/* Array of all connected players in the form of Player objects */
 /** 
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
-var socket = exports.socket = undefined;
-
-/* Array of all connected players in the form of Player objects */
 var players = exports.players = {};
 
 // Array of all powerups that have not been picked up, in the form of Powerup objects\
@@ -41795,7 +41797,7 @@ function SetupSocket(socket) {
             for (var _iterator = data.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
                 var powerup = _step.value;
 
-                powerups.push((0, _powerup.createPowerup)(powerup.typeID, powerups.length));
+                powerups.push((0, _powerup.createPowerup)(powerup.typeID, powerup.index, powerup.posX, powerup.posY));
             }
         } catch (err) {
             _didIteratorError = true;
@@ -41882,15 +41884,15 @@ function hideElement(el) {
 
 /**
  * Returns the distance between two objects.
- * Both objects must have a 'x' and 'y' field.
- * @param {*} obj1 First object 
- * @param {*} obj2 Second object
+ * Both objects must be GameObjects
+ * @param {GameObject} obj1 First object 
+ * @param {GameObject} obj2 Second object
  */
 function distanceBetween(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
 }
 
-},{"./chat-client.js":191,"./cookies.js":192,"./global.js":194,"./pixigame.js":196,"./player.js":197,"./powerup.js":198}],191:[function(require,module,exports){
+},{"./chat-client.js":191,"./cookies.js":192,"./gameobject.js":193,"./global.js":194,"./pixigame.js":196,"./player.js":197,"./powerup.js":198}],191:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -42196,6 +42198,8 @@ var _pixi = require('pixi.js');
 
 var PIXI = _interopRequireWildcard(_pixi);
 
+var _pixigame = require('./pixigame');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42218,20 +42222,20 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     /**
      * Creates a new GameObject.
      * @param {PIXI.Texture} texture The texture associated with this sprite
-     * @param {*} id Unique identifier- for example, socket ID for players, numerical ID for powerups
-     * @param {*} room Room that the object is in
-     * @param {*} x Global x-coordinate
-     * @param {*} y Global y-coordinate
+     * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for powerups
+     * @param {number} x Global x-coordinate
+     * @param {number} y Global y-coordinate
      */
-    function GameObject(texture, id, room, x, y) {
+    function GameObject(texture, id, x, y) {
         _classCallCheck(this, GameObject);
 
         var _this = _possibleConstructorReturn(this, (GameObject.__proto__ || Object.getPrototypeOf(GameObject)).call(this, texture));
 
         _this.id = id;
-        _this.room = room;
         _this.posX = x;
         _this.posY = y;
+
+        _pixigame.app.stage.addChild(_this);
         return _this;
     }
 
@@ -42266,6 +42270,18 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         }
 
         /**
+         * Call during tick() if necessary. 
+         * Draws powerup in the correct position on the player screen.
+         */
+
+    }, {
+        key: 'draw',
+        value: function draw() {
+            this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
+            this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
+        }
+
+        /**
          * Moves this player to (9999, 9999) on local screen space, effectively
          * hiding it from view.
          */
@@ -42278,30 +42294,28 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         }
 
         /**
-         * MUST OVERRIDE! Called once, during game setup phase.
+         * Override optional. Called once, during game setup phase.
          */
 
     }, {
         key: 'setup',
-        value: function setup() {
-            throw new Error('setup() must be overridden! in this GameObject!');
-        }
+        value: function setup() {}
 
         /**
-         * MUST OVERRIDE! Called once a frame after setup.
+         * Override optional. Default behavior: draw()
          */
 
     }, {
         key: 'tick',
         value: function tick() {
-            throw new Error('tick() must be overridden! in this GameObject!');
+            this.draw();
         }
     }]);
 
     return GameObject;
 }(PIXI.Sprite);
 
-},{"pixi.js":142}],194:[function(require,module,exports){
+},{"./pixigame":196,"pixi.js":142}],194:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42410,7 +42424,7 @@ function keyboard(keyCode) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.textStyle = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
+exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
 exports.createPlayer = createPlayer;
 
@@ -42432,10 +42446,9 @@ var isSetup = exports.isSetup = undefined; // True after the stage is fully set 
 var player = exports.player = undefined; // The player being controlled by this client
 var screenCenterX = exports.screenCenterX = undefined; // X-coordinate of the center of the screen
 var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the center of the screen
+var app = exports.app = undefined; // Pixi app
 
-var app = void 0;
 var sprites = []; // Sprites on the stage
-
 var esc = void 0,
     up = void 0,
     down = void 0,
@@ -42454,7 +42467,7 @@ function init() {
     PIXI.utils.sayHello(type);
 
     //Create a Pixi Application
-    app = new PIXI.Application(0, 0, { view: document.getElementById('gameView') });
+    exports.app = app = new PIXI.Application(0, 0, { view: document.getElementById('gameView') });
 
     //Add the canvas that Pixi automatically created for you to the HTML document
     // document.body.appendChild(app.view);
@@ -42466,7 +42479,7 @@ function init() {
     exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
     // Load resources
-    PIXI.loader.add(_global.GLOBAL.SPRITES).load(setup);
+    PIXI.loader.add(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]] === undefined ? _global.GLOBAL.SPRITES : '').load(setup);
 }
 
 /**
@@ -42485,16 +42498,39 @@ function setup() {
         toggleMenu();
     };
 
-    // Hide loading screen
-    (0, _app.hideElement)('loading');
-    (0, _app.showElement)('chatbox');
-
     // sprites.nametext.position.set()
 
     // Load sprites into stage
     for (var sprite in sprites) {
         if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
     }
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = _app.powerups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var powerup = _step.value;
+
+            app.stage.addChild(powerup);
+        } // Background
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    app.renderer.backgroundColor = 0xFFFFFF;
 
     // Resize
     document.getElementsByTagName('body')[0].onresize = function () {
@@ -42506,6 +42542,9 @@ function setup() {
     };
 
     exports.isSetup = isSetup = true;
+    // Hide loading screen
+    (0, _app.hideElement)('loading');
+    (0, _app.showElement)('chatbox');
 
     // Begin game loop
     app.ticker.add(function (delta) {
@@ -42518,9 +42557,6 @@ function setup() {
  * @param {number} delta Time value from Pixi
  */
 function draw(delta) {
-    // Background
-    app.renderer.backgroundColor = 0xFFFFFF;
-
     // Handle this player and movement
     if (player !== undefined) {
 
@@ -42530,6 +42566,10 @@ function draw(delta) {
             if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
             if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
             if (down.isDown) player.vy = -_global.GLOBAL.MAX_SPEED;
+
+            // Slow down gradually
+            if (!up.isDown && !down.isDown) player.vy *= _global.GLOBAL.VELOCITY_STEP;
+            if (!left.isDown && !right.isDown) player.vx *= _global.GLOBAL.VELOCITY_STEP;
 
             player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
         } else player.isMoving = false;
@@ -42545,6 +42585,34 @@ function draw(delta) {
     for (var pl in _app.players) {
         if (_app.players[pl] !== player) {
             if ((0, _app.distanceBetween)(_app.players[pl], player) < _global.GLOBAL.DRAW_RADIUS) _app.players[pl].tick();else _app.players[pl].hide();
+        }
+    }
+
+    // Draw powerups
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
+
+    try {
+        for (var _iterator2 = _app.powerups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var powerup = _step2.value;
+
+            if ((0, _app.distanceBetween)(player, powerup) < _global.GLOBAL.DRAW_RADIUS && !powerup.isEquipped) {
+                powerup.tick();
+            } else powerup.hide();
+        }
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
         }
     }
 }
@@ -42566,7 +42634,6 @@ function createPlayer(data) {
         console.log('create player ' + data.id);
         var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
         if (data.id === _app.socket.id) exports.player = player = newPlayer;
-        app.stage.addChild(newPlayer);
         return newPlayer;
     }
 }
@@ -42622,7 +42689,7 @@ var Player = exports.Player = function (_GameObject) {
         _classCallCheck(this, Player);
 
         // Pixi Values
-        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture, id, room, x, y));
+        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture, id, x, y));
 
         // Call GameObject
 
@@ -42641,6 +42708,7 @@ var Player = exports.Player = function (_GameObject) {
 
         // Custom fields
         _this.name = name;
+        _this.room = room;
         _this.isMoving = false;
         _this.vx = vx;
         _this.vy = vy;
@@ -42691,12 +42759,6 @@ var Player = exports.Player = function (_GameObject) {
             if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
             if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
 
-            // Slow down gradually
-            if (!this.isMoving) {
-                this.vy *= _global.GLOBAL.VELOCITY_STEP;
-                this.vx *= _global.GLOBAL.VELOCITY_STEP;
-            }
-
             // Change position based on speed and direction
             this.posX += this.vx;
             this.posY += this.vy;
@@ -42706,8 +42768,7 @@ var Player = exports.Player = function (_GameObject) {
 
             // Draw other player
             if (this.id !== _app.socket.id) {
-                this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
-                this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
+                this.draw();
             }
         }
     }]);
@@ -42729,68 +42790,78 @@ exports.createPowerup = createPowerup;
 
 var _global = require('./global.js');
 
+var _gameobject = require('./gameobject.js');
+
+var _player = require('./player.js');
+
+var _pixi = require('pixi.js');
+
+var PIXI = _interopRequireWildcard(_pixi);
+
+var _app = require('./app.js');
+
+var _pixigame = require('./pixigame.js');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Powerup = exports.Powerup = function () {
+var Powerup = exports.Powerup = function (_GameObject) {
+    _inherits(Powerup, _GameObject);
 
     /**
      * Creates a Powerup at the given coordinates. If no coordinates are given, then 
      * the powerup spawns in a random location.
+     * @param {PIXI.Texture} texture The texture of the powerup
      * @param {number} index The index of the powerup in the powerups array
      * @param {number} x (optional) X Coordinate of the Powerup 
      * @param {number} y (optional) Y Coordinate of the Powerup 
      */
-    function Powerup(index, x, y) {
+    function Powerup(texture, index, x, y) {
         _classCallCheck(this, Powerup);
 
-        if (x !== undefined && y !== undefined) {
-            this.x = x;
-            this.y = y;
-        } else {
-            this.x = Math.random() * _global.GLOBAL.MAP_SIZE * 2 - _global.GLOBAL.MAP_SIZE;
-            this.y = Math.random() * _global.GLOBAL.MAP_SIZE * 2 - _global.GLOBAL.MAP_SIZE;
-        }
+        var _this = _possibleConstructorReturn(this, (Powerup.__proto__ || Object.getPrototypeOf(Powerup)).call(this, texture, index, x, y));
 
-        this.isEquipped = false;
-        this.typeID = -1;
+        _this.height = _global.GLOBAL.POWERUP_RADIUS * 2;
+        _this.width = _global.GLOBAL.POWERUP_RADIUS * 2;
+        _this.isEquipped = false;
+        _this.typeID = -1;
+        return _this;
     }
 
     /**
-     * Draws the powerup either near the player or on the map. Call once per frame.
-     * @param {*} p5 P5 reference to use
-     * @param {*} player (optional) The player reference to use - needed only if powerup is equipped
+     * Run when players are nearby to check if they picked this powerup up.
+     * @param {Player} player Player to check collision against
+     * @returns true if collision detected, false otherwise
      */
 
 
     _createClass(Powerup, [{
-        key: 'draw',
-        value: function draw(p5, player) {
-            if (this.isEquipped) return; //TODO draw around player
-            // TODO fill with image
-            p5.ellipse(this.x, this.y, _global.GLOBAL.POWERUP_RADIUS, _global.GLOBAL.POWERUP_RADIUS);
-        }
-
-        /**
-         * Run when players are nearby to check if they picked this powerup up.
-         * @param {*} player Player to check collision against
-         * @returns true if collision detected, false otherwise
-         */
-
-    }, {
         key: 'checkCollision',
         value: function checkCollision(player) {
             if (this.isEquipped) return false;
-            if (Math.pow(this.y - player.y, 2) + Math.pow(this.x - player.x, 2) < Math.pow(_global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS, 2)) {
+            if ((0, _app.distanceBetween)(this, player) < _global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS) {
                 this.isEquipped = true;
                 return true;
             }
 
             return false;
         }
+    }, {
+        key: 'tick',
+        value: function tick() {
+            this.checkCollision(_pixigame.player);
+            this.draw();
+        }
+
+        /**
+         * MUST OVERRIDE! Consumes the powerup and applies effects
+         */
+
     }, {
         key: 'use',
         value: function use() {
@@ -42799,7 +42870,7 @@ var Powerup = exports.Powerup = function () {
     }]);
 
     return Powerup;
-}();
+}(_gameobject.GameObject);
 
 var HealthPowerup = exports.HealthPowerup = function (_Powerup) {
     _inherits(HealthPowerup, _Powerup);
@@ -42807,11 +42878,10 @@ var HealthPowerup = exports.HealthPowerup = function (_Powerup) {
     function HealthPowerup(index, x, y) {
         _classCallCheck(this, HealthPowerup);
 
-        var _this = _possibleConstructorReturn(this, (HealthPowerup.__proto__ || Object.getPrototypeOf(HealthPowerup)).call(this, index, x, y));
+        var _this2 = _possibleConstructorReturn(this, (HealthPowerup.__proto__ || Object.getPrototypeOf(HealthPowerup)).call(this, PIXI.loader.resources[_global.GLOBAL.SPRITES[_global.GLOBAL.P_HEALTH]].texture, index, x, y));
 
-        _this.image = ''; //TODO
-        _this.typeID = _global.GLOBAL.P_HEALTH;
-        return _this;
+        _this2.typeID = _global.GLOBAL.P_HEALTH;
+        return _this2;
     }
 
     _createClass(HealthPowerup, [{
@@ -42845,4 +42915,4 @@ function createPowerup(typeID, index, x, y) {
     throw new Error('Powerup of type ' + typeID + ' could not be found!');
 }
 
-},{"./global.js":194}]},{},[190]);
+},{"./app.js":190,"./gameobject.js":193,"./global.js":194,"./pixigame.js":196,"./player.js":197,"pixi.js":142}]},{},[190]);

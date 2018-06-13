@@ -2,16 +2,15 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './keyboard';
 import { GLOBAL } from './global';
 import { Player } from './player';
-import { hideElement, showElement, socket, players, distanceBetween } from './app';
+import { hideElement, showElement, socket, players, distanceBetween, powerups } from './app';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
 export var screenCenterX; // X-coordinate of the center of the screen
 export var screenCenterY; // Y-coordinate of the center of the screen
+export var app; // Pixi app
 
-let app;
 let sprites = []; // Sprites on the stage
-
 let esc, up, down, left, right; // Key handlers
 
 // Add text
@@ -39,7 +38,7 @@ export function init() {
 
     // Load resources
     PIXI.loader
-        .add(GLOBAL.SPRITES)
+        .add((PIXI.loader.resources[GLOBAL.SPRITES[0]] === undefined) ? GLOBAL.SPRITES : '')
         .load(setup);
 }
 
@@ -59,10 +58,6 @@ function setup() {
         toggleMenu();
     }
 
-    // Hide loading screen
-    hideElement('loading');
-    showElement('chatbox');
-
     // sprites.nametext.position.set()
 
     // Load sprites into stage
@@ -70,6 +65,13 @@ function setup() {
         if(sprite !== 'player')
             app.stage.addChild(sprites[sprite]);
     }
+
+    for(let powerup of powerups)
+        app.stage.addChild(powerup);
+
+    // Background
+    app.renderer.backgroundColor = 0xFFFFFF;
+
 
     // Resize
     document.getElementsByTagName('body')[0].onresize = () => {
@@ -81,6 +83,9 @@ function setup() {
     }
 
     isSetup = true; 
+    // Hide loading screen
+    hideElement('loading');
+    showElement('chatbox');
 
     // Begin game loop
     app.ticker.add(delta => draw(delta));
@@ -92,9 +97,6 @@ function setup() {
  * @param {number} delta Time value from Pixi
  */
 function draw(delta) {
-    // Background
-    app.renderer.backgroundColor = 0xFFFFFF;
-
     // Handle this player and movement
     if(player !== undefined) {
 
@@ -108,6 +110,12 @@ function draw(delta) {
                 player.vy = GLOBAL.MAX_SPEED;
             if (down.isDown)
                 player.vy = -GLOBAL.MAX_SPEED;
+            
+            // Slow down gradually
+            if (!up.isDown && !down.isDown) 
+                player.vy *= GLOBAL.VELOCITY_STEP;
+            if(!left.isDown && !right.isDown)
+                player.vx *= GLOBAL.VELOCITY_STEP;
             
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
         } else
@@ -128,6 +136,15 @@ function draw(delta) {
             else
                 players[pl].hide();
         }
+    }
+
+    // Draw powerups
+    for(let powerup of powerups) {
+        if (distanceBetween(player, powerup) < GLOBAL.DRAW_RADIUS && !powerup.isEquipped) {
+            powerup.tick();
+        }
+        else
+            powerup.hide();
     }
 }
 
@@ -152,7 +169,6 @@ export function createPlayer(data) {
         let newPlayer = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
         if(data.id === socket.id)
             player = newPlayer;
-        app.stage.addChild(newPlayer);
         return newPlayer;
     }
 }

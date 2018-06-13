@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { app, screenCenterX, screenCenterY, player } from './pixigame';
 
 /**
  * GameObject class that all objects in the game space should inherit.
@@ -13,17 +14,17 @@ export class GameObject extends PIXI.Sprite {
     /**
      * Creates a new GameObject.
      * @param {PIXI.Texture} texture The texture associated with this sprite
-     * @param {*} id Unique identifier- for example, socket ID for players, numerical ID for powerups
-     * @param {*} room Room that the object is in
-     * @param {*} x Global x-coordinate
-     * @param {*} y Global y-coordinate
+     * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for powerups
+     * @param {number} x Global x-coordinate
+     * @param {number} y Global y-coordinate
      */
-    constructor(texture, id, room, x, y) {
+    constructor(texture, id, x, y) {
         super(texture);
         this.id = id;
-        this.room = room;
         this.posX = x;
         this.posY = y;
+        
+        app.stage.addChild(this);
     }
 
     /**
@@ -50,6 +51,15 @@ export class GameObject extends PIXI.Sprite {
     }
 
     /**
+     * Call during tick() if necessary. 
+     * Draws powerup in the correct position on the player screen.
+     */
+    draw() {
+        this.x = screenCenterX + this.posX - player.posX;
+        this.y = screenCenterY + player.posY - this.posY;
+    }
+
+    /**
      * Moves this player to (9999, 9999) on local screen space, effectively
      * hiding it from view.
      */
@@ -59,16 +69,15 @@ export class GameObject extends PIXI.Sprite {
     }
 
     /**
-     * MUST OVERRIDE! Called once, during game setup phase.
+     * Override optional. Called once, during game setup phase.
      */
     setup() {
-        throw new Error('setup() must be overridden! in this GameObject!');
     }
 
     /**
-     * MUST OVERRIDE! Called once a frame after setup.
+     * Override optional. Default behavior: draw()
      */
     tick() {
-        throw new Error('tick() must be overridden! in this GameObject!');
+        this.draw();
     }
 }

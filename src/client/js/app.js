@@ -8,6 +8,7 @@ import * as cookies from './cookies.js';
 import {init, createPlayer, isSetup } from './pixigame.js';
 import { Player } from './player.js';
 import { createPowerup } from './powerup.js';
+import { GameObject } from './gameobject.js';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
 export var socket;
@@ -193,7 +194,7 @@ function SetupSocket(socket) {
         // First time sync - copy over entire array data
         console.log('Generating powerups...');
         for (let powerup of data.powerups) {
-            powerups.push(createPowerup(powerup.typeID, powerups.length));
+            powerups.push(createPowerup(powerup.typeID, powerup.index, powerup.posX, powerup.posY));
         }
     })
 
@@ -266,9 +267,9 @@ export function hideElement(el) {
 
 /**
  * Returns the distance between two objects.
- * Both objects must have a 'x' and 'y' field.
- * @param {*} obj1 First object 
- * @param {*} obj2 Second object
+ * Both objects must be GameObjects
+ * @param {GameObject} obj1 First object 
+ * @param {GameObject} obj2 Second object
  */
 export function distanceBetween(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));

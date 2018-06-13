@@ -4,8 +4,6 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {GLOBAL} from '../client/js/global.js';
-import { createPowerup } from '../client/js/powerup.js';
-
 var config = require('./config.json');
 
 
@@ -58,7 +56,14 @@ io.on('connection', socket => {
     // Generate Powerups
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
       let type = Math.floor(Math.random() * GLOBAL.POWERUP_TYPES);
-      let powerup = createPowerup(type);
+      let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
+      let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
+      let powerup = {
+        typeID: type,
+        index: rooms[room].powerups.length,
+        posX: randX,
+        posY: randY
+      };
       rooms[room].powerups.push(powerup);
     }
   }
