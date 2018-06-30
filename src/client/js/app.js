@@ -22,9 +22,11 @@ export var powerups = [];
 const nickErrorText = document.getElementById('nickErrorText');
 const playerNameInput = document.getElementById('playerNameInput');
 const roomNameInput = document.getElementById('roomNameInput');
+const teamNameInput = document.getElementById('teamNameInput');
 
 let playerName;
 let roomName;
+let teamName;
 
 // Starts the game if the name is valid.
 function startGame() {
@@ -34,10 +36,12 @@ function startGame() {
         // Start game sequence
         playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
         roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
+        teamName = teamNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
         // Set cookies
         cookies.setCookie(GLOBAL.NAME_COOKIE, playerName, GLOBAL.COOKIE_DAYS);
         cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
+        cookies.setCookie(GLOBAL.TEAM_COOKIE, teamName, GLOBAL.COOKIE_DAYS);
 
         // Show game window
         showElement('gameAreaWrapper');
@@ -48,7 +52,7 @@ function startGame() {
 
         //Debugging and Local serving
         socket = io.connect(GLOBAL.LOCAL_HOST, {
-            query: `room=${roomName}&name=${playerName}`,
+            query: `room=${roomName}&name=${playerName}&team=${teamName}`,
             reconnectionAttempts: 3
         });
         
@@ -57,7 +61,7 @@ function startGame() {
             if(!socket.connected) {
                 console.log('connecting to main server');
                 socket.disconnect();
-                socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}` });
+                socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}&team=${teamName}` });
             }
             if (socket !== null)
                 SetupSocket(socket);
@@ -75,7 +79,7 @@ function startGame() {
  */
 function validNick() {
     const regex = /^\w*$/;
-    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
+    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null && regex.exec(teamNameInput.value);
 }
 
 /** 
@@ -85,12 +89,15 @@ window.onload = () => {
     // Cookie loading
     const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
     const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
+    const teamCookie = cookies.getCookie(GLOBAL.TEAM_COOKIE);
 
     // Continue loading cookie only if it exists
     if(playerCookie !== null && playerCookie.length > 0)
         playerNameInput.value = playerCookie;
     if(roomCookie !== null && roomCookie.length > 0)
         roomNameInput.value = roomCookie;
+    if(teamCookie !== null && teamCookie.length > 0)
+        teamNameInput.value = teamCookie;
 
     // Add listeners to start game to enter key and button click
     document.getElementById('startButton').onclick = () => {
@@ -121,9 +128,10 @@ function SetupSocket(socket) {
     console.log('Socket:', socket);
     
     //Instantiate Chat System
-    let chat = new ChatClient({ player: playerName, room: roomName });
+    let chat = new ChatClient({ player: playerName, room: roomName, team: teamName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
+    
 
     // On Connection Failure
     socket.on('reconnect_failed', () => {

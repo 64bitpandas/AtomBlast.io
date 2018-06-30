@@ -41625,9 +41625,11 @@ var powerups = exports.powerups = [];
 var nickErrorText = document.getElementById('nickErrorText');
 var playerNameInput = document.getElementById('playerNameInput');
 var roomNameInput = document.getElementById('roomNameInput');
+var teamNameInput = document.getElementById('teamNameInput');
 
 var playerName = void 0;
 var roomName = void 0;
+var teamName = void 0;
 
 // Starts the game if the name is valid.
 function startGame() {
@@ -41637,10 +41639,12 @@ function startGame() {
         // Start game sequence
         playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
         roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
+        teamName = teamNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
         // Set cookies
         cookies.setCookie(_global.GLOBAL.NAME_COOKIE, playerName, _global.GLOBAL.COOKIE_DAYS);
         cookies.setCookie(_global.GLOBAL.ROOM_COOKIE, roomName, _global.GLOBAL.COOKIE_DAYS);
+        cookies.setCookie(_global.GLOBAL.TEAM_COOKIE, teamName, _global.GLOBAL.COOKIE_DAYS);
 
         // Show game window
         showElement('gameAreaWrapper');
@@ -41651,7 +41655,7 @@ function startGame() {
 
         //Debugging and Local serving
         exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
-            query: 'room=' + roomName + '&name=' + playerName,
+            query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
             reconnectionAttempts: 3
         });
 
@@ -41660,7 +41664,7 @@ function startGame() {
             if (!socket.connected) {
                 console.log('connecting to main server');
                 socket.disconnect();
-                exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, { query: 'room=' + roomName + '&name=' + playerName });
+                exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, { query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName });
             }
             if (socket !== null) SetupSocket(socket);
             // Init pixi
@@ -41676,7 +41680,7 @@ function startGame() {
  */
 function validNick() {
     var regex = /^\w*$/;
-    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
+    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null && regex.exec(teamNameInput.value);
 }
 
 /** 
@@ -41686,10 +41690,12 @@ window.onload = function () {
     // Cookie loading
     var playerCookie = cookies.getCookie(_global.GLOBAL.NAME_COOKIE);
     var roomCookie = cookies.getCookie(_global.GLOBAL.ROOM_COOKIE);
+    var teamCookie = cookies.getCookie(_global.GLOBAL.TEAM_COOKIE);
 
     // Continue loading cookie only if it exists
     if (playerCookie !== null && playerCookie.length > 0) playerNameInput.value = playerCookie;
     if (roomCookie !== null && roomCookie.length > 0) roomNameInput.value = roomCookie;
+    if (teamCookie !== null && teamCookie.length > 0) teamNameInput.value = teamCookie;
 
     // Add listeners to start game to enter key and button click
     document.getElementById('startButton').onclick = function () {
@@ -41719,7 +41725,7 @@ function SetupSocket(socket) {
     console.log('Socket:', socket);
 
     //Instantiate Chat System
-    var chat = new _chatClient2.default({ player: playerName, room: roomName });
+    var chat = new _chatClient2.default({ player: playerName, room: roomName, team: teamName });
     chat.addLoginMessage(playerName, true);
     chat.registerFunctions();
 
@@ -41927,6 +41933,7 @@ var ChatClient = function () {
         this.player = params.player;
         var self = this;
         this.commands = {};
+        this.commandPrefix = "-";
         var input = document.getElementById('chatInput');
         input.addEventListener('keypress', function (key) {
             _this.sendChat(key);
@@ -42007,6 +42014,19 @@ var ChatClient = function () {
             this.appendMessage('<b>' + (name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name) + '</b>: ' + message, me ? 'me' : 'friend');
         }
 
+        /**
+         * Chat box implementation for the users.
+         * @param {string} name Name of the player who sent the message
+         * @param {string} message Message that was sent
+         * @param {boolean} me True if the sender matches the receiver
+         */
+
+    }, {
+        key: 'addPrivateMessage',
+        value: function addPrivateMessage(name, message, me) {
+            this.appendMessage('<b>' + (name.length < 1 ? _global.GLOBAL.PLACEHOLDER_NAME : name) + '</b>: ' + message, me ? 'me' : 'friend');
+        }
+
         // Message to notify players when a new player joins
 
     }, {
@@ -42052,7 +42072,7 @@ var ChatClient = function () {
                 if (text !== '') {
 
                     // Chat command.
-                    if (text.indexOf('-') === 0) {
+                    if (text.indexOf(this.commandPrefix) === 0) {
                         var args = text.substring(1).split(' ');
                         if (commands[args[0]]) {
                             commands[args[0]].callback(args.slice(1));
@@ -42680,12 +42700,13 @@ var Player = exports.Player = function (_GameObject) {
      * @param {string} id Socket ID of the player
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
+     * @param {string} team Team that the player belongs to
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    function Player(texture, id, name, room, x, y, vx, vy) {
+    function Player(texture, id, name, room, team, x, y, vx, vy) {
         _classCallCheck(this, Player);
 
         // Pixi Values
@@ -42731,6 +42752,7 @@ var Player = exports.Player = function (_GameObject) {
             this.textObjects.nametext = new PIXI.Text('name: ', _pixigame.textStyle);
             this.textObjects.idtext = new PIXI.Text('id: ', _pixigame.textStyle);
             this.textObjects.postext = new PIXI.Text('x', _pixigame.textStyle);
+            this.textObject.teamtext = new PIXI.Text('team: ', _pixigame.textStyle);
 
             // Assign values and positions
             this.textObjects.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
@@ -42738,6 +42760,8 @@ var Player = exports.Player = function (_GameObject) {
             this.textObjects.nametext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 100);
             this.textObjects.nametext.text += this.name;
             this.textObjects.postext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 200);
+            this.textObjects.teamtext.text += this.team;
+            this.textObjects.teamtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9 + 300);
 
             // Create text
             for (var item in this.textObjects) {

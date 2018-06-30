@@ -1,4 +1,4 @@
-// Main script for the clientside rendering of the game using Pixi.js.
+// DEPRECATED, use pixigame.js Main script for the clientside rendering of the game using Pixi.js.
 
 import * as PIXI from './lib/pixi.min.js';
 import { CONNREFUSED } from 'dns';

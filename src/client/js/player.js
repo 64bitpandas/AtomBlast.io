@@ -15,12 +15,13 @@ export class Player extends GameObject {
      * @param {string} id Socket ID of the player
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
+     * @param {string} team Team that the player belongs to
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    constructor(texture, id, name, room, x, y, vx, vy) {
+    constructor(texture, id, name, room, team, x, y, vx, vy) {
 
         // Call GameObject
         super(texture, id, x, y);
@@ -58,6 +59,7 @@ export class Player extends GameObject {
         this.textObjects.nametext = new PIXI.Text('name: ', textStyle);
         this.textObjects.idtext = new PIXI.Text('id: ', textStyle);
         this.textObjects.postext = new PIXI.Text('x', textStyle);
+        this.textObject.teamtext = new PIXI.Text('team: ', textStyle);
 
         // Assign values and positions
         this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);
@@ -65,6 +67,8 @@ export class Player extends GameObject {
         this.textObjects.nametext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 100);
         this.textObjects.nametext.text += this.name;
         this.textObjects.postext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200);
+        this.textObjects.teamtext.text += this.team;
+        this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);
 
         // Create text
         for (let item in this.textObjects)

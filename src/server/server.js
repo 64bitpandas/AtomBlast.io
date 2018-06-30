@@ -49,7 +49,7 @@ io.on('connection', socket => {
 
   // Initialize room array and spawn powerups on first player join
   if(rooms[room] === undefined || rooms[room] === null) {
-    console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red);
+    console.log('[Server] '.bold.blue + 'Setting uproom room '.yellow + ('' + room).bold.red);
     rooms[room] = {};
     rooms[room].players = {};
     rooms[room].powerups = [];

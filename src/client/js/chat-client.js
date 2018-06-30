@@ -16,6 +16,7 @@ export default class ChatClient {
         this.player = params.player;
         const self = this;
         this.commands = {};
+        this.commandPrefix = "-";
         let input = document.getElementById('chatInput');
         input.addEventListener('keypress', key => {this.sendChat(key);}); //This works WTF
         input.addEventListener('keyup', key => {
@@ -88,6 +89,19 @@ export default class ChatClient {
         );
     }
 
+    /**
+     * Chat box implementation for the users.
+     * @param {string} name Name of the player who sent the message
+     * @param {string} message Message that was sent
+     * @param {boolean} me True if the sender matches the receiver
+     */
+    addPrivateMessage(name, message, me) {
+       this.appendMessage(
+           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,
+           (me) ? 'me' : 'friend'
+        );
+    }
+
     // Message to notify players when a new player joins
     addLoginMessage(name, me) {
         console.log(`${name} joined`);
@@ -130,7 +144,7 @@ export default class ChatClient {
             if (text !== '') {
 
                 // Chat command.
-                if (text.indexOf('-') === 0) {
+                if (text.indexOf(this.commandPrefix) === 0) {
                     const args = text.substring(1).split(' ');
                     if (commands[args[0]]) {
                         commands[args[0]].callback(args.slice(1));

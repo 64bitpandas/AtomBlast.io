@@ -1,7 +1,7 @@
 import { p5 } from './lib/p5.min.js';
 import { GLOBAL } from './global.js';
 import { players, socket, powerups, showElement, hideElement, distanceBetween } from './app.js';
-// Please comment YOUR CODE! <---- yes PLEASE !
+// DEPRECATED, use pixigame.js Please comment YOUR CODE! <---- yes PLEASE !
 
 const game = (p5) => {
   let playerSpeed = GLOBAL.MAX_SPEED;
