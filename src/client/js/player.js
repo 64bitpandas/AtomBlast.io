@@ -102,6 +102,12 @@ export class Player extends GameObject {
         }
     }
 
-
+    /**
+     * Adds a powerup to the list
+     * @param {number} id The ID of the powerup to add to the player
+     */
+    addPowerup(id) {
+        this.powerups.push(id)
+    }
 
 }

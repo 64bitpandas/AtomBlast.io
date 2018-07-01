@@ -1,4 +1,4 @@
-// Contains all global constants for the client.
+// Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
     
     // Keys and other mathematical constants
@@ -36,7 +36,7 @@ export const GLOBAL = {
     MIN_POWERUPS: 50, // minimum number of powerups to be spawned
     MAX_POWERUPS: 100, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
-    P_HEALTH: 0, // HealthPowerup
+    P_HYDROGEN_ATOM: 1, // HydrogenAtom
 
     // Map
     MAP_SIZE: 5000,
@@ -49,7 +49,17 @@ export const GLOBAL = {
     // Sprites
     SPRITES: [
         '../assets/testplayer.png',
+        '../assets/testplayer2.png',
     ]
-   
 
 };
+
+/**
+ * Returns the distance between two objects.
+ * Both objects must be GameObjects
+ * @param {GameObject} obj1 First object 
+ * @param {GameObject} obj2 Second object
+ */
+export function distanceBetween(obj1, obj2) {
+    return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
+}

@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './keyboard';
 import { GLOBAL } from './global';
 import { Player } from './player';
-import { hideElement, showElement, socket, players, distanceBetween, powerups } from './app';
+import { hideElement, showElement, socket, players, powerups } from './app';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -66,8 +66,8 @@ function setup() {
             app.stage.addChild(sprites[sprite]);
     }
 
-    for(let powerup of powerups)
-        app.stage.addChild(powerup);
+    for(let powerup in powerups)
+        app.stage.addChild(powerups[powerup]);
 
     // Background
     app.renderer.backgroundColor = 0xFFFFFF;
@@ -131,20 +131,13 @@ function draw(delta) {
     // Handle other players
     for(let pl in players) {
         if(players[pl] !== player) {
-            if(distanceBetween(players[pl], player) < GLOBAL.DRAW_RADIUS)
-                players[pl].tick();
-            else
-                players[pl].hide();
+            players[pl].tick();
         }
     }
 
     // Draw powerups
-    for(let powerup of powerups) {
-        if (distanceBetween(player, powerup) < GLOBAL.DRAW_RADIUS && !powerup.isEquipped) {
-            powerup.tick();
-        }
-        else
-            powerup.hide();
+    for(let powerup in powerups) {
+        powerups[powerup].tick();
     }
 }
 
@@ -171,4 +164,11 @@ export function createPlayer(data) {
             player = newPlayer;
         return newPlayer;
     }
+}
+
+/**
+ * Deletes the pixi app instance (use on disconnect)
+ */
+export function deletePixi() {
+    app = null;
 }

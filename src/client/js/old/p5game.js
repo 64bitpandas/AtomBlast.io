@@ -105,7 +105,7 @@ const game = (p5) => {
   
         // Check powerup collision
         if(powerup.checkCollision(player))
-          socket.emit('powerupChange', {index: powerup.index});
+          socket.emit('powerupCollision', {id: powerup.id});
       }
     }
 
