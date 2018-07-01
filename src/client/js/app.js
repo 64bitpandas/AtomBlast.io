@@ -78,7 +78,7 @@ function startGame() {
  * @returns true if the nickname is valid, false otherwise
  */
 function validNick() {
-    const regex = /^\w*$/;
+    const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
     return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null && regex.exec(teamNameInput.value);
 }
 
@@ -176,18 +176,19 @@ function SetupSocket(socket) {
             }
         }
 
-        if (oldPlayers !== undefined && players !== undefined) {
-            // Lerp predictions with actual for other players
-            for (let player in players) {
-                let pl = players[player], oldPl = oldPlayers[player];
-                if (pl !== null && pl !== undefined && oldPl !== undefined && pl !== socket.id) {
-                    pl.posX = lerp(pl.posX, oldPl.posX, GLOBAL.LERP_VALUE);
-                    pl.posY = lerp(pl.posY, oldPl.posY, GLOBAL.LERP_VALUE);
-                    pl.vx = lerp(pl.vx, oldPl.vx, GLOBAL.LERP_VALUE);
-                    pl.vy = lerp(pl.vy, oldPl.vy, GLOBAL.LERP_VALUE);
-                }
-            }
-        }
+        // Lerping deprecated for performance issues
+        // if (oldPlayers !== undefined && players !== undefined) {
+        //     // Lerp predictions with actual for other players
+        //     for (let player in players) {
+        //         let pl = players[player], oldPl = oldPlayers[player];
+        //         if (pl !== null && pl !== undefined && oldPl !== undefined && pl !== socket.id) {
+        //             pl.posX = lerp(pl.posX, oldPl.posX, GLOBAL.LERP_VALUE);
+        //             pl.posY = lerp(pl.posY, oldPl.posY, GLOBAL.LERP_VALUE);
+        //             pl.vx = lerp(pl.vx, oldPl.vx, GLOBAL.LERP_VALUE);
+        //             pl.vy = lerp(pl.vy, oldPl.vy, GLOBAL.LERP_VALUE);
+        //         }
+        //     }
+        // }
         
     });
 
