@@ -21,6 +21,7 @@ export const GLOBAL = {
     // Cookies
     NAME_COOKIE: 'name',
     ROOM_COOKIE: 'room',
+    TEAM_COOKIE: 'team',
     COOKIE_DAYS: 14,
 
     // Player Movement

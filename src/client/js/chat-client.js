@@ -6,7 +6,7 @@
 import {GLOBAL} from './global.js';
 import { socket } from './app.js';
 
-let player, room;
+let player, room, team;
 export default class ChatClient {
 
     // Use this constructor during init to connect ChatClient to the server
@@ -14,6 +14,7 @@ export default class ChatClient {
         // this.canvas = params.canvas;
         // this.mobile = params.mobile;
         this.player = params.player;
+        this.team = params.team;
         const self = this;
         this.commands = {};
         this.commandPrefix = "-";

@@ -166,7 +166,7 @@ function toggleMenu() {
 export function createPlayer(data) {
     if(isSetup) {
         console.log('create player ' + data.id);
-        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
+        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.posX, data.posY, data.vx, data.vy);
         if(data.id === socket.id)
             player = newPlayer;
         return newPlayer;

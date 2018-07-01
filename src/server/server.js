@@ -41,7 +41,7 @@ io.on('connection', socket => {
 
   // Join custom room
   socket.join(socket.handshake.query.room, () => {
-    console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${socket.handshake.query.room}`.yellow);
+    console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${socket.handshake.query.room} in team ${socket.handshake.query.team}`.yellow);
   });
 
   // Player room name
@@ -73,6 +73,7 @@ io.on('connection', socket => {
     id: socket.id, 
     name: socket.handshake.query.name, 
     room: socket.handshake.query.room,
+    team: socket.handshake.query.team,
     posX: 0,
     posY: 0,
     // posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
@@ -109,7 +110,7 @@ io.on('connection', socket => {
   socket.to(room).on('playerJoin', data => {
     // console.log('sender: ' + data.sender);
     const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
-    socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender });
+    socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender, team: data.team });
   });
 
   // Broadcasts player join message

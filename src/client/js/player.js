@@ -42,6 +42,7 @@ export class Player extends GameObject {
         // Custom fields
         this.name = name;
         this.room = room;
+        this.team = team;
         this.isMoving = false;
         this.vx = vx;
         this.vy = vy;
@@ -59,7 +60,7 @@ export class Player extends GameObject {
         this.textObjects.nametext = new PIXI.Text('name: ', textStyle);
         this.textObjects.idtext = new PIXI.Text('id: ', textStyle);
         this.textObjects.postext = new PIXI.Text('x', textStyle);
-        this.textObject.teamtext = new PIXI.Text('team: ', textStyle);
+        this.textObjects.teamtext = new PIXI.Text('team: ', textStyle);
 
         // Assign values and positions
         this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);

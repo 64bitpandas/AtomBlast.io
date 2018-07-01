@@ -225,8 +225,8 @@ function SetupSocket(socket) {
         chat.addLoginMessage(data.reason, false);
     });
 
-    //Emit join message
-    socket.emit('playerJoin', { sender: chat.player });
+    //Emit join message,
+    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }
 
 // Linear Interpolation function. Adapted from p5.lerp

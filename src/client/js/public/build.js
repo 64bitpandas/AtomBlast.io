@@ -41840,8 +41840,8 @@ function SetupSocket(socket) {
         chat.addLoginMessage(data.reason, false);
     });
 
-    //Emit join message
-    socket.emit('playerJoin', { sender: chat.player });
+    //Emit join message,
+    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }
 
 // Linear Interpolation function. Adapted from p5.lerp
@@ -41918,7 +41918,8 @@ var _app = require('./app.js');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var player = void 0,
-    room = void 0;
+    room = void 0,
+    team = void 0;
 
 var ChatClient = function () {
 
@@ -41931,6 +41932,7 @@ var ChatClient = function () {
         // this.canvas = params.canvas;
         // this.mobile = params.mobile;
         this.player = params.player;
+        this.team = params.team;
         var self = this;
         this.commands = {};
         this.commandPrefix = "-";
@@ -42364,6 +42366,7 @@ var GLOBAL = exports.GLOBAL = {
     // Cookies
     NAME_COOKIE: 'name',
     ROOM_COOKIE: 'room',
+    TEAM_COOKIE: 'team',
     COOKIE_DAYS: 14,
 
     // Player Movement
@@ -42652,7 +42655,7 @@ function toggleMenu() {
 function createPlayer(data) {
     if (isSetup) {
         console.log('create player ' + data.id);
-        var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.posX, data.posY, data.vx, data.vy);
+        var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.posX, data.posY, data.vx, data.vy);
         if (data.id === _app.socket.id) exports.player = player = newPlayer;
         return newPlayer;
     }
@@ -42730,6 +42733,7 @@ var Player = exports.Player = function (_GameObject) {
         // Custom fields
         _this.name = name;
         _this.room = room;
+        _this.team = team;
         _this.isMoving = false;
         _this.vx = vx;
         _this.vy = vy;
@@ -42752,7 +42756,7 @@ var Player = exports.Player = function (_GameObject) {
             this.textObjects.nametext = new PIXI.Text('name: ', _pixigame.textStyle);
             this.textObjects.idtext = new PIXI.Text('id: ', _pixigame.textStyle);
             this.textObjects.postext = new PIXI.Text('x', _pixigame.textStyle);
-            this.textObject.teamtext = new PIXI.Text('team: ', _pixigame.textStyle);
+            this.textObjects.teamtext = new PIXI.Text('team: ', _pixigame.textStyle);
 
             // Assign values and positions
             this.textObjects.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
