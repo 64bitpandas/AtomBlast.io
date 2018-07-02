@@ -41750,6 +41750,7 @@ function SetupSocket(socket) {
     // Sync players between server and client
     // Sync players between server and client
     socket.on('playerSync', function (data) {
+        console.log("Player sync");
         // Create temp array for lerping
         var oldPlayers = players;
         //assigning local array to data sent by server
@@ -41761,9 +41762,15 @@ function SetupSocket(socket) {
             // Valid player
             if (pl !== null) {
                 // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null && player !== socket.id) players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                if (players[player] !== undefined && players[player] !== null && player !== socket.id) {
+                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                }
+
                 // Does not exist - need to create new player
-                else if (_pixigame.isSetup && (players[socket.id] === undefined || players[socket.id] === null)) players[player] = (0, _pixigame.createPlayer)(pl);
+                else if (_pixigame.isSetup && (players[player] === undefined || players[player] === null)) {
+                        console.log("Create a player");
+                        players[player] = (0, _pixigame.createPlayer)(pl);
+                    }
             }
             // Delete if it is a player that has disconnected
             else {
@@ -41911,7 +41918,7 @@ var GLOBAL = exports.GLOBAL = {
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
-    LOCAL_HOST: 'localhost:3000',
+    LOCAL_HOST: 'localhost:8080',
 
     // Cookies
     NAME_COOKIE: 'name',

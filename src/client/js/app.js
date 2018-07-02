@@ -155,6 +155,7 @@ function SetupSocket(socket) {
     // Sync players between server and client
      // Sync players between server and client
      socket.on('playerSync', (data) => {
+         console.log("Player sync");
          // Create temp array for lerping
          let oldPlayers = players;
          //assigning local array to data sent by server
@@ -166,11 +167,15 @@ function SetupSocket(socket) {
              // Valid player
              if (pl !== null) {
                  // Player already exists in database
-                 if (players[player] !== undefined && players[player] !== null && player !== socket.id)
+                 if (players[player] !== undefined && players[player] !== null && player !== socket.id){
                      players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                 }
+                 
                  // Does not exist - need to create new player
-                 else if (isSetup && (players[socket.id] === undefined || players[socket.id] === null))
+                 else if (isSetup && (players[player] === undefined || players[player] === null)){
+                     console.log("Create a player");
                      players[player] = createPlayer(pl);
+                 }
              }
              // Delete if it is a player that has disconnected
              else {
