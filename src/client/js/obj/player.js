@@ -16,12 +16,13 @@ export class Player extends GameObject {
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
      * @param {string} team Team that the player belongs to
+     * @param {number} health Health of the player
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    constructor(texture, id, name, room, team, x, y, vx, vy) {
+    constructor(texture, id, name, room, team, health, x, y, vx, vy) {
 
         // Call GameObject
         super(texture, id, x, y, vx, vy);
@@ -43,6 +44,7 @@ export class Player extends GameObject {
         this.name = name;
         this.room = room;
         this.team = team;
+        this.health = health; //Set the health of the player
         this.isMoving = false;
         this.powerups = [];
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
@@ -57,8 +59,9 @@ export class Player extends GameObject {
         // Create text objects
         this.textObjects.nametext = new PIXI.Text('name: ', textStyle);
         this.textObjects.idtext = new PIXI.Text('id: ', textStyle);
-        this.textObjects.postext = new PIXI.Text('x', textStyle);
+        this.textObjects.postext = new PIXI.Text('placeholderpos', textStyle);
         this.textObjects.teamtext = new PIXI.Text('team: ', textStyle);
+        this.textObjects.healthtext = new PIXI.Text('health: ', textStyle);
 
         // Assign values and positions
         this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);
@@ -74,11 +77,22 @@ export class Player extends GameObject {
             this.addChild(this.textObjects[item]);
     }
     
-  /** 
-   * Draws all components of a given player.
-   * This method should be included in the ticker and called once a frame.
-   * Therefore, all setup tasks should be called in setup().
-   */
+    /**
+    *  Decrement player health
+    *  Called whenever a player damages, or collides with, another player
+    *  @param {number} power
+    */
+    damage(power) {
+        this.health -= power;
+        socket.emit('damage', this.health);
+    }
+
+
+    /** 
+    * Draws all components of a given player.
+    * This method should be included in the ticker and called once a frame.
+    * Therefore, all setup tasks should be called in setup().
+    */
     tick() {
         
         // Movement
@@ -86,6 +100,7 @@ export class Player extends GameObject {
         
         // Update text
         this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
+        this.textObjects.healthtext.text = 'health: ' + this.health;
 
         // Draw other player
         if(this.id !== socket.id) {
@@ -94,11 +109,11 @@ export class Player extends GameObject {
     }
 
     /**
-     * Adds a powerup to the list
-     * @param {number} id The ID of the powerup to add to the player
-     */
+        * Adds a powerup to the list
+        * @param {number} id The ID of the powerup to add to the player
+        */
     addPowerup(id) {
-        this.powerups.push(id)
+        this.powerups.push(id);
     }
 
 }

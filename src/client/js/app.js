@@ -153,28 +153,45 @@ function SetupSocket(socket) {
     });
 
     // Sync players between server and client
-    socket.on('playerSync', (data) => {
-        //assigning local array to data sent by server
+     // Sync players between server and client
+     socket.on('playerSync', (data) => {
+         // Create temp array for lerping
+         let oldPlayers = players;
+         //assigning local array to data sent by server
 
-        // Reconstruct player objects based on transferred data
-        for (let player in data) {
-            let pl = data[player];
+         // Reconstruct player objects based on transferred data
+         for (let player in data) {
+             let pl = data[player];
 
-            // Valid player
-            if (pl !== null) {
-                // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null)
-                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
-                // Does not exist - need to create new player
-                else if (isSetup)
-                    players[player] = createPlayer(pl);
-            }
-            // Delete if it is a player that has disconnected or out of range
-            else {
-                delete players[player];
-            }
-        }
-    });
+             // Valid player
+             if (pl !== null) {
+                 // Player already exists in database
+                 if (players[player] !== undefined && players[player] !== null && player !== socket.id)
+                     players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                 // Does not exist - need to create new player
+                 else if (isSetup && (players[socket.id] === undefined || players[socket.id] === null))
+                     players[player] = createPlayer(pl);
+             }
+             // Delete if it is a player that has disconnected
+             else {
+                 delete players[player];
+             }
+         }
+
+         if (oldPlayers !== undefined && players !== undefined) {
+             // Lerp predictions with actual for other players
+             for (let player in players) {
+                 let pl = players[player],
+                     oldPl = oldPlayers[player];
+                 if (pl !== null && pl !== undefined && oldPl !== undefined && player !== socket.id) {
+                     pl.posX = lerp(pl.posX, oldPl.posX, GLOBAL.LERP_VALUE);
+                     pl.posY = lerp(pl.posY, oldPl.posY, GLOBAL.LERP_VALUE);
+                     pl.vx = lerp(pl.vx, oldPl.vx, GLOBAL.LERP_VALUE);
+                     pl.vy = lerp(pl.vy, oldPl.vy, GLOBAL.LERP_VALUE);
+                 }
+             }
+         }
+     });
 
     socket.on('powerupSync', (data) => { //THIS IS NOT AN ARRAY ANYMORE
         //assigning local array to data sent by server
@@ -270,4 +287,9 @@ export function showElement(el) {
  */
 export function hideElement(el) {
     document.getElementById(el).style.display = 'none';
+}
+
+// Linear Interpolation function. Adapted from p5.lerp
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t
 }

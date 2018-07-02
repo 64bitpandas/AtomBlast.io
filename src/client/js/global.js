@@ -30,6 +30,7 @@ export const GLOBAL = {
     VELOCITY_STEP: 0.8, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
     DEADZONE: 0.1,
+    MAX_HEALTH: 100, // Starting health of players
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups

@@ -41598,7 +41598,7 @@ var cookies = _interopRequireWildcard(_cookies);
 
 var _pixigame = require('./pixigame.js');
 
-var _player = require('./obj/player');
+var _player2 = require('./obj/player');
 
 var _powerup = require('./obj/powerup');
 
@@ -41748,7 +41748,10 @@ function SetupSocket(socket) {
     });
 
     // Sync players between server and client
+    // Sync players between server and client
     socket.on('playerSync', function (data) {
+        // Create temp array for lerping
+        var oldPlayers = players;
         //assigning local array to data sent by server
 
         // Reconstruct player objects based on transferred data
@@ -41758,14 +41761,28 @@ function SetupSocket(socket) {
             // Valid player
             if (pl !== null) {
                 // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null) players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                if (players[player] !== undefined && players[player] !== null && player !== socket.id) players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
                 // Does not exist - need to create new player
-                else if (_pixigame.isSetup) players[player] = (0, _pixigame.createPlayer)(pl);
+                else if (_pixigame.isSetup && (players[socket.id] === undefined || players[socket.id] === null)) players[player] = (0, _pixigame.createPlayer)(pl);
             }
-            // Delete if it is a player that has disconnected or out of range
+            // Delete if it is a player that has disconnected
             else {
                     delete players[player];
                 }
+        }
+
+        if (oldPlayers !== undefined && players !== undefined) {
+            // Lerp predictions with actual for other players
+            for (var _player in players) {
+                var _pl = players[_player],
+                    oldPl = oldPlayers[_player];
+                if (_pl !== null && _pl !== undefined && oldPl !== undefined && _player !== socket.id) {
+                    _pl.posX = lerp(_pl.posX, oldPl.posX, _global.GLOBAL.LERP_VALUE);
+                    _pl.posY = lerp(_pl.posY, oldPl.posY, _global.GLOBAL.LERP_VALUE);
+                    _pl.vx = lerp(_pl.vx, oldPl.vx, _global.GLOBAL.LERP_VALUE);
+                    _pl.vy = lerp(_pl.vy, oldPl.vy, _global.GLOBAL.LERP_VALUE);
+                }
+            }
         }
     });
 
@@ -41864,6 +41881,11 @@ function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
 
+// Linear Interpolation function. Adapted from p5.lerp
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t;
+}
+
 },{"./global.js":191,"./lib/chat-client":192,"./lib/cookies":193,"./obj/gameobject":195,"./obj/player":196,"./obj/powerup":197,"./pixigame.js":198}],191:[function(require,module,exports){
 'use strict';
 
@@ -41903,6 +41925,7 @@ var GLOBAL = exports.GLOBAL = {
     VELOCITY_STEP: 0.8, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
     DEADZONE: 0.1,
+    MAX_HEALTH: 100, // Starting health of players
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups
@@ -42388,8 +42411,10 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     }, {
         key: 'draw',
         value: function draw() {
-            this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX + _global.GLOBAL.POWERUP_RADIUS;
-            this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY + _global.GLOBAL.POWERUP_RADIUS;
+            if (_pixigame.player !== undefined) {
+                this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX + _global.GLOBAL.POWERUP_RADIUS;
+                this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY + _global.GLOBAL.POWERUP_RADIUS;
+            }
         }
 
         /**
@@ -42477,12 +42502,13 @@ var Player = exports.Player = function (_GameObject) {
      * @param {string} name Name of the player
      * @param {string} room Room that the player belongs to
      * @param {string} team Team that the player belongs to
+     * @param {number} health Health of the player
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    function Player(texture, id, name, room, team, x, y, vx, vy) {
+    function Player(texture, id, name, room, team, health, x, y, vx, vy) {
         _classCallCheck(this, Player);
 
         // Pixi Values
@@ -42507,6 +42533,7 @@ var Player = exports.Player = function (_GameObject) {
         _this.name = name;
         _this.room = room;
         _this.team = team;
+        _this.health = health; //Set the health of the player
         _this.isMoving = false;
         _this.powerups = [];
         _this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
@@ -42526,8 +42553,9 @@ var Player = exports.Player = function (_GameObject) {
             // Create text objects
             this.textObjects.nametext = new PIXI.Text('name: ', _pixigame.textStyle);
             this.textObjects.idtext = new PIXI.Text('id: ', _pixigame.textStyle);
-            this.textObjects.postext = new PIXI.Text('x', _pixigame.textStyle);
+            this.textObjects.postext = new PIXI.Text('placeholderpos', _pixigame.textStyle);
             this.textObjects.teamtext = new PIXI.Text('team: ', _pixigame.textStyle);
+            this.textObjects.healthtext = new PIXI.Text('health: ', _pixigame.textStyle);
 
             // Assign values and positions
             this.textObjects.idtext.position.set(0, _global.GLOBAL.PLAYER_RADIUS * 9);
@@ -42544,11 +42572,24 @@ var Player = exports.Player = function (_GameObject) {
             }
         }
 
+        /**
+        *  Decrement player health
+        *  Called whenever a player damages, or collides with, another player
+        *  @param {number} power
+        */
+
+    }, {
+        key: 'damage',
+        value: function damage(power) {
+            this.health -= power;
+            _app.socket.emit('damage', this.health);
+        }
+
         /** 
-         * Draws all components of a given player.
-         * This method should be included in the ticker and called once a frame.
-         * Therefore, all setup tasks should be called in setup().
-         */
+        * Draws all components of a given player.
+        * This method should be included in the ticker and called once a frame.
+        * Therefore, all setup tasks should be called in setup().
+        */
 
     }, {
         key: 'tick',
@@ -42559,6 +42600,7 @@ var Player = exports.Player = function (_GameObject) {
 
             // Update text
             this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
+            this.textObjects.healthtext.text = 'health: ' + this.health;
 
             // Draw other player
             if (this.id !== _app.socket.id) {
@@ -42567,9 +42609,9 @@ var Player = exports.Player = function (_GameObject) {
         }
 
         /**
-         * Adds a powerup to the list
-         * @param {number} id The ID of the powerup to add to the player
-         */
+            * Adds a powerup to the list
+            * @param {number} id The ID of the powerup to add to the player
+            */
 
     }, {
         key: 'addPowerup',
@@ -42924,7 +42966,7 @@ function toggleMenu() {
 function createPlayer(data) {
     if (isSetup) {
         console.log('create player ' + data.id);
-        var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.posX, data.posY, data.vx, data.vy);
+        var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
         if (data.id === _app.socket.id) exports.player = player = newPlayer;
         return newPlayer;
     }

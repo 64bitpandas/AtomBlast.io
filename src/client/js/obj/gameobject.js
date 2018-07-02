@@ -60,8 +60,10 @@ export class GameObject extends PIXI.Sprite {
      * Draws powerup in the correct position on the player screen.
      */
     draw() {
-        this.x = screenCenterX + this.posX - player.posX + GLOBAL.POWERUP_RADIUS;
-        this.y = screenCenterY + player.posY - this.posY + GLOBAL.POWERUP_RADIUS;
+        if(player !== undefined) {
+            this.x = screenCenterX + this.posX - player.posX + GLOBAL.POWERUP_RADIUS;
+            this.y = screenCenterY + player.posY - this.posY + GLOBAL.POWERUP_RADIUS;
+        }
     }
 
     /**

@@ -77,6 +77,7 @@ io.on('connection', socket => {
     name: socket.handshake.query.name, 
     room: socket.handshake.query.room,
     team: socket.handshake.query.team,
+    health: GLOBAL.MAX_HEALTH,
     posX: 0,
     posY: 0,
     // posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
@@ -87,6 +88,7 @@ io.on('connection', socket => {
 
  let thisPlayer = rooms[room].players[socket.id];
  console.log(thisPlayer);
+ 
   // Setup player array sync- once a frame
   setInterval(() => {
     if(rooms[room] !== undefined) {
@@ -163,6 +165,11 @@ io.on('connection', socket => {
 
   }); 
 
+  socket.to(room).on('damage', data => {
+    if(rooms[room].players[data.id] !== undefined){
+      rooms[room].players[data.id].health = data;
+    }
+  });
 
   /**
    * On powerup movement
