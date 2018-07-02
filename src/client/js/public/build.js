@@ -41652,23 +41652,28 @@ function startGame() {
         // Show loading screen
         showElement('loading');
 
-        //Debugging and Local serving
-        exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
-            query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
-            reconnectionAttempts: 3
-        });
+        //Joins debug server if conditions are met
+        if (roomName === 'jurassicexp') {
+            console.log('Dev Backdoor Initiated! Connecting to devserver');
+            //Debugging and Local serving
+            exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
+                query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
+                reconnectionAttempts: 3
+            });
+        } else {
+            // Production server
+            console.log('connecting to main server');
+            exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, {
+                query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
+                reconnectionAttempts: 3
+            });
+        }
 
-        //Production server
-        setTimeout(function () {
-            if (!socket.connected) {
-                console.log('connecting to main server');
-                socket.disconnect();
-                exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, { query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName });
-            }
-            if (socket !== null) SetupSocket(socket);
+        socket.on('connect', function () {
+            setupSocket(socket);
             // Init pixi
             (0, _pixigame.init)();
-        }, 1000);
+        });
     } else {
         nickErrorText.style.display = 'inline';
     }
@@ -41720,7 +41725,7 @@ window.onload = function () {
  * First time setup when connection starts.
  * @param {*} socket The socket.io connection instance.
  */
-function SetupSocket(socket) {
+function setupSocket(socket) {
     //Debug
     console.log('Socket:', socket);
 
@@ -41750,7 +41755,6 @@ function SetupSocket(socket) {
     // Sync players between server and client
     // Sync players between server and client
     socket.on('playerSync', function (data) {
-        console.log("Player sync");
         // Create temp array for lerping
         var oldPlayers = players;
         //assigning local array to data sent by server
@@ -41772,10 +41776,6 @@ function SetupSocket(socket) {
                         players[player] = (0, _pixigame.createPlayer)(pl);
                     }
             }
-            // Delete if it is a player that has disconnected
-            else {
-                    delete players[player];
-                }
         }
 
         if (oldPlayers !== undefined && players !== undefined) {
@@ -41819,7 +41819,18 @@ function SetupSocket(socket) {
     // Sync powerups that have not been picked up
     socket.on('serverSendPowerupRemoval', function (data) {
         //A powerup was removed
-        if (powerups[data.id] !== null) delete powerups[data.id];
+        if (powerups[data.id] !== undefined) {
+            powerups[data.id].hide();
+            delete powerups[data.id];
+        }
+    });
+
+    socket.on('disconnectedPlayer', function (data) {
+        console.log('Player ' + data.id + ' has disconnected');
+        if (players[data.id] !== undefined) {
+            players[data.id].hide();
+            delete players[data.id];
+        }
     });
 
     // Sync powerups on first connect
@@ -41918,7 +41929,7 @@ var GLOBAL = exports.GLOBAL = {
 
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
-    LOCAL_HOST: 'localhost:8080',
+    LOCAL_HOST: 'localhost:3000',
 
     // Cookies
     NAME_COOKIE: 'name',
@@ -41941,7 +41952,7 @@ var GLOBAL = exports.GLOBAL = {
     POWERUP_TYPES: 1, // number of types of powerups
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
     ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
-    ATTRACTION_COEFFICIENT: .1, // Multiplier for attraction strength
+    ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
 
     // Map
     MAP_SIZE: 5000,
@@ -42714,7 +42725,7 @@ var Powerup = exports.Powerup = function (_GameObject) {
                 // let theta = Math.tan((this.posY - player.posY)/());
                 this.vx += 1 / (player.posX - this.posX) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
                 this.vy += 1 / (player.posY - this.posY) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
-                console.log(this.vx, this.vy, this.posX, this.posY);
+                // console.log(this.vx, this.vy, this.posX, this.posY);
                 _app.socket.emit('powerupMove', { id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
             } else if (this.vx !== 0 || this.vy !== 0) {
                 this.vx *= _global.GLOBAL.VELOCITY_STEP;
@@ -42973,6 +42984,7 @@ function toggleMenu() {
 function createPlayer(data) {
     if (isSetup) {
         console.log('create player ' + data.id);
+        console.log(data);
         var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
         if (data.id === _app.socket.id) exports.player = player = newPlayer;
         return newPlayer;

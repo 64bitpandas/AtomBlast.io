@@ -50,25 +50,33 @@ function startGame() {
         // Show loading screen
         showElement('loading');
 
-        //Debugging and Local serving
-        socket = io.connect(GLOBAL.LOCAL_HOST, {
-            query: `room=${roomName}&name=${playerName}&team=${teamName}`,
-            reconnectionAttempts: 3
-        });
+       
 
-        //Production server
-        setTimeout(() => {
-            if (!socket.connected) {
-                console.log('connecting to main server');
-                socket.disconnect();
-                socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}&team=${teamName}` });
-            }
-            if (socket !== null)
-                SetupSocket(socket);
+        //Joins debug server if conditions are met
+        if(roomName === 'jurassicexp') {
+            console.log('Dev Backdoor Initiated! Connecting to devserver');            
+            //Debugging and Local serving
+            socket = io.connect(GLOBAL.LOCAL_HOST, {
+                query: `room=${roomName}&name=${playerName}&team=${teamName}`,
+                reconnectionAttempts: 3
+            });
+        }
+        else {
+            // Production server
+            console.log('connecting to main server');
+            socket = io.connect(GLOBAL.SERVER_IP, {
+                query: `room=${roomName}&name=${playerName}&team=${teamName}`,
+                reconnectionAttempts: 3
+            });
+        }
+        
+        socket.on('connect', () => {
+            setupSocket(socket);
             // Init pixi
             init();
-
-        }, 1000);
+        });
+                
+            
     } else {
         nickErrorText.style.display = 'inline';
     }
@@ -124,7 +132,7 @@ window.onload = () => {
  * First time setup when connection starts.
  * @param {*} socket The socket.io connection instance.
  */
-function SetupSocket(socket) {
+function setupSocket(socket) {
     //Debug
     console.log('Socket:', socket);
 
@@ -155,7 +163,6 @@ function SetupSocket(socket) {
     // Sync players between server and client
      // Sync players between server and client
      socket.on('playerSync', (data) => {
-         console.log("Player sync");
          // Create temp array for lerping
          let oldPlayers = players;
          //assigning local array to data sent by server
@@ -176,10 +183,6 @@ function SetupSocket(socket) {
                      console.log("Create a player");
                      players[player] = createPlayer(pl);
                  }
-             }
-             // Delete if it is a player that has disconnected
-             else {
-                 delete players[player];
              }
          }
 
@@ -224,8 +227,18 @@ function SetupSocket(socket) {
     // Sync powerups that have not been picked up
     socket.on('serverSendPowerupRemoval', (data) => {
         //A powerup was removed
-        if (powerups[data.id] !== null)
+        if(powerups[data.id] !== undefined) {
+            powerups[data.id].hide();
             delete powerups[data.id];
+        }
+    });
+
+    socket.on('disconnectedPlayer', (data) => {
+        console.log('Player ' + data.id + ' has disconnected');
+        if(players[data.id] !== undefined) {
+            players[data.id].hide();
+            delete players[data.id];
+        }
     });
 
     // Sync powerups on first connect

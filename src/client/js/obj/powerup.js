@@ -45,7 +45,7 @@ export class Powerup extends GameObject {
             // let theta = Math.tan((this.posY - player.posY)/());
             this.vx += 1/(player.posX - this.posX) * GLOBAL.ATTRACTION_COEFFICIENT;
             this.vy += 1/(player.posY - this.posY) * GLOBAL.ATTRACTION_COEFFICIENT;
-            console.log(this.vx, this.vy, this.posX, this.posY);
+            // console.log(this.vx, this.vy, this.posX, this.posY);
             socket.emit('powerupMove', {id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy});
         }
         else if(this.vx !== 0 || this.vy !== 0) {

@@ -191,9 +191,10 @@ io.on('connection', socket => {
 
   socket.on('disconnect', data => {
     console.log("Disconnect Received: " + data);
-    console.log("Players before deletion, " + rooms[room].players.toString());
-    delete rooms[room].players[socket.id];
-    console.log("Players after deletion, " + rooms[room].players.toString());
+    
+    socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
+    
+    delete rooms[room].players[socket.id]; //Remove the server side player
 
     // Delete room if there is nobody inside
     if(Object.keys(rooms[room].players).length === 0)  {
