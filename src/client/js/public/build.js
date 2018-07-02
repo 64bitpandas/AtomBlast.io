@@ -41836,7 +41836,7 @@ function quitGame(msg) {
     // Wipe players list
     exports.players = players = {};
     // Wipe powerups list
-    exports.powerups = powerups = [];
+    exports.powerups = powerups = {};
 
     // menu
     hideElement('gameAreaWrapper');
@@ -41905,8 +41905,8 @@ var GLOBAL = exports.GLOBAL = {
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups
-    MIN_POWERUPS: 50, // minimum number of powerups to be spawned
-    MAX_POWERUPS: 100, // maximum number of powerups to be spawned
+    MIN_POWERUPS: 150, // minimum number of powerups to be spawned
+    MAX_POWERUPS: 300, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
 
@@ -41914,7 +41914,7 @@ var GLOBAL = exports.GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    DRAW_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    DRAW_RADIUS: 1000, // Radius around player in which to draw other players and powerups
     GRID_SPACING: 200, // space between each line on the grid
     FRAME_RATE: 60,
 
@@ -42302,6 +42302,8 @@ var PIXI = _interopRequireWildcard(_pixi);
 
 var _pixigame = require('../pixigame');
 
+var _global = require('../global');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42379,8 +42381,8 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     }, {
         key: 'draw',
         value: function draw() {
-            this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
-            this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
+            this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX + _global.GLOBAL.POWERUP_RADIUS;
+            this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY + _global.GLOBAL.POWERUP_RADIUS;
         }
 
         /**
@@ -42417,7 +42419,7 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     return GameObject;
 }(PIXI.Sprite);
 
-},{"../pixigame":198,"pixi.js":142}],196:[function(require,module,exports){
+},{"../global":191,"../pixigame":198,"pixi.js":142}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42595,6 +42597,8 @@ var _gameobject = require('../obj/gameobject');
 
 var _pixigame = require('../pixigame.js');
 
+var _app = require('../app.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42642,6 +42646,7 @@ var Powerup = exports.Powerup = function (_GameObject) {
             if ((0, _global.distanceBetween)(this, player) < _global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS) {
                 this.isEquipped = true;
                 player.addPowerup(this.typeID);
+                _app.socket.emit('powerupCollision', { id: this.id });
                 return true;
             }
 
@@ -42714,7 +42719,7 @@ function createPowerup(typeID, id, x, y) {
     throw new Error('Powerup of type ' + typeID + ' could not be found!');
 }
 
-},{"../global.js":191,"../obj/gameobject":195,"../pixigame.js":198,"./player.js":196,"pixi.js":142}],198:[function(require,module,exports){
+},{"../app.js":190,"../global.js":191,"../obj/gameobject":195,"../pixigame.js":198,"./player.js":196,"pixi.js":142}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

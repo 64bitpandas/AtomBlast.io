@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { app, screenCenterX, screenCenterY, player } from '../pixigame';
+import { GLOBAL } from '../global';
 
 /**
  * GameObject class that all objects in the game space should inherit.
@@ -55,8 +56,8 @@ export class GameObject extends PIXI.Sprite {
      * Draws powerup in the correct position on the player screen.
      */
     draw() {
-        this.x = screenCenterX + this.posX - player.posX;
-        this.y = screenCenterY + player.posY - this.posY;
+        this.x = screenCenterX + this.posX - player.posX + GLOBAL.POWERUP_RADIUS;
+        this.y = screenCenterY + player.posY - this.posY + GLOBAL.POWERUP_RADIUS;
     }
 
     /**

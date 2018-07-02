@@ -243,7 +243,7 @@ function quitGame(msg) {
     // Wipe players list
     players = {};
     // Wipe powerups list
-    powerups = [];
+    powerups = {};
 
     // menu
     hideElement('gameAreaWrapper');

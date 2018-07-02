@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js';
 import { Player } from './player.js';
-import {GLOBAL} from '../global.js';
+import { GLOBAL } from '../global.js';
 import { GameObject } from '../obj/gameobject';
 import { distanceBetween } from '../global.js';
 import { screenCenterX, screenCenterY, player } from '../pixigame.js';
+import { socket } from '../app.js';
 
 export class Powerup extends GameObject {
 
@@ -15,7 +16,7 @@ export class Powerup extends GameObject {
      * @param {number} x (optional) X Coordinate of the Powerup 
      * @param {number} y (optional) Y Coordinate of the Powerup 
      */
-    constructor (texture, id, x, y) {
+    constructor(texture, id, x, y) {
         // Powerups have a random ID between 100000 and 999999, inclusive.
         super(texture, id, x, y);
         this.height = GLOBAL.POWERUP_RADIUS * 2;
@@ -30,11 +31,12 @@ export class Powerup extends GameObject {
      * @returns true if collision detected, false otherwise
      */
     checkCollision(player) {
-        if(this.isEquipped || player === undefined)
-            return false; 
-        if(distanceBetween(this, player) < GLOBAL.POWERUP_RADIUS+GLOBAL.PLAYER_RADIUS) {
+        if (this.isEquipped || player === undefined)
+            return false;
+        if (distanceBetween(this, player) < GLOBAL.POWERUP_RADIUS + GLOBAL.PLAYER_RADIUS) {
             this.isEquipped = true;
             player.addPowerup(this.typeID);
+            socket.emit('powerupCollision', {id: this.id});
             return true;
         }
 
@@ -42,7 +44,7 @@ export class Powerup extends GameObject {
     }
 
     tick() {
-        if(!this.isEquipped) {
+        if (!this.isEquipped) {
             this.checkCollision(player);
             this.draw();
         }
@@ -60,14 +62,14 @@ export class Powerup extends GameObject {
 }
 
 export class HydrogenAtom extends Powerup {
-    
-    constructor(id, x,y) {
+
+    constructor(id, x, y) {
         super(PIXI.loader.resources[GLOBAL.SPRITES[GLOBAL.P_HYDROGEN_ATOM]].texture, id, x, y);
         this.typeID = GLOBAL.P_HYDROGEN_ATOM;
     }
 
     use() {
-        
+
     }
 }
 
@@ -82,13 +84,13 @@ export class HydrogenAtom extends Powerup {
  * @param {number} y (optional) y-coordinate of the powerup
  */
 export function createPowerup(typeID, id, x, y) {
-    switch(typeID) {
+    switch (typeID) {
         case 1:
             return new HydrogenAtom(id, x, y);
         // Tried to create a generic Powerup
         case -1:
             throw new Error('The Powerup object cannot be created without specifying behavior.');
     }
-    
+
     throw new Error('Powerup of type ' + typeID + ' could not be found!');
 }

@@ -33,8 +33,8 @@ export const GLOBAL = {
 
     // Powerups
     POWERUP_RADIUS: 30, // size of spawned powerups
-    MIN_POWERUPS: 50, // minimum number of powerups to be spawned
-    MAX_POWERUPS: 100, // maximum number of powerups to be spawned
+    MIN_POWERUPS: 150, // minimum number of powerups to be spawned
+    MAX_POWERUPS: 300, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
 
@@ -42,7 +42,7 @@ export const GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    DRAW_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    DRAW_RADIUS: 1000, // Radius around player in which to draw other players and powerups
     GRID_SPACING: 200, // space between each line on the grid
     FRAME_RATE: 60,
 
