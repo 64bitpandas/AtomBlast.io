@@ -41775,14 +41775,15 @@ function SetupSocket(socket) {
 
         // Reconstruct powerup objects based on transferred data
         for (var powerup in data) {
-
             // Valid powerup
             if (data[powerup] !== null) {
+                // Powerup already exists in database
+                var tempPow = data[powerup];
+                if (powerups[powerup] !== undefined && powerups[powerup] !== null) powerups[powerup].setData(tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
                 // Does not exist - need to create new powerup
-                if (_pixigame.isSetup && powerups[powerup] === undefined) {
-                    var tempPow = data[powerup];
-                    powerups[powerup] = (0, _powerup.createPowerup)(tempPow.typeID, tempPow.id, tempPow.posX, tempPow.posY);
-                }
+                else if (_pixigame.isSetup) {
+                        powerups[powerup] = (0, _powerup.createPowerup)(tempPow.typeID, tempPow.id, tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
+                    }
             }
             // Delete if it is a player that has disconnected or out of range
             else {
@@ -41909,6 +41910,8 @@ var GLOBAL = exports.GLOBAL = {
     MAX_POWERUPS: 300, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
+    ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
+    ATTRACTION_COEFFICIENT: .1, // Multiplier for attraction strength
 
     // Map
     MAP_SIZE: 5000,
@@ -42329,8 +42332,10 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
      * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for powerups
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
+     * @param {number} vx Horizontal velocity
+     * @param {number} vy Vertical velocity
      */
-    function GameObject(texture, id, x, y) {
+    function GameObject(texture, id, x, y, vx, vy) {
         _classCallCheck(this, GameObject);
 
         var _this = _possibleConstructorReturn(this, (GameObject.__proto__ || Object.getPrototypeOf(GameObject)).call(this, texture));
@@ -42338,6 +42343,8 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         _this.id = id;
         _this.posX = x;
         _this.posY = y;
+        _this.vx = vx;
+        _this.vy = vy;
 
         _pixigame.app.stage.addChild(_this);
         return _this;
@@ -42406,13 +42413,19 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         value: function setup() {}
 
         /**
-         * Override optional. Default behavior: draw()
+         * Override optional. Default behavior: handles movement. Call super.tick() from child class if movable.
          */
 
     }, {
         key: 'tick',
         value: function tick() {
-            this.draw();
+            // Prevent drifting due to minimal negative values
+            if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
+            if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
+
+            // Change position based on speed and direction
+            this.posX += this.vx;
+            this.posY += this.vy;
         }
     }]);
 
@@ -42428,6 +42441,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.Player = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _global = require('../global.js');
 
@@ -42471,7 +42486,7 @@ var Player = exports.Player = function (_GameObject) {
         _classCallCheck(this, Player);
 
         // Pixi Values
-        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture, id, x, y));
+        var _this = _possibleConstructorReturn(this, (Player.__proto__ || Object.getPrototypeOf(Player)).call(this, texture, id, x, y, vx, vy));
 
         // Call GameObject
 
@@ -42493,8 +42508,6 @@ var Player = exports.Player = function (_GameObject) {
         _this.room = room;
         _this.team = team;
         _this.isMoving = false;
-        _this.vx = vx;
-        _this.vy = vy;
         _this.powerups = [];
         _this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
@@ -42532,7 +42545,7 @@ var Player = exports.Player = function (_GameObject) {
         }
 
         /** 
-         * Draws all components of a given player and handles movement.
+         * Draws all components of a given player.
          * This method should be included in the ticker and called once a frame.
          * Therefore, all setup tasks should be called in setup().
          */
@@ -42541,13 +42554,8 @@ var Player = exports.Player = function (_GameObject) {
         key: 'tick',
         value: function tick() {
 
-            // Prevent drifting due to minimal negative values
-            if (Math.abs(this.vx) < _global.GLOBAL.DEADZONE) this.vx = 0;
-            if (Math.abs(this.vy) < _global.GLOBAL.DEADZONE) this.vy = 0;
-
-            // Change position based on speed and direction
-            this.posX += this.vx;
-            this.posY += this.vy;
+            // Movement
+            _get(Player.prototype.__proto__ || Object.getPrototypeOf(Player.prototype), 'tick', this).call(this);
 
             // Update text
             this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
@@ -42583,6 +42591,8 @@ exports.HydrogenAtom = exports.Powerup = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 exports.createPowerup = createPowerup;
 
 var _pixi = require('pixi.js');
@@ -42615,13 +42625,16 @@ var Powerup = exports.Powerup = function (_GameObject) {
      * the powerup spawns in a random location.
      * @param {PIXI.Texture} texture The texture of the powerup
      * @param {number} id The ID of this powerup (generated by server)
+     * @param {number} type The numerical type of this powerup (see createPowerup for details)
      * @param {number} x (optional) X Coordinate of the Powerup 
      * @param {number} y (optional) Y Coordinate of the Powerup 
+     * @param {number} vx Horizontal velocity
+     * @param {number} vy Vertical velocity
      */
-    function Powerup(texture, id, x, y) {
+    function Powerup(texture, id, x, y, vx, vy) {
         _classCallCheck(this, Powerup);
 
-        var _this = _possibleConstructorReturn(this, (Powerup.__proto__ || Object.getPrototypeOf(Powerup)).call(this, texture, id, x, y));
+        var _this = _possibleConstructorReturn(this, (Powerup.__proto__ || Object.getPrototypeOf(Powerup)).call(this, texture, id, x, y, vx, vy));
         // Powerups have a random ID between 100000 and 999999, inclusive.
 
 
@@ -42634,6 +42647,7 @@ var Powerup = exports.Powerup = function (_GameObject) {
 
     /**
      * Run when players are nearby to check if they picked this powerup up.
+     * If the player is nearby but not close enough to pick up, then it becomes attracted towards the player.
      * @param {Player} player Player to check collision against
      * @returns true if collision detected, false otherwise
      */
@@ -42643,7 +42657,23 @@ var Powerup = exports.Powerup = function (_GameObject) {
         key: 'checkCollision',
         value: function checkCollision(player) {
             if (this.isEquipped || player === undefined) return false;
-            if ((0, _global.distanceBetween)(this, player) < _global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS) {
+
+            var distance = (0, _global.distanceBetween)(this, player);
+
+            // Attractive force
+            if (distance < _global.GLOBAL.ATTRACTION_RADIUS) {
+                // let theta = Math.tan((this.posY - player.posY)/());
+                this.vx += 1 / (player.posX - this.posX) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
+                this.vy += 1 / (player.posY - this.posY) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
+                console.log(this.vx, this.vy, this.posX, this.posY);
+                _app.socket.emit('powerupMove', { id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
+            } else if (this.vx !== 0 || this.vy !== 0) {
+                this.vx *= _global.GLOBAL.VELOCITY_STEP;
+                this.vy *= _global.GLOBAL.VELOCITY_STEP;
+            }
+
+            // Collected by player
+            if (distance < _global.GLOBAL.POWERUP_RADIUS + _global.GLOBAL.PLAYER_RADIUS) {
                 this.isEquipped = true;
                 player.addPowerup(this.typeID);
                 _app.socket.emit('powerupCollision', { id: this.id });
@@ -42655,6 +42685,10 @@ var Powerup = exports.Powerup = function (_GameObject) {
     }, {
         key: 'tick',
         value: function tick() {
+
+            // Movement
+            _get(Powerup.prototype.__proto__ || Object.getPrototypeOf(Powerup.prototype), 'tick', this).call(this);
+
             if (!this.isEquipped) {
                 this.checkCollision(_pixigame.player);
                 this.draw();
@@ -42678,10 +42712,10 @@ var Powerup = exports.Powerup = function (_GameObject) {
 var HydrogenAtom = exports.HydrogenAtom = function (_Powerup) {
     _inherits(HydrogenAtom, _Powerup);
 
-    function HydrogenAtom(id, x, y) {
+    function HydrogenAtom(id, x, y, vx, vy) {
         _classCallCheck(this, HydrogenAtom);
 
-        var _this2 = _possibleConstructorReturn(this, (HydrogenAtom.__proto__ || Object.getPrototypeOf(HydrogenAtom)).call(this, PIXI.loader.resources[_global.GLOBAL.SPRITES[_global.GLOBAL.P_HYDROGEN_ATOM]].texture, id, x, y));
+        var _this2 = _possibleConstructorReturn(this, (HydrogenAtom.__proto__ || Object.getPrototypeOf(HydrogenAtom)).call(this, PIXI.loader.resources[_global.GLOBAL.SPRITES[_global.GLOBAL.P_HYDROGEN_ATOM]].texture, id, x, y, vx, vy));
 
         _this2.typeID = _global.GLOBAL.P_HYDROGEN_ATOM;
         return _this2;
@@ -42704,13 +42738,15 @@ var HydrogenAtom = exports.HydrogenAtom = function (_Powerup) {
  * @param {number} id The ID of this powerup (generated by server)
  * @param {number} x (optional) x-coordinate of the powerup
  * @param {number} y (optional) y-coordinate of the powerup
+ * @param {number} vx Horizontal velocity
+ * @param {number} vy Vertical velocity
  */
 
 
-function createPowerup(typeID, id, x, y) {
+function createPowerup(typeID, id, x, y, vx, vy) {
     switch (typeID) {
         case 1:
-            return new HydrogenAtom(id, x, y);
+            return new HydrogenAtom(id, x, y, vx, vy);
         // Tried to create a generic Powerup
         case -1:
             throw new Error('The Powerup object cannot be created without specifying behavior.');

@@ -181,13 +181,15 @@ function SetupSocket(socket) {
 
         // Reconstruct powerup objects based on transferred data
         for (let powerup in data) {
-
             // Valid powerup
             if (data[powerup] !== null) {
+                // Powerup already exists in database
+                let tempPow = data[powerup];
+                if (powerups[powerup] !== undefined && powerups[powerup] !== null)
+                    powerups[powerup].setData(tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
                 // Does not exist - need to create new powerup
-                if (isSetup && powerups[powerup] === undefined) {
-                    let tempPow = data[powerup];
-                    powerups[powerup] = createPowerup(tempPow.typeID, tempPow.id, tempPow.posX, tempPow.posY);
+                else if (isSetup) {
+                    powerups[powerup] = createPowerup(tempPow.typeID, tempPow.id, tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
                 }
             }
             // Delete if it is a player that has disconnected or out of range

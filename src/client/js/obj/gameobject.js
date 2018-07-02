@@ -18,12 +18,16 @@ export class GameObject extends PIXI.Sprite {
      * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for powerups
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
+     * @param {number} vx Horizontal velocity
+     * @param {number} vy Vertical velocity
      */
-    constructor(texture, id, x, y) {
+    constructor(texture, id, x, y, vx, vy) {
         super(texture);
         this.id = id;
         this.posX = x;
         this.posY = y;
+        this.vx = vx;
+        this.vy = vy;
         
         app.stage.addChild(this);
     }
@@ -76,9 +80,17 @@ export class GameObject extends PIXI.Sprite {
     }
 
     /**
-     * Override optional. Default behavior: draw()
+     * Override optional. Default behavior: handles movement. Call super.tick() from child class if movable.
      */
     tick() {
-        this.draw();
+        // Prevent drifting due to minimal negative values
+        if (Math.abs(this.vx) < GLOBAL.DEADZONE)
+            this.vx = 0;
+        if (Math.abs(this.vy) < GLOBAL.DEADZONE)
+            this.vy = 0;
+
+        // Change position based on speed and direction
+        this.posX += this.vx;
+        this.posY += this.vy;
     }
 }

@@ -24,7 +24,7 @@ export class Player extends GameObject {
     constructor(texture, id, name, room, team, x, y, vx, vy) {
 
         // Call GameObject
-        super(texture, id, x, y);
+        super(texture, id, x, y, vx, vy);
 
         // Pixi Values
         this.width = GLOBAL.PLAYER_RADIUS * 2;
@@ -44,8 +44,6 @@ export class Player extends GameObject {
         this.room = room;
         this.team = team;
         this.isMoving = false;
-        this.vx = vx;
-        this.vy = vy;
         this.powerups = [];
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
@@ -77,21 +75,14 @@ export class Player extends GameObject {
     }
     
   /** 
-   * Draws all components of a given player and handles movement.
+   * Draws all components of a given player.
    * This method should be included in the ticker and called once a frame.
    * Therefore, all setup tasks should be called in setup().
    */
     tick() {
         
-        // Prevent drifting due to minimal negative values
-        if (Math.abs(this.vx) < GLOBAL.DEADZONE)
-            this.vx = 0;
-        if (Math.abs(this.vy) < GLOBAL.DEADZONE)
-            this.vy = 0;
-        
-        // Change position based on speed and direction
-        this.posX += this.vx;
-        this.posY += this.vy;
+        // Movement
+        super.tick();
         
         // Update text
         this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';

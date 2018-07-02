@@ -63,7 +63,9 @@ io.on('connection', socket => {
         typeID: type,
         id: randID,
         posX: randX,
-        posY: randY
+        posY: randY,
+        vx: 0,
+        vy: 0
       };
       rooms[room].powerups[powerup.id] = powerup;
     }
@@ -158,7 +160,21 @@ io.on('connection', socket => {
       rooms[room].players[data.id].vx = data.vx;
       rooms[room].players[data.id].vy = data.vy;
     }
+
   }); 
+
+
+  /**
+   * On powerup movement
+   */
+  socket.to(room).on('powerupMove', data => {
+    if(rooms[room].powerups[data.id] !== undefined) {
+      rooms[room].powerups[data.id].posX = data.posX;
+      rooms[room].powerups[data.id].posY = data.posY;
+      rooms[room].powerups[data.id].vx = data.vx;
+      rooms[room].powerups[data.id].vy = data.vy;
+    }
+  })
 
   // A powerup was equipped or changed
   socket.to(room).on('powerupCollision', data => {

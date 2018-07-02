@@ -37,6 +37,8 @@ export const GLOBAL = {
     MAX_POWERUPS: 300, // maximum number of powerups to be spawned
     POWERUP_TYPES: 1, // number of types of powerups
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
+    ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
+    ATTRACTION_COEFFICIENT: .1, // Multiplier for attraction strength
 
     // Map
     MAP_SIZE: 5000,
