@@ -3,12 +3,12 @@
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
 import { GLOBAL } from './global.js';
-import ChatClient from './chat-client.js';
-import * as cookies from './cookies.js';
-import { init, createPlayer, isSetup, deletePixi } from './pixigame.js';
-import { Player } from './player.js';
-import { createPowerup } from './powerup.js';
-import { GameObject } from './gameobject.js';
+import ChatClient from './lib/chat-client';
+import * as cookies from './lib/cookies';
+import { init, createPlayer, isSetup, deletePixi, app } from './pixigame.js';
+import { Player } from './obj/player';
+import { createPowerup } from './obj/powerup';
+import { GameObject } from './obj/gameobject';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
 export var socket;
@@ -238,7 +238,7 @@ function quitGame(msg) {
 
     // Disconnect from server
     socket.disconnect();
-    deletePixi();
+    app.stop();
 
     // Wipe players list
     players = {};

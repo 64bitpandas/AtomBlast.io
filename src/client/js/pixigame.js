@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { keyboard } from './keyboard';
+import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
-import { Player } from './player';
+import { Player } from './obj/player';
 import { hideElement, showElement, socket, players, powerups } from './app';
 
 export var isSetup; // True after the stage is fully set up
@@ -164,11 +164,4 @@ export function createPlayer(data) {
             player = newPlayer;
         return newPlayer;
     }
-}
-
-/**
- * Deletes the pixi app instance (use on disconnect)
- */
-export function deletePixi() {
-    app = null;
 }

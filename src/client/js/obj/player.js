@@ -1,8 +1,8 @@
-import {GLOBAL} from './global.js';
+import {GLOBAL} from '../global.js';
 import * as PIXI from 'pixi.js';
-import { textStyle, player, screenCenterX, screenCenterY } from './pixigame.js';
-import { socket } from './app.js';
-import { GameObject } from './gameobject.js';
+import { textStyle, player, screenCenterX, screenCenterY } from '../pixigame.js';
+import { socket } from '../app.js';
+import { GameObject } from '../obj/gameobject';
 
 export class Player extends GameObject {
 

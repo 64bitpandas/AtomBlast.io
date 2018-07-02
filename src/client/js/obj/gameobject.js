@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { app, screenCenterX, screenCenterY, player } from './pixigame';
+import { app, screenCenterX, screenCenterY, player } from '../pixigame';
 
 /**
  * GameObject class that all objects in the game space should inherit.

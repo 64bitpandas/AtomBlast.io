@@ -3,8 +3,8 @@
  * Created 17 April 2018
  */
 
-import {GLOBAL} from './global.js';
-import { socket } from './app.js';
+import {GLOBAL} from '../global.js';
+import { socket } from '../app.js';
 
 let player, room, team;
 export default class ChatClient {

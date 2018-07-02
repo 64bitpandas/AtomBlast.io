@@ -1,9 +1,9 @@
-import {GLOBAL} from './global.js';
-import { GameObject } from './gameobject.js';
-import { Player } from './player.js';
 import * as PIXI from 'pixi.js';
-import { distanceBetween } from './global.js';
-import { screenCenterX, screenCenterY, player } from './pixigame.js';
+import { Player } from './player.js';
+import {GLOBAL} from '../global.js';
+import { GameObject } from '../obj/gameobject';
+import { distanceBetween } from '../global.js';
+import { screenCenterX, screenCenterY, player } from '../pixigame.js';
 
 export class Powerup extends GameObject {
 
