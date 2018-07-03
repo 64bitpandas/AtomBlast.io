@@ -36,8 +36,6 @@ export const GLOBAL = {
     ATOM_RADIUS: 30, // size of spawned atoms
     MIN_POWERUPS: 150, // minimum number of powerups to be spawned (TEMPORARY)
     MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)
-    P_HYDROGEN_ATOM: 1, // HydrogenAtom
-    P_HYDROGEN_BINARY: 2, // Hydrogen BinaryAtom
     ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
     ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
 
@@ -49,12 +47,23 @@ export const GLOBAL = {
     GRID_SPACING: 200, // space between each line on the grid
     FRAME_RATE: 60,
 
-    // Sprites
-    SPRITES: [
+    // Sprites and textures
+    PLAYER_SPRITES: [
         '../assets/testplayer.png',
+        
+    ],
+
+    // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
+    HYDROGEN_ATOM: 0, // HydrogenAtom
+    ATOM_SPRITES: [
         '../assets/testplayer2.png',
-        '../assets/testplayer3.png',
+    ],
+
+    COMPOUND_SPRITES: [
+
     ]
+
+
 
 };
 

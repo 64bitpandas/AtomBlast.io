@@ -55,7 +55,7 @@ io.on('connection', socket => {
     rooms[room].atoms = {};
     // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
-      let type = 1;
+      let type = 0; //TODO
       let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randID = Math.floor(Math.random() * 90000000) + 10000000;
