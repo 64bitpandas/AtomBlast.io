@@ -32,12 +32,12 @@ export const GLOBAL = {
     DEADZONE: 0.1,
     MAX_HEALTH: 100, // Starting health of players
 
-    // Powerups
-    POWERUP_RADIUS: 30, // size of spawned powerups
-    MIN_POWERUPS: 150, // minimum number of powerups to be spawned
-    MAX_POWERUPS: 300, // maximum number of powerups to be spawned
-    POWERUP_TYPES: 1, // number of types of powerups
+    // Atoms
+    ATOM_RADIUS: 30, // size of spawned atoms
+    MIN_POWERUPS: 150, // minimum number of powerups to be spawned (TEMPORARY)
+    MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)
     P_HYDROGEN_ATOM: 1, // HydrogenAtom
+    P_HYDROGEN_BINARY: 2, // Hydrogen BinaryAtom
     ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
     ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
 
@@ -45,7 +45,7 @@ export const GLOBAL = {
     MAP_SIZE: 5000,
 
     // Drawing
-    DRAW_RADIUS: 1000, // Radius around player in which to draw other players and powerups
+    DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
     GRID_SPACING: 200, // space between each line on the grid
     FRAME_RATE: 60,
 
@@ -53,6 +53,7 @@ export const GLOBAL = {
     SPRITES: [
         '../assets/testplayer.png',
         '../assets/testplayer2.png',
+        '../assets/testplayer3.png',
     ]
 
 };

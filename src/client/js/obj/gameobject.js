@@ -15,7 +15,7 @@ export class GameObject extends PIXI.Sprite {
     /**
      * Creates a new GameObject.
      * @param {PIXI.Texture} texture The texture associated with this sprite
-     * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for powerups
+     * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for atoms
      * @param {number} x Global x-coordinate
      * @param {number} y Global y-coordinate
      * @param {number} vx Horizontal velocity
@@ -57,12 +57,12 @@ export class GameObject extends PIXI.Sprite {
 
     /**
      * Call during tick() if necessary. 
-     * Draws powerup in the correct position on the player screen.
+     * Draws object in the correct position on the player screen.
      */
     draw() {
         if(player !== undefined) {
-            this.x = screenCenterX + this.posX - player.posX + GLOBAL.POWERUP_RADIUS;
-            this.y = screenCenterY + player.posY - this.posY + GLOBAL.POWERUP_RADIUS;
+            this.x = screenCenterX + this.posX - player.posX + GLOBAL.ATOM_RADIUS;
+            this.y = screenCenterY + player.posY - this.posY + GLOBAL.ATOM_RADIUS;
         }
     }
 

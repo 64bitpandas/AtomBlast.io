@@ -10,7 +10,7 @@ var config = require('./config.json');
 const debug = true;
 app.use(express.static(`${__dirname}/../client`));
 
-/* Array of all connected players and powerups in respective rooms. All players must contain:
+/* Array of all connected players and atoms in respective rooms. All players must contain:
  * id: Socket id
  * name: Player name
  * room: Room that player is currently in
@@ -18,7 +18,7 @@ app.use(express.static(`${__dirname}/../client`));
  * y: Current y-position on map
  * theta: Current direction of travel to use in client prediction
  * speed: Current speed of player to use in client prediction
- * powerups: Object containing all powerups that the player has
+ * atoms: Object containing all atoms that the player has
  * 
  * Structure of Rooms object:
  * rooms: {
@@ -27,9 +27,9 @@ app.use(express.static(`${__dirname}/../client`));
  *        Insert Player object here
  *      }
  *    }
- *    powerups: [
+ *    atoms: [
  *       0: {
- *          Insert Powerup object here
+ *          Insert Atom object here
  *       }
  *    ]
  * }
@@ -47,19 +47,19 @@ io.on('connection', socket => {
   // Player room name
   let room = socket.handshake.query.room;
 
-  // Initialize room array and spawn powerups on first player join
+  // Initialize room array and spawn atoms on first player join
   if(rooms[room] === undefined || rooms[room] === null) {
     console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red);
     rooms[room] = {};
     rooms[room].players = {};
-    rooms[room].powerups = {};
-    // Generate Powerups. Powerups have a random ID between 10000000 and 99999999, inclusive.
+    rooms[room].atoms = {};
+    // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
       let type = 1;
       let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randID = Math.floor(Math.random() * 90000000) + 10000000;
-      let powerup = {
+      let atom = {
         typeID: type,
         id: randID,
         posX: randX,
@@ -67,7 +67,7 @@ io.on('connection', socket => {
         vx: 0,
         vy: 0
       };
-      rooms[room].powerups[powerup.id] = powerup;
+      rooms[room].atoms[atom.id] = atom;
     }
   }
 
@@ -92,9 +92,9 @@ io.on('connection', socket => {
   // Setup player array sync- once a frame
   setInterval(() => {
     if(rooms[room] !== undefined) {
-      // Distance checking for both players and powerups
+      // Distance checking for both players and atoms
       let tempPlayerSync = {};
-      let tempPowerupSync = {};
+      let tempAtomSync = {};
 
       for(let player in rooms[room].players) {
         if(distanceBetween(rooms[room].players[player], thisPlayer) < GLOBAL.DRAW_RADIUS) {
@@ -102,24 +102,17 @@ io.on('connection', socket => {
         }
       }
 
-      for(let powerup in rooms[room].powerups) {
-        if (distanceBetween(thisPlayer, rooms[room].powerups[powerup]) < GLOBAL.DRAW_RADIUS && !rooms[room].powerups[powerup].isEquipped) {
-          tempPowerupSync[powerup] = rooms[room].powerups[powerup];
+      for(let atom in rooms[room].atoms) {
+        if (distanceBetween(thisPlayer, rooms[room].atoms[atom]) < GLOBAL.DRAW_RADIUS && !rooms[room].atoms[atom].isEquipped) {
+          tempAtomSync[atom] = rooms[room].atoms[atom];
         }
       }
 
       socket.emit('playerSync', tempPlayerSync);
-      socket.emit('powerupSync', tempPowerupSync);
+      socket.emit('atomSync', tempAtomSync);
     }
   }, 1000/60);
   
-  // setTimeout(() => {
-  //   // Send powerups to player
-  //   if(rooms[room] !== undefined)
-  //     socket.emit('serverSendPowerupArray', { powerups: rooms[room].powerups });
-  // }, 1500);
-    
-
   // Receives a chat from a player, then broadcasts it to other players
   socket.to(room).on('playerChat', data => {
     // console.log('sender: ' + data.sender);
@@ -172,21 +165,21 @@ io.on('connection', socket => {
   });
 
   /**
-   * On powerup movement
+   * On atom movement
    */
-  socket.to(room).on('powerupMove', data => {
-    if(rooms[room].powerups[data.id] !== undefined) {
-      rooms[room].powerups[data.id].posX = data.posX;
-      rooms[room].powerups[data.id].posY = data.posY;
-      rooms[room].powerups[data.id].vx = data.vx;
-      rooms[room].powerups[data.id].vy = data.vy;
+  socket.to(room).on('atomMove', data => {
+    if(rooms[room].atoms[data.id] !== undefined) {
+      rooms[room].atoms[data.id].posX = data.posX;
+      rooms[room].atoms[data.id].posY = data.posY;
+      rooms[room].atoms[data.id].vx = data.vx;
+      rooms[room].atoms[data.id].vy = data.vy;
     }
   })
 
-  // A powerup was equipped or changed
-  socket.to(room).on('powerupCollision', data => {
-      delete rooms[room].powerups[data.id];
-      socket.to(room).broadcast.emit('serverSendPowerupRemoval', data);
+  // An atom was collected or changed
+  socket.to(room).on('atomCollision', data => {
+      delete rooms[room].atoms[data.id];
+      socket.to(room).broadcast.emit('serverSendAtomRemoval', data);
   });
 
   socket.on('disconnect', data => {

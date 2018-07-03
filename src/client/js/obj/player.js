@@ -46,7 +46,12 @@ export class Player extends GameObject {
         this.team = team;
         this.health = health; //Set the health of the player
         this.isMoving = false;
-        this.powerups = [];
+        this.atoms = { // List of all atoms and the number that the player has. Continue list later
+            h: 0,
+            he: 0,
+            o: 0,
+            c: 0,
+        };
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
         this.setup();
@@ -109,11 +114,11 @@ export class Player extends GameObject {
     }
 
     /**
-        * Adds a powerup to the list
-        * @param {number} id The ID of the powerup to add to the player
+        * Adds an atom to the list
+        * @param {number} id The ID of the atom to add to the player
         */
-    addPowerup(id) {
-        this.powerups.push(id);
+    addAtom(id) {
+        this.atoms[id]++;
     }
 
 }

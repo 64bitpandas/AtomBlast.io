@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, socket, players, powerups } from './app';
+import { hideElement, showElement, socket, players, atoms } from './app';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -66,8 +66,8 @@ function setup() {
             app.stage.addChild(sprites[sprite]);
     }
 
-    for(let powerup in powerups)
-        app.stage.addChild(powerups[powerup]);
+    for(let atom in atoms)
+        app.stage.addChild(atoms[atom]);
 
     // Background
     app.renderer.backgroundColor = 0xFFFFFF;
@@ -135,9 +135,9 @@ function draw(delta) {
         }
     }
 
-    // Draw powerups
-    for(let powerup in powerups) {
-        powerups[powerup].tick();
+    // Draw Atoms
+    for(let atom in atoms) {
+        atoms[atom].tick();
     }
 }
 

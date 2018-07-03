@@ -7,7 +7,7 @@ import ChatClient from './lib/chat-client';
 import * as cookies from './lib/cookies';
 import { init, createPlayer, isSetup, deletePixi, app } from './pixigame.js';
 import { Player } from './obj/player';
-import { createPowerup } from './obj/powerup';
+import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
@@ -16,8 +16,8 @@ export var socket;
 /* Object containing of all connected players in the form of Player objects */
 export var players = {};
 
-// Object containing of all powerups that have not been picked up, in the form of Powerup objects\
-export var powerups = {};
+// Object containing of all Atoms that have not been picked up, in the form of Atom objects
+export var atoms = {};
 
 const nickErrorText = document.getElementById('nickErrorText');
 const playerNameInput = document.getElementById('playerNameInput');
@@ -201,35 +201,35 @@ function setupSocket(socket) {
          }
      });
 
-    socket.on('powerupSync', (data) => { //THIS IS NOT AN ARRAY ANYMORE
+    socket.on('atomSync', (data) => { //THIS IS NOT AN ARRAY ANYMORE
         //assigning local array to data sent by server
 
-        // Reconstruct powerup objects based on transferred data
-        for (let powerup in data) {
-            // Valid powerup
-            if (data[powerup] !== null) {
-                // Powerup already exists in database
-                let tempPow = data[powerup];
-                if (powerups[powerup] !== undefined && powerups[powerup] !== null)
-                    powerups[powerup].setData(tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
-                // Does not exist - need to create new powerup
+        // Reconstruct atom objects based on transferred data
+        for (let atom in data) {
+            // Valid atom
+            if (data[atom] !== null) {
+                // atom already exists in database
+                let tempAtom = data[atom];
+                if (atoms[atom] !== undefined && atoms[atom] !== null)
+                    atoms[atom].setData(tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
+                // Does not exist - need to create new atom
                 else if (isSetup) {
-                    powerups[powerup] = createPowerup(tempPow.typeID, tempPow.id, tempPow.posX, tempPow.posY, tempPow.vx, tempPow.vy);
+                    atoms[atom] = spawnAtom(tempAtom.typeID, tempAtom.id, tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
                 }
             }
             // Delete if it is a player that has disconnected or out of range
             else {
-                delete powerups[powerup];
+                delete atoms[atom];
             }
         }
     });
 
-    // Sync powerups that have not been picked up
-    socket.on('serverSendPowerupRemoval', (data) => {
-        //A powerup was removed
-        if(powerups[data.id] !== undefined) {
-            powerups[data.id].hide();
-            delete powerups[data.id];
+    // Sync atoms that have not been picked up
+    socket.on('serverSendAtomRemoval', (data) => {
+        //An Atom was removed
+        if(atoms[data.id] !== undefined) {
+            atoms[data.id].hide();
+            delete atoms[data.id];
         }
     });
 
@@ -240,15 +240,6 @@ function setupSocket(socket) {
             delete players[data.id];
         }
     });
-
-    // Sync powerups on first connect
-    // socket.on('serverSendPowerupArray', (data) => {
-    //     // First time sync - copy over entire array data
-    //     console.log('Generating powerups...');
-    //     for (let powerup of data.powerups) {
-    //         powerups.push(createPowerup(powerup.typeID, powerup.id, powerup.posX, powerup.posY));
-    //     }
-    // })
 
     //Chat system receiver
     socket.on('serverMSG', data => {
@@ -279,8 +270,8 @@ function quitGame(msg) {
 
     // Wipe players list
     players = {};
-    // Wipe powerups list
-    powerups = {};
+    // Wipe atom list
+    atoms = {};
 
     // menu
     hideElement('gameAreaWrapper');
