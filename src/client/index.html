@@ -7,6 +7,7 @@
 
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
+    <link rel="stylesheet" href="/css/simple-grid.min.css" />
     <link rel="stylesheet" href="/css/main.css" />
 
     <!-- Do not place scripts here! All scripts must be imported into app.js -->
@@ -40,20 +41,32 @@
 
     </div>
     <div id="startMenuWrapper">
-        <div id="startMenu" class="box">
-            <p>Enter Name</p>
-            <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" spellcheck="false"/>
-            <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="roomNameInput" spellcheck="false"/>
-            <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="teamNameInput" spellcheck="false"/>
-            <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
-            <br />
-            <button id="startButton" class="button btn-primary">Play</button>
-            <button class="button btn-secondary">Controls</button>
-            <button class="button btn-secondary">Credits</button>
+        <div id="logo">
+            <img src="assets/logo.svg">
+        </div>
+        <div class="row">
+            <div id="aBox" class="col-3 box offset-top">
+                <p>Insert ad here</p>
+            </div>
+            <div id="startMenu" class="col-6 box">
+                <p>Enter Name</p>
+                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" spellcheck="false"/>
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="roomNameInput" spellcheck="false"/>
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="teamNameInput" spellcheck="false"/>
+                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
+                <br />
+                <button id="startButton" class="button btn-primary">Play</button>
+                <button class="button btn-secondary">Controls</button>
+                <button class="button btn-secondary">Credits</button>
+            </div>
+            <div id="blueprintBox" class="col-3 box">
+                <p>Select Blueprints</p>
+            </div>
         </div>
         <div id="startMenuMessage" class="box">
-           
+            <!-- Auto-filled in script -->
         </div>
+
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
