@@ -28,6 +28,20 @@ export const BLUEPRINTS = {
             cl: 5
         }
     },
+    binaryHydrogen: {
+        name: 'Binary Hydrogen',
+        tooltip: 'Formula: H2\nDamage: 1\nSpeed:5',
+        texture: '../../assets/path/to/image.jpg',
+        type: 'binary',
+        params: {
+            speed: 5,
+            damage: 1,
+            size: 1
+        },
+        atoms: {
+            h: 2
+        }
+    },
 
 }
 
