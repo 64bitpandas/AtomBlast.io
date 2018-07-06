@@ -36,11 +36,13 @@ export function init() {
     screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
     screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
-    // Load resources
-    PIXI.loader
+    // Load resources if not already loaded
+    if (Object.keys(PIXI.loader.resources).length < 1) {
+        PIXI.loader
         .add(GLOBAL.PLAYER_SPRITES)
         .add(GLOBAL.ATOM_SPRITES)
         .load(setup);
+    }
 }
 
 /**

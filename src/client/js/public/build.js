@@ -43103,8 +43103,10 @@ function init() {
     exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
     exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
-    // Load resources
-    PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
+    // Load resources if not already loaded
+    if (Object.keys(PIXI.loader.resources).length < 1) {
+        PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
+    }
 }
 
 /**
