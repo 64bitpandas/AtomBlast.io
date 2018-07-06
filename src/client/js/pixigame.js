@@ -124,17 +124,17 @@ function draw(delta) {
             if (up.isDown) 
                 player.vy = GLOBAL.MAX_SPEED;
             if (down.isDown)
-                player.vy = -GLOBAL.MAX_SPEED;
-            
-            // Slow down gradually
-            if (!up.isDown && !down.isDown) 
-                player.vy *= GLOBAL.VELOCITY_STEP;
-            if(!left.isDown && !right.isDown)
-                player.vx *= GLOBAL.VELOCITY_STEP;
-            
+                player.vy = -GLOBAL.MAX_SPEED;  
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
-        } else
+        } else {
             player.isMoving = false;
+        }
+
+        // Slow down gradually - unaffected by chat input
+        if (!up.isDown && !down.isDown) 
+            player.vy *= GLOBAL.VELOCITY_STEP;
+        if(!left.isDown && !right.isDown)
+            player.vx *= GLOBAL.VELOCITY_STEP;
 
         // Move player
         player.tick();
