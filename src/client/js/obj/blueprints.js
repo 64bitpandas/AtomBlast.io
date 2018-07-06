@@ -16,7 +16,7 @@ export const BLUEPRINTS = {
     sampleBlueprint: {
         name: 'Sample Blueprint',
         tooltip: 'Copyright 2018 Bananium Labs, inc.',
-        texture: '../../assets/path/to/image.jpg',
+        texture: '../../assets/placeholder-atom.svg',
         type: 'binary',
         params: {
             speed: 5,
@@ -29,9 +29,9 @@ export const BLUEPRINTS = {
         }
     },
     binaryHydrogen: {
-        name: 'Binary Hydrogen',
-        tooltip: 'Formula: H2\nDamage: 1\nSpeed:5',
-        texture: '../../assets/path/to/image.jpg',
+        name: 'Hydrogen',
+        tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
+        texture: '../../assets/placeholder-atom.svg',
         type: 'binary',
         params: {
             speed: 5,
@@ -40,6 +40,36 @@ export const BLUEPRINTS = {
         },
         atoms: {
             h: 2
+        }
+    },
+    basicMethane: {
+        name: 'Methane',
+        tooltip: 'Okay, who passed gas?',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'basic',
+        params: {
+            speed: 3,
+            damage: 3,
+            size: 1
+        },
+        atoms: {
+            c: 1,
+            h: 4
+        }
+    },
+    basicBenzene: {
+        name: 'Benzene',
+        tooltip: 'Carbon rings. They smell nice.',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'basic',
+        params: {
+            speed: 1,
+            damage: 5,
+            size: 3
+        },
+        atoms: {
+            h: 6,
+            c: 6
         }
     },
 

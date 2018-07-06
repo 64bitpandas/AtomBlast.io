@@ -41604,67 +41604,95 @@ var _atom = require('./obj/atom');
 
 var _gameobject = require('./obj/gameobject');
 
+var _blueprints = require('./obj/blueprints.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
-var socket = exports.socket = undefined;
-
-/* Object containing of all connected players in the form of Player objects */
 /** 
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
+var socket = exports.socket = undefined;
+
+/* Object containing of all connected players in the form of Player objects */
 var players = exports.players = {};
 
 // Object containing of all Atoms that have not been picked up, in the form of Atom objects
 var atoms = exports.atoms = {};
 
 var nickErrorText = document.getElementById('nickErrorText');
-var playerNameInput = document.getElementById('playerNameInput');
-var roomNameInput = document.getElementById('roomNameInput');
-var teamNameInput = document.getElementById('teamNameInput');
 
-var playerName = void 0;
-var roomName = void 0;
-var teamName = void 0;
+// Arrays containing all inputs which require cookies, and their values
+var cookieInputs = _global.GLOBAL.COOKIES.map(function (val) {
+    return document.getElementById(val);
+});
+
+// Mouse position - used for tooltips
+var mouseX = void 0,
+    mouseY = void 0;
+
+// Currently selected blueprint slot
+var selectedSlot = void 0;
 
 // Starts the game if the name is valid.
 function startGame() {
     // check if the nick is valid
     if (validNick()) {
 
-        // Start game sequence
-        playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-        roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
-        teamName = teamNameInput.value.replace(/(<([^>]+)>)/ig, '');
-
         // Set cookies
-        cookies.setCookie(_global.GLOBAL.NAME_COOKIE, playerName, _global.GLOBAL.COOKIE_DAYS);
-        cookies.setCookie(_global.GLOBAL.ROOM_COOKIE, roomName, _global.GLOBAL.COOKIE_DAYS);
-        cookies.setCookie(_global.GLOBAL.TEAM_COOKIE, teamName, _global.GLOBAL.COOKIE_DAYS);
+        var i = 0;
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
-        // Show game window
+        try {
+            for (var _iterator = _global.GLOBAL.COOKIES[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var cookie = _step.value;
+
+                cookies.setCookie(cookie, cookieInputs[i].value, _global.GLOBAL.COOKIE_DAYS);
+                i++;
+            }
+
+            // Show game window
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
+            }
+        }
+
         showElement('gameAreaWrapper');
         hideElement('startMenuWrapper');
 
         // Show loading screen
         showElement('loading');
 
+        // Cookie Inputs: 0=player, 1=room, 2=team
+
         //Joins debug server if conditions are met
-        if (roomName === 'jurassicexp') {
+        if (cookieInputs[1].value === 'jurassicexp') {
             console.log('Dev Backdoor Initiated! Connecting to devserver');
             //Debugging and Local serving
             exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
-                query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
+                query: 'room=' + cookieInputs[1].value + '&name=' + cookieInputs[0].value + '&team=' + cookieInputs[2].value,
                 reconnectionAttempts: 3
             });
         } else {
             // Production server
             console.log('connecting to main server');
             exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, {
-                query: 'room=' + roomName + '&name=' + playerName + '&team=' + teamName,
+                query: 'room=' + cookieInputs[1].value + '&name=' + cookieInputs[0].value + '&team=' + cookieInputs[2].value,
                 reconnectionAttempts: 3
             });
         }
@@ -41684,24 +41712,52 @@ function startGame() {
  */
 function validNick() {
     var regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
-    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null && regex.exec(teamNameInput.value);
+    for (var i = 0; i < 3; i++) {
+        if (regex.exec(cookieInputs[i].value) === null) return false;
+    }
+
+    return true;
 }
 
 /** 
- * Onload function. Initializes the menu screen and loads cookies.
+ * Onload function. Initializes the menu screen, creates click events, and loads cookies.
  */
 window.onload = function () {
-    // Cookie loading
-    var playerCookie = cookies.getCookie(_global.GLOBAL.NAME_COOKIE);
-    var roomCookie = cookies.getCookie(_global.GLOBAL.ROOM_COOKIE);
-    var teamCookie = cookies.getCookie(_global.GLOBAL.TEAM_COOKIE);
+    // Cookie loading - create array of all cookie values
+    var cookieValues = _global.GLOBAL.COOKIES.map(function (val) {
+        return cookies.getCookie(val);
+    });
 
-    // Continue loading cookie only if it exists
-    if (playerCookie !== null && playerCookie.length > 0) playerNameInput.value = playerCookie;
-    if (roomCookie !== null && roomCookie.length > 0) roomNameInput.value = roomCookie;
-    if (teamCookie !== null && teamCookie.length > 0) teamNameInput.value = teamCookie;
+    // Continue loading cookies only if it exists
+    var i = 0;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
-    // Add listeners to start game to enter key and button click
+    try {
+        for (var _iterator2 = cookieValues[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var cookie = _step2.value;
+
+            if (cookie !== null && cookie.length > 0) cookieInputs[i].value = cookie;
+            i++;
+        }
+
+        // Add listeners to start game to enter key and button click
+    } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
+            }
+        } finally {
+            if (_didIteratorError2) {
+                throw _iteratorError2;
+            }
+        }
+    }
+
     document.getElementById('startButton').onclick = function () {
         startGame();
     };
@@ -41714,13 +41770,99 @@ window.onload = function () {
         hideElement('menubox');
     };
 
-    playerNameInput.addEventListener('keypress', function (e) {
-        var key = e.which || e.keyCode;
+    // Set up the blueprint slot buttons
 
-        if (key === _global.GLOBAL.KEY_ENTER) startGame();
-    });
+    var _loop = function _loop(_i) {
+        document.getElementById('bp-slot-' + _i).onclick = function () {
+            showElement('bp-select');
+            document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i;
+            selectedSlot = _i;
+
+            // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
+            // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
+            // implement when you hover over the blueprint button, it will give a desc. of the button
+        };
+    };
+
+    for (var _i = 1; _i <= 4; _i++) {
+        _loop(_i);
+    }
+
+    document.getElementById('btn-close').onclick = function () {
+        hideElement('bp-select');
+    };
+
+    // Set up blueprint selection buttons
+
+    var _loop2 = function _loop2(blueprint) {
+        var bp = _blueprints.BLUEPRINTS[blueprint];
+        var formula = '';
+        for (var atom in bp.atoms) {
+            formula += atom.toUpperCase() + (bp.atoms[atom] > 1 ? bp.atoms[atom] : '');
+        }
+
+        document.getElementById('blueprint-wrapper').innerHTML += '\n            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-' + blueprint + '">\n                <p>' + bp.name + '</p>\n                <h6>-' + formula + '-</h6>\n                <img src="' + bp.texture + '">\n                <span class="tooltip">' + bp.tooltip + '</span>\n            </button>\n\n            ';
+
+        document.getElementById('btn-blueprint-' + blueprint).onclick = function () {
+            console.log('test');
+            document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[blueprint].name;
+            hideElement('bp-select');
+        };
+    };
+
+    for (var blueprint in _blueprints.BLUEPRINTS) {
+        _loop2(blueprint);
+    }
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+        var _loop3 = function _loop3() {
+            var btn = _step3.value;
+
+            btn.onclick = function () {
+                console.log('test');
+                document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[btn.id.substring(14)].name;
+                hideElement('bp-select');
+            };
+        };
+
+        for (var _iterator3 = document.getElementsByClassName('btn-blueprint')[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            _loop3();
+        }
+    } catch (err) {
+        _didIteratorError3 = true;
+        _iteratorError3 = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                _iterator3.return();
+            }
+        } finally {
+            if (_didIteratorError3) {
+                throw _iteratorError3;
+            }
+        }
+    }
+
+    for (var _i2 = 0; _i2 < 3; _i2++) {
+        cookieInputs[_i2].addEventListener('keypress', function (e) {
+            var key = e.which || e.keyCode;
+
+            if (key === _global.GLOBAL.KEY_ENTER) startGame();
+        });
+    }
 };
 
+/**
+ * Sets mouse positions for tooltip
+ */
+window.onmousemove = function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+};
 /** 
  * First time setup when connection starts.
  * @param {*} socket The socket.io connection instance.
@@ -41730,8 +41872,8 @@ function setupSocket(socket) {
     console.log('Socket:', socket);
 
     //Instantiate Chat System
-    var chat = new _chatClient2.default({ player: playerName, room: roomName, team: teamName });
-    chat.addLoginMessage(playerName, true);
+    var chat = new _chatClient2.default({ player: cookieInputs[0].value, room: cookieInputs[1].value, team: cookieInputs[2].value });
+    chat.addLoginMessage(cookieInputs[0].value, true);
     chat.registerFunctions();
 
     // On Connection Failure
@@ -41895,7 +42037,17 @@ function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
 }
 
-},{"./global.js":191,"./lib/chat-client":192,"./lib/cookies":193,"./obj/atom":195,"./obj/gameobject":196,"./obj/player":197,"./pixigame.js":198}],191:[function(require,module,exports){
+/**
+ * Makes tooltip follow the mouse. Call when a button is hovered.
+ * @param {HTMLElement} button The element reference for the button currently being hovered.
+ */
+window.tooltipFollow = function (button) {
+    var tooltip = button.getElementsByClassName('tooltip')[0];
+    tooltip.style.top = mouseY - 150 + 'px';
+    tooltip.style.left = mouseX - 150 + 'px';
+};
+
+},{"./global.js":191,"./lib/chat-client":192,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":197,"./obj/player":198,"./pixigame.js":199}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -41914,6 +42066,9 @@ var GLOBAL = exports.GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
+    //html stuffs
+    BP_SELECT: 'Blueprint Select - Slot ',
+
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
     MAX_CHATS: 50, // Max number of chats to be displayed before deleting
@@ -41923,10 +42078,8 @@ var GLOBAL = exports.GLOBAL = {
     LOCAL_HOST: 'localhost:3000',
 
     // Cookies
-    NAME_COOKIE: 'name',
-    ROOM_COOKIE: 'room',
-    TEAM_COOKIE: 'team',
-    COOKIE_DAYS: 14,
+    COOKIES: ['name', 'room', 'team', 'bp-slot-1', 'bp-slot-2', 'bp-slot-3', 'bp-slot-4'],
+    COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
     MAX_SPEED: 5,
@@ -42478,7 +42631,103 @@ function spawnAtom(typeID, id, x, y, vx, vy) {
     return new Atom(id, typeID, texture, x, y, vx, vy);
 }
 
-},{"../app.js":190,"../global.js":191,"../obj/gameobject":196,"../pixigame.js":198,"./player.js":197,"pixi.js":142}],196:[function(require,module,exports){
+},{"../app.js":190,"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"./player.js":198,"pixi.js":142}],196:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.BLUEPRINTS = undefined;
+exports.canCraft = canCraft;
+
+var _pixigame = require('../pixigame');
+
+/**
+ * This constant stores all data that is used to define Blueprints, 
+ * which define the recipe and behaviors of Compounds.
+ * 
+ * Fields required:
+ * Name: The formatted name of the compound to display
+ * Tooltip: Description of compound
+ * Texture: Path to image to load
+ * Type: Class of compound. Each different type has a different behavior as defined in `compound.js`.
+ * Params: Optional parameters to pass to the compound class associated with the given type.
+ * Atoms: How to make the compound. Format is `Element symbol: Number required`. All excluded atoms will be considered 0.
+ */
+var BLUEPRINTS = exports.BLUEPRINTS = {
+    sampleBlueprint: {
+        name: 'Sample Blueprint',
+        tooltip: 'Copyright 2018 Bananium Labs, inc.',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'binary',
+        params: {
+            speed: 5,
+            damage: 5,
+            size: 5
+        },
+        atoms: {
+            h: 1,
+            cl: 5
+        }
+    },
+    binaryHydrogen: {
+        name: 'Hydrogen',
+        tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'binary',
+        params: {
+            speed: 5,
+            damage: 1,
+            size: 1
+        },
+        atoms: {
+            h: 2
+        }
+    },
+    basicMethane: {
+        name: 'Methane',
+        tooltip: 'Okay, who passed gas?',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'basic',
+        params: {
+            speed: 3,
+            damage: 3,
+            size: 1
+        },
+        atoms: {
+            c: 1,
+            h: 4
+        }
+    },
+    basicBenzene: {
+        name: 'Benzene',
+        tooltip: 'Carbon rings. They smell nice.',
+        texture: '../../assets/placeholder-atom.svg',
+        type: 'basic',
+        params: {
+            speed: 1,
+            damage: 5,
+            size: 3
+        },
+        atoms: {
+            h: 6,
+            c: 6
+        }
+    }
+
+    /**
+     * Returns true if the player has the materials necessary to create a particular blueprint.
+     * @param {string} blueprint The name of the blueprint to check.
+     */
+};function canCraft(blueprint) {
+    for (var atom in BLUEPRINTS[blueprint].atoms) {
+        if (_pixigame.player.atoms[blueprint] === undefined || _pixigame.player.atoms[blueprint] < BLUEPRINTS[blueprint].atoms[atom]) return false;
+    }
+
+    return true;
+}
+
+},{"../pixigame":199}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42623,7 +42872,7 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     return GameObject;
 }(PIXI.Sprite);
 
-},{"../global":191,"../pixigame":198,"pixi.js":142}],197:[function(require,module,exports){
+},{"../global":191,"../pixigame":199,"pixi.js":142}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42794,7 +43043,7 @@ var Player = exports.Player = function (_GameObject) {
     return Player;
 }(_gameobject.GameObject);
 
-},{"../app.js":190,"../global.js":191,"../obj/gameobject":196,"../pixigame.js":198,"pixi.js":142}],198:[function(require,module,exports){
+},{"../app.js":190,"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"pixi.js":142}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42970,4 +43219,4 @@ function createPlayer(data) {
     }
 }
 
-},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/player":197,"pixi.js":142}]},{},[190]);
+},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/player":198,"pixi.js":142}]},{},[190]);

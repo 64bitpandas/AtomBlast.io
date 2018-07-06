@@ -25,6 +25,9 @@ export class Compound extends GameObject {
             case 'binary':
                 //do stuff
                 break;
+            case 'basic':
+                //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
+                break;
             default:
                 throw new Error('Blueprint ' + this.blueprint + ' could not be found!');
         }

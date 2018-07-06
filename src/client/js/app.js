@@ -9,6 +9,7 @@ import { init, createPlayer, isSetup, deletePixi, app } from './pixigame.js';
 import { Player } from './obj/player';
 import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
+import { BLUEPRINTS } from './obj/blueprints.js';
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
 export var socket;
@@ -20,28 +21,28 @@ export var players = {};
 export var atoms = {};
 
 const nickErrorText = document.getElementById('nickErrorText');
-const playerNameInput = document.getElementById('playerNameInput');
-const roomNameInput = document.getElementById('roomNameInput');
-const teamNameInput = document.getElementById('teamNameInput');
 
-let playerName;
-let roomName;
-let teamName;
+// Arrays containing all inputs which require cookies, and their values
+const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));
+
+// Mouse position - used for tooltips
+let mouseX, mouseY;
+
+// Currently selected blueprint slot
+let selectedSlot;
 
 // Starts the game if the name is valid.
 function startGame() {
     // check if the nick is valid
     if (validNick()) {
 
-        // Start game sequence
-        playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-        roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
-        teamName = teamNameInput.value.replace(/(<([^>]+)>)/ig, '');
 
         // Set cookies
-        cookies.setCookie(GLOBAL.NAME_COOKIE, playerName, GLOBAL.COOKIE_DAYS);
-        cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
-        cookies.setCookie(GLOBAL.TEAM_COOKIE, teamName, GLOBAL.COOKIE_DAYS);
+        let i = 0;
+        for(let cookie of GLOBAL.COOKIES) {
+            cookies.setCookie(cookie, cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
+            i++;
+        }
 
         // Show game window
         showElement('gameAreaWrapper');
@@ -50,14 +51,14 @@ function startGame() {
         // Show loading screen
         showElement('loading');
 
-       
+       // Cookie Inputs: 0=player, 1=room, 2=team
 
         //Joins debug server if conditions are met
-        if(roomName === 'jurassicexp') {
+        if(cookieInputs[1].value === 'jurassicexp') {
             console.log('Dev Backdoor Initiated! Connecting to devserver');            
             //Debugging and Local serving
             socket = io.connect(GLOBAL.LOCAL_HOST, {
-                query: `room=${roomName}&name=${playerName}&team=${teamName}`,
+                query: `room=${cookieInputs[1].value}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}`,
                 reconnectionAttempts: 3
             });
         }
@@ -65,7 +66,7 @@ function startGame() {
             // Production server
             console.log('connecting to main server');
             socket = io.connect(GLOBAL.SERVER_IP, {
-                query: `room=${roomName}&name=${playerName}&team=${teamName}`,
+                query: `room=${cookieInputs[1].value}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}`,
                 reconnectionAttempts: 3
             });
         }
@@ -87,25 +88,28 @@ function startGame() {
  */
 function validNick() {
     const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
-    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null && regex.exec(teamNameInput.value);
+    for(let i = 0; i < 3; i++) {
+        if(regex.exec(cookieInputs[i].value) === null)
+            return false;
+    }
+
+    return true;
 }
 
 /** 
- * Onload function. Initializes the menu screen and loads cookies.
+ * Onload function. Initializes the menu screen, creates click events, and loads cookies.
  */
 window.onload = () => {
-    // Cookie loading
-    const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
-    const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
-    const teamCookie = cookies.getCookie(GLOBAL.TEAM_COOKIE);
+    // Cookie loading - create array of all cookie values
+    let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));
 
-    // Continue loading cookie only if it exists
-    if (playerCookie !== null && playerCookie.length > 0)
-        playerNameInput.value = playerCookie;
-    if (roomCookie !== null && roomCookie.length > 0)
-        roomNameInput.value = roomCookie;
-    if (teamCookie !== null && teamCookie.length > 0)
-        teamNameInput.value = teamCookie;
+    // Continue loading cookies only if it exists
+    let i = 0;
+    for(let cookie of cookieValues) {
+        if(cookie !== null && cookie.length > 0)
+            cookieInputs[i].value = cookie;
+        i++;
+    }
 
     // Add listeners to start game to enter key and button click
     document.getElementById('startButton').onclick = () => {
@@ -120,14 +124,71 @@ window.onload = () => {
         hideElement('menubox');
     };
 
-    playerNameInput.addEventListener('keypress', e => {
-        const key = e.which || e.keyCode;
+    // Set up the blueprint slot buttons
+    for(let i = 1; i <= 4; i++) {
+        document.getElementById('bp-slot-' + i).onclick = () => {
+            showElement('bp-select');
+            document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;
+            selectedSlot = i;
+            
+            // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
+            // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
+            // implement when you hover over the blueprint button, it will give a desc. of the button
+        }
+    }
 
-        if (key === GLOBAL.KEY_ENTER)
-            startGame();
-    });
+    document.getElementById('btn-close').onclick = () => { hideElement('bp-select') }
+
+    // Set up blueprint selection buttons
+    for(let blueprint in BLUEPRINTS) {
+        let bp = BLUEPRINTS[blueprint];
+        let formula = '';
+        for(let atom in bp.atoms) {
+            formula += atom.toUpperCase() + ((bp.atoms[atom] > 1) ? bp.atoms[atom] : '');
+        }
+
+        document.getElementById('blueprint-wrapper').innerHTML +=
+            `
+            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-` + blueprint + `">
+                <p>` + bp.name + `</p>
+                <h6>-` + formula + `-</h6>
+                <img src="` + bp.texture + `">
+                <span class="tooltip">` + bp.tooltip + `</span>
+            </button>
+
+            `;
+        
+        document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
+            console.log('test');
+            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+            hideElement('bp-select');
+        }
+    }
+
+    for(let btn of document.getElementsByClassName('btn-blueprint'))
+        btn.onclick = () =>  {
+            console.log('test');
+            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[btn.id.substring(14)].name;
+            hideElement('bp-select');
+        }
+
+    for(let i = 0; i < 3; i++) {
+        cookieInputs[i].addEventListener('keypress', e => {
+            const key = e.which || e.keyCode;
+    
+            if (key === GLOBAL.KEY_ENTER)
+                startGame();
+        });
+    }
 };
 
+/**
+ * Sets mouse positions for tooltip
+ */
+window.onmousemove = (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+}
 /** 
  * First time setup when connection starts.
  * @param {*} socket The socket.io connection instance.
@@ -137,8 +198,8 @@ function setupSocket(socket) {
     console.log('Socket:', socket);
 
     //Instantiate Chat System
-    let chat = new ChatClient({ player: playerName, room: roomName, team: teamName });
-    chat.addLoginMessage(playerName, true);
+    let chat = new ChatClient({ player: cookieInputs[0].value, room: cookieInputs[1].value, team: cookieInputs[2].value });
+    chat.addLoginMessage(cookieInputs[0].value, true);
     chat.registerFunctions();
 
 
@@ -301,4 +362,14 @@ export function hideElement(el) {
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t
+}
+
+/**
+ * Makes tooltip follow the mouse. Call when a button is hovered.
+ * @param {HTMLElement} button The element reference for the button currently being hovered.
+ */
+window.tooltipFollow = (button) => {
+    let tooltip = button.getElementsByClassName('tooltip')[0];
+    tooltip.style.top = (mouseY - 150) + 'px';
+    tooltip.style.left = (mouseX - 150) + 'px';
 }

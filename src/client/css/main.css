@@ -4,8 +4,7 @@
  * *  GLOBAL STYLES  *
  * ******************* */
 * {
-	font-family: 'Aldrich', sans-serif;
-	font-size: 14px;
+	font-family: 'Aldrich', sans-serif !important;
 }
 
 html, body {
@@ -55,6 +54,21 @@ canvas {
 	box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
 	box-sizing: border-box;
 }
+
+/* Blueprint Select Window */
+#bp-select {
+	z-index: 100;
+	position: absolute;
+	margin: auto;
+	width: 80%;
+	height: 70%;
+}
+
+/* Ingame Menu */
+.menubox {
+	position: absolute;
+	z-index: 100;
+ }
 
 /* ************
  * * BUTTONS  *
@@ -136,6 +150,21 @@ canvas {
 	background: rgb(238, 74, 74);
  }
 
+ .btn-slot {
+	background: rgba(200, 200, 200, 0.8);
+	color: black;
+ }
+
+ #btn-close {
+	 /* float: bottom; */
+	 width: 70%;
+	 /* margin-top: 200px; */
+}
+
+ .btn-slot:active, .btn-slot:hover {
+	background: rgba(220, 220, 220,0.9);
+ }
+
 /* ***************
  * * START MENU  *
  * *************** */
@@ -145,7 +174,7 @@ canvas {
 	box-sizing: border-box;
 }
 
-#startMenu p {
+#startMenuWrapper p {
 	padding: 0;
 	text-align:center;
 	font-size: x-large;
@@ -201,15 +230,7 @@ canvas {
 	max-height: 20vh;
 	padding-top: 5vh;
 }
-
-/* *****************
- * *  INGAME MENU  *
- * ***************** */
- .menubox {
-	position: absolute;
-	z-index: 100;
-	
- }
+ 
 
 /* **********
  * *  CHAT  *
@@ -365,3 +386,51 @@ canvas {
   color: rgb(60, 26, 214);
   text-shadow: 0 0 0.5rem rgba(26, 0, 172, 0.8);
 }
+
+
+/* **************
+ * * BLUEPRINTS *
+ * ************** */
+
+ .blueprint-wrapper {
+	 height: 80%;
+	 overflow-y: scroll;
+ }
+
+ .btn-blueprint {
+	 height: 60%;
+	 top: 0;
+ }
+
+ .btn-blueprint h6 {
+	font-weight: 100;
+	margin-top: 5%;
+	max-height: 10%;
+ }
+
+ .btn-blueprint p {
+	 margin-top: 5%;
+	 line-height: 1;
+	 max-height: 5%;
+ }
+
+ .btn-blueprint img {
+	 margin-bottom: 5%;
+	 max-height: 45%;
+ }
+
+ .tooltip {
+	visibility: hidden;
+	width: 30%;
+    background-color: rgba(255,255,255, 0.8);
+    color: black;
+    text-align: center;
+    padding: 5vh 0;
+	border-radius: 6px;
+	position: fixed;
+    z-index: 200;
+ }
+
+ .btn-blueprint:hover .tooltip {
+	 visibility: visible;
+ }

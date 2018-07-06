@@ -10,6 +10,9 @@ export const GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
+    //html stuffs
+    BP_SELECT: 'Blueprint Select - Slot ',
+
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
     MAX_CHATS: 50, // Max number of chats to be displayed before deleting
@@ -19,10 +22,16 @@ export const GLOBAL = {
     LOCAL_HOST: 'localhost:3000',
 
     // Cookies
-    NAME_COOKIE: 'name',
-    ROOM_COOKIE: 'room',
-    TEAM_COOKIE: 'team',
-    COOKIE_DAYS: 14,
+    COOKIES: [
+        'name',
+        'room',
+        'team',
+        'bp-slot-1',
+        'bp-slot-2',
+        'bp-slot-3',
+        'bp-slot-4',
+    ],
+    COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
     MAX_SPEED: 5,
