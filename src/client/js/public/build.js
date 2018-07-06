@@ -41583,6 +41583,13 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.atoms = exports.players = exports.socket = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /** 
+                                                                                                                                                                                                                                                                               * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
+                                                                                                                                                                                                                                                                               * Uses socket.io to set up listeners in the setupSocket() function.
+                                                                                                                                                                                                                                                                               */
+
+
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 
@@ -41611,10 +41618,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Socket. Yes this is a var, and this is intentional because it is a global variable.
-/** 
- * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
- * Uses socket.io to set up listeners in the setupSocket() function.
- */
 var socket = exports.socket = undefined;
 
 /* Object containing of all connected players in the form of Player objects */
@@ -41701,6 +41704,9 @@ function startGame() {
             setupSocket(socket);
             // Init pixi
             (0, _pixigame.init)();
+            if ((typeof _pixigame.app === 'undefined' ? 'undefined' : _typeof(_pixigame.app)) !== undefined) {
+                _pixigame.app.start();
+            }
         });
     } else {
         nickErrorText.style.display = 'inline';
@@ -42001,6 +42007,8 @@ function quitGame(msg) {
     // Disconnect from server
     socket.disconnect();
     _pixigame.app.stop();
+    // destroyPIXI();
+
 
     // Wipe players list
     exports.players = players = {};
@@ -43051,6 +43059,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
+exports.destroyPIXI = destroyPIXI;
 exports.createPlayer = createPlayer;
 
 var _pixi = require('pixi.js');
@@ -43087,25 +43096,36 @@ var textStyle = exports.textStyle = new PIXI.TextStyle({
 });
 
 function init() {
-    //Initialization
-    var type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas';
-    PIXI.utils.sayHello(type);
+    if (!isSetup) {
+        //Initialization
+        var type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas';
+        PIXI.utils.sayHello(type);
 
-    //Create a Pixi Application
-    exports.app = app = new PIXI.Application(0, 0, { view: document.getElementById('gameView') });
+        //Create a Pixi Application
+        exports.app = app = new PIXI.Application(0, 0, { view: document.getElementById('gameView') });
+        //Add the canvas that Pixi automatically created for you to the HTML document
+        // document.body.appendChild(app.view);
 
-    //Add the canvas that Pixi automatically created for you to the HTML document
-    // document.body.appendChild(app.view);
+        // Renderer settings
+        app.renderer.autoResize = true;
+        app.renderer.resize(window.innerWidth, window.innerHeight);
+        exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
-    // Renderer settings
-    app.renderer.autoResize = true;
-    app.renderer.resize(window.innerWidth, window.innerHeight);
-    exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
-    exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+        // Load resources if not already loaded
+        console.warn("AYYYYY");
+        if (Object.keys(PIXI.loader.resources).length < 1) {
+            PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
+        }
+    }
 
-    // Load resources if not already loaded
-    if (Object.keys(PIXI.loader.resources).length < 1) {
-        PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
+    // If already initialized, use existing app variable
+    if (isSetup) {
+        console.warn("Loader already initialized!");
+        for (var i = app.stage.children.length - 1; i >= 0; i--) {
+            app.stage.removeChild(app.stage.children[i]);
+        }
+        setup();
     }
 }
 
@@ -43113,48 +43133,48 @@ function init() {
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
 function setup() {
+    if (!isSetup) {
+        // Set up key listeners
+        esc = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_ESC);
+        up = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_W);
+        down = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_S);
+        left = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_A);
+        right = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_D);
 
-    // Set up key listeners
-    esc = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_ESC);
-    up = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_W);
-    down = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_S);
-    left = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_A);
-    right = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_D);
+        esc.press = function () {
+            toggleMenu();
+        };
 
-    esc.press = function () {
-        toggleMenu();
-    };
+        // sprites.nametext.position.set()
 
-    // sprites.nametext.position.set()
+        // Load sprites into stage
+        for (var sprite in sprites) {
+            if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
+        }
 
-    // Load sprites into stage
-    for (var sprite in sprites) {
-        if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
+        for (var atom in _app.atoms) {
+            app.stage.addChild(_app.atoms[atom]);
+        } // Background
+        app.renderer.backgroundColor = 0xFFFFFF;
+
+        // Resize
+        document.getElementsByTagName('body')[0].onresize = function () {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+            exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
+            exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
+            player.x = screenCenterX;
+            player.y = screenCenterY;
+        };
+        // Begin game loop
+        app.ticker.add(function (delta) {
+            return draw(delta);
+        });
     }
-
-    for (var atom in _app.atoms) {
-        app.stage.addChild(_app.atoms[atom]);
-    } // Background
-    app.renderer.backgroundColor = 0xFFFFFF;
-
-    // Resize
-    document.getElementsByTagName('body')[0].onresize = function () {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
-        exports.screenCenterX = screenCenterX = window.innerWidth / 2 - _global.GLOBAL.PLAYER_RADIUS;
-        exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
-        player.x = screenCenterX;
-        player.y = screenCenterY;
-    };
 
     exports.isSetup = isSetup = true;
     // Hide loading screen
     (0, _app.hideElement)('loading');
     (0, _app.showElement)('chatbox');
-
-    // Begin game loop
-    app.ticker.add(function (delta) {
-        return draw(delta);
-    });
 }
 
 /**
@@ -43204,6 +43224,16 @@ function draw(delta) {
  */
 function toggleMenu() {
     if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
+}
+
+/**
+ * Destroy everything in PIXI
+ */
+function destroyPIXI() {
+    app.destroy(true, { children: true, texture: true, baseTexture: true });
+    PIXI.loader.reset();
+    exports.isSetup = isSetup = false;
+    exports.app = app = undefined;
 }
 
 /**

@@ -5,7 +5,7 @@
 import { GLOBAL } from './global.js';
 import ChatClient from './lib/chat-client';
 import * as cookies from './lib/cookies';
-import { init, createPlayer, isSetup, deletePixi, app } from './pixigame.js';
+import { init, createPlayer, isSetup, destroyPIXI, app } from './pixigame.js';
 import { Player } from './obj/player';
 import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
@@ -75,6 +75,10 @@ function startGame() {
             setupSocket(socket);
             // Init pixi
             init();
+            if(typeof app !== undefined)
+            {
+                app.start();
+            }
         });
                 
             
@@ -328,6 +332,8 @@ function quitGame(msg) {
     // Disconnect from server
     socket.disconnect();
     app.stop();
+    // destroyPIXI();
+
 
     // Wipe players list
     players = {};

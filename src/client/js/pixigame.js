@@ -20,28 +20,39 @@ export let textStyle = new PIXI.TextStyle({
 })
 
 export function init() {
-    //Initialization
-    let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
-    PIXI.utils.sayHello(type);
-    
-    //Create a Pixi Application
-    app = new PIXI.Application(0, 0, {view: document.getElementById('gameView')});
-    
-    //Add the canvas that Pixi automatically created for you to the HTML document
-    // document.body.appendChild(app.view);
+    if (!isSetup) {
+        //Initialization
+        let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
+        PIXI.utils.sayHello(type);
+        
+        //Create a Pixi Application
+        app = new PIXI.Application(0, 0, {view: document.getElementById('gameView')});
+        //Add the canvas that Pixi automatically created for you to the HTML document
+        // document.body.appendChild(app.view);
 
-    // Renderer settings
-    app.renderer.autoResize = true;
-    app.renderer.resize(window.innerWidth, window.innerHeight);
-    screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-    screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+        // Renderer settings
+        app.renderer.autoResize = true;
+        app.renderer.resize(window.innerWidth, window.innerHeight);
+        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
-    // Load resources if not already loaded
-    if (Object.keys(PIXI.loader.resources).length < 1) {
-        PIXI.loader
-        .add(GLOBAL.PLAYER_SPRITES)
-        .add(GLOBAL.ATOM_SPRITES)
-        .load(setup);
+        // Load resources if not already loaded
+        console.warn("AYYYYY");
+        if (Object.keys(PIXI.loader.resources).length < 1) {
+            PIXI.loader
+            .add(GLOBAL.PLAYER_SPRITES)
+            .add(GLOBAL.ATOM_SPRITES)
+            .load(setup);
+        }
+    }
+
+    // If already initialized, use existing app variable
+    if (isSetup) {
+        console.warn("Loader already initialized!");
+        for (var i = app.stage.children.length - 1; i >= 0; i--) {
+            app.stage.removeChild(app.stage.children[i]);
+        }
+        setup();
     }
 }
 
@@ -49,49 +60,50 @@ export function init() {
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
 function setup() {
-   
-    // Set up key listeners
-    esc = keyboard(GLOBAL.KEY_ESC);
-    up = keyboard(GLOBAL.KEY_W);
-    down = keyboard(GLOBAL.KEY_S);
-    left = keyboard(GLOBAL.KEY_A);
-    right = keyboard(GLOBAL.KEY_D);
+   if(!isSetup) {
+        // Set up key listeners
+        esc = keyboard(GLOBAL.KEY_ESC);
+        up = keyboard(GLOBAL.KEY_W);
+        down = keyboard(GLOBAL.KEY_S);
+        left = keyboard(GLOBAL.KEY_A);
+        right = keyboard(GLOBAL.KEY_D);
 
-    esc.press = () => {
-        toggleMenu();
-    }
+        esc.press = () => {
+            toggleMenu();
+        }
 
-    // sprites.nametext.position.set()
+        // sprites.nametext.position.set()
 
-    // Load sprites into stage
-    for(let sprite in sprites) {
-        if(sprite !== 'player')
-            app.stage.addChild(sprites[sprite]);
-    }
+        // Load sprites into stage
+        for(let sprite in sprites) {
+            if(sprite !== 'player')
+                app.stage.addChild(sprites[sprite]);
+        }
 
-    for(let atom in atoms)
-        app.stage.addChild(atoms[atom]);
+        for(let atom in atoms)
+            app.stage.addChild(atoms[atom]);
 
-    // Background
-    app.renderer.backgroundColor = 0xFFFFFF;
+        // Background
+        app.renderer.backgroundColor = 0xFFFFFF;
 
 
-    // Resize
-    document.getElementsByTagName('body')[0].onresize = () => {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
-        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
-        player.x = screenCenterX;
-        player.y = screenCenterY;
+        // Resize
+        document.getElementsByTagName('body')[0].onresize = () => {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+            screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+            screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+            player.x = screenCenterX;
+            player.y = screenCenterY;
+        }
+        // Begin game loop
+        app.ticker.add(delta => draw(delta));
     }
 
     isSetup = true; 
     // Hide loading screen
     hideElement('loading');
     showElement('chatbox');
-
-    // Begin game loop
-    app.ticker.add(delta => draw(delta));
+    
 
 }
 
@@ -152,6 +164,16 @@ function toggleMenu() {
         showElement('menubox');
     else
         hideElement('menubox');
+}
+
+/**
+ * Destroy everything in PIXI
+ */
+export function destroyPIXI() {
+    app.destroy(true, { children: true, texture: true, baseTexture: true});
+    PIXI.loader.reset();
+    isSetup = false;
+    app = undefined;
 }
 
 /**
