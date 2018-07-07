@@ -1,7 +1,7 @@
 import { GLOBAL } from "./global";
 import { cookieInputs, quitGame } from "./app";
 import ChatClient from "./lib/chat-client";
-import { init, app, createPlayer, isSetup } from "./pixigame";
+import { init, app, createPlayer, isSetup, showGameUI } from "./pixigame";
 import { spawnAtom } from "./obj/atom";
 
 /**
@@ -46,6 +46,7 @@ export function beginConnection() {
         init();
         if (typeof app !== undefined) {
             app.start();
+            showGameUI();
         }
     });
 }
