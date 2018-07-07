@@ -41582,30 +41582,18 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.atoms = exports.players = exports.socket = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /** 
-                                                                                                                                                                                                                                                                               * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
-                                                                                                                                                                                                                                                                               * Uses socket.io to set up listeners in the setupSocket() function.
-                                                                                                                                                                                                                                                                               */
-
-
+exports.cookieInputs = undefined;
+exports.quitGame = quitGame;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 
 var _global = require('./global.js');
 
-var _chatClient = require('./lib/chat-client');
-
-var _chatClient2 = _interopRequireDefault(_chatClient);
-
 var _cookies = require('./lib/cookies');
 
 var cookies = _interopRequireWildcard(_cookies);
 
-var _pixigame = require('./pixigame.js');
-
-var _player2 = require('./obj/player');
+var _player = require('./obj/player');
 
 var _atom = require('./obj/atom');
 
@@ -41613,25 +41601,20 @@ var _gameobject = require('./obj/gameobject');
 
 var _blueprints = require('./obj/blueprints.js');
 
+var _socket = require('./socket.js');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+// Arrays containing all inputs which require cookies, and their values
+var cookieInputs = exports.cookieInputs = _global.GLOBAL.COOKIES.map(function (val) {
+    return document.getElementById(val);
+}); /** 
+     * App.js is responsible for connecting the UI with the game functionality.
+     * Most of the functionality is used for the main menu and connecting/disconnecting behavior.
+     */
 
-// Socket. Yes this is a var, and this is intentional because it is a global variable.
-var socket = exports.socket = undefined;
-
-/* Object containing of all connected players in the form of Player objects */
-var players = exports.players = {};
-
-// Object containing of all Atoms that have not been picked up, in the form of Atom objects
-var atoms = exports.atoms = {};
 
 var nickErrorText = document.getElementById('nickErrorText');
-
-// Arrays containing all inputs which require cookies, and their values
-var cookieInputs = _global.GLOBAL.COOKIES.map(function (val) {
-    return document.getElementById(val);
-});
 
 // Mouse position - used for tooltips
 var mouseX = void 0,
@@ -41683,31 +41666,8 @@ function startGame() {
 
         // Cookie Inputs: 0=player, 1=room, 2=team
 
-        //Joins debug server if conditions are met
-        if (cookieInputs[1].value === 'jurassicexp') {
-            console.log('Dev Backdoor Initiated! Connecting to devserver');
-            //Debugging and Local serving
-            exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
-                query: 'room=' + cookieInputs[1].value + '&name=' + cookieInputs[0].value + '&team=' + cookieInputs[2].value,
-                reconnectionAttempts: 3
-            });
-        } else {
-            // Production server
-            console.log('connecting to main server');
-            exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, {
-                query: 'room=' + cookieInputs[1].value + '&name=' + cookieInputs[0].value + '&team=' + cookieInputs[2].value,
-                reconnectionAttempts: 3
-            });
-        }
-
-        socket.on('connect', function () {
-            setupSocket(socket);
-            // Init pixi
-            (0, _pixigame.init)();
-            if ((typeof _pixigame.app === 'undefined' ? 'undefined' : _typeof(_pixigame.app)) !== undefined) {
-                _pixigame.app.start();
-            }
-        });
+        // Connect to server
+        (0, _socket.beginConnection)();
     } else {
         nickErrorText.style.display = 'inline';
     }
@@ -41869,134 +41829,6 @@ window.onmousemove = function (e) {
     mouseX = e.clientX;
     mouseY = e.clientY;
 };
-/** 
- * First time setup when connection starts.
- * @param {*} socket The socket.io connection instance.
- */
-function setupSocket(socket) {
-    //Debug
-    console.log('Socket:', socket);
-
-    //Instantiate Chat System
-    var chat = new _chatClient2.default({ player: cookieInputs[0].value, room: cookieInputs[1].value, team: cookieInputs[2].value });
-    chat.addLoginMessage(cookieInputs[0].value, true);
-    chat.registerFunctions();
-
-    // On Connection Failure
-    socket.on('reconnect_failed', function () {
-        alert("You have lost connection to the server!");
-    });
-
-    socket.on('reconnecting', function (attempt) {
-        console.log("Lost connection. Reconnecting on attempt: " + attempt);
-        quitGame('Lost connection to server');
-    });
-
-    socket.on('reconnect_error', function (err) {
-        console.log("CRITICAL: Reconnect failed! " + err);
-    });
-
-    socket.on('pong', function (ping) {
-        console.log("Your Ping Is: " + ping);
-    });
-
-    // Sync players between server and client
-    // Sync players between server and client
-    socket.on('playerSync', function (data) {
-        // Create temp array for lerping
-        var oldPlayers = players;
-        //assigning local array to data sent by server
-
-        // Reconstruct player objects based on transferred data
-        for (var player in data) {
-            var pl = data[player];
-
-            // Valid player
-            if (pl !== null) {
-                // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null && player !== socket.id) {
-                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
-                }
-
-                // Does not exist - need to create new player
-                else if (_pixigame.isSetup && (players[player] === undefined || players[player] === null)) {
-                        console.log("Create a player");
-                        players[player] = (0, _pixigame.createPlayer)(pl);
-                    }
-            }
-        }
-
-        if (oldPlayers !== undefined && players !== undefined) {
-            // Lerp predictions with actual for other players
-            for (var _player in players) {
-                var _pl = players[_player],
-                    oldPl = oldPlayers[_player];
-                if (_pl !== null && _pl !== undefined && oldPl !== undefined && _player !== socket.id) {
-                    _pl.posX = lerp(_pl.posX, oldPl.posX, _global.GLOBAL.LERP_VALUE);
-                    _pl.posY = lerp(_pl.posY, oldPl.posY, _global.GLOBAL.LERP_VALUE);
-                    _pl.vx = lerp(_pl.vx, oldPl.vx, _global.GLOBAL.LERP_VALUE);
-                    _pl.vy = lerp(_pl.vy, oldPl.vy, _global.GLOBAL.LERP_VALUE);
-                }
-            }
-        }
-    });
-
-    socket.on('atomSync', function (data) {
-        //THIS IS NOT AN ARRAY ANYMORE
-        //assigning local array to data sent by server
-
-        // Reconstruct atom objects based on transferred data
-        for (var atom in data) {
-            // Valid atom
-            if (data[atom] !== null) {
-                // atom already exists in database
-                var tempAtom = data[atom];
-                if (atoms[atom] !== undefined && atoms[atom] !== null) atoms[atom].setData(tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                // Does not exist - need to create new atom
-                else if (_pixigame.isSetup) {
-                        atoms[atom] = (0, _atom.spawnAtom)(tempAtom.typeID, tempAtom.id, tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                    }
-            }
-            // Delete if it is a player that has disconnected or out of range
-            else {
-                    delete atoms[atom];
-                }
-        }
-    });
-
-    // Sync atoms that have not been picked up
-    socket.on('serverSendAtomRemoval', function (data) {
-        //An Atom was removed
-        if (atoms[data.id] !== undefined) {
-            atoms[data.id].hide();
-            delete atoms[data.id];
-        }
-    });
-
-    socket.on('disconnectedPlayer', function (data) {
-        console.log('Player ' + data.id + ' has disconnected');
-        if (players[data.id] !== undefined) {
-            players[data.id].hide();
-            delete players[data.id];
-        }
-    });
-
-    //Chat system receiver
-    socket.on('serverMSG', function (data) {
-        chat.addSystemLine(data);
-    });
-
-    socket.on('serverSendPlayerChat', function (data) {
-        chat.addChatLine(data.sender, data.message, false);
-    });
-
-    socket.on('serverSendLoginMessage', function (data) {
-        chat.addLoginMessage(data.sender, false);
-    });
-
-    //Emit join message,
-    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
-}
 
 /**
  * Transitions from in-game displays to the main menu.
@@ -42005,15 +41837,7 @@ function setupSocket(socket) {
 function quitGame(msg) {
 
     // Disconnect from server
-    socket.disconnect();
-    _pixigame.app.stop();
-    // destroyPIXI();
-
-
-    // Wipe players list
-    exports.players = players = {};
-    // Wipe atom list
-    exports.atoms = atoms = {};
+    (0, _socket.disconnect)();
 
     // menu
     hideElement('gameAreaWrapper');
@@ -42055,7 +41879,7 @@ window.tooltipFollow = function (button) {
     tooltip.style.left = mouseX - 150 + 'px';
 };
 
-},{"./global.js":191,"./lib/chat-client":192,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":197,"./obj/player":198,"./pixigame.js":199}],191:[function(require,module,exports){
+},{"./global.js":191,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":197,"./obj/player":198,"./socket.js":200}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42148,7 +41972,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _global = require('../global.js');
 
-var _app = require('../app.js');
+var _socket = require('../socket.js');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -42322,7 +42146,7 @@ var ChatClient = function () {
                         //Debug lines for messages - Remove on production
                         // console.log("This Player: " + this.player);
                         // console.log("This message: " + text);
-                        _app.socket.emit('playerChat', { sender: this.player, message: text });
+                        _socket.socket.emit('playerChat', { sender: this.player, message: text });
                         this.addChatLine(this.player, text, true);
                     }
 
@@ -42364,7 +42188,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../app.js":190,"../global.js":191}],193:[function(require,module,exports){
+},{"../global.js":191,"../socket.js":200}],193:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42512,7 +42336,7 @@ var _gameobject = require('../obj/gameobject');
 
 var _pixigame = require('../pixigame.js');
 
-var _app = require('../app.js');
+var _socket = require('../socket.js');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -42574,7 +42398,7 @@ var Atom = exports.Atom = function (_GameObject) {
                 this.vx += 1 / (player.posX - this.posX) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
                 this.vy += 1 / (player.posY - this.posY) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
                 // console.log(this.vx, this.vy, this.posX, this.posY);
-                _app.socket.emit('atomMove', { id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
+                _socket.socket.emit('atomMove', { id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
             } else if (this.vx !== 0 || this.vy !== 0) {
                 this.vx *= _global.GLOBAL.VELOCITY_STEP;
                 this.vy *= _global.GLOBAL.VELOCITY_STEP;
@@ -42584,7 +42408,7 @@ var Atom = exports.Atom = function (_GameObject) {
             if (distance < _global.GLOBAL.ATOM_RADIUS + _global.GLOBAL.PLAYER_RADIUS) {
                 this.isEquipped = true;
                 player.addAtom(this.typeID);
-                _app.socket.emit('atomCollision', { id: this.id });
+                _socket.socket.emit('atomCollision', { id: this.id });
                 return true;
             }
 
@@ -42639,7 +42463,7 @@ function spawnAtom(typeID, id, x, y, vx, vy) {
     return new Atom(id, typeID, texture, x, y, vx, vy);
 }
 
-},{"../app.js":190,"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"./player.js":198,"pixi.js":142}],196:[function(require,module,exports){
+},{"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"../socket.js":200,"./player.js":198,"pixi.js":142}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42900,7 +42724,7 @@ var PIXI = _interopRequireWildcard(_pixi);
 
 var _pixigame = require('../pixigame.js');
 
-var _app = require('../app.js');
+var _socket = require('../socket.js');
 
 var _gameobject = require('../obj/gameobject');
 
@@ -42943,7 +42767,7 @@ var Player = exports.Player = function (_GameObject) {
         _this.width = _global.GLOBAL.PLAYER_RADIUS * 2;
         _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
 
-        if (id === _app.socket.id) {
+        if (id === _socket.socket.id) {
             console.log('this player');
             _this.x = _pixigame.screenCenterX;
             _this.y = _pixigame.screenCenterY;
@@ -43010,7 +42834,7 @@ var Player = exports.Player = function (_GameObject) {
         key: 'damage',
         value: function damage(power) {
             this.health -= power;
-            _app.socket.emit('damage', this.health);
+            _socket.socket.emit('damage', this.health);
         }
 
         /** 
@@ -43031,7 +42855,7 @@ var Player = exports.Player = function (_GameObject) {
             this.textObjects.healthtext.text = 'health: ' + this.health;
 
             // Draw other player
-            if (this.id !== _app.socket.id) {
+            if (this.id !== _socket.socket.id) {
                 this.draw();
             }
         }
@@ -43051,7 +42875,7 @@ var Player = exports.Player = function (_GameObject) {
     return Player;
 }(_gameobject.GameObject);
 
-},{"../app.js":190,"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"pixi.js":142}],199:[function(require,module,exports){
+},{"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"../socket.js":200,"pixi.js":142}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43059,7 +42883,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
-exports.destroyPIXI = destroyPIXI;
 exports.createPlayer = createPlayer;
 
 var _pixi = require('pixi.js');
@@ -43073,6 +42896,8 @@ var _global = require('./global');
 var _player = require('./obj/player');
 
 var _app = require('./app');
+
+var _socket = require('./socket');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -43152,8 +42977,8 @@ function setup() {
             if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
         }
 
-        for (var atom in _app.atoms) {
-            app.stage.addChild(_app.atoms[atom]);
+        for (var atom in _socket.atoms) {
+            app.stage.addChild(_socket.atoms[atom]);
         } // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
@@ -43204,19 +43029,19 @@ function draw(delta) {
         player.tick();
 
         // Send coordinates
-        _app.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+        _socket.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
 
     // Handle other players
-    for (var pl in _app.players) {
-        if (_app.players[pl] !== player) {
-            _app.players[pl].tick();
+    for (var pl in _socket.players) {
+        if (_socket.players[pl] !== player) {
+            _socket.players[pl].tick();
         }
     }
 
     // Draw Atoms
-    for (var atom in _app.atoms) {
-        _app.atoms[atom].tick();
+    for (var atom in _socket.atoms) {
+        _socket.atoms[atom].tick();
     }
 }
 
@@ -43225,16 +43050,6 @@ function draw(delta) {
  */
 function toggleMenu() {
     if (document.getElementById('menubox').offsetParent === null) (0, _app.showElement)('menubox');else (0, _app.hideElement)('menubox');
-}
-
-/**
- * Destroy everything in PIXI
- */
-function destroyPIXI() {
-    app.destroy(true, { children: true, texture: true, baseTexture: true });
-    PIXI.loader.reset();
-    exports.isSetup = isSetup = false;
-    exports.app = app = undefined;
 }
 
 /**
@@ -43247,9 +43062,222 @@ function createPlayer(data) {
         console.log('create player ' + data.id);
         console.log(data);
         var newPlayer = new _player.Player(PIXI.loader.resources[_global.GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
-        if (data.id === _app.socket.id) exports.player = player = newPlayer;
+        if (data.id === _socket.socket.id) exports.player = player = newPlayer;
         return newPlayer;
     }
 }
 
-},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/player":198,"pixi.js":142}]},{},[190]);
+},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/player":198,"./socket":200,"pixi.js":142}],200:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.atoms = exports.players = exports.socket = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.beginConnection = beginConnection;
+exports.disconnect = disconnect;
+
+var _global = require("./global");
+
+var _app = require("./app");
+
+var _chatClient = require("./lib/chat-client");
+
+var _chatClient2 = _interopRequireDefault(_chatClient);
+
+var _pixigame = require("./pixigame");
+
+var _atom = require("./obj/atom");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Socket.js contains all of the clientside networking interface.
+ * It contains all variables which are synced between client and server.
+ */
+
+// Socket.io instance
+var socket = exports.socket = undefined;
+
+/* Object containing of all connected players in the form of Player objects */
+var players = exports.players = {};
+
+// Object containing of all Atoms that have not been picked up, in the form of Atom objects
+var atoms = exports.atoms = {};
+
+/**
+ * Attempts to connect to the server.
+ */
+function beginConnection() {
+    //Joins debug server if conditions are met
+    if (_app.cookieInputs[1].value === 'jurassicexp') {
+        console.log('Dev Backdoor Initiated! Connecting to devserver');
+        //Debugging and Local serving
+        exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
+            query: "room=" + _app.cookieInputs[1].value + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value,
+            reconnectionAttempts: 3
+        });
+    } else {
+        // Production server
+        console.log('connecting to main server');
+        exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, {
+            query: "room=" + _app.cookieInputs[1].value + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value,
+            reconnectionAttempts: 3
+        });
+    }
+
+    socket.on('connect', function () {
+        setupSocket();
+        // Init pixi
+        (0, _pixigame.init)();
+        if ((typeof _pixigame.app === "undefined" ? "undefined" : _typeof(_pixigame.app)) !== undefined) {
+            _pixigame.app.start();
+        }
+    });
+}
+
+/**
+ * Run on disconnect to reset all server-based variables and connections
+ */
+function disconnect() {
+    _pixigame.app.stop();
+    socket.disconnect();
+
+    // Wipe players list
+    exports.players = players = {};
+    // Wipe atom list
+    exports.atoms = atoms = {};
+}
+
+/** 
+ * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
+ */
+function setupSocket() {
+    //Debug
+    console.log('Socket:', socket);
+
+    //Instantiate Chat System
+    var chat = new _chatClient2.default({ player: _app.cookieInputs[0].value, room: _app.cookieInputs[1].value, team: _app.cookieInputs[2].value });
+    chat.addLoginMessage(_app.cookieInputs[0].value, true);
+    chat.registerFunctions();
+
+    // On Connection Failure
+    socket.on('reconnect_failed', function () {
+        alert("You have lost connection to the server!");
+    });
+
+    socket.on('reconnecting', function (attempt) {
+        console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        (0, _app.quitGame)('Lost connection to server');
+    });
+
+    socket.on('reconnect_error', function (err) {
+        console.log("CRITICAL: Reconnect failed! " + err);
+    });
+
+    socket.on('pong', function (ping) {
+        console.log("Your Ping Is: " + ping);
+    });
+
+    // Sync players between server and client
+    // Sync players between server and client
+    socket.on('playerSync', function (data) {
+        // Create temp array for lerping
+        var oldPlayers = players;
+        //assigning local array to data sent by server
+
+        // Reconstruct player objects based on transferred data
+        for (var player in data) {
+            var pl = data[player];
+
+            // Valid player
+            if (pl !== null) {
+                // Player already exists in database
+                if (players[player] !== undefined && players[player] !== null && player !== socket.id) {
+                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+                }
+
+                // Does not exist - need to create new player
+                else if (_pixigame.isSetup && (players[player] === undefined || players[player] === null)) {
+                        console.log("Create a player");
+                        players[player] = (0, _pixigame.createPlayer)(pl);
+                    }
+            }
+        }
+
+        if (oldPlayers !== undefined && players !== undefined) {
+            // Lerp predictions with actual for other players
+            for (var _player in players) {
+                var _pl = players[_player],
+                    oldPl = oldPlayers[_player];
+                if (_pl !== null && _pl !== undefined && oldPl !== undefined && _player !== socket.id) {
+                    _pl.posX = lerp(_pl.posX, oldPl.posX, _global.GLOBAL.LERP_VALUE);
+                    _pl.posY = lerp(_pl.posY, oldPl.posY, _global.GLOBAL.LERP_VALUE);
+                    _pl.vx = lerp(_pl.vx, oldPl.vx, _global.GLOBAL.LERP_VALUE);
+                    _pl.vy = lerp(_pl.vy, oldPl.vy, _global.GLOBAL.LERP_VALUE);
+                }
+            }
+        }
+    });
+
+    socket.on('atomSync', function (data) {
+        //THIS IS NOT AN ARRAY ANYMORE
+        //assigning local array to data sent by server
+
+        // Reconstruct atom objects based on transferred data
+        for (var atom in data) {
+            // Valid atom
+            if (data[atom] !== null) {
+                // atom already exists in database
+                var tempAtom = data[atom];
+                if (atoms[atom] !== undefined && atoms[atom] !== null) atoms[atom].setData(tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
+                // Does not exist - need to create new atom
+                else if (_pixigame.isSetup) {
+                        atoms[atom] = (0, _atom.spawnAtom)(tempAtom.typeID, tempAtom.id, tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
+                    }
+            }
+            // Delete if it is a player that has disconnected or out of range
+            else {
+                    delete atoms[atom];
+                }
+        }
+    });
+
+    // Sync atoms that have not been picked up
+    socket.on('serverSendAtomRemoval', function (data) {
+        //An Atom was removed
+        if (atoms[data.id] !== undefined) {
+            atoms[data.id].hide();
+            delete atoms[data.id];
+        }
+    });
+
+    socket.on('disconnectedPlayer', function (data) {
+        console.log('Player ' + data.id + ' has disconnected');
+        if (players[data.id] !== undefined) {
+            players[data.id].hide();
+            delete players[data.id];
+        }
+    });
+
+    //Chat system receiver
+    socket.on('serverMSG', function (data) {
+        chat.addSystemLine(data);
+    });
+
+    socket.on('serverSendPlayerChat', function (data) {
+        chat.addChatLine(data.sender, data.message, false);
+    });
+
+    socket.on('serverSendLoginMessage', function (data) {
+        chat.addLoginMessage(data.sender, false);
+    });
+
+    //Emit join message,
+    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
+}
+
+},{"./app":190,"./global":191,"./lib/chat-client":192,"./obj/atom":195,"./pixigame":199}]},{},[190]);

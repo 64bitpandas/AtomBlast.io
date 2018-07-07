@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, socket, players, atoms } from './app';
+import { hideElement, showElement} from './app';
+import { socket, players, atoms } from './socket';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -164,16 +165,6 @@ function toggleMenu() {
         showElement('menubox');
     else
         hideElement('menubox');
-}
-
-/**
- * Destroy everything in PIXI
- */
-export function destroyPIXI() {
-    app.destroy(true, { children: true, texture: true, baseTexture: true});
-    PIXI.loader.reset();
-    isSetup = false;
-    app = undefined;
 }
 
 /**

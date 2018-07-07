@@ -4,7 +4,7 @@ import { GLOBAL } from '../global.js';
 import { GameObject } from '../obj/gameobject';
 import { distanceBetween } from '../global.js';
 import { screenCenterX, screenCenterY, player } from '../pixigame.js';
-import { socket } from '../app.js';
+import { socket } from '../socket.js';
 
 /**
  * An Atom can be picked up by players and used to create Compounds.
