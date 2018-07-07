@@ -66,14 +66,7 @@ export const GLOBAL = {
     HYDROGEN_ATOM: 0, // HydrogenAtom
     ATOM_SPRITES: [
         '../assets/testplayer2.png',
-    ],
-
-    COMPOUND_SPRITES: [
-
     ]
-
-
-
 };
 
 /**

@@ -74,8 +74,12 @@ window.onload = () => {
     // Continue loading cookies only if it exists
     let i = 0;
     for(let cookie of cookieValues) {
-        if(cookie !== null && cookie.length > 0)
-            cookieInputs[i].value = cookie;
+        if(cookie !== null && cookie.length > 0) {
+            if(cookieInputs[i].tagName === 'INPUT')
+                cookieInputs[i].value = cookie;
+            else if(cookieInputs[i].tagName === 'BUTTON')
+                cookieInputs[i].innerHTML = cookie;
+        }
         i++;
     }
 
@@ -126,20 +130,25 @@ window.onload = () => {
 
             `;
         
-        document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
-            console.log('test');
-            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
-            hideElement('bp-select');
-        }
+        // document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
+        //     console.log(blueprint + ' selected in slot ' + selectedSlot);
+        //     document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+        //     hideElement('bp-select');
+        //     cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, COOKIE_DAYS);
+        // }
     }
 
+    // Blueprint Slots
     for(let btn of document.getElementsByClassName('btn-blueprint'))
         btn.onclick = () =>  {
-            console.log('test');
-            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[btn.id.substring(14)].name;
+            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'
+            console.log(blueprint + ' selected in slot ' + selectedSlot);
+            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
             hideElement('bp-select');
+            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, GLOBAL.COOKIE_DAYS);
         }
 
+    // Add enter listeners for all inputs
     for(let i = 0; i < 3; i++) {
         cookieInputs[i].addEventListener('keypress', e => {
             const key = e.which || e.keyCode;

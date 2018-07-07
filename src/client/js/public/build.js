@@ -41704,7 +41704,9 @@ window.onload = function () {
         for (var _iterator2 = cookieValues[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             var cookie = _step2.value;
 
-            if (cookie !== null && cookie.length > 0) cookieInputs[i].value = cookie;
+            if (cookie !== null && cookie.length > 0) {
+                if (cookieInputs[i].tagName === 'INPUT') cookieInputs[i].value = cookie;else if (cookieInputs[i].tagName === 'BUTTON') cookieInputs[i].innerHTML = cookie;
+            }
             i++;
         }
 
@@ -41759,8 +41761,7 @@ window.onload = function () {
     };
 
     // Set up blueprint selection buttons
-
-    var _loop2 = function _loop2(blueprint) {
+    for (var blueprint in _blueprints.BLUEPRINTS) {
         var bp = _blueprints.BLUEPRINTS[blueprint];
         var formula = '';
         for (var atom in bp.atoms) {
@@ -41769,35 +41770,35 @@ window.onload = function () {
 
         document.getElementById('blueprint-wrapper').innerHTML += '\n            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-' + blueprint + '">\n                <p>' + bp.name + '</p>\n                <h6>-' + formula + '-</h6>\n                <img src="' + bp.texture + '">\n                <span class="tooltip">' + bp.tooltip + '</span>\n            </button>\n\n            ';
 
-        document.getElementById('btn-blueprint-' + blueprint).onclick = function () {
-            console.log('test');
-            document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[blueprint].name;
-            hideElement('bp-select');
-        };
-    };
-
-    for (var blueprint in _blueprints.BLUEPRINTS) {
-        _loop2(blueprint);
+        // document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
+        //     console.log(blueprint + ' selected in slot ' + selectedSlot);
+        //     document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+        //     hideElement('bp-select');
+        //     cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, COOKIE_DAYS);
+        // }
     }
 
+    // Blueprint Slots
     var _iteratorNormalCompletion3 = true;
     var _didIteratorError3 = false;
     var _iteratorError3 = undefined;
 
     try {
-        var _loop3 = function _loop3() {
+        var _loop2 = function _loop2() {
             var btn = _step3.value;
 
             btn.onclick = function () {
-                console.log('test');
-                document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[btn.id.substring(14)].name;
+                var blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'
+                console.log(blueprint + ' selected in slot ' + selectedSlot);
+                document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[blueprint].name;
                 hideElement('bp-select');
+                cookies.setCookie(_global.GLOBAL.COOKIES[selectedSlot + 2], _blueprints.BLUEPRINTS[blueprint].name, _global.GLOBAL.COOKIE_DAYS);
             };
         };
 
         for (var _iterator3 = document.getElementsByClassName('btn-blueprint')[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            _loop3();
-        }
+            _loop2();
+        } // Add enter listeners for all inputs
     } catch (err) {
         _didIteratorError3 = true;
         _iteratorError3 = err;
@@ -41941,10 +41942,7 @@ var GLOBAL = exports.GLOBAL = {
 
     // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
     HYDROGEN_ATOM: 0, // HydrogenAtom
-    ATOM_SPRITES: ['../assets/testplayer2.png'],
-
-    COMPOUND_SPRITES: []
-
+    ATOM_SPRITES: ['../assets/testplayer2.png']
 };
 
 /**

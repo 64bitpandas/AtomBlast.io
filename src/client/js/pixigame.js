@@ -104,7 +104,6 @@ function setup() {
     // Hide loading screen
     hideElement('loading');
     showElement('chatbox');
-    
 
 }
 
