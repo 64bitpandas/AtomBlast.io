@@ -49,11 +49,7 @@ export function init() {
     // If already initialized, use existing app variable
     if (isSetup) {
         console.info("Stage already initialized!");
-
-        for (var i = app.stage.children.length - 1; i >= 0; i--) {
-            // Remove all elements pre-rendered on stage. 
-            app.stage.removeChild(app.stage.children[i]);
-        }
+        clearStage();
         setup();
     }
 }
@@ -163,6 +159,15 @@ function toggleMenu() {
         showElement('menubox');
     else
         hideElement('menubox');
+}
+
+/**
+ * Remove all elements pre-rendered on stage.
+ */
+function clearStage() {
+    for (var i = app.stage.children.length - 1; i >= 0; i--) {
+        app.stage.removeChild(app.stage.children[i]);
+    }
 }
 
 /**
