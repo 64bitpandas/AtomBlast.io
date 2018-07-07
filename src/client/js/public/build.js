@@ -41577,18 +41577,18 @@ module.exports = {
 };
 
 },{}],190:[function(require,module,exports){
-'use strict';
+/** 
+ * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
+ * Uses socket.io to set up listeners in the setupSocket() function.
+ */
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.atoms = exports.players = exports.socket = undefined;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /** 
-                                                                                                                                                                                                                                                                               * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
-                                                                                                                                                                                                                                                                               * Uses socket.io to set up listeners in the setupSocket() function.
-                                                                                                                                                                                                                                                                               */
-
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.showElement = showElement;
 exports.hideElement = hideElement;
@@ -41700,12 +41700,15 @@ function startGame() {
             });
         }
 
+        (0, _pixigame.init)();
+
         socket.on('connect', function () {
             setupSocket(socket);
             // Init pixi
-            (0, _pixigame.init)();
+
             if ((typeof _pixigame.app === 'undefined' ? 'undefined' : _typeof(_pixigame.app)) !== undefined) {
                 _pixigame.app.start();
+                (0, _pixigame.showGameUI)();
             }
         });
     } else {
@@ -41774,6 +41777,18 @@ window.onload = function () {
 
     document.getElementById('resumeButton').onclick = function () {
         hideElement('menubox');
+    };
+
+    document.getElementById('optionsButton').onclick = function () {
+        alert('This feature is not implemented.');
+    };
+
+    document.getElementById('controlsButton').onclick = function () {
+        alert('This feature is not implemented.');
+    };
+
+    document.getElementById('creditsButton').onclick = function () {
+        alert('Created by BananiumLabs.com');
     };
 
     // Set up the blueprint slot buttons
@@ -41888,16 +41903,16 @@ function setupSocket(socket) {
     });
 
     socket.on('reconnecting', function (attempt) {
-        console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        console.warn("Lost connection. Reconnecting on attempt: " + attempt);
         quitGame('Lost connection to server');
     });
 
     socket.on('reconnect_error', function (err) {
-        console.log("CRITICAL: Reconnect failed! " + err);
+        console.error("CRITICAL: Reconnect failed! " + err);
     });
 
     socket.on('pong', function (ping) {
-        console.log("Your Ping Is: " + ping);
+        console.info("Your Ping Is: " + ping);
     });
 
     // Sync players between server and client
@@ -43060,6 +43075,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
 exports.destroyPIXI = destroyPIXI;
+exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
 
 var _pixi = require('pixi.js');
@@ -43113,7 +43129,6 @@ function init() {
         exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
         // Load resources if not already loaded
-        console.warn("AYYYYY");
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
         }
@@ -43121,8 +43136,10 @@ function init() {
 
     // If already initialized, use existing app variable
     if (isSetup) {
-        console.warn("Loader already initialized!");
+        console.info("Stage already initialized!");
+
         for (var i = app.stage.children.length - 1; i >= 0; i--) {
+            // Remove all elements pre-rendered on stage. 
             app.stage.removeChild(app.stage.children[i]);
         }
         setup();
@@ -43172,9 +43189,6 @@ function setup() {
     }
 
     exports.isSetup = isSetup = true;
-    // Hide loading screen
-    (0, _app.hideElement)('loading');
-    (0, _app.showElement)('chatbox');
 }
 
 /**
@@ -43228,13 +43242,22 @@ function toggleMenu() {
 }
 
 /**
- * Destroy everything in PIXI
+ * Destroy everything in PIXI. DANGEROUS avoid!
  */
 function destroyPIXI() {
     app.destroy(true, { children: true, texture: true, baseTexture: true });
     PIXI.loader.reset();
     exports.isSetup = isSetup = false;
     exports.app = app = undefined;
+}
+
+/**
+ * Call this function to hide loading div and show UI
+ */
+function showGameUI() {
+    // Hide loading screen
+    (0, _app.hideElement)('loading');
+    (0, _app.showElement)('chatbox');
 }
 
 /**

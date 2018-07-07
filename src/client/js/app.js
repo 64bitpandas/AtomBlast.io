@@ -2,10 +2,11 @@
  * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
  * Uses socket.io to set up listeners in the setupSocket() function.
  */
+"use strict";
 import { GLOBAL } from './global.js';
 import ChatClient from './lib/chat-client';
 import * as cookies from './lib/cookies';
-import { init, createPlayer, isSetup, destroyPIXI, app } from './pixigame.js';
+import { init, createPlayer, isSetup, destroyPIXI, app, loadedPIXI, showGameUI } from './pixigame.js';
 import { Player } from './obj/player';
 import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
@@ -71,13 +72,16 @@ function startGame() {
             });
         }
         
+        init();
+
         socket.on('connect', () => {
             setupSocket(socket);
             // Init pixi
-            init();
+            
             if(typeof app !== undefined)
             {
                 app.start();
+                showGameUI();
             }
         });
                 
@@ -126,6 +130,18 @@ window.onload = () => {
 
     document.getElementById('resumeButton').onclick = () => {
         hideElement('menubox');
+    };
+
+    document.getElementById('optionsButton').onclick = () => {
+        alert('This feature is not implemented.');
+    };
+
+    document.getElementById('controlsButton').onclick = () => {
+        alert('This feature is not implemented.');
+    };
+
+    document.getElementById('creditsButton').onclick = () => {
+        alert('Created by BananiumLabs.com');
     };
 
     // Set up the blueprint slot buttons
@@ -213,16 +229,16 @@ function setupSocket(socket) {
     });
 
     socket.on('reconnecting', (attempt) => {
-        console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        console.warn("Lost connection. Reconnecting on attempt: " + attempt);
         quitGame('Lost connection to server');
     });
 
     socket.on('reconnect_error', (err) => {
-        console.log("CRITICAL: Reconnect failed! " + err);
+        console.error("CRITICAL: Reconnect failed! " + err);
     });
 
     socket.on('pong', (ping) => {
-        console.log("Your Ping Is: " + ping);
+        console.info("Your Ping Is: " + ping);
     });
 
     // Sync players between server and client

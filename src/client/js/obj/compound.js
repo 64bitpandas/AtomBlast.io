@@ -8,7 +8,6 @@ import { BLUEPRINTS } from "./blueprints";
  */
 export class Compound extends GameObject {
 
-
     constructor(texture, id, x, y, vx, vy, blueprint) {
         super(texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
@@ -35,8 +34,6 @@ export class Compound extends GameObject {
         // Movement
         super.tick();
     }
-
-
 }
 
 /**

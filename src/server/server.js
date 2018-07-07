@@ -7,7 +7,7 @@ import {GLOBAL, distanceBetween} from '../client/js/global.js';
 var config = require('./config.json');
 
 
-const debug = true;
+const DEBUG = true;
 app.use(express.static(`${__dirname}/../client`));
 
 /* Array of all connected players and atoms in respective rooms. All players must contain:
@@ -129,6 +129,9 @@ io.on('connection', socket => {
     // console.log('sender: ' + data.sender);
     const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');
     socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender, team: data.team });
+    if(DEBUG) {
+      socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
+    }
   });
 
   // Broadcasts player join message
@@ -136,6 +139,9 @@ io.on('connection', socket => {
     socket.to(room).broadcast.emit('serverSendLoginMessage', {
       sender: socket.id
     });
+    if(DEBUG) {
+      socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
+    }
   });
 
   /**

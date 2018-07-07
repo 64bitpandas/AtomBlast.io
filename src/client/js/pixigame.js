@@ -37,7 +37,6 @@ export function init() {
         screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
         // Load resources if not already loaded
-        console.warn("AYYYYY");
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader
             .add(GLOBAL.PLAYER_SPRITES)
@@ -48,8 +47,10 @@ export function init() {
 
     // If already initialized, use existing app variable
     if (isSetup) {
-        console.warn("Loader already initialized!");
+        console.info("Stage already initialized!");
+
         for (var i = app.stage.children.length - 1; i >= 0; i--) {
+            // Remove all elements pre-rendered on stage. 
             app.stage.removeChild(app.stage.children[i]);
         }
         setup();
@@ -98,11 +99,9 @@ function setup() {
         // Begin game loop
         app.ticker.add(delta => draw(delta));
     }
-
+    
     isSetup = true; 
-    // Hide loading screen
-    hideElement('loading');
-    showElement('chatbox');
+    
     
 
 }
@@ -167,13 +166,22 @@ function toggleMenu() {
 }
 
 /**
- * Destroy everything in PIXI
+ * Destroy everything in PIXI. DANGEROUS avoid!
  */
 export function destroyPIXI() {
     app.destroy(true, { children: true, texture: true, baseTexture: true});
     PIXI.loader.reset();
     isSetup = false;
     app = undefined;
+}
+
+/**
+ * Call this function to hide loading div and show UI
+ */
+export function showGameUI() {
+    // Hide loading screen
+    hideElement('loading');
+    showElement('chatbox');
 }
 
 /**
