@@ -37,7 +37,6 @@ function startGame() {
 
         // Use cookies to set the ingame blueprint slot values
         for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
-            console.log(cookieInputs[i - 1 + GLOBAL.INPUT_COUNT]);
             selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
             document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;
         }

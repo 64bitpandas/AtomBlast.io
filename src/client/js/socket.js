@@ -3,6 +3,7 @@ import { cookieInputs, quitGame } from "./app";
 import ChatClient from "./lib/chat-client";
 import { init, app, createPlayer, isSetup, showGameUI } from "./pixigame";
 import { spawnAtom } from "./obj/atom";
+import { createCompound } from "./obj/compound";
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -12,11 +13,14 @@ import { spawnAtom } from "./obj/atom";
 // Socket.io instance
 export var socket;
 
-/* Object containing of all connected players in the form of Player objects */
-export var players = {};
-
-// Object containing of all Atoms that have not been picked up, in the form of Atom objects
-export var atoms = {};
+/* Object containing all synced objects. Contains nested objects, which correspond to different types
+ * (for example, objects[atoms], objects[players], objects[compounds])
+ */
+export var objects = {
+    players: {},
+    atoms: {},
+    compounds: {}
+};
 
 /**
  * Attempts to connect to the server.
@@ -57,10 +61,9 @@ export function disconnect() {
     app.stop();
     socket.disconnect();
 
-    // Wipe players list
-    players = {};
-    // Wipe atom list
-    atoms = {};
+    // Wipe objects list
+    for(let objType in objects)
+        objects[objType] = {};
 }
 
 /** 
@@ -94,66 +97,33 @@ function setupSocket() {
         console.log("Your Ping Is: " + ping);
     });
 
-    // Sync players between server and client
-    // Sync players between server and client
-    socket.on('playerSync', (data) => {
-        // Create temp array for lerping
-        let oldPlayers = players;
-        //assigning local array to data sent by server
-
-        // Reconstruct player objects based on transferred data
-        for (let player in data) {
-            let pl = data[player];
-
-            // Valid player
-            if (pl !== null) {
-                // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null && player !== socket.id) {
-                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
+    // Syncs all objects from server once a frame
+    socket.on('objectSync', (data) => {
+        for(let objType in data) {
+            for(let obj in data[objType]) {
+                if(data[objType][obj] !== null) {
+                    let objRef = data[objType][obj];
+                    let clientObj = objects[objType][obj];
+                    // Already exists in database
+                    if(clientObj !== undefined && clientObj !== null) {
+                        if (objRef.id !== socket.id)
+                            objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                    }
+                    // Does not exist - need to clone to clientside
+                    else if(isSetup) {
+                        switch(objType) {
+                            case 'players':
+                               objects[objType][obj] = createPlayer(objRef);
+                               break;
+                            case 'atoms':
+                                objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                                break;
+                            case 'compounds':
+                                objects[objType][obj] = createCompound(objRef);
+                                break;
+                        }
+                    }
                 }
-
-                // Does not exist - need to create new player
-                else if (isSetup && (players[player] === undefined || players[player] === null)) {
-                    console.log("Create a player");
-                    players[player] = createPlayer(pl);
-                }
-            }
-        }
-
-        if (oldPlayers !== undefined && players !== undefined) {
-            // Lerp predictions with actual for other players
-            for (let player in players) {
-                let pl = players[player],
-                    oldPl = oldPlayers[player];
-                if (pl !== null && pl !== undefined && oldPl !== undefined && player !== socket.id) {
-                    pl.posX = lerp(pl.posX, oldPl.posX, GLOBAL.LERP_VALUE);
-                    pl.posY = lerp(pl.posY, oldPl.posY, GLOBAL.LERP_VALUE);
-                    pl.vx = lerp(pl.vx, oldPl.vx, GLOBAL.LERP_VALUE);
-                    pl.vy = lerp(pl.vy, oldPl.vy, GLOBAL.LERP_VALUE);
-                }
-            }
-        }
-    });
-
-    socket.on('atomSync', (data) => { //THIS IS NOT AN ARRAY ANYMORE
-        //assigning local array to data sent by server
-
-        // Reconstruct atom objects based on transferred data
-        for (let atom in data) {
-            // Valid atom
-            if (data[atom] !== null) {
-                // atom already exists in database
-                let tempAtom = data[atom];
-                if (atoms[atom] !== undefined && atoms[atom] !== null)
-                    atoms[atom].setData(tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                // Does not exist - need to create new atom
-                else if (isSetup) {
-                    atoms[atom] = spawnAtom(tempAtom.typeID, tempAtom.id, tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                }
-            }
-            // Delete if it is a player that has disconnected or out of range
-            else {
-                delete atoms[atom];
             }
         }
     });

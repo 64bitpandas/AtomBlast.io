@@ -41638,7 +41638,6 @@ function startGame() {
 
         // Use cookies to set the ingame blueprint slot values
         for (var _i = 1; _i <= _global.GLOBAL.BP_MAX; _i++) {
-            console.log(cookieInputs[_i - 1 + _global.GLOBAL.INPUT_COUNT]);
             selectedBlueprints[_i - 1] = _blueprints.BLUEPRINTS[cookies.getCookie(_global.GLOBAL.COOKIES[_i - 1 + _global.GLOBAL.INPUT_COUNT])];
             document.getElementById('bp-ingame-' + _i).innerHTML = selectedBlueprints[_i - 1].name;
         }
@@ -41873,7 +41872,7 @@ window.tooltipFollow = function (button) {
     tooltip.style.left = mouseX - 150 + 'px';
 };
 
-},{"./global.js":191,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":197,"./obj/player":198,"./socket.js":200}],191:[function(require,module,exports){
+},{"./global.js":191,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":198,"./obj/player":199,"./socket.js":201}],191:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42183,7 +42182,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../global.js":191,"../socket.js":200}],193:[function(require,module,exports){
+},{"../global.js":191,"../socket.js":201}],193:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42458,7 +42457,7 @@ function spawnAtom(typeID, id, x, y, vx, vy) {
     return new Atom(id, typeID, texture, x, y, vx, vy);
 }
 
-},{"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"../socket.js":200,"./player.js":198,"pixi.js":142}],196:[function(require,module,exports){
+},{"../global.js":191,"../obj/gameobject":198,"../pixigame.js":200,"../socket.js":201,"./player.js":199,"pixi.js":142}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42554,7 +42553,100 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
     return true;
 }
 
-},{"../pixigame":199}],197:[function(require,module,exports){
+},{"../pixigame":200}],197:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.Compound = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+exports.createNewCompound = createNewCompound;
+exports.createCompound = createCompound;
+
+var _gameobject = require("./gameobject");
+
+var _socket = require("../socket");
+
+var _blueprints = require("./blueprints");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * Generic Compound which can be instantiated into the scene as a GameObject.
+ * Created when a player uses a Blueprint.
+ */
+var Compound = exports.Compound = function (_GameObject) {
+    _inherits(Compound, _GameObject);
+
+    function Compound(id, x, y, vx, vy, blueprint) {
+        _classCallCheck(this, Compound);
+
+        var _this = _possibleConstructorReturn(this, (Compound.__proto__ || Object.getPrototypeOf(Compound)).call(this, _blueprints.BLUEPRINTS[blueprint].texture, id, x, y, vx, vy));
+
+        _this.blueprint = blueprint;
+        _this.type = _blueprints.BLUEPRINTS[blueprint].type;
+        return _this;
+    }
+
+    /**
+     * Runs once a frame.
+     */
+
+
+    _createClass(Compound, [{
+        key: "tick",
+        value: function tick() {
+
+            // Different behaviors based on type
+            switch (this.type) {
+                case 'binary':
+                    //do stuff
+                    break;
+                case 'basic':
+                    //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
+                    break;
+                default:
+                    throw new Error('Blueprint ' + this.blueprint + ' could not be found!');
+            }
+
+            // Movement
+            _get(Compound.prototype.__proto__ || Object.getPrototypeOf(Compound.prototype), "tick", this).call(this);
+        }
+    }]);
+
+    return Compound;
+}(_gameobject.GameObject);
+
+/**
+ * Creates a Compound by sending a request to the server.
+ * @param {string} blueprint Then name of the blueprint to create the compound from
+ */
+
+
+function createNewCompound(blueprint) {
+    _socket.socket.emit('createCompound', {
+        blueprint: blueprint
+    });
+}
+
+/**
+ * Recreates an already spawned compound on the clientside based on server data.
+ * @param {*} data Data sent from server
+ */
+function createCompound(data) {
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
+}
+
+},{"../socket":201,"./blueprints":196,"./gameobject":198}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42699,7 +42791,7 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     return GameObject;
 }(PIXI.Sprite);
 
-},{"../global":191,"../pixigame":199,"pixi.js":142}],198:[function(require,module,exports){
+},{"../global":191,"../pixigame":200,"pixi.js":142}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42870,7 +42962,7 @@ var Player = exports.Player = function (_GameObject) {
     return Player;
 }(_gameobject.GameObject);
 
-},{"../global.js":191,"../obj/gameobject":197,"../pixigame.js":199,"../socket.js":200,"pixi.js":142}],199:[function(require,module,exports){
+},{"../global.js":191,"../obj/gameobject":198,"../pixigame.js":200,"../socket.js":201,"pixi.js":142}],200:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42896,6 +42988,8 @@ var _app = require('./app');
 
 var _socket = require('./socket');
 
+var _blueprints = require('./obj/blueprints');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var isSetup = exports.isSetup = undefined; // True after the stage is fully set up
@@ -42904,7 +42998,7 @@ var screenCenterX = exports.screenCenterX = undefined; // X-coordinate of the ce
 var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the center of the screen
 var app = exports.app = undefined; // Pixi app
 
-var sprites = []; // Sprites on the stage
+// let sprites = []; // Sprites on the stage
 var esc = void 0,
     up = void 0,
     down = void 0,
@@ -42936,9 +43030,9 @@ function init() {
 
         // Load resources if not already loaded
         var BLUEPRINT_TEXTURES = [];
-        for (var bp in BLUEPRINTS) {
+        for (var bp in _blueprints.BLUEPRINTS) {
             // Prevent duplicate textures from being loaded
-            if (BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture < 0)) BLUEPRINT_TEXTURES.push(BLUEPRINTS[bp].texture);
+            if (BLUEPRINT_TEXTURES.indexOf(_blueprints.BLUEPRINTS[bp].texture) < 0) BLUEPRINT_TEXTURES.push(_blueprints.BLUEPRINTS[bp].texture);
         }
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
@@ -42973,13 +43067,15 @@ function setup() {
         // sprites.nametext.position.set()
 
         // Load sprites into stage
-        for (var sprite in sprites) {
-            if (sprite !== 'player') app.stage.addChild(sprites[sprite]);
-        }
+        // for(let sprite in sprites) {
+        //     if(sprite !== 'player')
+        //         app.stage.addChild(sprites[sprite]);
+        // }
 
-        for (var atom in _socket.atoms) {
-            app.stage.addChild(_socket.atoms[atom]);
-        } // Background
+        // for(let atom in atoms)
+        //     app.stage.addChild(atoms[atom]);
+
+        // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
         // Resize
@@ -43030,17 +43126,22 @@ function draw(delta) {
         _socket.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
 
-    // Handle other players
-    for (var pl in _socket.players) {
-        if (_socket.players[pl] !== player) {
-            _socket.players[pl].tick();
+    // Handle objects except for this player
+    for (var objType in _socket.objects) {
+        for (var obj in _socket.objects[objType]) {
+            if (objType !== 'players' || player !== _socket.objects[objType][obj]) _socket.objects[objType][obj].tick();
         }
     }
+    // for(let pl in players) {
+    //     if(players[pl] !== player) {
+    //         players[pl].tick();
+    //     }
+    // }
 
-    // Draw Atoms
-    for (var atom in _socket.atoms) {
-        _socket.atoms[atom].tick();
-    }
+    // // Draw Atoms
+    // for(let atom in atoms) {
+    //     atoms[atom].tick();
+    // }
 }
 
 /**
@@ -43093,13 +43194,13 @@ function createPlayer(data) {
     }
 }
 
-},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/player":198,"./socket":200,"pixi.js":142}],200:[function(require,module,exports){
+},{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/blueprints":196,"./obj/player":199,"./socket":201,"pixi.js":142}],201:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.atoms = exports.players = exports.socket = undefined;
+exports.objects = exports.socket = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -43118,6 +43219,8 @@ var _pixigame = require("./pixigame");
 
 var _atom = require("./obj/atom");
 
+var _compound = require("./obj/compound");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -43128,11 +43231,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // Socket.io instance
 var socket = exports.socket = undefined;
 
-/* Object containing of all connected players in the form of Player objects */
-var players = exports.players = {};
-
-// Object containing of all Atoms that have not been picked up, in the form of Atom objects
-var atoms = exports.atoms = {};
+/* Object containing all synced objects. Contains nested objects, which correspond to different types
+ * (for example, objects[atoms], objects[players], objects[compounds])
+ */
+var objects = exports.objects = {
+    players: {},
+    atoms: {},
+    compounds: {}
+};
 
 /**
  * Attempts to connect to the server.
@@ -43172,10 +43278,10 @@ function disconnect() {
     _pixigame.app.stop();
     socket.disconnect();
 
-    // Wipe players list
-    exports.players = players = {};
-    // Wipe atom list
-    exports.atoms = atoms = {};
+    // Wipe objects list
+    for (var objType in objects) {
+        objects[objType] = {};
+    }
 }
 
 /** 
@@ -43208,67 +43314,33 @@ function setupSocket() {
         console.log("Your Ping Is: " + ping);
     });
 
-    // Sync players between server and client
-    // Sync players between server and client
-    socket.on('playerSync', function (data) {
-        // Create temp array for lerping
-        var oldPlayers = players;
-        //assigning local array to data sent by server
-
-        // Reconstruct player objects based on transferred data
-        for (var player in data) {
-            var pl = data[player];
-
-            // Valid player
-            if (pl !== null) {
-                // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null && player !== socket.id) {
-                    players[player].setData(pl.posX, pl.posY, pl.vx, pl.vy);
-                }
-
-                // Does not exist - need to create new player
-                else if (_pixigame.isSetup && (players[player] === undefined || players[player] === null)) {
-                        console.log("Create a player");
-                        players[player] = (0, _pixigame.createPlayer)(pl);
+    // Syncs all objects from server once a frame
+    socket.on('objectSync', function (data) {
+        for (var objType in data) {
+            for (var obj in data[objType]) {
+                if (data[objType][obj] !== null) {
+                    var objRef = data[objType][obj];
+                    var clientObj = objects[objType][obj];
+                    // Already exists in database
+                    if (clientObj !== undefined && clientObj !== null) {
+                        if (objRef.id !== socket.id) objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
                     }
-            }
-        }
-
-        if (oldPlayers !== undefined && players !== undefined) {
-            // Lerp predictions with actual for other players
-            for (var _player in players) {
-                var _pl = players[_player],
-                    oldPl = oldPlayers[_player];
-                if (_pl !== null && _pl !== undefined && oldPl !== undefined && _player !== socket.id) {
-                    _pl.posX = lerp(_pl.posX, oldPl.posX, _global.GLOBAL.LERP_VALUE);
-                    _pl.posY = lerp(_pl.posY, oldPl.posY, _global.GLOBAL.LERP_VALUE);
-                    _pl.vx = lerp(_pl.vx, oldPl.vx, _global.GLOBAL.LERP_VALUE);
-                    _pl.vy = lerp(_pl.vy, oldPl.vy, _global.GLOBAL.LERP_VALUE);
+                    // Does not exist - need to clone to clientside
+                    else if (_pixigame.isSetup) {
+                            switch (objType) {
+                                case 'players':
+                                    objects[objType][obj] = (0, _pixigame.createPlayer)(objRef);
+                                    break;
+                                case 'atoms':
+                                    objects[objType][obj] = (0, _atom.spawnAtom)(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                                    break;
+                                case 'compounds':
+                                    objects[objType][obj] = (0, _compound.createCompound)(objRef);
+                                    break;
+                            }
+                        }
                 }
             }
-        }
-    });
-
-    socket.on('atomSync', function (data) {
-        //THIS IS NOT AN ARRAY ANYMORE
-        //assigning local array to data sent by server
-
-        // Reconstruct atom objects based on transferred data
-        for (var atom in data) {
-            // Valid atom
-            if (data[atom] !== null) {
-                // atom already exists in database
-                var tempAtom = data[atom];
-                if (atoms[atom] !== undefined && atoms[atom] !== null) atoms[atom].setData(tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                // Does not exist - need to create new atom
-                else if (_pixigame.isSetup) {
-                        atoms[atom] = (0, _atom.spawnAtom)(tempAtom.typeID, tempAtom.id, tempAtom.posX, tempAtom.posY, tempAtom.vx, tempAtom.vy);
-                    }
-            }
-            // Delete if it is a player that has disconnected or out of range
-            else {
-                    delete atoms[atom];
-                }
         }
     });
 
@@ -43311,4 +43383,4 @@ function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
 }
 
-},{"./app":190,"./global":191,"./lib/chat-client":192,"./obj/atom":195,"./pixigame":199}]},{},[190]);
+},{"./app":190,"./global":191,"./lib/chat-client":192,"./obj/atom":195,"./obj/compound":197,"./pixigame":200}]},{},[190]);

@@ -90,24 +90,31 @@ io.on('connection', socket => {
   // Setup player array sync- once a frame
   setInterval(() => {
     if(rooms[room] !== undefined) {
-      // Distance checking for both players and atoms
-      let tempPlayerSync = {};
-      let tempAtomSync = {};
+      // Distance checking for all objects
+      let tempObjects = {
+        players: {},
+        atoms: {},
+        compounds: {}
+      };
 
-      for(let player in rooms[room].players) {
-        if(distanceBetween(rooms[room].players[player], thisPlayer) < GLOBAL.DRAW_RADIUS) {
-          tempPlayerSync[player] = rooms[room].players[player];
-        }
+      for(let objType in tempObjects) {
+        for (let obj in rooms[room][objType])
+          if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
+            tempObjects[objType][obj] = rooms[room][objType][obj];
       }
+      // for(let player in rooms[room].players) {
+      //   if(distanceBetween(rooms[room].players[player], thisPlayer) < GLOBAL.DRAW_RADIUS) {
+      //     tempPlayerSync[player] = rooms[room].players[player];
+      //   }
+      // }
 
-      for(let atom in rooms[room].atoms) {
-        if (distanceBetween(thisPlayer, rooms[room].atoms[atom]) < GLOBAL.DRAW_RADIUS && !rooms[room].atoms[atom].isEquipped) {
-          tempAtomSync[atom] = rooms[room].atoms[atom];
-        }
-      }
+      // for(let atom in rooms[room].atoms) {
+      //   if (distanceBetween(thisPlayer, rooms[room].atoms[atom]) < GLOBAL.DRAW_RADIUS && !rooms[room].atoms[atom].isEquipped) {
+      //     tempAtomSync[atom] = rooms[room].atoms[atom];
+      //   }
+      // }
 
-      socket.emit('playerSync', tempPlayerSync);
-      socket.emit('atomSync', tempAtomSync);
+      socket.emit('objectSync', tempObjects);
     }
   }, 1000/60);
   

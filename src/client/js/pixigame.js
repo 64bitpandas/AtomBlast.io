@@ -3,7 +3,8 @@ import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
 import { hideElement, showElement} from './app';
-import { socket, players, atoms } from './socket';
+import { socket, objects } from './socket';
+import { BLUEPRINTS } from './obj/blueprints';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -11,7 +12,7 @@ export var screenCenterX; // X-coordinate of the center of the screen
 export var screenCenterY; // Y-coordinate of the center of the screen
 export var app; // Pixi app
 
-let sprites = []; // Sprites on the stage
+// let sprites = []; // Sprites on the stage
 let esc, up, down, left, right; // Key handlers
 
 // Add text
@@ -41,7 +42,7 @@ export function init() {
         let BLUEPRINT_TEXTURES = [];
         for(let bp in BLUEPRINTS) {
             // Prevent duplicate textures from being loaded
-            if(BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture < 0))
+            if(BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
                 BLUEPRINT_TEXTURES.push(BLUEPRINTS[bp].texture);
         }
 
@@ -81,13 +82,13 @@ function setup() {
         // sprites.nametext.position.set()
 
         // Load sprites into stage
-        for(let sprite in sprites) {
-            if(sprite !== 'player')
-                app.stage.addChild(sprites[sprite]);
-        }
+        // for(let sprite in sprites) {
+        //     if(sprite !== 'player')
+        //         app.stage.addChild(sprites[sprite]);
+        // }
 
-        for(let atom in atoms)
-            app.stage.addChild(atoms[atom]);
+        // for(let atom in atoms)
+        //     app.stage.addChild(atoms[atom]);
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -147,17 +148,22 @@ function draw(delta) {
         socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
     
-    // Handle other players
-    for(let pl in players) {
-        if(players[pl] !== player) {
-            players[pl].tick();
-        }
+    // Handle objects except for this player
+    for(let objType in objects) {
+        for(let obj in objects[objType])
+            if(objType !== 'players' || player !== objects[objType][obj])
+                objects[objType][obj].tick();
     }
+    // for(let pl in players) {
+    //     if(players[pl] !== player) {
+    //         players[pl].tick();
+    //     }
+    // }
 
-    // Draw Atoms
-    for(let atom in atoms) {
-        atoms[atom].tick();
-    }
+    // // Draw Atoms
+    // for(let atom in atoms) {
+    //     atoms[atom].tick();
+    // }
 }
 
 /**

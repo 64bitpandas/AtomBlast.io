@@ -40,8 +40,16 @@ export class Compound extends GameObject {
  * Creates a Compound by sending a request to the server.
  * @param {string} blueprint Then name of the blueprint to create the compound from
  */
-export function createCompound(blueprint) {
+export function createNewCompound(blueprint) {
     socket.emit('createCompound', {
         blueprint: blueprint
     });
+}
+
+/**
+ * Recreates an already spawned compound on the clientside based on server data.
+ * @param {*} data Data sent from server
+ */
+export function createCompound(data) {
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
 }
