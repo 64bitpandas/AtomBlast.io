@@ -1,7 +1,8 @@
 {
     "files": {
         "included": [
-            "src/client/js/*.js"
+            "src/client/js/*.js",
+            "src/client/js/obj/*.js"
         ],
         "excluded": [
             "src/client/js/public/*.js"

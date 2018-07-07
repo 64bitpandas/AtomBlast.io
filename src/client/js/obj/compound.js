@@ -1,5 +1,5 @@
 import { GameObject } from "./gameobject";
-import { socket } from "../app";
+import { socket } from "../socket";
 import { BLUEPRINTS } from "./blueprints";
 
 /**

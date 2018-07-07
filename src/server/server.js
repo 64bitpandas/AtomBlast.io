@@ -87,7 +87,6 @@ io.on('connection', socket => {
   };
 
  let thisPlayer = rooms[room].players[socket.id];
- console.log(thisPlayer);
  
   // Setup player array sync- once a frame
   setInterval(() => {
@@ -189,7 +188,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', data => {
-    console.log("Disconnect Received: " + data);
+    console.log('[Server]'.bold.blue + " Disconnect Received: ".red + ('' + socket.id).yellow + ': ' + data );
     
     socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
     
@@ -197,7 +196,7 @@ io.on('connection', socket => {
 
     // Delete room if there is nobody inside
     if(Object.keys(rooms[room].players).length === 0)  {
-      console.log('[Server] '.bold.blue + ' Closing room '.red + (room + '').bold.red);
+      console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);
       delete io.sockets.adapter.rooms[socket.id];
       delete rooms[room];
     }

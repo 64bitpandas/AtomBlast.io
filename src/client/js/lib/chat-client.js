@@ -4,7 +4,7 @@
  */
 
 import {GLOBAL} from '../global.js';
-import { socket } from '../app.js';
+import { socket } from '../socket.js';
 
 let player, room, team;
 export default class ChatClient {
