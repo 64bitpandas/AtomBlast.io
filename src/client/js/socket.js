@@ -191,3 +191,8 @@ function setupSocket() {
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }
+
+// Linear Interpolation function. Adapted from p5.lerp
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t
+}

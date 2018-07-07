@@ -41865,11 +41865,6 @@ function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
 
-// Linear Interpolation function. Adapted from p5.lerp
-function lerp(v0, v1, t) {
-    return v0 * (1 - t) + v1 * t;
-}
-
 /**
  * Makes tooltip follow the mouse. Call when a button is hovered.
  * @param {HTMLElement} button The element reference for the button currently being hovered.
@@ -43276,6 +43271,11 @@ function setupSocket() {
 
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });
+}
+
+// Linear Interpolation function. Adapted from p5.lerp
+function lerp(v0, v1, t) {
+    return v0 * (1 - t) + v1 * t;
 }
 
 },{"./app":190,"./global":191,"./lib/chat-client":192,"./obj/atom":195,"./pixigame":199}]},{},[190]);

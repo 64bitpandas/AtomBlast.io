@@ -201,11 +201,6 @@ export function hideElement(el) {
     document.getElementById(el).style.display = 'none';
 }
 
-// Linear Interpolation function. Adapted from p5.lerp
-function lerp(v0, v1, t) {
-    return v0 * (1 - t) + v1 * t
-}
-
 /**
  * Makes tooltip follow the mouse. Call when a button is hovered.
  * @param {HTMLElement} button The element reference for the button currently being hovered.
