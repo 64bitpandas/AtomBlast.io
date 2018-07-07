@@ -38,10 +38,18 @@ export function init() {
         screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
         // Load resources if not already loaded
+        let BLUEPRINT_TEXTURES = [];
+        for(let bp in BLUEPRINTS) {
+            // Prevent duplicate textures from being loaded
+            if(BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture < 0))
+                BLUEPRINT_TEXTURES.push(BLUEPRINTS[bp].texture);
+        }
+
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader
             .add(GLOBAL.PLAYER_SPRITES)
             .add(GLOBAL.ATOM_SPRITES)
+            .add(BLUEPRINT_TEXTURES)
             .load(setup);
         }
     }

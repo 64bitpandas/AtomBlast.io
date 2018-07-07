@@ -58,10 +58,9 @@ io.on('connection', socket => {
       let type = 0; //TODO
       let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-      let randID = Math.floor(Math.random() * 90000000) + 10000000;
       let atom = {
         typeID: type,
-        id: randID,
+        id: generateID(),
         posX: randX,
         posY: randY,
         vx: 0,
@@ -187,6 +186,20 @@ io.on('connection', socket => {
       socket.to(room).broadcast.emit('serverSendAtomRemoval', data);
   });
 
+  // A player spawned a Compound
+  socket.to(room).on('createCompound', data => {
+    let newCompound = {
+      id: generateID(),
+      posX: thisPlayer.posX, 
+      posY: thisPlayer.posY,
+      vx: thisPlayer.vx,
+      vy: thisPlayer.vy,
+      blueprint: data.blueprint
+    };
+    socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound);
+    socket.to(room).emit('serverSendCreateCompound', newCompound);
+  });
+
   socket.on('disconnect', data => {
     console.log('[Server]'.bold.blue + " Disconnect Received: ".red + ('' + socket.id).yellow + ': ' + data );
     
@@ -210,3 +223,11 @@ http.listen(serverPort, () => {
   rooms = {};
   console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);
 });
+
+/**
+ * Returns a random number between between 10000000 and 99999999, inclusive.
+ * TODO Make every ID guaranteed unique
+ */
+function generateID() {
+  return Math.floor(Math.random() * 90000000) + 10000000;
+}

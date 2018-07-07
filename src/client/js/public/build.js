@@ -42935,8 +42935,14 @@ function init() {
         exports.screenCenterY = screenCenterY = window.innerHeight / 2 - _global.GLOBAL.PLAYER_RADIUS;
 
         // Load resources if not already loaded
+        var BLUEPRINT_TEXTURES = [];
+        for (var bp in BLUEPRINTS) {
+            // Prevent duplicate textures from being loaded
+            if (BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture < 0)) BLUEPRINT_TEXTURES.push(BLUEPRINTS[bp].texture);
+        }
+
         if (Object.keys(PIXI.loader.resources).length < 1) {
-            PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).load(setup);
+            PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(_global.GLOBAL.ATOM_SPRITES).add(BLUEPRINT_TEXTURES).load(setup);
         }
     }
 

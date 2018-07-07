@@ -8,8 +8,8 @@ import { BLUEPRINTS } from "./blueprints";
  */
 export class Compound extends GameObject {
 
-    constructor(texture, id, x, y, vx, vy, blueprint) {
-        super(texture, id, x, y, vx, vy);
+    constructor(id, x, y, vx, vy, blueprint) {
+        super(BLUEPRINTS[blueprint].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
         this.type = BLUEPRINTS[blueprint].type;
     }
