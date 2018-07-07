@@ -11,8 +11,11 @@ import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 
-// Arrays containing all inputs which require cookies, and their values
+// Array containing all inputs which require cookies, and their values
 export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));
+
+// Array containing the four chosen blueprints
+export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
 
 const nickErrorText = document.getElementById('nickErrorText');
 
@@ -27,11 +30,16 @@ function startGame() {
     // check if the nick is valid
     if (validNick()) {
 
-        // Set cookies
-        let i = 0;
-        for(let cookie of GLOBAL.COOKIES) {
-            cookies.setCookie(cookie, cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
-            i++;
+        // Set cookies for inputs
+        for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
+            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
+        }
+
+        // Use cookies to set the ingame blueprint slot values
+        for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
+            console.log(cookieInputs[i - 1 + GLOBAL.INPUT_COUNT]);
+            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
+            document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;
         }
 
         // Show game window
@@ -56,7 +64,7 @@ function startGame() {
  */
 function validNick() {
     const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
-    for(let i = 0; i < 3; i++) {
+    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
         if(regex.exec(cookieInputs[i].value) === null)
             return false;
     }
@@ -78,7 +86,7 @@ window.onload = () => {
             if(cookieInputs[i].tagName === 'INPUT')
                 cookieInputs[i].value = cookie;
             else if(cookieInputs[i].tagName === 'BUTTON')
-                cookieInputs[i].innerHTML = cookie;
+                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
         }
         i++;
     }
@@ -109,7 +117,7 @@ window.onload = () => {
     };
 
     // Set up the blueprint slot buttons
-    for(let i = 1; i <= 4; i++) {
+    for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
         document.getElementById('bp-slot-' + i).onclick = () => {
             showElement('bp-select');
             document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;
@@ -157,11 +165,11 @@ window.onload = () => {
             console.log(blueprint + ' selected in slot ' + selectedSlot);
             document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
             hideElement('bp-select');
-            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, GLOBAL.COOKIE_DAYS);
+            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
         }
 
     // Add enter listeners for all inputs
-    for(let i = 0; i < 3; i++) {
+    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
         cookieInputs[i].addEventListener('keypress', e => {
             const key = e.which || e.keyCode;
     
@@ -190,7 +198,7 @@ export function quitGame(msg) {
 
     // menu
     hideElement('gameAreaWrapper');
-    hideElement('chatbox');
+    hideElement('hud');
     hideElement('menubox');
     showElement('startMenuMessage');
     showElement('startMenuWrapper');

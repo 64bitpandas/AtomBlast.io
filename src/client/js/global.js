@@ -10,8 +10,12 @@ export const GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
-    //html stuffs
-    BP_SELECT: 'Blueprint Select - Slot ',
+    //Blueprints
+    BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
+    BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time
+
+    // Main menu
+    INPUT_COUNT: 3, // Number of input boxes on main menu
 
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',

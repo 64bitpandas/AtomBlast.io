@@ -231,19 +231,38 @@ canvas {
 	padding-top: 5vh;
 }
  
+/* *********
+ * *  HUD  *
+ * ********* */
+ #hud {
+	position: absolute;
+	z-index: 20;
+	width: 100%;
+	height: 100%;
+ }
+
+ #bp-ingame {
+	 position: absolute;
+	 bottom: 2rem;
+	 right: 2rem;
+	 max-width: 30vw;
+ }
+
+ .bp-ingame {
+	 right: 0;
+ }
 
 /* **********
  * *  CHAT  *
  * ********** */
 
 .chatbox {
-	position: absolute;
     width: 25vw;
     height: 45vh;
     bottom: 2rem;
     left: 2rem;
 	padding: 1.2rem;
-	z-index: 20;
+	position: absolute;
 }
 
 .chatbox .chat-list {
@@ -307,9 +326,8 @@ canvas {
 .spinner {
   width: 8vw;
   height: 8vw;
-
   position: relative;
-  margin: 100px auto;
+  margin: auto;
 }
 
 .double-bounce1, .double-bounce2 {

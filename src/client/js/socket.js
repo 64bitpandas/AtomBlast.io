@@ -46,7 +46,6 @@ export function beginConnection() {
         init();
         if (typeof app !== undefined) {
             app.start();
-            showGameUI();
         }
     });
 }

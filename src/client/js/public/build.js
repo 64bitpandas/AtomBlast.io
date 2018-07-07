@@ -41586,7 +41586,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.cookieInputs = undefined;
+exports.selectedBlueprints = exports.cookieInputs = undefined;
 exports.quitGame = quitGame;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
@@ -41609,10 +41609,13 @@ var _socket = require('./socket.js');
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-// Arrays containing all inputs which require cookies, and their values
+// Array containing all inputs which require cookies, and their values
 var cookieInputs = exports.cookieInputs = _global.GLOBAL.COOKIES.map(function (val) {
     return document.getElementById(val);
 });
+
+// Array containing the four chosen blueprints
+var selectedBlueprints = exports.selectedBlueprints = new Array(_global.GLOBAL.BP_MAX);
 
 var nickErrorText = document.getElementById('nickErrorText');
 
@@ -41628,36 +41631,19 @@ function startGame() {
     // check if the nick is valid
     if (validNick()) {
 
-        // Set cookies
-        var i = 0;
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = _global.GLOBAL.COOKIES[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var cookie = _step.value;
-
-                cookies.setCookie(cookie, cookieInputs[i].value, _global.GLOBAL.COOKIE_DAYS);
-                i++;
-            }
-
-            // Show game window
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
+        // Set cookies for inputs
+        for (var i = 0; i < _global.GLOBAL.INPUT_COUNT; i++) {
+            cookies.setCookie(_global.GLOBAL.COOKIES[i], cookieInputs[i].value, _global.GLOBAL.COOKIE_DAYS);
         }
 
+        // Use cookies to set the ingame blueprint slot values
+        for (var _i = 1; _i <= _global.GLOBAL.BP_MAX; _i++) {
+            console.log(cookieInputs[_i - 1 + _global.GLOBAL.INPUT_COUNT]);
+            selectedBlueprints[_i - 1] = _blueprints.BLUEPRINTS[cookies.getCookie(_global.GLOBAL.COOKIES[_i - 1 + _global.GLOBAL.INPUT_COUNT])];
+            document.getElementById('bp-ingame-' + _i).innerHTML = selectedBlueprints[_i - 1].name;
+        }
+
+        // Show game window
         showElement('gameAreaWrapper');
         hideElement('startMenuWrapper');
 
@@ -41678,7 +41664,7 @@ function startGame() {
  */
 function validNick() {
     var regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < _global.GLOBAL.INPUT_COUNT; i++) {
         if (regex.exec(cookieInputs[i].value) === null) return false;
     }
 
@@ -41696,32 +41682,32 @@ window.onload = function () {
 
     // Continue loading cookies only if it exists
     var i = 0;
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
 
     try {
-        for (var _iterator2 = cookieValues[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var cookie = _step2.value;
+        for (var _iterator = cookieValues[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var cookie = _step.value;
 
             if (cookie !== null && cookie.length > 0) {
-                if (cookieInputs[i].tagName === 'INPUT') cookieInputs[i].value = cookie;else if (cookieInputs[i].tagName === 'BUTTON') cookieInputs[i].innerHTML = cookie;
+                if (cookieInputs[i].tagName === 'INPUT') cookieInputs[i].value = cookie;else if (cookieInputs[i].tagName === 'BUTTON') cookieInputs[i].innerHTML = _blueprints.BLUEPRINTS[cookie].name;
             }
             i++;
         }
 
         // Add listeners to start game to enter key and button click
     } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _didIteratorError = true;
+        _iteratorError = err;
     } finally {
         try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
             }
         } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
+            if (_didIteratorError) {
+                throw _iteratorError;
             }
         }
     }
@@ -41752,11 +41738,11 @@ window.onload = function () {
 
     // Set up the blueprint slot buttons
 
-    var _loop = function _loop(_i) {
-        document.getElementById('bp-slot-' + _i).onclick = function () {
+    var _loop = function _loop(_i2) {
+        document.getElementById('bp-slot-' + _i2).onclick = function () {
             showElement('bp-select');
-            document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i;
-            selectedSlot = _i;
+            document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i2;
+            selectedSlot = _i2;
 
             // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
             // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
@@ -41764,8 +41750,8 @@ window.onload = function () {
         };
     };
 
-    for (var _i = 1; _i <= 4; _i++) {
-        _loop(_i);
+    for (var _i2 = 1; _i2 <= _global.GLOBAL.BP_MAX; _i2++) {
+        _loop(_i2);
     }
 
     document.getElementById('btn-close').onclick = function () {
@@ -41791,43 +41777,43 @@ window.onload = function () {
     }
 
     // Blueprint Slots
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iteratorNormalCompletion2 = true;
+    var _didIteratorError2 = false;
+    var _iteratorError2 = undefined;
 
     try {
         var _loop2 = function _loop2() {
-            var btn = _step3.value;
+            var btn = _step2.value;
 
             btn.onclick = function () {
                 var blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'
                 console.log(blueprint + ' selected in slot ' + selectedSlot);
                 document.getElementById('bp-slot-' + selectedSlot).innerHTML = _blueprints.BLUEPRINTS[blueprint].name;
                 hideElement('bp-select');
-                cookies.setCookie(_global.GLOBAL.COOKIES[selectedSlot + 2], _blueprints.BLUEPRINTS[blueprint].name, _global.GLOBAL.COOKIE_DAYS);
+                cookies.setCookie(_global.GLOBAL.COOKIES[selectedSlot + _global.GLOBAL.INPUT_COUNT - 1], blueprint, _global.GLOBAL.COOKIE_DAYS);
             };
         };
 
-        for (var _iterator3 = document.getElementsByClassName('btn-blueprint')[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (var _iterator2 = document.getElementsByClassName('btn-blueprint')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
             _loop2();
         } // Add enter listeners for all inputs
     } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
     } finally {
         try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                _iterator2.return();
             }
         } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
+            if (_didIteratorError2) {
+                throw _iteratorError2;
             }
         }
     }
 
-    for (var _i2 = 0; _i2 < 3; _i2++) {
-        cookieInputs[_i2].addEventListener('keypress', function (e) {
+    for (var _i3 = 0; _i3 < _global.GLOBAL.INPUT_COUNT; _i3++) {
+        cookieInputs[_i3].addEventListener('keypress', function (e) {
             var key = e.which || e.keyCode;
 
             if (key === _global.GLOBAL.KEY_ENTER) startGame();
@@ -41854,7 +41840,7 @@ function quitGame(msg) {
 
     // menu
     hideElement('gameAreaWrapper');
-    hideElement('chatbox');
+    hideElement('hud');
     hideElement('menubox');
     showElement('startMenuMessage');
     showElement('startMenuWrapper');
@@ -41906,8 +41892,12 @@ var GLOBAL = exports.GLOBAL = {
     KEY_S: 83,
     KEY_D: 68,
 
-    //html stuffs
-    BP_SELECT: 'Blueprint Select - Slot ',
+    //Blueprints
+    BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
+    BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time
+
+    // Main menu
+    INPUT_COUNT: 3, // Number of input boxes on main menu
 
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
@@ -42953,11 +42943,7 @@ function init() {
     // If already initialized, use existing app variable
     if (isSetup) {
         console.info("Stage already initialized!");
-
-        for (var i = app.stage.children.length - 1; i >= 0; i--) {
-            // Remove all elements pre-rendered on stage. 
-            app.stage.removeChild(app.stage.children[i]);
-        }
+        clearStage();
         setup();
     }
 }
@@ -43005,6 +42991,7 @@ function setup() {
     }
 
     exports.isSetup = isSetup = true;
+    showGameUI();
 }
 
 /**
@@ -43058,6 +43045,15 @@ function toggleMenu() {
 }
 
 /**
+ * Remove all elements pre-rendered on stage.
+ */
+function clearStage() {
+    for (var i = app.stage.children.length - 1; i >= 0; i--) {
+        app.stage.removeChild(app.stage.children[i]);
+    }
+}
+
+/**
  * Destroy everything in PIXI. DANGEROUS avoid!
  */
 function destroyPIXI() {
@@ -43073,7 +43069,7 @@ function destroyPIXI() {
 function showGameUI() {
     // Hide loading screen
     (0, _app.hideElement)('loading');
-    (0, _app.showElement)('chatbox');
+    (0, _app.showElement)('hud');
 }
 
 /**
@@ -43159,7 +43155,6 @@ function beginConnection() {
         (0, _pixigame.init)();
         if ((typeof _pixigame.app === "undefined" ? "undefined" : _typeof(_pixigame.app)) !== undefined) {
             _pixigame.app.start();
-            (0, _pixigame.showGameUI)();
         }
     });
 }

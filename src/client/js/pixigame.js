@@ -98,6 +98,7 @@ function setup() {
     }
     
     isSetup = true; 
+    showGameUI();
     
 
 }
@@ -186,7 +187,7 @@ export function destroyPIXI() {
 export function showGameUI() {
     // Hide loading screen
     hideElement('loading');
-    showElement('chatbox');
+    showElement('hud');
 }
 
 /**
