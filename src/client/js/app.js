@@ -10,6 +10,7 @@ import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
+import { player } from './pixigame.js';
 
 // Array containing all inputs which require cookies, and their values
 export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));
@@ -228,4 +229,21 @@ window.tooltipFollow = (button) => {
     let tooltip = button.getElementsByClassName('tooltip')[0];
     tooltip.style.top = (mouseY - 150) + 'px';
     tooltip.style.left = (mouseX - 150) + 'px';
+}
+
+/**
+ * Updates the list of atoms that the player holds.
+ * Only updates the entry for the particular ID given.
+ * @param {string} atomID The ID of the atom to update.
+ */
+export function updateAtomList(atomID) {
+    let list = document.getElementById('atom-count');
+
+    if(document.getElementById('atom-list-' + atomID) === null) {
+        let newEntry = document.createElement('li');
+        newEntry.setAttribute('id', 'atom-list-' + atomID);
+        list.appendChild(newEntry);
+    }
+
+    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atoms[atomID];
 }

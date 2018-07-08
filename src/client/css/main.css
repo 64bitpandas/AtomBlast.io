@@ -252,6 +252,17 @@ canvas {
 	 right: 0;
  }
 
+ #atom-count-wrapper {
+	position: absolute;
+	top: 2rem;
+	right: 2rem;
+	max-width: 30vw;
+ }
+
+ #atom-count-wrapper h3 {
+	 text-align: center;
+ }
+
 /* **********
  * *  CHAT  *
  * ********** */

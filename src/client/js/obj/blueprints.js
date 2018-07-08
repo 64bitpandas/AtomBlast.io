@@ -80,8 +80,8 @@ export const BLUEPRINTS = {
  * @param {string} blueprint The name of the blueprint to check.
  */
 export function canCraft(blueprint) {
-    for(let atom in BLUEPRINTS[blueprint].atoms) {
-        if(player.atoms[blueprint] === undefined || player.atoms[blueprint] < BLUEPRINTS[blueprint].atoms[atom])
+    for(let atom in blueprint.atoms) {
+        if(player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])
             return false;
     }
 

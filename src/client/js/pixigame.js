@@ -2,9 +2,10 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement} from './app';
+import { hideElement, showElement, selectedBlueprints, updateAtomList} from './app';
 import { socket, objects } from './socket';
-import { BLUEPRINTS } from './obj/blueprints';
+import { BLUEPRINTS, canCraft } from './obj/blueprints';
+import { createNewCompound } from './obj/compound'
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -13,7 +14,7 @@ export var screenCenterY; // Y-coordinate of the center of the screen
 export var app; // Pixi app
 
 // let sprites = []; // Sprites on the stage
-let esc, up, down, left, right; // Key handlers
+let esc, up, down, left, right, blueprintKeys; // Key handlers
 
 // Add text
 export let textStyle = new PIXI.TextStyle({
@@ -39,18 +40,21 @@ export function init() {
         screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
         // Load resources if not already loaded
-        let BLUEPRINT_TEXTURES = [];
+        let TEXTURES = [];
         for(let bp in BLUEPRINTS) {
             // Prevent duplicate textures from being loaded
-            if(BLUEPRINT_TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
-                BLUEPRINT_TEXTURES.push(BLUEPRINTS[bp].texture);
+            if(TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
+                TEXTURES.push(BLUEPRINTS[bp].texture);
         }
+        for(let atom of GLOBAL.ATOM_SPRITES)
+            if (TEXTURES.indexOf(atom) < 0)
+                TEXTURES.push(atom);
+        
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader
             .add(GLOBAL.PLAYER_SPRITES)
-            .add(GLOBAL.ATOM_SPRITES)
-            .add(BLUEPRINT_TEXTURES)
+            .add(TEXTURES)
             .load(setup);
         }
     }
@@ -74,21 +78,36 @@ function setup() {
         down = keyboard(GLOBAL.KEY_S);
         left = keyboard(GLOBAL.KEY_A);
         right = keyboard(GLOBAL.KEY_D);
+        
+        //Set up the blueprint key listeners
+        blueprintKeys = [
+            keyboard(GLOBAL.KEY_1),
+            keyboard(GLOBAL.KEY_2),
+            keyboard(GLOBAL.KEY_3),
+            keyboard(GLOBAL.KEY_4)
+        ]
 
         esc.press = () => {
             toggleMenu();
         }
 
-        // sprites.nametext.position.set()
+        //Bind each blueprint key
+        for(let key in blueprintKeys){
+            blueprintKeys[key].press = () => {
+                //Creates a compound of that certain blueprint
+                if (canCraft(selectedBlueprints[key])) {
+                    createNewCompound(selectedBlueprints[key]); 
 
-        // Load sprites into stage
-        // for(let sprite in sprites) {
-        //     if(sprite !== 'player')
-        //         app.stage.addChild(sprites[sprite]);
-        // }
-
-        // for(let atom in atoms)
-        //     app.stage.addChild(atoms[atom]);
+                    // Subtract atoms needed to craft
+                    for(let atom in selectedBlueprints[key].atoms) {
+                        player.atoms[atom] -= selectedBlueprints[key].atoms[atom];
+                        updateAtomList(atom);
+                    }
+                }
+                else
+                    console.log("Not enough atoms to craft this blueprint!");
+            }
+        }
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;

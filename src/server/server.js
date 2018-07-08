@@ -55,7 +55,7 @@ io.on('connection', socket => {
     rooms[room].atoms = {};
     // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
-      let type = 0; //TODO
+      let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
       let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let atom = {
@@ -102,17 +102,6 @@ io.on('connection', socket => {
           if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
             tempObjects[objType][obj] = rooms[room][objType][obj];
       }
-      // for(let player in rooms[room].players) {
-      //   if(distanceBetween(rooms[room].players[player], thisPlayer) < GLOBAL.DRAW_RADIUS) {
-      //     tempPlayerSync[player] = rooms[room].players[player];
-      //   }
-      // }
-
-      // for(let atom in rooms[room].atoms) {
-      //   if (distanceBetween(thisPlayer, rooms[room].atoms[atom]) < GLOBAL.DRAW_RADIUS && !rooms[room].atoms[atom].isEquipped) {
-      //     tempAtomSync[atom] = rooms[room].atoms[atom];
-      //   }
-      // }
 
       socket.emit('objectSync', tempObjects);
     }

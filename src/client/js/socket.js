@@ -139,9 +139,9 @@ function setupSocket() {
 
     socket.on('disconnectedPlayer', (data) => {
         console.log('Player ' + data.id + ' has disconnected');
-        if (players[data.id] !== undefined) {
-            players[data.id].hide();
-            delete players[data.id];
+        if (objects.players[data.id] !== undefined) {
+            objects.players[data.id].hide();
+            delete objects.players[data.id];
         }
     });
 

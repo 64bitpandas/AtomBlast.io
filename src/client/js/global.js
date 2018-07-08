@@ -9,6 +9,10 @@ export const GLOBAL = {
     KEY_A: 65,
     KEY_S: 83,
     KEY_D: 68,
+    KEY_1: 49,
+    KEY_2: 50,
+    KEY_3: 51,
+    KEY_4: 52,
 
     //Blueprints
     BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
@@ -67,8 +71,16 @@ export const GLOBAL = {
     ],
 
     // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
-    HYDROGEN_ATOM: 0, // HydrogenAtom
+    ATOM_IDS: [
+        'h',
+        'he',
+        'c',
+        'cl'
+    ],
     ATOM_SPRITES: [
+        '../assets/atom-hydrogen.png',
+        '../assets/testplayer2.png',
+        '../assets/testplayer2.png',
         '../assets/testplayer2.png',
     ]
 };
