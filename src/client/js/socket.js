@@ -131,9 +131,9 @@ function setupSocket() {
     // Sync atoms that have not been picked up
     socket.on('serverSendAtomRemoval', (data) => {
         //An Atom was removed
-        if (atoms[data.id] !== undefined) {
-            atoms[data.id].hide();
-            delete atoms[data.id];
+        if (objects.atoms[data.id] !== undefined) {
+            objects.atoms[data.id].hide();
+            delete objects.atoms[data.id];
         }
     });
 

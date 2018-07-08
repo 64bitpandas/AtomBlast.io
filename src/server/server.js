@@ -53,9 +53,11 @@ io.on('connection', socket => {
     rooms[room] = {};
     rooms[room].players = {};
     rooms[room].atoms = {};
+    rooms[room].compounds = {};
     // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
-      let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
+      // let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
+      let type = 'h'; //TODO
       let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
       let atom = {
@@ -192,8 +194,9 @@ io.on('connection', socket => {
       vy: thisPlayer.vy,
       blueprint: data.blueprint
     };
-    socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound);
-    socket.to(room).emit('serverSendCreateCompound', newCompound);
+    rooms[room].compounds[newCompound.id] = newCompound;
+    // socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound); //Send to everyone but the sender
+    // socket.to(room).emit('serverSendCreateCompound', newCompound); //Send to the sender
   });
 
   socket.on('disconnect', data => {

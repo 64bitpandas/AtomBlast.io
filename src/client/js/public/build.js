@@ -42501,7 +42501,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
     sampleBlueprint: {
         name: 'Sample Blueprint',
         tooltip: 'Copyright 2018 Bananium Labs, inc.',
-        texture: '../../assets/placeholder-atom.svg',
+        texture: '../assets/atom-hydrogen.png',
         type: 'binary',
         params: {
             speed: 5,
@@ -42516,7 +42516,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
     binaryHydrogen: {
         name: 'Hydrogen',
         tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
-        texture: '../../assets/placeholder-atom.svg',
+        texture: '../assets/atom-hydrogen.png',
         type: 'binary',
         params: {
             speed: 5,
@@ -42530,7 +42530,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
     basicMethane: {
         name: 'Methane',
         tooltip: 'Okay, who passed gas?',
-        texture: '../../assets/placeholder-atom.svg',
+        texture: '../assets/atom-hydrogen.png',
         type: 'basic',
         params: {
             speed: 3,
@@ -42545,7 +42545,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
     basicBenzene: {
         name: 'Benzene',
         tooltip: 'Carbon rings. They smell nice.',
-        texture: '../../assets/placeholder-atom.svg',
+        texture: '../assets/atom-hydrogen.png',
         type: 'basic',
         params: {
             speed: 1,
@@ -42591,6 +42591,12 @@ var _socket = require("../socket");
 
 var _blueprints = require("./blueprints");
 
+var _pixi = require("pixi.js");
+
+var PIXI = _interopRequireWildcard(_pixi);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -42607,10 +42613,9 @@ var Compound = exports.Compound = function (_GameObject) {
     function Compound(id, x, y, vx, vy, blueprint) {
         _classCallCheck(this, Compound);
 
-        var _this = _possibleConstructorReturn(this, (Compound.__proto__ || Object.getPrototypeOf(Compound)).call(this, _blueprints.BLUEPRINTS[blueprint].texture, id, x, y, vx, vy));
+        var _this = _possibleConstructorReturn(this, (Compound.__proto__ || Object.getPrototypeOf(Compound)).call(this, PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy));
 
         _this.blueprint = blueprint;
-        _this.type = _blueprints.BLUEPRINTS[blueprint].type;
         return _this;
     }
 
@@ -42624,7 +42629,7 @@ var Compound = exports.Compound = function (_GameObject) {
         value: function tick() {
 
             // Different behaviors based on type
-            switch (this.type) {
+            switch (this.blueprint.type) {
                 case 'binary':
                     //do stuff
                     break;
@@ -42632,11 +42637,12 @@ var Compound = exports.Compound = function (_GameObject) {
                     //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
                     break;
                 default:
-                    throw new Error('Blueprint ' + this.blueprint + ' could not be found!');
+                    throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
             }
 
             // Movement
             _get(Compound.prototype.__proto__ || Object.getPrototypeOf(Compound.prototype), "tick", this).call(this);
+            this.draw();
         }
     }]);
 
@@ -42645,7 +42651,7 @@ var Compound = exports.Compound = function (_GameObject) {
 
 /**
  * Creates a Compound by sending a request to the server.
- * @param {string} blueprint Then name of the blueprint to create the compound from
+ * @param {*} blueprint Then blueprint to create the compound from
  */
 
 
@@ -42663,7 +42669,7 @@ function createCompound(data) {
     return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
 }
 
-},{"../socket":201,"./blueprints":196,"./gameobject":198}],198:[function(require,module,exports){
+},{"../socket":201,"./blueprints":196,"./gameobject":198,"pixi.js":142}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43404,9 +43410,9 @@ function setupSocket() {
     // Sync atoms that have not been picked up
     socket.on('serverSendAtomRemoval', function (data) {
         //An Atom was removed
-        if (atoms[data.id] !== undefined) {
-            atoms[data.id].hide();
-            delete atoms[data.id];
+        if (objects.atoms[data.id] !== undefined) {
+            objects.atoms[data.id].hide();
+            delete objects.atoms[data.id];
         }
     });
 
