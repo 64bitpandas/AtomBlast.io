@@ -12,7 +12,7 @@ export class Compound extends GameObject {
     constructor(id, x, y, vx, vy, blueprint) {
         super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
-    }
+    } 
 
     /**
      * Runs once a frame.
