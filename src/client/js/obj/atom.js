@@ -50,7 +50,7 @@ export class Atom extends GameObject {
             this.vx += 1/(player.posX - this.posX) * GLOBAL.ATTRACTION_COEFFICIENT;
             this.vy += 1/(player.posY - this.posY) * GLOBAL.ATTRACTION_COEFFICIENT;
             // console.log(this.vx, this.vy, this.posX, this.posY);
-            socket.emit('atomMove', {id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy});
+            socket.emit('move', {type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy});
         }
         else if(this.vx !== 0 || this.vy !== 0) {
             this.vx *= GLOBAL.VELOCITY_STEP;

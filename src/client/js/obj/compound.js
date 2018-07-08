@@ -1,7 +1,9 @@
 import { GameObject } from "./gameobject";
-import { socket } from "../socket";
+import { socket, objects } from "../socket";
 import { BLUEPRINTS } from "./blueprints";
 import * as PIXI from 'pixi.js';
+import { app } from "../pixigame";
+import { updateCompoundButtons } from "../app";
 
 /**
  * Generic Compound which can be instantiated into the scene as a GameObject.
@@ -12,6 +14,19 @@ export class Compound extends GameObject {
     constructor(id, x, y, vx, vy, blueprint) {
         super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
+
+        // Parse params
+        for(let param in this.blueprint.params) {
+            this[param] = this.blueprint.params[param];
+        }
+
+        // Use params
+        switch(this.blueprint.type) {
+            case 'binary':
+                this.width = this.size;
+                this.height = this.size;
+                break;
+        }
     } 
 
     /**
@@ -35,6 +50,32 @@ export class Compound extends GameObject {
         super.tick();
         this.draw();
     }
+
+    /**
+     * Run when players are nearby to check if they picked this atom up.
+     * If the player is nearby but not close enough to pick up, then it becomes attracted towards the player.
+     * @param {Player} player Player to check collision against
+     * @returns true if collision detected, false otherwise
+     */
+    checkCollision() {
+        if (player === undefined)
+            return false;
+
+        for(let objType in objects) {
+            if(objType !== 'atoms')
+                for(let obj in objects[objType]) {
+                    let distance = distanceBetween(this, objects[objType][obj]);
+
+                    // Collision with player or other powerup
+                    if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+                        socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
+                        return true;
+                    }
+                }
+        }
+
+        return false;
+    }
 }
 
 /**
@@ -42,8 +83,14 @@ export class Compound extends GameObject {
  * @param {*} blueprint Then blueprint to create the compound from
  */
 export function createNewCompound(blueprint) {
+    updateCompoundButtons();
+    let cursor = app.renderer.plugins.interaction.mouse.global;
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+    console.log(centerX - cursor.x, cursor.y - centerY)
     socket.emit('createCompound', {
-        blueprint: blueprint
+        blueprint: blueprint,
+        mousePos: {x: cursor.x - centerX, y: centerY - cursor.y}
     });
 }
 

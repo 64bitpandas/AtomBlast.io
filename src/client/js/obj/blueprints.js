@@ -35,8 +35,8 @@ export const BLUEPRINTS = {
         type: 'binary',
         params: {
             speed: 5,
-            damage: 1,
-            size: 1
+            damage: 10,
+            size: 10
         },
         atoms: {
             h: 2

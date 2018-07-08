@@ -8,7 +8,7 @@ import * as cookies from './lib/cookies';
 import { Player } from './obj/player';
 import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
-import { BLUEPRINTS } from './obj/blueprints.js';
+import { BLUEPRINTS, canCraft } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 import { player } from './pixigame.js';
 
@@ -246,4 +246,18 @@ export function updateAtomList(atomID) {
     }
 
     document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atoms[atomID];
+
+    updateCompoundButtons();
+}
+
+
+export function updateCompoundButtons() {
+    for(let i = 0; i < selectedBlueprints.length; i++){
+        if(canCraft(selectedBlueprints[i])){
+            document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';
+        }
+        else{
+            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+        }
+    }
 }

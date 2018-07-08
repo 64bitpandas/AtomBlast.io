@@ -41591,6 +41591,7 @@ exports.quitGame = quitGame;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 exports.updateAtomList = updateAtomList;
+exports.updateCompoundButtons = updateCompoundButtons;
 
 var _global = require('./global.js');
 
@@ -41890,6 +41891,18 @@ function updateAtomList(atomID) {
     }
 
     document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + _pixigame.player.atoms[atomID];
+
+    updateCompoundButtons();
+}
+
+function updateCompoundButtons() {
+    for (var i = 0; i < selectedBlueprints.length; i++) {
+        if ((0, _blueprints.canCraft)(selectedBlueprints[i])) {
+            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#2ecc71';
+        } else {
+            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+        }
+    }
 }
 
 },{"./global.js":191,"./lib/cookies":193,"./obj/atom":195,"./obj/blueprints.js":196,"./obj/gameobject":198,"./obj/player":199,"./pixigame.js":200,"./socket.js":201}],191:[function(require,module,exports){
@@ -42418,7 +42431,7 @@ var Atom = exports.Atom = function (_GameObject) {
                 this.vx += 1 / (player.posX - this.posX) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
                 this.vy += 1 / (player.posY - this.posY) * _global.GLOBAL.ATTRACTION_COEFFICIENT;
                 // console.log(this.vx, this.vy, this.posX, this.posY);
-                _socket.socket.emit('atomMove', { id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
+                _socket.socket.emit('move', { type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
             } else if (this.vx !== 0 || this.vy !== 0) {
                 this.vx *= _global.GLOBAL.VELOCITY_STEP;
                 this.vy *= _global.GLOBAL.VELOCITY_STEP;
@@ -42520,8 +42533,8 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         type: 'binary',
         params: {
             speed: 5,
-            damage: 1,
-            size: 1
+            damage: 10,
+            size: 10
         },
         atoms: {
             h: 2
@@ -42595,6 +42608,10 @@ var _pixi = require("pixi.js");
 
 var PIXI = _interopRequireWildcard(_pixi);
 
+var _pixigame = require("../pixigame");
+
+var _app = require("../app");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42616,6 +42633,19 @@ var Compound = exports.Compound = function (_GameObject) {
         var _this = _possibleConstructorReturn(this, (Compound.__proto__ || Object.getPrototypeOf(Compound)).call(this, PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy));
 
         _this.blueprint = blueprint;
+
+        // Parse params
+        for (var param in _this.blueprint.params) {
+            _this[param] = _this.blueprint.params[param];
+        }
+
+        // Use params
+        switch (_this.blueprint.type) {
+            case 'binary':
+                _this.width = _this.size;
+                _this.height = _this.size;
+                break;
+        }
         return _this;
     }
 
@@ -42644,6 +42674,33 @@ var Compound = exports.Compound = function (_GameObject) {
             _get(Compound.prototype.__proto__ || Object.getPrototypeOf(Compound.prototype), "tick", this).call(this);
             this.draw();
         }
+
+        /**
+         * Run when players are nearby to check if they picked this atom up.
+         * If the player is nearby but not close enough to pick up, then it becomes attracted towards the player.
+         * @param {Player} player Player to check collision against
+         * @returns true if collision detected, false otherwise
+         */
+
+    }, {
+        key: "checkCollision",
+        value: function checkCollision() {
+            if (player === undefined) return false;
+
+            for (var objType in _socket.objects) {
+                if (objType !== 'atoms') for (var obj in _socket.objects[objType]) {
+                    var distance = distanceBetween(this, _socket.objects[objType][obj]);
+
+                    // Collision with player or other powerup
+                    if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+                        _socket.socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }]);
 
     return Compound;
@@ -42656,8 +42713,14 @@ var Compound = exports.Compound = function (_GameObject) {
 
 
 function createNewCompound(blueprint) {
+    (0, _app.updateCompoundButtons)();
+    var cursor = _pixigame.app.renderer.plugins.interaction.mouse.global;
+    var centerX = window.innerWidth / 2;
+    var centerY = window.innerHeight / 2;
+    console.log(centerX - cursor.x, cursor.y - centerY);
     _socket.socket.emit('createCompound', {
-        blueprint: blueprint
+        blueprint: blueprint,
+        mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
     });
 }
 
@@ -42669,7 +42732,7 @@ function createCompound(data) {
     return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
 }
 
-},{"../socket":201,"./blueprints":196,"./gameobject":198,"pixi.js":142}],198:[function(require,module,exports){
+},{"../app":190,"../pixigame":200,"../socket":201,"./blueprints":196,"./gameobject":198,"pixi.js":142}],198:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43186,7 +43249,7 @@ function draw(delta) {
         player.tick();
 
         // Send coordinates
-        _socket.socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+        _socket.socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
 
     // Handle objects except for this player
@@ -43413,6 +43476,17 @@ function setupSocket() {
         if (objects.atoms[data.id] !== undefined) {
             objects.atoms[data.id].hide();
             delete objects.atoms[data.id];
+        }
+    });
+
+    // Compound has collided
+    socket.on('serverSendCompoundRemoval', function (data) {
+        //An Atom was removed
+        if (objects.compounds[data.id] !== undefined) {
+            delete objects.compounds[data.id];
+            if (data.collidedWith === socket.id) {
+                player.health -= 1; //TODO
+            }
         }
     });
 

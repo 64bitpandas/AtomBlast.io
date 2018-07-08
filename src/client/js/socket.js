@@ -137,6 +137,17 @@ function setupSocket() {
         }
     });
 
+    // Compound has collided
+    socket.on('serverSendCompoundRemoval', (data) => {
+        //An Atom was removed
+        if (objects.compounds[data.id] !== undefined) {
+            delete objects.compounds[data.id];
+            if(data.collidedWith === socket.id) {
+                player.health -= 1; //TODO
+            }
+        }
+    });
+
     socket.on('disconnectedPlayer', (data) => {
         console.log('Player ' + data.id + ' has disconnected');
         if (objects.players[data.id] !== undefined) {

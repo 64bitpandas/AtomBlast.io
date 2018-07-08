@@ -164,7 +164,7 @@ function draw(delta) {
         player.tick();
 
         // Send coordinates
-        socket.emit('move', { id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+        socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
     }
     
     // Handle objects except for this player

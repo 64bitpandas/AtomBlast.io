@@ -99,6 +99,12 @@ io.on('connection', socket => {
         compounds: {}
       };
 
+      // Move compounds
+      for(let compound in rooms[room].compounds) {
+        rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
+        rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+      }
+
       for(let objType in tempObjects) {
         for (let obj in rooms[room][objType])
           if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
@@ -144,18 +150,19 @@ io.on('connection', socket => {
    * On player movement:
    * data is in format
    *  - id: index of player that moved
-   *  - x: new x position
-   *  - y: new y position
-   *  - theta: angle of player
-   *  - speed: how fast the player is going
+   *  - type: atoms, players, or compounds
+   *  - posX: new x position
+   *  - posY: new y position
+   *  - vx: x-velocity
+   *  - vy: y-velocity
    */
   socket.to(room).on('move', data => {
     // Player exists in database already because it was created serverside - no need for extra checking
-    if(rooms[room].players[data.id] !== undefined) {
-      rooms[room].players[data.id].posX = data.posX;
-      rooms[room].players[data.id].posY = data.posY;
-      rooms[room].players[data.id].vx = data.vx;
-      rooms[room].players[data.id].vy = data.vy;
+    if(rooms[room][data.type][data.id] !== undefined) {
+      rooms[room][data.type][data.id].posX = data.posX;
+      rooms[room][data.type][data.id].posY = data.posY;
+      rooms[room][data.type][data.id].vx = data.vx;
+      rooms[room][data.type][data.id].vy = data.vy;
     }
 
   }); 
@@ -166,17 +173,17 @@ io.on('connection', socket => {
     }
   });
 
-  /**
-   * On atom movement
-   */
-  socket.to(room).on('atomMove', data => {
-    if(rooms[room].atoms[data.id] !== undefined) {
-      rooms[room].atoms[data.id].posX = data.posX;
-      rooms[room].atoms[data.id].posY = data.posY;
-      rooms[room].atoms[data.id].vx = data.vx;
-      rooms[room].atoms[data.id].vy = data.vy;
-    }
-  })
+  // /**
+  //  * On atom movement
+  //  */
+  // socket.to(room).on('atomMove', data => {
+  //   if(rooms[room].atoms[data.id] !== undefined) {
+  //     rooms[room].atoms[data.id].posX = data.posX;
+  //     rooms[room].atoms[data.id].posY = data.posY;
+  //     rooms[room].atoms[data.id].vx = data.vx;
+  //     rooms[room].atoms[data.id].vy = data.vy;
+  //   }
+  // })
 
   // An atom was collected or changed
   socket.to(room).on('atomCollision', data => {
@@ -184,14 +191,23 @@ io.on('connection', socket => {
       socket.to(room).broadcast.emit('serverSendAtomRemoval', data);
   });
 
+  socket.to(room).on('compoundCollision', data => {
+    delete rooms[room].compounds[data.id];
+    socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
+  })
+
   // A player spawned a Compound
   socket.to(room).on('createCompound', data => {
+
+    // Calculate velocities based on cursor position
+    let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
+
     let newCompound = {
       id: generateID(),
       posX: thisPlayer.posX, 
       posY: thisPlayer.posY,
-      vx: thisPlayer.vx,
-      vy: thisPlayer.vy,
+      vx: data.blueprint.params.speed * Math.cos(theta),
+      vy: data.blueprint.params.speed * Math.sin(theta),
       blueprint: data.blueprint
     };
     rooms[room].compounds[newCompound.id] = newCompound;
