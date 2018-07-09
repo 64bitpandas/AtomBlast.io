@@ -42303,11 +42303,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.keyboard = keyboard;
-/**
- * Key listener function, adapted from https://github.com/kittykatattack/learningPixi#keyboard
- * Please refer to this link for extended documentation.
- * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
- */
+
+var _pixigame = require("../pixigame");
+
 function keyboard(keyCode) {
   var key = {};
   key.code = keyCode;
@@ -42318,19 +42316,35 @@ function keyboard(keyCode) {
   //The `downHandler`
   key.downHandler = function (event) {
     if (event.keyCode === key.code) {
-      if (key.isUp && key.press) key.press();
-      key.isDown = true;
-      key.isUp = false;
+      if ((0, _pixigame.isFocused)()) {
+        if (key.isUp && key.press) {
+          key.press();
+        }
+        key.isDown = true;
+        key.isUp = false;
+      }
+      //If 
+      else {
+          key.isDown = false;
+          key.isUp = true;
+        }
+      // event.preventDefault();
     }
-    // event.preventDefault();
   };
 
   //The `upHandler`
   key.upHandler = function (event) {
     if (event.keyCode === key.code) {
-      if (key.isDown && key.release) key.release();
-      key.isDown = false;
-      key.isUp = true;
+      if ((0, _pixigame.isFocused)()) {
+        if (key.isDown && key.release) {
+          key.release();
+        }
+        key.isDown = false;
+        key.isUp = true;
+      } else {
+        key.isDown = false;
+        key.isUp = true;
+      }
     }
     // event.preventDefault();
   };
@@ -42339,9 +42353,13 @@ function keyboard(keyCode) {
   window.addEventListener("keydown", key.downHandler.bind(key), false);
   window.addEventListener("keyup", key.upHandler.bind(key), false);
   return key;
-}
+} /**
+   * Key listener function, adapted from https://github.com/kittykatattack/learningPixi#keyboard
+   * Please refer to this link for extended documentation.
+   * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
+   */
 
-},{}],195:[function(require,module,exports){
+},{"../pixigame":200}],195:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42832,12 +42850,12 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         key: 'draw',
         value: function draw() {
             if (_pixigame.player !== undefined) {
-                this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX + _global.GLOBAL.ATOM_RADIUS;
-                this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY + _global.GLOBAL.ATOM_RADIUS;
+                this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
+                this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
             }
         }
 
-        /**
+        /** TEMP
          * Moves this player to (9999, 9999) on local screen space, effectively
          * hiding it from view.
          */
@@ -43059,6 +43077,7 @@ exports.init = init;
 exports.destroyPIXI = destroyPIXI;
 exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
+exports.isFocused = isFocused;
 
 var _pixi = require('pixi.js');
 
@@ -43087,12 +43106,14 @@ var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the ce
 var app = exports.app = undefined; // Pixi app
 
 // let sprites = []; // Sprites on the stage
+
 var esc = void 0,
     up = void 0,
     down = void 0,
     left = void 0,
     right = void 0,
     blueprintKeys = void 0; // Key handlers
+var moveKeys = [];
 
 // Add text
 var textStyle = exports.textStyle = new PIXI.TextStyle({
@@ -43173,27 +43194,33 @@ function setup() {
         left = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_A);
         right = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_D);
 
+        //All the movement keys for easy access
+        moveKeys = [up, down, right, left];
         //Set up the blueprint key listeners
         blueprintKeys = [(0, _keyboard.keyboard)(_global.GLOBAL.KEY_1), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_2), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_3), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_4)];
 
         esc.press = function () {
-            toggleMenu();
+            if (isFocused()) {
+                toggleMenu();
+            }
         };
 
         //Bind each blueprint key
 
         var _loop = function _loop(key) {
             blueprintKeys[key].press = function () {
-                //Creates a compound of that certain blueprint
-                if ((0, _blueprints.canCraft)(_app.selectedBlueprints[key])) {
-                    (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
+                if (isFocused()) {
+                    //Creates a compound of that certain blueprint
+                    if ((0, _blueprints.canCraft)(_app.selectedBlueprints[key])) {
+                        (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
 
-                    // Subtract atoms needed to craft
-                    for (var atom in _app.selectedBlueprints[key].atoms) {
-                        player.atoms[atom] -= _app.selectedBlueprints[key].atoms[atom];
-                        (0, _app.updateAtomList)(atom);
-                    }
-                } else console.log("Not enough atoms to craft this blueprint!");
+                        // Subtract atoms needed to craft
+                        for (var atom in _app.selectedBlueprints[key].atoms) {
+                            player.atoms[atom] -= _app.selectedBlueprints[key].atoms[atom];
+                            (0, _app.updateAtomList)(atom);
+                        }
+                    } else console.log("Not enough atoms to craft this blueprint!");
+                }
             };
         };
 
@@ -43231,7 +43258,7 @@ function draw(delta) {
     if (player !== undefined) {
 
         // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput')) {
+        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus()) {
             if (left.isDown) player.vx = -_global.GLOBAL.MAX_SPEED;
             if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
             if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
@@ -43239,6 +43266,12 @@ function draw(delta) {
             player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
         } else {
             player.isMoving = false;
+
+            //Because the document is not focused disable all keys(Stops moving!)
+            for (var key in moveKeys) {
+                moveKeys[key].isDown = false;
+                moveKeys[key].isUp = true;
+            }
         }
 
         // Slow down gradually - unaffected by chat input
@@ -43318,6 +43351,11 @@ function createPlayer(data) {
         if (data.id === _socket.socket.id) exports.player = player = newPlayer;
         return newPlayer;
     }
+}
+
+function isFocused() {
+    //If the document is Focused return true otherwise false
+    return document.hasFocus();
 }
 
 },{"./app":190,"./global":191,"./lib/keyboard":194,"./obj/blueprints":196,"./obj/compound":197,"./obj/player":199,"./socket":201,"pixi.js":142}],201:[function(require,module,exports){

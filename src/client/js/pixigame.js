@@ -14,7 +14,9 @@ export var screenCenterY; // Y-coordinate of the center of the screen
 export var app; // Pixi app
 
 // let sprites = []; // Sprites on the stage
+
 let esc, up, down, left, right, blueprintKeys; // Key handlers
+let moveKeys = [];
 
 // Add text
 export let textStyle = new PIXI.TextStyle({
@@ -79,6 +81,8 @@ function setup() {
         left = keyboard(GLOBAL.KEY_A);
         right = keyboard(GLOBAL.KEY_D);
         
+        //All the movement keys for easy access
+        moveKeys = [up, down, right, left];
         //Set up the blueprint key listeners
         blueprintKeys = [
             keyboard(GLOBAL.KEY_1),
@@ -86,26 +90,30 @@ function setup() {
             keyboard(GLOBAL.KEY_3),
             keyboard(GLOBAL.KEY_4)
         ]
-
+        
         esc.press = () => {
-            toggleMenu();
+            if (isFocused()) {
+                toggleMenu();
+            }
         }
 
         //Bind each blueprint key
         for(let key in blueprintKeys){
             blueprintKeys[key].press = () => {
-                //Creates a compound of that certain blueprint
-                if (canCraft(selectedBlueprints[key])) {
-                    createNewCompound(selectedBlueprints[key]); 
+                if(isFocused()){
+                    //Creates a compound of that certain blueprint
+                    if (canCraft(selectedBlueprints[key])) {
+                        createNewCompound(selectedBlueprints[key]); 
 
-                    // Subtract atoms needed to craft
-                    for(let atom in selectedBlueprints[key].atoms) {
-                        player.atoms[atom] -= selectedBlueprints[key].atoms[atom];
-                        updateAtomList(atom);
+                        // Subtract atoms needed to craft
+                        for(let atom in selectedBlueprints[key].atoms) {
+                            player.atoms[atom] -= selectedBlueprints[key].atoms[atom];
+                            updateAtomList(atom);
+                        }
                     }
+                    else
+                        console.log("Not enough atoms to craft this blueprint!");
                 }
-                else
-                    console.log("Not enough atoms to craft this blueprint!");
             }
         }
 
@@ -140,7 +148,7 @@ function draw(delta) {
     if(player !== undefined) {
 
         // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput')) {
+        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus()) {
             if (left.isDown)
                 player.vx = -GLOBAL.MAX_SPEED;
             if (right.isDown)
@@ -152,6 +160,12 @@ function draw(delta) {
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
         } else {
             player.isMoving = false;
+            
+            //Because the document is not focused disable all keys(Stops moving!)
+            for(let key in moveKeys){
+                moveKeys[key].isDown = false;
+                moveKeys[key].isUp = true;
+            }
         }
 
         // Slow down gradually - unaffected by chat input
@@ -237,4 +251,9 @@ export function createPlayer(data) {
             player = newPlayer;
         return newPlayer;
     }
+}
+
+export function isFocused(){
+    //If the document is Focused return true otherwise false
+    return document.hasFocus();
 }

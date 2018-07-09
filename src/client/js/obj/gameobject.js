@@ -61,12 +61,12 @@ export class GameObject extends PIXI.Sprite {
      */
     draw() {
         if(player !== undefined) {
-            this.x = screenCenterX + this.posX - player.posX + GLOBAL.ATOM_RADIUS;
-            this.y = screenCenterY + player.posY - this.posY + GLOBAL.ATOM_RADIUS;
+            this.x = screenCenterX + this.posX - player.posX;
+            this.y = screenCenterY + player.posY - this.posY;
         }
     }
 
-    /**
+    /** TEMP
      * Moves this player to (9999, 9999) on local screen space, effectively
      * hiding it from view.
      */
