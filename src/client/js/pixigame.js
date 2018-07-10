@@ -12,6 +12,7 @@ export var player; // The player being controlled by this client
 export var screenCenterX; // X-coordinate of the center of the screen
 export var screenCenterY; // Y-coordinate of the center of the screen
 export var app; // Pixi app
+export var inGame = false; // True after game has begun
 
 // let sprites = []; // Sprites on the stage
 
@@ -171,7 +172,7 @@ function setup() {
         horizLines.push(line);
         app.stage.addChild(line);
     }
-    
+
     showGameUI();
     
 
@@ -186,7 +187,7 @@ function draw(delta) {
     if(player !== undefined) {
 
         // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus()) {
+        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
             if (left.isDown)
                 player.vx = -GLOBAL.MAX_SPEED;
             if (right.isDown)
@@ -232,18 +233,6 @@ function draw(delta) {
             if(objType !== 'players' || player !== objects[objType][obj])
                 objects[objType][obj].tick();
     }
-    // for(let pl in players) {
-    //     if(players[pl] !== player) {
-    //         players[pl].tick();
-    //     }
-    // }
-
-    // // Draw Atoms
-    // for(let atom in atoms) {
-    //     atoms[atom].tick();
-    // }
-
-
 
 }
 
@@ -282,7 +271,7 @@ export function destroyPIXI() {
 export function showGameUI() {
     // Hide loading screen
     hideElement('loading');
-    showElement('hud');
+    showElement('lobby');
 }
 
 /**
@@ -319,4 +308,13 @@ export function canCraft(blueprint) {
     }
 
     return true;
+}
+
+/**
+ * Starts the game after lobby closes.
+ */
+export function startGame() {
+    inGame = true;
+    hideElement('lobby');
+    showElement('hud');
 }

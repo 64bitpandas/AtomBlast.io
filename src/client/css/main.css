@@ -474,3 +474,20 @@ select:focus {
  .btn-blueprint:hover .tooltip {
 	 visibility: visible;
  }
+
+ /* ********
+ * * LOBBY *
+ * ********* */
+ 
+ #lobby {
+	 position: absolute;
+	 height: 100%;
+	 width: 100%;
+	 z-index: 30;
+	 background-color: rgba(0, 0, 0, 0.25);
+ }
+
+ #lobbybox {
+	 height: 70vh;
+	 width: 70vw;
+ }

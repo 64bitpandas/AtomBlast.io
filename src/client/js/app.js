@@ -10,7 +10,7 @@ import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player, canCraft } from './pixigame.js';
+import { player, canCraft, inGame, startGame } from './pixigame.js';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
@@ -28,7 +28,7 @@ let mouseX, mouseY;
 let selectedSlot;
 
 // Starts the game if the name is valid.
-function startGame() {
+function joinGame() {
     // Make sure the 
     if (!allBlueprintsSelected())
         swal("Blueprint(s) not selected", "Make sure all your blueprint slots are filled before joining a game!", "error");
@@ -108,7 +108,7 @@ window.onload = () => {
 
     // Add listeners to start game to enter key and button click
     document.getElementById('startButton').onclick = () => {
-        startGame();
+        joinGame();
     };
 
     document.getElementById('quitButton').onclick = () => {
@@ -120,16 +120,21 @@ window.onload = () => {
     };
 
     document.getElementById('optionsButton').onclick = () => {
-        alert('This feature is not implemented.');
+        swal('', 'This feature is not implemented.', 'info');
     };
 
     document.getElementById('controlsButton').onclick = () => {
-        alert('This feature is not implemented.');
+        swal('', 'This feature is not implemented.', 'info');
     };
 
     document.getElementById('creditsButton').onclick = () => {
-        alert('Created by BananiumLabs.com');
+        swal('', 'Created by BananiumLabs.com', 'info');
     };
+
+    document.getElementById('btn-start-game').onclick = () => {
+        console.log('starting game');
+        startGame();
+    }
 
     // Set up the blueprint slot buttons
     for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
@@ -189,7 +194,7 @@ window.onload = () => {
             const key = e.which || e.keyCode;
     
             if (key === GLOBAL.KEY_ENTER)
-                startGame();
+                joinGame();
         });
     }
 
@@ -233,6 +238,7 @@ export function quitGame(msg) {
     hideElement('hud');
     hideElement('menubox');
     showElement('startMenuWrapper');
+    hideElement('lobbybox');
     swal("Disconnected from Game", "You have left the game.", "info");
 }
 

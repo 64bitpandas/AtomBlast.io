@@ -41639,7 +41639,7 @@ var mouseX = void 0,
 var selectedSlot = void 0;
 
 // Starts the game if the name is valid.
-function startGame() {
+function joinGame() {
     // Make sure the 
     if (!allBlueprintsSelected()) (0, _sweetalert2.default)("Blueprint(s) not selected", "Make sure all your blueprint slots are filled before joining a game!", "error");
     // check if the nick is valid
@@ -41735,7 +41735,7 @@ window.onload = function () {
     }
 
     document.getElementById('startButton').onclick = function () {
-        startGame();
+        joinGame();
     };
 
     document.getElementById('quitButton').onclick = function () {
@@ -41747,15 +41747,20 @@ window.onload = function () {
     };
 
     document.getElementById('optionsButton').onclick = function () {
-        alert('This feature is not implemented.');
+        (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
     };
 
     document.getElementById('controlsButton').onclick = function () {
-        alert('This feature is not implemented.');
+        (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
     };
 
     document.getElementById('creditsButton').onclick = function () {
-        alert('Created by BananiumLabs.com');
+        (0, _sweetalert2.default)('', 'Created by BananiumLabs.com', 'info');
+    };
+
+    document.getElementById('btn-start-game').onclick = function () {
+        console.log('starting game');
+        (0, _pixigame.startGame)();
     };
 
     // Set up the blueprint slot buttons
@@ -41838,7 +41843,7 @@ window.onload = function () {
         cookieInputs[_i3].addEventListener('keypress', function (e) {
             var key = e.which || e.keyCode;
 
-            if (key === _global.GLOBAL.KEY_ENTER) startGame();
+            if (key === _global.GLOBAL.KEY_ENTER) joinGame();
         });
     }
 
@@ -41878,6 +41883,7 @@ function quitGame(msg) {
     hideElement('hud');
     hideElement('menubox');
     showElement('startMenuWrapper');
+    hideElement('lobbybox');
     (0, _sweetalert2.default)("Disconnected from Game", "You have left the game.", "info");
 }
 
@@ -43098,13 +43104,14 @@ var Player = exports.Player = function (_GameObject) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
+exports.textStyle = exports.inGame = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.init = init;
 exports.destroyPIXI = destroyPIXI;
 exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
 exports.isFocused = isFocused;
 exports.canCraft = canCraft;
+exports.startGame = startGame;
 
 var _pixi = require('pixi.js');
 
@@ -43131,6 +43138,7 @@ var player = exports.player = undefined; // The player being controlled by this 
 var screenCenterX = exports.screenCenterX = undefined; // X-coordinate of the center of the screen
 var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the center of the screen
 var app = exports.app = undefined; // Pixi app
+var inGame = exports.inGame = false; // True after game has begun
 
 // let sprites = []; // Sprites on the stage
 
@@ -43321,7 +43329,7 @@ function draw(delta) {
     if (player !== undefined) {
 
         // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus()) {
+        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
             if (left.isDown) player.vx = -_global.GLOBAL.MAX_SPEED;
             if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
             if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
@@ -43405,17 +43413,6 @@ function draw(delta) {
             if (objType !== 'players' || player !== _socket.objects[objType][obj]) _socket.objects[objType][obj].tick();
         }
     }
-    // for(let pl in players) {
-    //     if(players[pl] !== player) {
-    //         players[pl].tick();
-    //     }
-    // }
-
-    // // Draw Atoms
-    // for(let atom in atoms) {
-    //     atoms[atom].tick();
-    // }
-
 }
 
 /**
@@ -43450,7 +43447,7 @@ function destroyPIXI() {
 function showGameUI() {
     // Hide loading screen
     (0, _app.hideElement)('loading');
-    (0, _app.showElement)('hud');
+    (0, _app.showElement)('lobby');
 }
 
 /**
@@ -43485,6 +43482,15 @@ function canCraft(blueprint) {
     }
 
     return true;
+}
+
+/**
+ * Starts the game after lobby closes.
+ */
+function startGame() {
+    exports.inGame = inGame = true;
+    (0, _app.hideElement)('lobby');
+    (0, _app.showElement)('hud');
 }
 
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){

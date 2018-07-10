@@ -48,7 +48,7 @@ export function beginConnection() {
     socket.on('connect', () => {
         setupSocket();
         // Init pixi
-        init();
+        init()
         if (typeof app !== undefined) {
             app.start();
         }
