@@ -31,14 +31,15 @@ export const GLOBAL = {
 
     // Cookies
     COOKIES: [
-        'name',
-        'room',
-        'team',
-        'bp-slot-1',
-        'bp-slot-2',
-        'bp-slot-3',
-        'bp-slot-4',
-        'room-type',
+        'name', //0
+        'room', //1
+        'team', //2
+        'bp-slot-1', //3
+        'bp-slot-2', //4
+        'bp-slot-3', //5 
+        'bp-slot-4', //6
+        'room-type', //7
+        'server', //8
     ],
     COOKIE_DAYS: 14, // Cookie lifetime
 

@@ -11,6 +11,7 @@ import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS, canCraft } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 import { player } from './pixigame.js';
+import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
 export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));
@@ -28,8 +29,11 @@ let selectedSlot;
 
 // Starts the game if the name is valid.
 function startGame() {
+    // Make sure the 
+    if (!allBlueprintsSelected())
+        swal("Blueprint(s) not selected", "Make sure all your blueprint slots are filled before joining a game!", "error");
     // check if the nick is valid
-    if (validNick()) {
+    else if (validNick()) {
 
         // Set cookies for inputs
         for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
@@ -72,6 +76,17 @@ function validNick() {
     return true;
 }
 
+/**
+ * Returns true if all four blueprint slots are filled.
+ */
+function allBlueprintsSelected() {
+    for(let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++)
+        if(cookieInputs[i].innerHTML.substring(0) === '-')
+            return false;
+
+    return true;
+}
+
 /** 
  * Onload function. Initializes the menu screen, creates click events, and loads cookies.
  */
@@ -83,7 +98,7 @@ window.onload = () => {
     let i = 0;
     for(let cookie of cookieValues) {
         if(cookie !== null && cookie.length > 0) {
-            if(cookieInputs[i].tagName === 'INPUT')
+            if(cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT')
                 cookieInputs[i].value = cookie;
             else if(cookieInputs[i].tagName === 'BUTTON')
                 cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
@@ -176,6 +191,23 @@ window.onload = () => {
             if (key === GLOBAL.KEY_ENTER)
                 startGame();
         });
+    }
+
+    // Behavior when room type is changed
+    if (cookieInputs[7].value !== 'private')
+        hideElement('room');
+    cookieInputs[7].onchange = () => {
+        if(cookieInputs[7].value === 'private')
+            showElement('room');
+        else
+            hideElement('room');
+
+        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);
+    };
+
+    // Server changed
+    cookieInputs[8].onchange = () => {
+        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
     }
 };
 

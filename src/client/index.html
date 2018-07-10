@@ -64,24 +64,37 @@
             <img src="assets/logo.svg">
         </div>
         <div class="row">
-            <div id="aBox" class="col-3 box offset-top">
-                <p>Insert ad here</p>
+            <div class="col-3 offset-top">
+                <div id="aBox" class="box offset-top">
+                    <p>Insert ad here</p>
+                </div>
+                <div id="newsBox" class="box">
+                    <p>News</p>
+                </div>
             </div>
             <div id="startMenu" class="col-6 box">
                 <p>Join a Game</p>
-                <!-- <div class="row">
-                    <h5 class="col-4">4v4</h5>
-                    <h5 class="col-4">4v4v4v4</h5>
-                    <h5 class="col-4">2v2v2v2</h5>
+                <div class="row">
+                    <div class="col-6">
+                        <select id="room-type">
+                            <option value="2v2v2v2">2v2v2v2</option>
+                            <option value="4v4v4v4">4v4v4v4</option>
+                            <option value="4v4v4v4">4v4</option>
+                            <option value="private">Private Match</option>
+                        </select>  
+                    </div>
+                    <div class="col-6">
+                        <select id="server">
+                            <option value="na">North America</option>
+                            <option value="eu">Europe</option>
+                            <option value="oce">Oceania</option>
+                        </select>  
+                    </div>
                 </div>
-                <form class="row" action="">
-                    <input class="col-4" type="radio" name="roomtype" value="4v4" checked="checked" />
-                    <input class="col-4" type="radio" name="roomtype" value="4v4v4v4" />
-                    <input class="col-4" type="radio" name="roomtype" value="2v2v2v2" />
-                </form> -->
+                
                 <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="name" spellcheck="false"/>
-                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room" spellcheck="false"/>
                 <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team" spellcheck="false"/>
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room" spellcheck="false"/>
                 <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
                 <br />
                 <button id="startButton" class="button btn-primary">Play</button>
