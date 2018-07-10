@@ -6,7 +6,7 @@ export const GLOBAL = {
     KEY_ENTER: 13,
     KEY_CHAT: 13,
     KEY_W: 87,
-    KEY_A: 65,
+    KEY_A: 65,  
     KEY_S: 83,
     KEY_D: 68,
     KEY_1: 49,
@@ -38,6 +38,7 @@ export const GLOBAL = {
         'bp-slot-2',
         'bp-slot-3',
         'bp-slot-4',
+        'room-type',
     ],
     COOKIE_DAYS: 14, // Cookie lifetime
 
@@ -62,6 +63,8 @@ export const GLOBAL = {
     // Drawing
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
     GRID_SPACING: 200, // space between each line on the grid
+    GRID_LINE_STROKE: 1,
+    GRID_LINE_COLOUR: 0xD3D3D3,
     FRAME_RATE: 60,
 
     // Sprites and textures

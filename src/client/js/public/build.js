@@ -41944,7 +41944,7 @@ var GLOBAL = exports.GLOBAL = {
     LOCAL_HOST: 'localhost:3000',
 
     // Cookies
-    COOKIES: ['name', 'room', 'team', 'bp-slot-1', 'bp-slot-2', 'bp-slot-3', 'bp-slot-4'],
+    COOKIES: ['name', 'room', 'team', 'bp-slot-1', 'bp-slot-2', 'bp-slot-3', 'bp-slot-4', 'room-type'],
     COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
@@ -41968,6 +41968,8 @@ var GLOBAL = exports.GLOBAL = {
     // Drawing
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
     GRID_SPACING: 200, // space between each line on the grid
+    GRID_LINE_STROKE: 1,
+    GRID_LINE_COLOUR: 0xD3D3D3,
     FRAME_RATE: 60,
 
     // Sprites and textures
@@ -43115,6 +43117,9 @@ var esc = void 0,
     blueprintKeys = void 0; // Key handlers
 var moveKeys = [];
 
+var vertLines = [];
+var horizLines = [];
+
 // Add text
 var textStyle = exports.textStyle = new PIXI.TextStyle({
     fill: 'black',
@@ -43231,6 +43236,28 @@ function setup() {
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
+        console.log(window.innerWidth / _global.GLOBAL.GRID_SPACING);
+        // Grid
+        var line = void 0;
+        for (var x = 0; x < window.innerWidth / _global.GLOBAL.GRID_SPACING; x++) {
+            line = new PIXI.Graphics();
+            line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
+            line.oX = x * _global.GLOBAL.GRID_SPACING;
+            line.moveTo(line.oX, 0);
+            line.lineTo(line.oX, window.innerHeight);
+            vertLines.push(line);
+            app.stage.addChild(line);
+        }
+        for (var y = 0; y < window.innerHeight / _global.GLOBAL.GRID_SPACING; y++) {
+            line = new PIXI.Graphics();
+            line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
+            line.oY = y * _global.GLOBAL.GRID_SPACING;
+            line.moveTo(0, line.oY);
+            line.lineTo(window.innerWidth, line.oY);
+            horizLines.push(line);
+            app.stage.addChild(line);
+        }
+
         // Resize
         document.getElementsByTagName('body')[0].onresize = function () {
             app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -43239,6 +43266,7 @@ function setup() {
             player.x = screenCenterX;
             player.y = screenCenterY;
         };
+
         // Begin game loop
         app.ticker.add(function (delta) {
             return draw(delta);
@@ -43283,6 +43311,57 @@ function draw(delta) {
 
         // Send coordinates
         _socket.socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+
+        // Move grid
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = vertLines[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var line = _step2.value;
+
+                line.x = line.oX - player.posX % (_global.GLOBAL.GRID_SPACING * 2);
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+            for (var _iterator3 = horizLines[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var _line = _step3.value;
+
+                _line.y = _line.oY + player.posY % (_global.GLOBAL.GRID_SPACING * 2);
+            }
+        } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                    _iterator3.return();
+                }
+            } finally {
+                if (_didIteratorError3) {
+                    throw _iteratorError3;
+                }
+            }
+        }
     }
 
     // Handle objects except for this player
@@ -43301,6 +43380,7 @@ function draw(delta) {
     // for(let atom in atoms) {
     //     atoms[atom].tick();
     // }
+
 }
 
 /**

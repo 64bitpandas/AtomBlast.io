@@ -18,6 +18,9 @@ export var app; // Pixi app
 let esc, up, down, left, right, blueprintKeys; // Key handlers
 let moveKeys = [];
 
+let vertLines = [];
+let horizLines = [];
+
 // Add text
 export let textStyle = new PIXI.TextStyle({
     fill: 'black',
@@ -120,6 +123,27 @@ function setup() {
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
+        console.log(window.innerWidth / GLOBAL.GRID_SPACING);
+        // Grid
+        let line;
+        for(let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {
+            line = new PIXI.Graphics();
+            line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+            line.oX = x*GLOBAL.GRID_SPACING;
+            line.moveTo(line.oX, 0);
+            line.lineTo(line.oX, window.innerHeight); 
+            vertLines.push(line);
+            app.stage.addChild(line);
+        }
+        for(let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {
+            line = new PIXI.Graphics();
+            line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+            line.oY = y*GLOBAL.GRID_SPACING;
+            line.moveTo(0, line.oY);
+            line.lineTo(window.innerWidth, line.oY);
+            horizLines.push(line);
+            app.stage.addChild(line);
+        }
 
         // Resize
         document.getElementsByTagName('body')[0].onresize = () => {
@@ -129,6 +153,7 @@ function setup() {
             player.x = screenCenterX;
             player.y = screenCenterY;
         }
+
         // Begin game loop
         app.ticker.add(delta => draw(delta));
     }
@@ -179,6 +204,13 @@ function draw(delta) {
 
         // Send coordinates
         socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+
+        // Move grid
+        for (let line of vertLines)
+            line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2);
+
+        for (let line of horizLines)
+            line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);
     }
     
     // Handle objects except for this player
@@ -197,6 +229,9 @@ function draw(delta) {
     // for(let atom in atoms) {
     //     atoms[atom].tick();
     // }
+
+
+
 }
 
 /**
