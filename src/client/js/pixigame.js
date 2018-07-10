@@ -95,7 +95,6 @@ function setup() {
         ]
         
         esc.press = () => {
-            console.log(document.activeElement);
             if (isFocused()) {
                 if (document.activeElement !== document.getElementById('chatInput'))
                     toggleMenu();
@@ -110,7 +109,6 @@ function setup() {
         }
 
         document.getElementById('chatInput').onblur = () => {
-            console.log('test');
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
         }
 
@@ -137,28 +135,6 @@ function setup() {
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
-        console.log(window.innerWidth / GLOBAL.GRID_SPACING);
-        // Grid
-        let line;
-        for(let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {
-            line = new PIXI.Graphics();
-            line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
-            line.oX = x*GLOBAL.GRID_SPACING;
-            line.moveTo(line.oX, 0);
-            line.lineTo(line.oX, window.innerHeight); 
-            vertLines.push(line);
-            app.stage.addChild(line);
-        }
-        for(let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {
-            line = new PIXI.Graphics();
-            line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
-            line.oY = y*GLOBAL.GRID_SPACING;
-            line.moveTo(0, line.oY);
-            line.lineTo(window.innerWidth, line.oY);
-            horizLines.push(line);
-            app.stage.addChild(line);
-        }
-
         // Resize
         document.getElementsByTagName('body')[0].onresize = () => {
             app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -173,6 +149,29 @@ function setup() {
     }
     
     isSetup = true; 
+
+    // Draw grid
+    // Grid
+    let line;
+    for (let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {
+        line = new PIXI.Graphics();
+        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+        line.oX = x * GLOBAL.GRID_SPACING;
+        line.moveTo(line.oX, 0);
+        line.lineTo(line.oX, window.innerHeight);
+        vertLines.push(line);
+        app.stage.addChild(line);
+    }
+    for (let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {
+        line = new PIXI.Graphics();
+        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+        line.oY = y * GLOBAL.GRID_SPACING;
+        line.moveTo(0, line.oY);
+        line.lineTo(window.innerWidth, line.oY);
+        horizLines.push(line);
+        app.stage.addChild(line);
+    }
+    
     showGameUI();
     
 

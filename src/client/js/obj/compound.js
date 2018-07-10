@@ -87,7 +87,7 @@ export function createNewCompound(blueprint) {
     let cursor = app.renderer.plugins.interaction.mouse.global;
     let centerX = window.innerWidth / 2;
     let centerY = window.innerHeight / 2;
-    console.log(centerX - cursor.x, cursor.y - centerY)
+    // console.log(centerX - cursor.x, cursor.y - centerY)
     socket.emit('createCompound', {
         blueprint: blueprint,
         mousePos: {x: cursor.x - centerX, y: centerY - cursor.y}

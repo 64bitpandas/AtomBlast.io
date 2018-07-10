@@ -42761,7 +42761,7 @@ function createNewCompound(blueprint) {
     var cursor = _pixigame.app.renderer.plugins.interaction.mouse.global;
     var centerX = window.innerWidth / 2;
     var centerY = window.innerHeight / 2;
-    console.log(centerX - cursor.x, cursor.y - centerY);
+    // console.log(centerX - cursor.x, cursor.y - centerY)
     _socket.socket.emit('createCompound', {
         blueprint: blueprint,
         mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
@@ -42985,7 +42985,7 @@ var Player = exports.Player = function (_GameObject) {
         _this.height = _global.GLOBAL.PLAYER_RADIUS * 2;
 
         if (id === _socket.socket.id) {
-            console.log('this player');
+            // console.log('this player');
             _this.x = _pixigame.screenCenterX;
             _this.y = _pixigame.screenCenterY;
         } else {
@@ -43230,7 +43230,6 @@ function setup() {
         blueprintKeys = [(0, _keyboard.keyboard)(_global.GLOBAL.KEY_1), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_2), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_3), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_4)];
 
         esc.press = function () {
-            console.log(document.activeElement);
             if (isFocused()) {
                 if (document.activeElement !== document.getElementById('chatInput')) toggleMenu();else document.getElementById('chatInput').blur();
             }
@@ -43242,7 +43241,6 @@ function setup() {
         };
 
         document.getElementById('chatInput').onblur = function () {
-            console.log('test');
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
         };
 
@@ -43272,28 +43270,6 @@ function setup() {
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
 
-        console.log(window.innerWidth / _global.GLOBAL.GRID_SPACING);
-        // Grid
-        var line = void 0;
-        for (var x = 0; x < window.innerWidth / _global.GLOBAL.GRID_SPACING; x++) {
-            line = new PIXI.Graphics();
-            line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
-            line.oX = x * _global.GLOBAL.GRID_SPACING;
-            line.moveTo(line.oX, 0);
-            line.lineTo(line.oX, window.innerHeight);
-            vertLines.push(line);
-            app.stage.addChild(line);
-        }
-        for (var y = 0; y < window.innerHeight / _global.GLOBAL.GRID_SPACING; y++) {
-            line = new PIXI.Graphics();
-            line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
-            line.oY = y * _global.GLOBAL.GRID_SPACING;
-            line.moveTo(0, line.oY);
-            line.lineTo(window.innerWidth, line.oY);
-            horizLines.push(line);
-            app.stage.addChild(line);
-        }
-
         // Resize
         document.getElementsByTagName('body')[0].onresize = function () {
             app.renderer.resize(window.innerWidth, window.innerHeight);
@@ -43310,6 +43286,29 @@ function setup() {
     }
 
     exports.isSetup = isSetup = true;
+
+    // Draw grid
+    // Grid
+    var line = void 0;
+    for (var x = 0; x < window.innerWidth / _global.GLOBAL.GRID_SPACING; x++) {
+        line = new PIXI.Graphics();
+        line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
+        line.oX = x * _global.GLOBAL.GRID_SPACING;
+        line.moveTo(line.oX, 0);
+        line.lineTo(line.oX, window.innerHeight);
+        vertLines.push(line);
+        app.stage.addChild(line);
+    }
+    for (var y = 0; y < window.innerHeight / _global.GLOBAL.GRID_SPACING; y++) {
+        line = new PIXI.Graphics();
+        line.lineStyle(_global.GLOBAL.GRID_LINE_STROKE, _global.GLOBAL.GRID_LINE_COLOUR, 1);
+        line.oY = y * _global.GLOBAL.GRID_SPACING;
+        line.moveTo(0, line.oY);
+        line.lineTo(window.innerWidth, line.oY);
+        horizLines.push(line);
+        app.stage.addChild(line);
+    }
+
     showGameUI();
 }
 

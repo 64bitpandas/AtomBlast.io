@@ -32,7 +32,7 @@ export class Player extends GameObject {
         this.height = GLOBAL.PLAYER_RADIUS * 2;
 
         if(id === socket.id) {
-            console.log('this player');
+            // console.log('this player');
             this.x = screenCenterX;
             this.y = screenCenterY;
         }
