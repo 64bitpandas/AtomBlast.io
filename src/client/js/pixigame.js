@@ -4,7 +4,7 @@ import { GLOBAL } from './global';
 import { Player } from './obj/player';
 import { hideElement, showElement, selectedBlueprints, updateAtomList} from './app';
 import { socket, objects } from './socket';
-import { BLUEPRINTS, canCraft } from './obj/blueprints';
+import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound } from './obj/compound'
 
 export var isSetup; // True after the stage is fully set up
@@ -288,7 +288,22 @@ export function createPlayer(data) {
     }
 }
 
+/**
+ * If the document is Focused return true otherwise false
+ **/
 export function isFocused(){
-    //If the document is Focused return true otherwise false
     return document.hasFocus();
+}
+
+/**
+ * Returns true if the player has the materials necessary to create a particular blueprint.
+ * @param {string} blueprint The name of the blueprint to check.
+ */
+export function canCraft(blueprint) {
+    for (let atom in blueprint.atoms) {
+        if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])
+            return false;
+    }
+
+    return true;
 }

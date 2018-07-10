@@ -41929,7 +41929,7 @@ function updateAtomList(atomID) {
 
 function updateCompoundButtons() {
     for (var i = 0; i < selectedBlueprints.length; i++) {
-        if ((0, _blueprints.canCraft)(selectedBlueprints[i])) {
+        if ((0, _pixigame.canCraft)(selectedBlueprints[i])) {
             document.getElementById('bp-ingame-' + (i + 1)).style.background = '#2ecc71';
         } else {
             document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
@@ -42553,11 +42553,6 @@ function spawnAtom(typeID, id, x, y, vx, vy) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.BLUEPRINTS = undefined;
-exports.canCraft = canCraft;
-
-var _pixigame = require('../pixigame');
-
 /**
  * This constant stores all data that is used to define Blueprints, 
  * which define the recipe and behaviors of Compounds.
@@ -42631,19 +42626,9 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         }
     }
 
-    /**
-     * Returns true if the player has the materials necessary to create a particular blueprint.
-     * @param {string} blueprint The name of the blueprint to check.
-     */
-};function canCraft(blueprint) {
-    for (var atom in blueprint.atoms) {
-        if (_pixigame.player.atoms[atom] === undefined || _pixigame.player.atoms[atom] < blueprint.atoms[atom]) return false;
-    }
+};
 
-    return true;
-}
-
-},{"../pixigame":201}],198:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -43120,6 +43105,7 @@ exports.destroyPIXI = destroyPIXI;
 exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
 exports.isFocused = isFocused;
+exports.canCraft = canCraft;
 
 var _pixi = require('pixi.js');
 
@@ -43256,7 +43242,7 @@ function setup() {
             blueprintKeys[key].press = function () {
                 if (isFocused()) {
                     //Creates a compound of that certain blueprint
-                    if ((0, _blueprints.canCraft)(_app.selectedBlueprints[key])) {
+                    if (canCraft(_app.selectedBlueprints[key])) {
                         (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
 
                         // Subtract atoms needed to craft
@@ -43473,9 +43459,23 @@ function createPlayer(data) {
     }
 }
 
+/**
+ * If the document is Focused return true otherwise false
+ **/
 function isFocused() {
-    //If the document is Focused return true otherwise false
     return document.hasFocus();
+}
+
+/**
+ * Returns true if the player has the materials necessary to create a particular blueprint.
+ * @param {string} blueprint The name of the blueprint to check.
+ */
+function canCraft(blueprint) {
+    for (var atom in blueprint.atoms) {
+        if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom]) return false;
+    }
+
+    return true;
 }
 
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){

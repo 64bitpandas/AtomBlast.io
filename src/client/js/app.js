@@ -8,9 +8,9 @@ import * as cookies from './lib/cookies';
 import { Player } from './obj/player';
 import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
-import { BLUEPRINTS, canCraft } from './obj/blueprints.js';
+import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player } from './pixigame.js';
+import { player, canCraft } from './pixigame.js';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values

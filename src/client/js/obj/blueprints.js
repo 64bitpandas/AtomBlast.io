@@ -1,5 +1,3 @@
-import { player } from "../pixigame";
-
 /**
  * This constant stores all data that is used to define Blueprints, 
  * which define the recipe and behaviors of Compounds.
@@ -75,15 +73,3 @@ export const BLUEPRINTS = {
 
 }
 
-/**
- * Returns true if the player has the materials necessary to create a particular blueprint.
- * @param {string} blueprint The name of the blueprint to check.
- */
-export function canCraft(blueprint) {
-    for(let atom in blueprint.atoms) {
-        if(player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])
-            return false;
-    }
-
-    return true;
-}
