@@ -42,7 +42,9 @@ export class Atom extends GameObject {
         if (this.isEquipped || player === undefined)
             return false;
         
-        let distance = distanceBetween(this, player);
+        let distance = distanceBetween(
+            {posX: this.posX + GLOBAL.ATOM_RADIUS, posY: this.posY - GLOBAL.ATOM_RADIUS},
+            {posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS});
 
         // Attractive force
         if(distance < GLOBAL.ATTRACTION_RADIUS) {

@@ -204,10 +204,10 @@ io.on('connection', socket => {
 
     let newCompound = {
       id: generateID(),
-      posX: thisPlayer.posX, 
-      posY: thisPlayer.posY,
-      vx: data.blueprint.params.speed * Math.cos(theta),
-      vy: data.blueprint.params.speed * Math.sin(theta),
+      posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
+      posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
+      vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
+      vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
       blueprint: data.blueprint
     };
     rooms[room].compounds[newCompound.id] = newCompound;

@@ -42483,7 +42483,7 @@ var Atom = exports.Atom = function (_GameObject) {
         value: function checkCollision(player) {
             if (this.isEquipped || player === undefined) return false;
 
-            var distance = (0, _global.distanceBetween)(this, player);
+            var distance = (0, _global.distanceBetween)({ posX: this.posX + _global.GLOBAL.ATOM_RADIUS, posY: this.posY - _global.GLOBAL.ATOM_RADIUS }, { posX: player.posX + _global.GLOBAL.PLAYER_RADIUS, posY: player.posY - _global.GLOBAL.PLAYER_RADIUS });
 
             // Attractive force
             if (distance < _global.GLOBAL.ATTRACTION_RADIUS) {
