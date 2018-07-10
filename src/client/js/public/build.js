@@ -41877,9 +41877,8 @@ function quitGame(msg) {
     hideElement('gameAreaWrapper');
     hideElement('hud');
     hideElement('menubox');
-    showElement('startMenuMessage');
     showElement('startMenuWrapper');
-    document.getElementById('startMenuMessage').innerHTML = msg;
+    (0, _sweetalert2.default)("Disconnected from Game", "You have left the game.", "info");
 }
 
 /**

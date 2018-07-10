@@ -181,18 +181,6 @@ canvas {
 	font-weight: bold;
 }
 
-#startMenuMessage {
-	width: 30rem;
-	margin: auto;
-	box-sizing: border-box;
-	margin-top: 2vh;
-	color:red;
-	height: 2vh;
-	text-align: center;
-	/* Hidden on start */
-	display: none;
-}
-
 .menuInputBox {
 	width: 100%;
 	text-align: center;
