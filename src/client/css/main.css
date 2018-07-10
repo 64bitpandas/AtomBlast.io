@@ -343,6 +343,7 @@ select:focus {
 	outline: none;
 	height: 5vh;
 	z-index: 50;
+	transition-duration: 0.7s;
 }
 
 /* ***************************************************

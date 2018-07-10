@@ -95,9 +95,23 @@ function setup() {
         ]
         
         esc.press = () => {
+            console.log(document.activeElement);
             if (isFocused()) {
-                toggleMenu();
+                if (document.activeElement !== document.getElementById('chatInput'))
+                    toggleMenu();
+                else
+                    document.getElementById('chatInput').blur();
             }
+        }
+
+        // Chat box styling on select
+        document.getElementById('chatInput').onfocus = () => {
+            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
+        }
+
+        document.getElementById('chatInput').onblur = () => {
+            console.log('test');
+            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
         }
 
         //Bind each blueprint key

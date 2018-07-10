@@ -43231,9 +43231,20 @@ function setup() {
         blueprintKeys = [(0, _keyboard.keyboard)(_global.GLOBAL.KEY_1), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_2), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_3), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_4)];
 
         esc.press = function () {
+            console.log(document.activeElement);
             if (isFocused()) {
-                toggleMenu();
+                if (document.activeElement !== document.getElementById('chatInput')) toggleMenu();else document.getElementById('chatInput').blur();
             }
+        };
+
+        // Chat box styling on select
+        document.getElementById('chatInput').onfocus = function () {
+            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
+        };
+
+        document.getElementById('chatInput').onblur = function () {
+            console.log('test');
+            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
         };
 
         //Bind each blueprint key
