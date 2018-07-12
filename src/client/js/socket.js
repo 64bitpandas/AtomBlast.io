@@ -1,7 +1,7 @@
 import { GLOBAL } from "./global";
-import { cookieInputs, quitGame } from "./app";
+import { cookieInputs, quitGame, updateLobby } from "./app";
 import ChatClient from "./lib/chat-client";
-import { init, app, createPlayer, isSetup, showGameUI } from "./pixigame";
+import { init, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
 import { spawnAtom } from "./obj/atom";
 import { createCompound } from "./obj/compound";
 
@@ -175,6 +175,21 @@ function setupSocket() {
         socket.disconnect();
         quitGame(data.msg, true);
     })
+
+    // Receive information about room players
+    socket.on('roomInfo', (data) => {
+        // Update lobby info. Pass to app.js
+        updateLobby(data);
+
+        // if(GLOBAL.DEBUG) {
+        //     console.log("rcvd: ",data);
+        // }
+    })
+
+    socket.on('serverSendStartGame', (data) => {
+        console.log('game has started');
+        startGame(false);
+    });
 
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });

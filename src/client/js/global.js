@@ -1,6 +1,7 @@
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
     
+    DEBUG: true,
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,

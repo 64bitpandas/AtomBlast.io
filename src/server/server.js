@@ -101,8 +101,10 @@ io.on('connection', socket => {
       
   }
 
+  console.log(room);
+
   // Join custom room
-  socket.join(socket.handshake.query.room, () => {
+  socket.join(room, () => {
     console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
   });
 
@@ -153,8 +155,6 @@ io.on('connection', socket => {
   };
 
   // Add team to database
-
-
  let thisPlayer = rooms[room].players[socket.id];
  
   // Setup player array sync- once a frame
@@ -180,9 +180,17 @@ io.on('connection', socket => {
       }
 
       socket.emit('objectSync', tempObjects);
+      
+      if(!rooms[room].started) {
+        // Send over the room player information
+        // socket.to(room).broadcast.emit('roomInfo', rooms[room].players);
+        socket.emit('roomInfo', rooms[room].players)
+      }
     }
+
+
   }, 1000/60);
-  
+
   // Receives a chat from a player, then broadcasts it to other players
   socket.to(room).on('playerChat', data => {
     // console.log('sender: ' + data.sender);
@@ -202,6 +210,7 @@ io.on('connection', socket => {
     if(DEBUG) {
       socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
     }
+
   });
 
   // Broadcasts player join message
@@ -212,6 +221,7 @@ io.on('connection', socket => {
     if(DEBUG) {
       socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
     }
+  
   });
 
   /**
@@ -300,6 +310,12 @@ io.on('connection', socket => {
         delete teams[team];
     }
   });
+
+  socket.on('startGame', data => {
+    console.log('Game has started in room ' + room);
+    socket.broadcast.to(room).emit('serverSendStartGame', data);
+    rooms[room].started = true;
+  })
 
 });
 

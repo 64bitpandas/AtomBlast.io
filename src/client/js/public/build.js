@@ -41594,6 +41594,7 @@ exports.showElement = showElement;
 exports.hideElement = hideElement;
 exports.updateAtomList = updateAtomList;
 exports.updateCompoundButtons = updateCompoundButtons;
+exports.updateLobby = updateLobby;
 
 var _global = require('./global.js');
 
@@ -41601,7 +41602,7 @@ var _cookies = require('./lib/cookies');
 
 var cookies = _interopRequireWildcard(_cookies);
 
-var _player = require('./obj/player');
+var _player2 = require('./obj/player');
 
 var _atom = require('./obj/atom');
 
@@ -41640,7 +41641,7 @@ var selectedSlot = void 0;
 
 // Starts the game if the name is valid.
 function joinGame() {
-    // Make sure the 
+
     if (!allBlueprintsSelected()) (0, _sweetalert2.default)("Blueprint(s) not selected", "Make sure all your blueprint slots are filled before joining a game!", "error");
     // check if the nick is valid
     else if (validNick()) {
@@ -41653,6 +41654,9 @@ function joinGame() {
             // Use cookies to set the ingame blueprint slot values
             for (var _i = 1; _i <= _global.GLOBAL.BP_MAX; _i++) {
                 selectedBlueprints[_i - 1] = _blueprints.BLUEPRINTS[cookies.getCookie(_global.GLOBAL.COOKIES[_i - 1 + _global.GLOBAL.INPUT_COUNT])];
+
+                // Check whether blueprint is selected!
+                console.log("Blueprint Selected: " + selectedBlueprints);
                 document.getElementById('bp-ingame-' + _i).innerHTML = selectedBlueprints[_i - 1].name;
             }
 
@@ -41689,8 +41693,9 @@ function validNick() {
  */
 function allBlueprintsSelected() {
     for (var i = _global.GLOBAL.INPUT_COUNT - 1; i < _global.GLOBAL.INPUT_COUNT + _global.GLOBAL.BP_MAX; i++) {
-        if (cookieInputs[i].innerHTML.substring(0) === '-') return false;
-    }return true;
+        if (cookieInputs[i].innerHTML.substring(0, 1) === '-') return false;
+    }
+    return true;
 }
 
 /** 
@@ -41760,16 +41765,31 @@ window.onload = function () {
 
     document.getElementById('btn-start-game').onclick = function () {
         console.log('starting game');
-        (0, _pixigame.startGame)();
+        (0, _pixigame.startGame)(true);
     };
+
+    var _loop = function _loop(_i2) {
+        document.getElementById('bp-ingame-' + (_i2 + 1)).onclick = function () {
+            if ((0, _pixigame.canCraft)(selectedBlueprints[_i2])) {
+                (0, _sweetalert2.default)('MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'success');
+                (0, _pixigame.deductCraftMaterial)(selectedBlueprints[_i2]);
+            } else {
+                (0, _sweetalert2.default)('REQ NOT MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'warning');
+            }
+        };
+    };
+
+    for (var _i2 = 0; _i2 < selectedBlueprints.length; _i2++) {
+        _loop(_i2);
+    }
 
     // Set up the blueprint slot buttons
 
-    var _loop = function _loop(_i2) {
-        document.getElementById('bp-slot-' + _i2).onclick = function () {
+    var _loop2 = function _loop2(_i3) {
+        document.getElementById('bp-slot-' + _i3).onclick = function () {
             showElement('bp-select');
-            document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i2;
-            selectedSlot = _i2;
+            document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i3;
+            selectedSlot = _i3;
 
             // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
             // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
@@ -41777,8 +41797,8 @@ window.onload = function () {
         };
     };
 
-    for (var _i2 = 1; _i2 <= _global.GLOBAL.BP_MAX; _i2++) {
-        _loop(_i2);
+    for (var _i3 = 1; _i3 <= _global.GLOBAL.BP_MAX; _i3++) {
+        _loop2(_i3);
     }
 
     document.getElementById('btn-close').onclick = function () {
@@ -41809,7 +41829,7 @@ window.onload = function () {
     var _iteratorError2 = undefined;
 
     try {
-        var _loop2 = function _loop2() {
+        var _loop3 = function _loop3() {
             var btn = _step2.value;
 
             btn.onclick = function () {
@@ -41822,7 +41842,7 @@ window.onload = function () {
         };
 
         for (var _iterator2 = document.getElementsByClassName('btn-blueprint')[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            _loop2();
+            _loop3();
         } // Add enter listeners for all inputs
     } catch (err) {
         _didIteratorError2 = true;
@@ -41839,8 +41859,8 @@ window.onload = function () {
         }
     }
 
-    for (var _i3 = 0; _i3 < _global.GLOBAL.INPUT_COUNT; _i3++) {
-        cookieInputs[_i3].addEventListener('keypress', function (e) {
+    for (var _i4 = 0; _i4 < _global.GLOBAL.INPUT_COUNT; _i4++) {
+        cookieInputs[_i4].addEventListener('keypress', function (e) {
             var key = e.which || e.keyCode;
 
             if (key === _global.GLOBAL.KEY_ENTER) joinGame();
@@ -41942,6 +41962,25 @@ function updateCompoundButtons() {
     }
 }
 
+/**
+ * Run on new player join to sync lobby information
+ * @param {*} data The data transferred from server
+ */
+function updateLobby(data) {
+
+    // Wipe innerHTML first
+    var lobby = document.getElementById("team-display");
+    lobby.innerHTML = '';
+    for (var _player in data) {
+        if (document.getElementById(data[_player].team) === null || document.getElementById(data[_player].team) === undefined) {
+            lobby.innerHTML += '\n            <div class="col-3">\n                <h3>' + data[_player].team + '</h3>\n                <ul id="' + data[_player].team + '">\n                </ul>\n            </div>\n            ';
+        }
+        var listItem = document.createElement('LI');
+        listItem.appendChild(document.createTextNode(data[_player].name));
+        document.getElementById(data[_player].team).appendChild(listItem);
+    }
+}
+
 },{"./global.js":192,"./lib/cookies":194,"./obj/atom":196,"./obj/blueprints.js":197,"./obj/gameobject":199,"./obj/player":200,"./pixigame.js":201,"./socket.js":202,"sweetalert":188}],192:[function(require,module,exports){
 'use strict';
 
@@ -41952,6 +41991,7 @@ exports.distanceBetween = distanceBetween;
 // Contains all global constants and functions for both the client and server.
 var GLOBAL = exports.GLOBAL = {
 
+    DEBUG: true,
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,
@@ -43112,6 +43152,7 @@ exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
 exports.isFocused = isFocused;
 exports.canCraft = canCraft;
+exports.deductCraftMaterial = deductCraftMaterial;
 exports.startGame = startGame;
 
 var _pixi = require('pixi.js');
@@ -43263,10 +43304,7 @@ function setup() {
                         (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
 
                         // Subtract atoms needed to craft
-                        for (var atom in _app.selectedBlueprints[key].atoms) {
-                            player.atoms[atom] -= _app.selectedBlueprints[key].atoms[atom];
-                            (0, _app.updateAtomList)(atom);
-                        }
+                        deductCraftMaterial(electedBlueprints[key]);
                     } else console.log("Not enough atoms to craft this blueprint!");
                 }
             };
@@ -43486,12 +43524,31 @@ function canCraft(blueprint) {
 }
 
 /**
- * Starts the game after lobby closes.
+ * Deduct material needed to craft. 
+ * @param {string} blueprint The name of the blueprint to check.
+ * @returns {boolean} Returns true if success, false if fail.
  */
-function startGame() {
+function deductCraftMaterial(blueprint) {
+    if (canCraft) {
+        for (var atom in blueprint.atoms) {
+            player.atoms[atom] -= blueprint.atoms[atom];
+            (0, _app.updateAtomList)(atom);
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Starts the game after lobby closes.
+ * @param {boolean} emit True if this client should emit the event to the server.
+ */
+function startGame(emit) {
     exports.inGame = inGame = true;
     (0, _app.hideElement)('lobby');
     (0, _app.showElement)('hud');
+    console.log(emit);
+    if (emit) _socket.socket.emit('startGame', { start: true });
 }
 
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){
@@ -43690,6 +43747,21 @@ function setupSocket() {
     socket.on('connectionError', function (data) {
         socket.disconnect();
         (0, _app.quitGame)(data.msg, true);
+    });
+
+    // Receive information about room players
+    socket.on('roomInfo', function (data) {
+        // Update lobby info. Pass to app.js
+        (0, _app.updateLobby)(data);
+
+        // if(GLOBAL.DEBUG) {
+        //     console.log("rcvd: ",data);
+        // }
+    });
+
+    socket.on('serverSendStartGame', function (data) {
+        console.log('game has started');
+        (0, _pixigame.startGame)(false);
     });
 
     //Emit join message,

@@ -122,10 +122,7 @@ function setup() {
                         createNewCompound(selectedBlueprints[key]); 
 
                         // Subtract atoms needed to craft
-                        for(let atom in selectedBlueprints[key].atoms) {
-                            player.atoms[atom] -= selectedBlueprints[key].atoms[atom];
-                            updateAtomList(atom);
-                        }
+                        deductCraftMaterial(electedBlueprints[key]);
                     }
                     else
                         console.log("Not enough atoms to craft this blueprint!");
@@ -311,10 +308,30 @@ export function canCraft(blueprint) {
 }
 
 /**
- * Starts the game after lobby closes.
+ * Deduct material needed to craft. 
+ * @param {string} blueprint The name of the blueprint to check.
+ * @returns {boolean} Returns true if success, false if fail.
  */
-export function startGame() {
+export function deductCraftMaterial(blueprint) {
+    if (canCraft) {
+        for (let atom in blueprint.atoms) {
+            player.atoms[atom] -= blueprint.atoms[atom];
+            updateAtomList(atom);
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Starts the game after lobby closes.
+ * @param {boolean} emit True if this client should emit the event to the server.
+ */
+export function startGame(emit) {
     inGame = true;
     hideElement('lobby');
     showElement('hud');
+    console.log(emit);
+    if(emit)
+        socket.emit('startGame', {start: true});
 }
