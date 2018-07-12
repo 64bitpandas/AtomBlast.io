@@ -27,12 +27,12 @@ export var objects = {
  */
 export function beginConnection() {
     //Joins debug server if conditions are met
-    let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : getAvailableRoom());
+    let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER);
     if (cookieInputs[1].value === 'jurassicexp') {
         console.log('Dev Backdoor Initiated! Connecting to devserver');
         //Debugging and Local serving
         socket = io.connect(GLOBAL.LOCAL_HOST, {
-            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}`,
+            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,
             reconnectionAttempts: 3
         });
     }
@@ -40,7 +40,7 @@ export function beginConnection() {
         // Production server
         console.log('connecting to main server');
         socket = io.connect(GLOBAL.SERVER_IP, {
-            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}`,
+            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,
             reconnectionAttempts: 3
         });
     }
@@ -53,13 +53,6 @@ export function beginConnection() {
             app.start();
         }
     });
-}
-
-/**
- * TODO: Returns the next available room given the room type.
- */
-function getAvailableRoom() {
-    return 'room1';
 }
 
 /**
@@ -176,6 +169,12 @@ function setupSocket() {
     socket.on('serverSendLoginMessage', data => {
         chat.addLoginMessage(data.sender, false);
     });
+
+    // Errors on join
+    socket.on('connectionError', (data) => {
+        socket.disconnect();
+        quitGame(data.msg, true);
+    })
 
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });

@@ -41739,7 +41739,7 @@ window.onload = function () {
     };
 
     document.getElementById('quitButton').onclick = function () {
-        quitGame('You have left the game.');
+        quitGame('You have left the game.', false);
     };
 
     document.getElementById('resumeButton').onclick = function () {
@@ -41873,7 +41873,7 @@ window.onmousemove = function (e) {
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
-function quitGame(msg) {
+function quitGame(msg, isError) {
 
     // Disconnect from server
     (0, _socket.disconnect)();
@@ -41883,8 +41883,8 @@ function quitGame(msg) {
     hideElement('hud');
     hideElement('menubox');
     showElement('startMenuWrapper');
-    hideElement('lobbybox');
-    (0, _sweetalert2.default)("Disconnected from Game", "You have left the game.", "info");
+    hideElement('lobby');
+    (0, _sweetalert2.default)("Disconnected from Game", msg, isError ? 'error' : 'info');
 }
 
 /**
@@ -41979,6 +41979,7 @@ var GLOBAL = exports.GLOBAL = {
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
     LOCAL_HOST: 'localhost:3000',
+    NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required
 
     // Cookies
     COOKIES: ['name', //0
@@ -43544,19 +43545,19 @@ var objects = exports.objects = {
  */
 function beginConnection() {
     //Joins debug server if conditions are met
-    var room = _app.cookieInputs[7].value === 'private' ? _app.cookieInputs[1].value : getAvailableRoom();
+    var room = _app.cookieInputs[7].value === 'private' ? _app.cookieInputs[1].value : _global.GLOBAL.NO_ROOM_IDENTIFIER;
     if (_app.cookieInputs[1].value === 'jurassicexp') {
         console.log('Dev Backdoor Initiated! Connecting to devserver');
         //Debugging and Local serving
         exports.socket = socket = io.connect(_global.GLOBAL.LOCAL_HOST, {
-            query: "room=" + room + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value,
+            query: "room=" + room + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value + "&roomType=" + _app.cookieInputs[7].value,
             reconnectionAttempts: 3
         });
     } else {
         // Production server
         console.log('connecting to main server');
         exports.socket = socket = io.connect(_global.GLOBAL.SERVER_IP, {
-            query: "room=" + room + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value,
+            query: "room=" + room + "&name=" + _app.cookieInputs[0].value + "&team=" + _app.cookieInputs[2].value + "&roomType=" + _app.cookieInputs[7].value,
             reconnectionAttempts: 3
         });
     }
@@ -43569,13 +43570,6 @@ function beginConnection() {
             _pixigame.app.start();
         }
     });
-}
-
-/**
- * TODO: Returns the next available room given the room type.
- */
-function getAvailableRoom() {
-    return 'room1';
 }
 
 /**
@@ -43690,6 +43684,12 @@ function setupSocket() {
 
     socket.on('serverSendLoginMessage', function (data) {
         chat.addLoginMessage(data.sender, false);
+    });
+
+    // Errors on join
+    socket.on('connectionError', function (data) {
+        socket.disconnect();
+        (0, _app.quitGame)(data.msg, true);
     });
 
     //Emit join message,

@@ -229,17 +229,18 @@ select {
 	width: 100%;
 	transition-duration: 1s;
 	margin-bottom: 1vh;
+	-webkit-appearance: none;
 }
 
 select:focus {
 	box-shadow: 0px 0px 1rem 0px #311B92;
+	-webkit-appearance: none;
 }
 
 #newsBox {
 	margin-top: 5vh;
 	padding-top: 1vh;
 }
-
 
 /* *********
  * *  HUD  *

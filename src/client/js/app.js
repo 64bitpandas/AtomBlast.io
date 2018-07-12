@@ -112,7 +112,7 @@ window.onload = () => {
     };
 
     document.getElementById('quitButton').onclick = () => {
-        quitGame('You have left the game.');
+        quitGame('You have left the game.', false);
     };
 
     document.getElementById('resumeButton').onclick = () => {
@@ -228,7 +228,7 @@ window.onmousemove = (e) => {
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
-export function quitGame(msg) {
+export function quitGame(msg, isError) {
 
     // Disconnect from server
     disconnect();
@@ -238,8 +238,8 @@ export function quitGame(msg) {
     hideElement('hud');
     hideElement('menubox');
     showElement('startMenuWrapper');
-    hideElement('lobbybox');
-    swal("Disconnected from Game", "You have left the game.", "info");
+    hideElement('lobby');
+    swal("Disconnected from Game", msg, (isError) ? 'error' : 'info');
 }
 
 /**

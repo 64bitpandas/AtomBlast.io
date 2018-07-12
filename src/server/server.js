@@ -36,24 +36,89 @@ app.use(express.static(`${__dirname}/../client`));
 */
 let rooms = {};
 
+/**
+ * Teams object containing all the currently playing teams.
+ * Structure:
+ * teamName: {
+ *    room: 'roomName',
+ *    players: ['playerSocketId', 'player2SocketId', ...],
+ *    joinable: false/true
+ * }
+ * 
+ * -> Create a Team when the first player joins any lobby. Populate room when this occurs.
+ * -> Change joinable to false when a Team is either full or the game has begun.
+ * -> Delete the room from the database when the last player leaves.
+ * -> There cannot be two teams with the same name. Throw an error if this occurs.
+ */
+let teams = {};
+
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
+  // Determine room if matchmaking is needed
+  let room = socket.handshake.query.room;
+  if(room === GLOBAL.NO_ROOM_IDENTIFIER) {
+    let roomType = socket.handshake.query.roomType;
+    
+    // Check if the team already exists
+    let team = teams[socket.handshake.query.team];
+    if(team !== undefined) {
+      // Make sure everything is compatible
+      if(rooms[team.room].type !== roomType)
+        socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'})
+      else if(!team.joinable)
+        socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
+      else {// is joinable
+        room = team.room;
+        teams[socket.handshake.query.team].players.push(socket.id);
+        if(roomType === '2v2v2v2' && team.players.length === 2)
+          teams[socket.handshake.query.team].joinable = false;
+        else if(team.players.length === 4)
+          teams[socket.handshake.query.team].joinable = false;
+      }
+    } 
+    // Team not found 
+    else {
+      // Try joining a room
+      for(let roomName in rooms) {
+        if(roomName.indexOf(roomType) > -1)
+          if((roomType === '4v4' && rooms[roomName].teamCount < 2) || rooms[roomName].teamCount < 4) {
+            rooms[roomName].teamCount++;
+            room = roomName;
+          }
+      }
+
+      // No matching rooms - must create a new room
+      if(room === GLOBAL.NO_ROOM_IDENTIFIER)
+        room = 'NA_' + roomType + '_' + generateID();
+
+      // Make team
+      teams[socket.handshake.query.team] = {
+        room: room,
+        players: [socket.id],
+        joinable: true
+      }
+    }
+      
+  }
 
   // Join custom room
   socket.join(socket.handshake.query.room, () => {
-    console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${socket.handshake.query.room} in team ${socket.handshake.query.team}`.yellow);
+    console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
   });
 
-  // Player room name
-  let room = socket.handshake.query.room;
+  // Player team name
+  let team = socket.handshake.query.team;
 
   // Initialize room array and spawn atoms on first player join
   if(rooms[room] === undefined || rooms[room] === null) {
-    console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red);
+    console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);
     rooms[room] = {};
+    rooms[room].teamCount = 0;
     rooms[room].players = {};
     rooms[room].atoms = {};
     rooms[room].compounds = {};
+    rooms[room].type = socket.handshake.query.roomType;
+
     // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
     for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
       // let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
@@ -86,6 +151,9 @@ io.on('connection', socket => {
     vx: 0,
     vy: 0
   };
+
+  // Add team to database
+
 
  let thisPlayer = rooms[room].players[socket.id];
  
@@ -227,6 +295,9 @@ io.on('connection', socket => {
       console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);
       delete io.sockets.adapter.rooms[socket.id];
       delete rooms[room];
+
+      if(room !== GLOBAL.NO_ROOM_IDENTIFIER)
+        delete teams[team];
     }
   });
 

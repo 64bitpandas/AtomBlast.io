@@ -28,6 +28,7 @@ export const GLOBAL = {
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
     LOCAL_HOST: 'localhost:3000',
+    NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required
 
     // Cookies
     COOKIES: [
