@@ -16,18 +16,18 @@ export class Compound extends GameObject {
         this.blueprint = blueprint;
 
         // Parse params
-        for(let param in this.blueprint.params) {
+        for (let param in this.blueprint.params) {
             this[param] = this.blueprint.params[param];
         }
 
         // Use params
-        switch(this.blueprint.type) {
+        switch (this.blueprint.type) {
             case 'binary':
                 this.width = this.size;
                 this.height = this.size;
                 break;
         }
-    } 
+    }
 
     /**
      * Runs once a frame.
@@ -35,7 +35,7 @@ export class Compound extends GameObject {
     tick() {
 
         // Different behaviors based on type
-        switch(this.blueprint.type) {
+        switch (this.blueprint.type) {
             case 'binary':
                 //do stuff
                 break;
@@ -61,9 +61,9 @@ export class Compound extends GameObject {
         if (player === undefined)
             return false;
 
-        for(let objType in objects) {
-            if(objType !== 'atoms')
-                for(let obj in objects[objType]) {
+        for (let objType in objects) {
+            if (objType !== 'atoms')
+                for (let obj in objects[objType]) {
                     let distance = distanceBetween(this, objects[objType][obj]);
 
                     // Collision with player or other powerup
@@ -90,7 +90,7 @@ export function createNewCompound(blueprint) {
     // console.log(centerX - cursor.x, cursor.y - centerY)
     socket.emit('createCompound', {
         blueprint: blueprint,
-        mousePos: {x: cursor.x - centerX, y: centerY - cursor.y}
+        mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
     });
 }
 

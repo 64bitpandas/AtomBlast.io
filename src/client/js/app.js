@@ -72,7 +72,7 @@ function joinGame() {
 function validNick() {
     const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
     for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
-        if(regex.exec(cookieInputs[i].value) === null)
+        if(regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private'))
             return false;
     }
 

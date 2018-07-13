@@ -41682,7 +41682,7 @@ function joinGame() {
 function validNick() {
     var regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
     for (var i = 0; i < _global.GLOBAL.INPUT_COUNT; i++) {
-        if (regex.exec(cookieInputs[i].value) === null) return false;
+        if (regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private')) return false;
     }
 
     return true;
@@ -43304,7 +43304,7 @@ function setup() {
                         (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
 
                         // Subtract atoms needed to craft
-                        deductCraftMaterial(electedBlueprints[key]);
+                        deductCraftMaterial(_app.selectedBlueprints[key]);
                     } else console.log("Not enough atoms to craft this blueprint!");
                 }
             };
