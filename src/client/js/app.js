@@ -110,37 +110,41 @@ window.onload = () => {
     }
 
     // Add listeners to start game to enter key and button click
-    document.getElementById('startButton').onclick = () => {
+    bindHandler('startButton', function () {
         joinGame();
-    };
+    });
 
-    document.getElementById('quitButton').onclick = () => {
+    bindHandler('quitButton', function () {
         quitGame('You have left the game.', false);
-    };
+    });
 
-    document.getElementById('resumeButton').onclick = () => {
+    bindHandler('resumeButton', function () {
         hideElement('menubox');
-    };
+    });
 
-    document.getElementById('optionsButton').onclick = () => {
+    bindHandler('optionsButton', function () {
         swal('', 'This feature is not implemented.', 'info');
-    };
+    });
 
-    document.getElementById('controlsButton').onclick = () => {
+    bindHandler('controlsButton', function () {
         swal('', 'This feature is not implemented.', 'info');
-    };
+    });
 
-    document.getElementById('creditsButton').onclick = () => {
+    bindHandler('creditsButton', function () {
         swal('', 'Created by BananiumLabs.com', 'info');
-    };
+    });
 
-    document.getElementById('btn-start-game').onclick = () => {
+    bindHandler('btn-start-game', function () {
         console.log('starting game');
         startGame(true);
-    }
+    });
+
+    bindHandler('newsBox', function() {
+        swal('','hello world','info');
+    });
 
     for(let i = 0; i < selectedBlueprints.length; i++) {
-        document.getElementById('bp-ingame-' + (i + 1)).onclick = () => {
+        bindHandler('bp-ingame-' + (i + 1), function() {
             if (canCraft(selectedBlueprints[i])) {
                 swal('MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'success');
                 deductCraftMaterial(selectedBlueprints[i]); 
@@ -148,7 +152,7 @@ window.onload = () => {
             else {
                 swal('REQ NOT MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'warning');
             }
-        };
+        });
     }
 
     // Set up the blueprint slot buttons
@@ -255,6 +259,15 @@ export function quitGame(msg, isError) {
     showElement('startMenuWrapper');
     hideElement('lobby');
     swal("Disconnected from Game", msg, (isError) ? 'error' : 'info');
+}
+
+/**
+ * Binds handlerMethod to onclick event for element id.
+ * @param {string} id 
+ * @param {function} handlerMethod 
+ */
+export function bindHandler(id, handlerMethod) {
+    document.getElementById(id).onclick = handlerMethod;
 }
 
 /**

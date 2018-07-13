@@ -41590,6 +41590,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.selectedBlueprints = exports.cookieInputs = undefined;
 exports.quitGame = quitGame;
+exports.createHook = createHook;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 exports.updateAtomList = updateAtomList;
@@ -41739,44 +41740,48 @@ window.onload = function () {
         }
     }
 
-    document.getElementById('startButton').onclick = function () {
+    createHook('startButton', function () {
         joinGame();
-    };
+    });
 
-    document.getElementById('quitButton').onclick = function () {
+    createHook('quitButton', function () {
         quitGame('You have left the game.', false);
-    };
+    });
 
-    document.getElementById('resumeButton').onclick = function () {
+    createHook('resumeButton', function () {
         hideElement('menubox');
-    };
+    });
 
-    document.getElementById('optionsButton').onclick = function () {
+    createHook('optionsButton', function () {
         (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
-    };
+    });
 
-    document.getElementById('controlsButton').onclick = function () {
+    createHook('controlsButton', function () {
         (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
-    };
+    });
 
-    document.getElementById('creditsButton').onclick = function () {
+    createHook('creditsButton', function () {
         (0, _sweetalert2.default)('', 'Created by BananiumLabs.com', 'info');
-    };
+    });
 
-    document.getElementById('btn-start-game').onclick = function () {
+    createHook('btn-start-game', function () {
         console.log('starting game');
         (0, _pixigame.startGame)(true);
-    };
+    });
+
+    createHook('newsBox', function () {
+        (0, _sweetalert2.default)('', 'hello world', 'info');
+    });
 
     var _loop = function _loop(_i2) {
-        document.getElementById('bp-ingame-' + (_i2 + 1)).onclick = function () {
+        createHook('bp-ingame-' + (_i2 + 1), function () {
             if ((0, _pixigame.canCraft)(selectedBlueprints[_i2])) {
                 (0, _sweetalert2.default)('MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'success');
                 (0, _pixigame.deductCraftMaterial)(selectedBlueprints[_i2]);
             } else {
                 (0, _sweetalert2.default)('REQ NOT MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'warning');
             }
-        };
+        });
     };
 
     for (var _i2 = 0; _i2 < selectedBlueprints.length; _i2++) {
@@ -41905,6 +41910,15 @@ function quitGame(msg, isError) {
     showElement('startMenuWrapper');
     hideElement('lobby');
     (0, _sweetalert2.default)("Disconnected from Game", msg, isError ? 'error' : 'info');
+}
+
+/**
+ * Binds handlerMethod to onclick event for element id.
+ * @param {string} id 
+ * @param {function} handlerMethod 
+ */
+function createHook(id, handlerMethod) {
+    document.getElementById(id).onclick = handlerMethod;
 }
 
 /**
