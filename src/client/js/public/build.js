@@ -41588,9 +41588,10 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.selectedBlueprints = exports.cookieInputs = undefined;
+exports.selectedElement = exports.selectedBlueprints = exports.cookieInputs = undefined;
+exports.setElement = setElement;
 exports.quitGame = quitGame;
-exports.createHook = createHook;
+exports.bindHandler = bindHandler;
 exports.showElement = showElement;
 exports.hideElement = hideElement;
 exports.updateAtomList = updateAtomList;
@@ -41631,6 +41632,9 @@ var cookieInputs = exports.cookieInputs = _global.GLOBAL.COOKIES.map(function (v
 // Array containing the four chosen blueprints
 var selectedBlueprints = exports.selectedBlueprints = new Array(_global.GLOBAL.BP_MAX);
 
+// Currently selected element
+var selectedElement = exports.selectedElement = undefined;
+
 var nickErrorText = document.getElementById('nickErrorText');
 
 // Mouse position - used for tooltips
@@ -41640,6 +41644,9 @@ var mouseX = void 0,
 // Currently selected blueprint slot
 var selectedSlot = void 0;
 
+function setElement(input) {
+    exports.selectedElement = selectedElement = input;
+}
 // Starts the game if the name is valid.
 function joinGame() {
 
@@ -41740,47 +41747,51 @@ window.onload = function () {
         }
     }
 
-    createHook('startButton', function () {
+    bindHandler('startButton', function () {
         joinGame();
     });
 
-    createHook('quitButton', function () {
+    bindHandler('quitButton', function () {
         quitGame('You have left the game.', false);
     });
 
-    createHook('resumeButton', function () {
+    bindHandler('resumeButton', function () {
         hideElement('menubox');
     });
 
-    createHook('optionsButton', function () {
+    bindHandler('optionsButton', function () {
         (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
     });
 
-    createHook('controlsButton', function () {
+    bindHandler('controlsButton', function () {
         (0, _sweetalert2.default)('', 'This feature is not implemented.', 'info');
     });
 
-    createHook('creditsButton', function () {
+    bindHandler('creditsButton', function () {
         (0, _sweetalert2.default)('', 'Created by BananiumLabs.com', 'info');
     });
 
-    createHook('btn-start-game', function () {
+    bindHandler('btn-start-game', function () {
         console.log('starting game');
         (0, _pixigame.startGame)(true);
     });
 
-    createHook('newsBox', function () {
+    bindHandler('newsBox', function () {
         (0, _sweetalert2.default)('', 'hello world', 'info');
     });
 
+    // document.getElementById('gameView', onClick, false);
+
     var _loop = function _loop(_i2) {
-        createHook('bp-ingame-' + (_i2 + 1), function () {
+        bindHandler('bp-ingame-' + (_i2 + 1), function () {
             if ((0, _pixigame.canCraft)(selectedBlueprints[_i2])) {
                 (0, _sweetalert2.default)('MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'success');
                 (0, _pixigame.deductCraftMaterial)(selectedBlueprints[_i2]);
             } else {
                 (0, _sweetalert2.default)('REQ NOT MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'warning');
             }
+            exports.selectedElement = selectedElement = _i2 + 1;
+            console.log(selectedElement);
         });
     };
 
@@ -41886,6 +41897,11 @@ window.onload = function () {
     };
 };
 
+function onClick(e) {
+    (0, _sweetalert2.default)('', 'oooooo!!!', 'info');
+    console.log("ONCLICK!");
+}
+
 /**
  * Sets mouse positions for tooltip
  */
@@ -41917,7 +41933,7 @@ function quitGame(msg, isError) {
  * @param {string} id 
  * @param {function} handlerMethod 
  */
-function createHook(id, handlerMethod) {
+function bindHandler(id, handlerMethod) {
     document.getElementById(id).onclick = handlerMethod;
 }
 
@@ -41966,13 +41982,22 @@ function updateAtomList(atomID) {
     updateCompoundButtons();
 }
 
-function updateCompoundButtons() {
+/**
+ * 
+ * @param {boolean} isSelected 
+ */
+function updateCompoundButtons(isSelected) {
+    console.log(JSON.stringify(selectedSlot));
     for (var i = 0; i < selectedBlueprints.length; i++) {
-        if ((0, _pixigame.canCraft)(selectedBlueprints[i])) {
-            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#2ecc71';
-        } else {
-            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+        if (!isSelected) {
+            if ((0, _pixigame.canCraft)(selectedBlueprints[i])) {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#2ecc71';
+            } else {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+            }
         }
+
+        if (isSelected) {}
     }
 }
 
@@ -43222,7 +43247,9 @@ function init() {
         PIXI.utils.sayHello(type);
 
         //Create a Pixi Application
-        exports.app = app = new PIXI.Application(0, 0, { view: document.getElementById('gameView') });
+        exports.app = app = new PIXI.Application(0, 0, {
+            view: document.getElementById('gameView')
+        });
         //Add the canvas that Pixi automatically created for you to the HTML document
         // document.body.appendChild(app.view);
 
@@ -43299,6 +43326,9 @@ function setup() {
             }
         };
 
+        // var mousePosition = renderer.interaction.mouse.global;
+
+
         // Chat box styling on select
         document.getElementById('chatInput').onfocus = function () {
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
@@ -43310,23 +43340,30 @@ function setup() {
 
         //Bind each blueprint key
 
-        var _loop = function _loop(key) {
-            blueprintKeys[key].press = function () {
+        var _loop = function _loop(_key) {
+            blueprintKeys[_key].press = function () {
                 if (isFocused()) {
-                    //Creates a compound of that certain blueprint
-                    if (canCraft(_app.selectedBlueprints[key])) {
-                        (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
-
-                        // Subtract atoms needed to craft
-                        deductCraftMaterial(_app.selectedBlueprints[key]);
-                    } else console.log("Not enough atoms to craft this blueprint!");
+                    (0, _app.setElement)(_key);
                 }
             };
         };
 
-        for (var key in blueprintKeys) {
-            _loop(key);
+        for (var _key in blueprintKeys) {
+            _loop(_key);
         }
+
+        console.log(app.stage);
+        app.stage.on('pointerdown', function () {
+            //Creates a compound of that certain blueprint
+            console.warn("--TRIG--");
+            if (canCraft(_app.selectedBlueprints[key])) {
+
+                (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
+
+                // Subtract atoms needed to craft
+                deductCraftMaterial(_app.selectedBlueprints[key]);
+            } else console.log("Not enough atoms to craft this blueprint!");
+        });
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -43373,6 +43410,7 @@ function setup() {
     showGameUI();
 }
 
+function selectBlueprint(index) {}
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
@@ -43392,9 +43430,9 @@ function draw(delta) {
             player.isMoving = false;
 
             //Because the document is not focused disable all keys(Stops moving!)
-            for (var key in moveKeys) {
-                moveKeys[key].isDown = false;
-                moveKeys[key].isUp = true;
+            for (var _key2 in moveKeys) {
+                moveKeys[_key2].isDown = false;
+                moveKeys[_key2].isUp = true;
             }
         }
 
@@ -43406,7 +43444,14 @@ function draw(delta) {
         player.tick();
 
         // Send coordinates
-        _socket.socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+        _socket.socket.emit('move', {
+            type: 'players',
+            id: player.id,
+            posX: player.posX,
+            posY: player.posY,
+            vx: player.vx,
+            vy: player.vy
+        });
 
         // Move grid
         var _iteratorNormalCompletion2 = true;
@@ -43488,7 +43533,11 @@ function clearStage() {
  * Destroy everything in PIXI. DANGEROUS avoid!
  */
 function destroyPIXI() {
-    app.destroy(true, { children: true, texture: true, baseTexture: true });
+    app.destroy(true, {
+        children: true,
+        texture: true,
+        baseTexture: true
+    });
     PIXI.loader.reset();
     exports.isSetup = isSetup = false;
     exports.app = app = undefined;
@@ -43562,7 +43611,9 @@ function startGame(emit) {
     (0, _app.hideElement)('lobby');
     (0, _app.showElement)('hud');
     console.log(emit);
-    if (emit) _socket.socket.emit('startGame', { start: true });
+    if (emit) _socket.socket.emit('startGame', {
+        start: true
+    });
 }
 
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){

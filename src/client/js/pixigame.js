@@ -2,10 +2,10 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, selectedBlueprints, updateAtomList} from './app';
+import { hideElement, showElement, selectedBlueprints, setElement, updateAtomList, updateCompoundButtons } from './app';
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
-import { createNewCompound } from './obj/compound'
+import { createNewCompound} from './obj/compound';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -33,9 +33,11 @@ export function init() {
         //Initialization
         let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
         PIXI.utils.sayHello(type);
-        
+
         //Create a Pixi Application
-        app = new PIXI.Application(0, 0, {view: document.getElementById('gameView')});
+        app = new PIXI.Application(0, 0, {
+            view: document.getElementById('gameView')
+        });
         //Add the canvas that Pixi automatically created for you to the HTML document
         // document.body.appendChild(app.view);
 
@@ -47,21 +49,21 @@ export function init() {
 
         // Load resources if not already loaded
         let TEXTURES = [];
-        for(let bp in BLUEPRINTS) {
+        for (let bp in BLUEPRINTS) {
             // Prevent duplicate textures from being loaded
-            if(TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
+            if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
                 TEXTURES.push(BLUEPRINTS[bp].texture);
         }
-        for(let atom of GLOBAL.ATOM_SPRITES)
+        for (let atom of GLOBAL.ATOM_SPRITES)
             if (TEXTURES.indexOf(atom) < 0)
                 TEXTURES.push(atom);
-        
+
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader
-            .add(GLOBAL.PLAYER_SPRITES)
-            .add(TEXTURES)
-            .load(setup);
+                .add(GLOBAL.PLAYER_SPRITES)
+                .add(TEXTURES)
+                .load(setup);
         }
     }
 
@@ -77,14 +79,14 @@ export function init() {
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
 function setup() {
-   if(!isSetup) {
+    if (!isSetup) {
         // Set up key listeners
         esc = keyboard(GLOBAL.KEY_ESC);
         up = keyboard(GLOBAL.KEY_W);
         down = keyboard(GLOBAL.KEY_S);
         left = keyboard(GLOBAL.KEY_A);
         right = keyboard(GLOBAL.KEY_D);
-        
+
         //All the movement keys for easy access
         moveKeys = [up, down, right, left];
         //Set up the blueprint key listeners
@@ -94,7 +96,7 @@ function setup() {
             keyboard(GLOBAL.KEY_3),
             keyboard(GLOBAL.KEY_4)
         ]
-        
+
         esc.press = () => {
             if (isFocused()) {
                 if (document.activeElement !== document.getElementById('chatInput'))
@@ -103,6 +105,10 @@ function setup() {
                     document.getElementById('chatInput').blur();
             }
         }
+
+
+        // var mousePosition = renderer.interaction.mouse.global;
+
 
         // Chat box styling on select
         document.getElementById('chatInput').onfocus = () => {
@@ -114,21 +120,29 @@ function setup() {
         }
 
         //Bind each blueprint key
-        for(let key in blueprintKeys){
+        for (let key in blueprintKeys) {
             blueprintKeys[key].press = () => {
-                if(isFocused()){
-                    //Creates a compound of that certain blueprint
-                    if (canCraft(selectedBlueprints[key])) {
-                        createNewCompound(selectedBlueprints[key]); 
+                if (isFocused()) {
+                    setElement(key);
 
-                        // Subtract atoms needed to craft
-                        deductCraftMaterial(selectedBlueprints[key]);
-                    }
-                    else
-                        console.log("Not enough atoms to craft this blueprint!");
+
                 }
             }
         }
+
+        console.log(app.stage);
+        app.stage.on('mousedown', () => {
+            //Creates a compound of that certain blueprint
+            console.warn("--TRIG--");
+            if (canCraft(selectedBlueprints[key])) {
+    
+                createNewCompound(selectedBlueprints[key]); 
+
+                // Subtract atoms needed to craft
+                deductCraftMaterial(selectedBlueprints[key]);
+            } else
+                console.log("Not enough atoms to craft this blueprint!");
+        });
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -145,8 +159,8 @@ function setup() {
         // Begin game loop
         app.ticker.add(delta => draw(delta));
     }
-    
-    isSetup = true; 
+
+    isSetup = true;
 
     // Draw grid
     // Grid
@@ -171,17 +185,20 @@ function setup() {
     }
 
     showGameUI();
-    
+
 
 }
 
+function selectBlueprint(index) {
+
+}
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
  */
 function draw(delta) {
     // Handle this player and movement
-    if(player !== undefined) {
+    if (player !== undefined) {
 
         // Make sure player is not in chat before checking move
         if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
@@ -189,32 +206,39 @@ function draw(delta) {
                 player.vx = -GLOBAL.MAX_SPEED;
             if (right.isDown)
                 player.vx = GLOBAL.MAX_SPEED;
-            if (up.isDown) 
+            if (up.isDown)
                 player.vy = GLOBAL.MAX_SPEED;
             if (down.isDown)
-                player.vy = -GLOBAL.MAX_SPEED;  
+                player.vy = -GLOBAL.MAX_SPEED;
             player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
         } else {
             player.isMoving = false;
-            
+
             //Because the document is not focused disable all keys(Stops moving!)
-            for(let key in moveKeys){
+            for (let key in moveKeys) {
                 moveKeys[key].isDown = false;
                 moveKeys[key].isUp = true;
             }
         }
 
         // Slow down gradually - unaffected by chat input
-        if (!up.isDown && !down.isDown) 
+        if (!up.isDown && !down.isDown)
             player.vy *= GLOBAL.VELOCITY_STEP;
-        if(!left.isDown && !right.isDown)
+        if (!left.isDown && !right.isDown)
             player.vx *= GLOBAL.VELOCITY_STEP;
 
         // Move player
         player.tick();
 
         // Send coordinates
-        socket.emit('move', { type: 'players', id: player.id, posX: player.posX, posY: player.posY, vx: player.vx, vy: player.vy });
+        socket.emit('move', {
+            type: 'players',
+            id: player.id,
+            posX: player.posX,
+            posY: player.posY,
+            vx: player.vx,
+            vy: player.vy
+        });
 
         // Move grid
         for (let line of vertLines)
@@ -223,11 +247,11 @@ function draw(delta) {
         for (let line of horizLines)
             line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);
     }
-    
+
     // Handle objects except for this player
-    for(let objType in objects) {
-        for(let obj in objects[objType])
-            if(objType !== 'players' || player !== objects[objType][obj])
+    for (let objType in objects) {
+        for (let obj in objects[objType])
+            if (objType !== 'players' || player !== objects[objType][obj])
                 objects[objType][obj].tick();
     }
 
@@ -256,7 +280,11 @@ function clearStage() {
  * Destroy everything in PIXI. DANGEROUS avoid!
  */
 export function destroyPIXI() {
-    app.destroy(true, { children: true, texture: true, baseTexture: true});
+    app.destroy(true, {
+        children: true,
+        texture: true,
+        baseTexture: true
+    });
     PIXI.loader.reset();
     isSetup = false;
     app = undefined;
@@ -277,11 +305,11 @@ export function showGameUI() {
  * @returns {Player} The Player object that was created
  */
 export function createPlayer(data) {
-    if(isSetup) {
+    if (isSetup) {
         console.log('create player ' + data.id);
         console.log(data);
         let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
-        if(data.id === socket.id)
+        if (data.id === socket.id)
             player = newPlayer;
         return newPlayer;
     }
@@ -290,7 +318,7 @@ export function createPlayer(data) {
 /**
  * If the document is Focused return true otherwise false
  **/
-export function isFocused(){
+export function isFocused() {
     return document.hasFocus();
 }
 
@@ -332,6 +360,8 @@ export function startGame(emit) {
     hideElement('lobby');
     showElement('hud');
     console.log(emit);
-    if(emit)
-        socket.emit('startGame', {start: true});
+    if (emit)
+        socket.emit('startGame', {
+            start: true
+        });
 }

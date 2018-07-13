@@ -19,6 +19,9 @@ export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(va
 // Array containing the four chosen blueprints
 export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
 
+// Currently selected element
+export var selectedElement;
+
 const nickErrorText = document.getElementById('nickErrorText');
 
 // Mouse position - used for tooltips
@@ -27,6 +30,10 @@ let mouseX, mouseY;
 // Currently selected blueprint slot
 let selectedSlot;
 
+
+export function setElement(input) {
+    selectedElement = input;
+}
 // Starts the game if the name is valid.
 function joinGame() {
 
@@ -143,6 +150,8 @@ window.onload = () => {
         swal('','hello world','info');
     });
 
+    // document.getElementById('gameView', onClick, false);
+
     for(let i = 0; i < selectedBlueprints.length; i++) {
         bindHandler('bp-ingame-' + (i + 1), function() {
             if (canCraft(selectedBlueprints[i])) {
@@ -151,7 +160,10 @@ window.onload = () => {
             }
             else {
                 swal('REQ NOT MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'warning');
+                
             }
+            selectedElement = i + 1;
+            console.log(selectedElement);
         });
     }
 
@@ -235,6 +247,11 @@ window.onload = () => {
     }
 };
 
+function onClick(e) {
+    swal('', 'oooooo!!!', 'info');
+    console.log("ONCLICK!");
+}
+
 /**
  * Sets mouse positions for tooltip
  */
@@ -315,14 +332,24 @@ export function updateAtomList(atomID) {
     updateCompoundButtons();
 }
 
-
-export function updateCompoundButtons() {
+/**
+ * 
+ * @param {boolean} isSelected 
+ */
+export function updateCompoundButtons(isSelected) {
+    console.log(JSON.stringify(selectedSlot));
     for(let i = 0; i < selectedBlueprints.length; i++){
-        if(canCraft(selectedBlueprints[i])){
-            document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';
+        if(!isSelected) {
+            if(canCraft(selectedBlueprints[i])){
+                document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';
+            }
+            else{
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+            }
         }
-        else{
-            document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+        
+        if(isSelected) {
+
         }
     }
 }
