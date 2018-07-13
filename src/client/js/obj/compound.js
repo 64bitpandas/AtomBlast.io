@@ -26,6 +26,10 @@ export class Compound extends GameObject {
                 this.width = this.size;
                 this.height = this.size;
                 break;
+            case 'basic':
+                this.width = this.size*1.5;
+                this.height = this.size*1.5;
+                break;
         }
     }
 
@@ -33,7 +37,6 @@ export class Compound extends GameObject {
      * Runs once a frame.
      */
     tick() {
-
         // Different behaviors based on type
         switch (this.blueprint.type) {
             case 'binary':

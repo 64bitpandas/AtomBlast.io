@@ -41588,8 +41588,7 @@ module.exports = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.selectedElement = exports.selectedBlueprints = exports.cookieInputs = undefined;
-exports.setElement = setElement;
+exports.selectedCompound = exports.selectedBlueprints = exports.cookieInputs = undefined;
 exports.quitGame = quitGame;
 exports.bindHandler = bindHandler;
 exports.showElement = showElement;
@@ -41632,9 +41631,6 @@ var cookieInputs = exports.cookieInputs = _global.GLOBAL.COOKIES.map(function (v
 // Array containing the four chosen blueprints
 var selectedBlueprints = exports.selectedBlueprints = new Array(_global.GLOBAL.BP_MAX);
 
-// Currently selected element
-var selectedElement = exports.selectedElement = undefined;
-
 var nickErrorText = document.getElementById('nickErrorText');
 
 // Mouse position - used for tooltips
@@ -41642,11 +41638,10 @@ var mouseX = void 0,
     mouseY = void 0;
 
 // Currently selected blueprint slot
+var selectedCompound = exports.selectedCompound = 0;
+
 var selectedSlot = void 0;
 
-function setElement(input) {
-    exports.selectedElement = selectedElement = input;
-}
 // Starts the game if the name is valid.
 function joinGame() {
 
@@ -41663,8 +41658,7 @@ function joinGame() {
             for (var _i = 1; _i <= _global.GLOBAL.BP_MAX; _i++) {
                 selectedBlueprints[_i - 1] = _blueprints.BLUEPRINTS[cookies.getCookie(_global.GLOBAL.COOKIES[_i - 1 + _global.GLOBAL.INPUT_COUNT])];
 
-                // Check whether blueprint is selected!
-                console.log("Blueprint Selected: " + selectedBlueprints);
+                // Check whether blueprint is selected!                     
                 document.getElementById('bp-ingame-' + _i).innerHTML = selectedBlueprints[_i - 1].name;
             }
 
@@ -41790,8 +41784,8 @@ window.onload = function () {
             } else {
                 (0, _sweetalert2.default)('REQ NOT MET: ', JSON.stringify(selectedBlueprints[_i2]) + ' have been invoked', 'warning');
             }
-            exports.selectedElement = selectedElement = _i2 + 1;
-            console.log(selectedElement);
+            exports.selectedCompound = selectedCompound = _i2 + 1;
+            console.log(selectedCompound);
         });
     };
 
@@ -41806,10 +41800,6 @@ window.onload = function () {
             showElement('bp-select');
             document.getElementById('bp-select-header').innerHTML = _global.GLOBAL.BP_SELECT + _i3;
             selectedSlot = _i3;
-
-            // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
-            // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
-            // implement when you hover over the blueprint button, it will give a desc. of the button
         };
     };
 
@@ -41830,13 +41820,6 @@ window.onload = function () {
         }
 
         document.getElementById('blueprint-wrapper').innerHTML += '\n            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-' + blueprint + '">\n                <p>' + bp.name + '</p>\n                <h6>-' + formula + '-</h6>\n                <img src="' + bp.texture + '">\n                <span class="tooltip">' + bp.tooltip + '</span>\n            </button>\n\n            ';
-
-        // document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
-        //     console.log(blueprint + ' selected in slot ' + selectedSlot);
-        //     document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
-        //     hideElement('bp-select');
-        //     cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, COOKIE_DAYS);
-        // }
     }
 
     // Blueprint Slots
@@ -41897,10 +41880,10 @@ window.onload = function () {
     };
 };
 
-function onClick(e) {
-    (0, _sweetalert2.default)('', 'oooooo!!!', 'info');
-    console.log("ONCLICK!");
-}
+// function onClick(e) {
+//     swal('', 'oooooo!!!', 'info');
+//     console.log("ONCLICK!");
+// }
 
 /**
  * Sets mouse positions for tooltip
@@ -41979,25 +41962,32 @@ function updateAtomList(atomID) {
 
     document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + _pixigame.player.atoms[atomID];
 
-    updateCompoundButtons();
+    updateCompoundButtons(); //No need to update selection
 }
 
 /**
  * 
- * @param {boolean} isSelected 
+ * @param {number} selectedSlot The index of the selected slot. 0-3
  */
-function updateCompoundButtons(isSelected) {
-    console.log(JSON.stringify(selectedSlot));
+function updateCompoundButtons(selectedSlot) {
+    if (selectedSlot === undefined) selectedSlot = selectedCompound;else exports.selectedCompound = selectedCompound = selectedSlot;
+
     for (var i = 0; i < selectedBlueprints.length; i++) {
-        if (!isSelected) {
+        if (selectedSlot != i) {
             if ((0, _pixigame.canCraft)(selectedBlueprints[i])) {
                 document.getElementById('bp-ingame-' + (i + 1)).style.background = '#2ecc71';
             } else {
                 document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
             }
+        } else {
+            //is selected
+            if ((0, _pixigame.canCraft)(selectedBlueprints[i])) {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#003CA8';
+            } else {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#3D66D1';
+            }
+            document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;
         }
-
-        if (isSelected) {}
     }
 }
 
@@ -42034,7 +42024,6 @@ var GLOBAL = exports.GLOBAL = {
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,
-    KEY_CHAT: 13,
     KEY_W: 87,
     KEY_A: 65,
     KEY_S: 83,
@@ -42043,6 +42032,7 @@ var GLOBAL = exports.GLOBAL = {
     KEY_2: 50,
     KEY_3: 51,
     KEY_4: 52,
+    KEY_SPACE: 32,
 
     //Blueprints
     BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
@@ -42102,7 +42092,7 @@ var GLOBAL = exports.GLOBAL = {
 
     // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
     ATOM_IDS: ['h', 'he', 'c', 'cl'],
-    ATOM_SPRITES: ['../assets/atom-hydrogen.png', '../assets/testplayer2.png', '../assets/testplayer2.png', '../assets/testplayer2.png']
+    ATOM_SPRITES: ['../assets/atom-hydrogen.png', '../assets/atom_helium.png', '../assets/atom_carbon.png', '../assets/testplayer2.png']
 };
 
 /**
@@ -42673,7 +42663,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         type: 'binary',
         params: {
             speed: 5,
-            damage: 10,
+            damage: 1,
             size: 10
         },
         atoms: {
@@ -42708,6 +42698,35 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         atoms: {
             h: 6,
             c: 6
+        }
+    },
+    basicWater: {
+        name: 'Water',
+        tooltip: 'Why life exists. Are you trying to drown someone?',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'basic',
+        params: {
+            speed: 4,
+            damage: 1,
+            size: 1
+        },
+        atoms: {
+            h: 2,
+            o: 1
+        }
+    },
+    binaryNitrogen: {
+        name: 'Nitrogen',
+        tooltip: '78% of your air, and also why you get the bends.',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'basic',
+        params: {
+            speed: 3,
+            damage: 3,
+            size: 2
+        },
+        atoms: {
+            n: 2
         }
     }
 
@@ -42775,6 +42794,10 @@ var Compound = exports.Compound = function (_GameObject) {
                 _this.width = _this.size;
                 _this.height = _this.size;
                 break;
+            case 'basic':
+                _this.width = _this.size * 1.5;
+                _this.height = _this.size * 1.5;
+                break;
         }
         return _this;
     }
@@ -42787,7 +42810,6 @@ var Compound = exports.Compound = function (_GameObject) {
     _createClass(Compound, [{
         key: "tick",
         value: function tick() {
-
             // Different behaviors based on type
             switch (this.blueprint.type) {
                 case 'binary':
@@ -43185,7 +43207,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.textStyle = exports.inGame = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
-exports.init = init;
+exports.loadTextures = loadTextures;
 exports.destroyPIXI = destroyPIXI;
 exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
@@ -43224,13 +43246,9 @@ var inGame = exports.inGame = false; // True after game has begun
 // let sprites = []; // Sprites on the stage
 
 var esc = void 0,
-    up = void 0,
-    down = void 0,
-    left = void 0,
-    right = void 0,
-    blueprintKeys = void 0; // Key handlers
-var moveKeys = [];
-
+    space = void 0,
+    blueprintKeys = void 0,
+    moveKeys = void 0; // Key handlers
 var vertLines = [];
 var horizLines = [];
 
@@ -43240,7 +43258,7 @@ var textStyle = exports.textStyle = new PIXI.TextStyle({
     fontSize: 120
 });
 
-function init() {
+function loadTextures() {
     if (!isSetup) {
         //Initialization
         var type = PIXI.utils.isWebGLSupported() ? 'WebGL' : 'canvas';
@@ -43291,7 +43309,7 @@ function init() {
         }
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
-            PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(TEXTURES).load(setup);
+            PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(TEXTURES).load(registerCallbacks);
         }
     }
 
@@ -43299,24 +43317,24 @@ function init() {
     if (isSetup) {
         console.info("Stage already initialized!");
         clearStage();
-        setup();
+        registerCallbacks();
     }
 }
 
 /**
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
-function setup() {
+function registerCallbacks() {
     if (!isSetup) {
         // Set up key listeners
         esc = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_ESC);
-        up = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_W);
-        down = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_S);
-        left = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_A);
-        right = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_D);
+        space = (0, _keyboard.keyboard)(_global.GLOBAL.KEY_SPACE);
 
         //All the movement keys for easy access
-        moveKeys = [up, down, right, left];
+        moveKeys = [(0, _keyboard.keyboard)(_global.GLOBAL.KEY_A), // Left           
+        (0, _keyboard.keyboard)(_global.GLOBAL.KEY_D), // Right                 
+        (0, _keyboard.keyboard)(_global.GLOBAL.KEY_W), // Up               
+        (0, _keyboard.keyboard)(_global.GLOBAL.KEY_S)];
         //Set up the blueprint key listeners
         blueprintKeys = [(0, _keyboard.keyboard)(_global.GLOBAL.KEY_1), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_2), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_3), (0, _keyboard.keyboard)(_global.GLOBAL.KEY_4)];
 
@@ -43343,7 +43361,7 @@ function setup() {
         var _loop = function _loop(_key) {
             blueprintKeys[_key].press = function () {
                 if (isFocused()) {
-                    (0, _app.setElement)(_key);
+                    (0, _app.updateCompoundButtons)(_key);
                 }
             };
         };
@@ -43352,8 +43370,7 @@ function setup() {
             _loop(_key);
         }
 
-        console.log(app.stage);
-        app.stage.on('pointerdown', function () {
+        app.stage.on('mousedown', function () {
             //Creates a compound of that certain blueprint
             console.warn("--TRIG--");
             if (canCraft(_app.selectedBlueprints[key])) {
@@ -43410,7 +43427,6 @@ function setup() {
     showGameUI();
 }
 
-function selectBlueprint(index) {}
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
@@ -43421,24 +43437,62 @@ function draw(delta) {
 
         // Make sure player is not in chat before checking move
         if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
-            if (left.isDown) player.vx = -_global.GLOBAL.MAX_SPEED;
-            if (right.isDown) player.vx = _global.GLOBAL.MAX_SPEED;
-            if (up.isDown) player.vy = _global.GLOBAL.MAX_SPEED;
-            if (down.isDown) player.vy = -_global.GLOBAL.MAX_SPEED;
-            player.isMoving = up.isDown || down.isDown || left.isDown || right.isDown;
+            if (moveKeys[0].isDown) // Left
+                player.vx = -_global.GLOBAL.MAX_SPEED;
+            if (moveKeys[1].isDown) // Right
+                player.vx = _global.GLOBAL.MAX_SPEED;
+            if (moveKeys[2].isDown) // Up
+                player.vy = _global.GLOBAL.MAX_SPEED;
+            if (moveKeys[3].isDown) // Down
+                player.vy = -_global.GLOBAL.MAX_SPEED;
+
+            player.isMoving = false;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = moveKeys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _key2 = _step2.value;
+
+                    if (_key2.isDown) player.isMoving = true;
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                        _iterator2.return();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
+                    }
+                }
+            }
         } else {
             player.isMoving = false;
 
             //Because the document is not focused disable all keys(Stops moving!)
-            for (var _key2 in moveKeys) {
-                moveKeys[_key2].isDown = false;
-                moveKeys[_key2].isUp = true;
+            for (var _key3 in moveKeys) {
+                moveKeys[_key3].isDown = false;
+                moveKeys[_key3].isUp = true;
             }
         }
 
         // Slow down gradually - unaffected by chat input
-        if (!up.isDown && !down.isDown) player.vy *= _global.GLOBAL.VELOCITY_STEP;
-        if (!left.isDown && !right.isDown) player.vx *= _global.GLOBAL.VELOCITY_STEP;
+        if (!moveKeys[2].isDown && !moveKeys[3].isDown) player.vy *= _global.GLOBAL.VELOCITY_STEP;
+        if (!moveKeys[0].isDown && !moveKeys[1].isDown) player.vx *= _global.GLOBAL.VELOCITY_STEP;
+
+        // Shooting
+        space.press = function () {
+            if (canCraft(_app.selectedBlueprints[_app.selectedCompound])) {
+                (0, _compound.createNewCompound)(_app.selectedBlueprints[_app.selectedCompound]);
+                // Subtract atoms needed to craft
+                deductCraftMaterial(_app.selectedBlueprints[_app.selectedCompound]);
+            } else console.log("Not enough atoms to craft this blueprint!");
+        };
 
         // Move player
         player.tick();
@@ -43454,40 +43508,15 @@ function draw(delta) {
         });
 
         // Move grid
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-            for (var _iterator2 = vertLines[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var line = _step2.value;
-
-                line.x = line.oX - player.posX % (_global.GLOBAL.GRID_SPACING * 2);
-            }
-        } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                    _iterator2.return();
-                }
-            } finally {
-                if (_didIteratorError2) {
-                    throw _iteratorError2;
-                }
-            }
-        }
-
         var _iteratorNormalCompletion3 = true;
         var _didIteratorError3 = false;
         var _iteratorError3 = undefined;
 
         try {
-            for (var _iterator3 = horizLines[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                var _line = _step3.value;
+            for (var _iterator3 = vertLines[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var line = _step3.value;
 
-                _line.y = _line.oY + player.posY % (_global.GLOBAL.GRID_SPACING * 2);
+                line.x = line.oX - player.posX % (_global.GLOBAL.GRID_SPACING * 2);
             }
         } catch (err) {
             _didIteratorError3 = true;
@@ -43500,6 +43529,31 @@ function draw(delta) {
             } finally {
                 if (_didIteratorError3) {
                     throw _iteratorError3;
+                }
+            }
+        }
+
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
+
+        try {
+            for (var _iterator4 = horizLines[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var _line = _step4.value;
+
+                _line.y = _line.oY + player.posY % (_global.GLOBAL.GRID_SPACING * 2);
+            }
+        } catch (err) {
+            _didIteratorError4 = true;
+            _iteratorError4 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                    _iterator4.return();
+                }
+            } finally {
+                if (_didIteratorError4) {
+                    throw _iteratorError4;
                 }
             }
         }
@@ -43687,7 +43741,7 @@ function beginConnection() {
     socket.on('connect', function () {
         setupSocket();
         // Init pixi
-        (0, _pixigame.init)();
+        (0, _pixigame.loadTextures)();
         if ((typeof _pixigame.app === "undefined" ? "undefined" : _typeof(_pixigame.app)) !== undefined) {
             _pixigame.app.start();
         }

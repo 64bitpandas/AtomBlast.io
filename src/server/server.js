@@ -101,8 +101,6 @@ io.on('connection', socket => {
       
   }
 
-  console.log(room);
-
   // Join custom room
   socket.join(room, () => {
     console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
@@ -270,13 +268,12 @@ io.on('connection', socket => {
   });
 
   socket.to(room).on('compoundCollision', data => {
-    delete rooms[room].compounds[data.id];
-    socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
-  })
+    // delete rooms[room].compounds[data.id];
+    // socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
+  });
 
   // A player spawned a Compound
   socket.to(room).on('createCompound', data => {
-
     // Calculate velocities based on cursor position
     let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
 

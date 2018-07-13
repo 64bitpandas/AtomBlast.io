@@ -33,7 +33,7 @@ export const BLUEPRINTS = {
         type: 'binary',
         params: {
             speed: 5,
-            damage: 10,
+            damage: 1,
             size: 10
         },
         atoms: {
@@ -68,6 +68,35 @@ export const BLUEPRINTS = {
         atoms: {
             h: 6,
             c: 6
+        }
+    },
+    basicWater: {
+        name: 'Water',
+        tooltip: 'Why life exists. Are you trying to drown someone?',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'basic',
+        params: {
+            speed: 4,
+            damage: 1,
+            size: 1
+        },
+        atoms: {
+            h: 2,
+            o: 1
+        }
+    },
+    binaryNitrogen: {
+        name: 'Nitrogen',
+        tooltip: '78% of your air, and also why you get the bends.',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'basic',
+        params: {
+            speed: 3,
+            damage: 3,
+            size: 2
+        },
+        atoms: {
+            n: 2
         }
     },
 

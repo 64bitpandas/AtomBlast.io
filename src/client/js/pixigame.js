@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, selectedBlueprints, setElement, updateAtomList, updateCompoundButtons } from './app';
+import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound } from './app';
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
@@ -16,9 +16,7 @@ export var inGame = false; // True after game has begun
 
 // let sprites = []; // Sprites on the stage
 
-let esc, up, down, left, right, blueprintKeys; // Key handlers
-let moveKeys = [];
-
+let esc, space, blueprintKeys, moveKeys; // Key handlers
 let vertLines = [];
 let horizLines = [];
 
@@ -28,7 +26,7 @@ export let textStyle = new PIXI.TextStyle({
     fontSize: 120
 })
 
-export function init() {
+export function loadTextures() {
     if (!isSetup) {
         //Initialization
         let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
@@ -63,7 +61,7 @@ export function init() {
             PIXI.loader
                 .add(GLOBAL.PLAYER_SPRITES)
                 .add(TEXTURES)
-                .load(setup);
+                .load(registerCallbacks);
         }
     }
 
@@ -71,24 +69,26 @@ export function init() {
     if (isSetup) {
         console.info("Stage already initialized!");
         clearStage();
-        setup();
+        registerCallbacks();
     }
 }
 
 /**
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
-function setup() {
+function registerCallbacks() {
     if (!isSetup) {
         // Set up key listeners
         esc = keyboard(GLOBAL.KEY_ESC);
-        up = keyboard(GLOBAL.KEY_W);
-        down = keyboard(GLOBAL.KEY_S);
-        left = keyboard(GLOBAL.KEY_A);
-        right = keyboard(GLOBAL.KEY_D);
+        space = keyboard(GLOBAL.KEY_SPACE);
 
         //All the movement keys for easy access
-        moveKeys = [up, down, right, left];
+        moveKeys = [
+            keyboard(GLOBAL.KEY_A), // Left           
+            keyboard(GLOBAL.KEY_D), // Right                 
+            keyboard(GLOBAL.KEY_W), // Up               
+            keyboard(GLOBAL.KEY_S), // Down              
+        ];
         //Set up the blueprint key listeners
         blueprintKeys = [
             keyboard(GLOBAL.KEY_1),
@@ -123,14 +123,11 @@ function setup() {
         for (let key in blueprintKeys) {
             blueprintKeys[key].press = () => {
                 if (isFocused()) {
-                    setElement(key);
-
-
+                    updateCompoundButtons(key);
                 }
             }
         }
 
-        console.log(app.stage);
         app.stage.on('mousedown', () => {
             //Creates a compound of that certain blueprint
             console.warn("--TRIG--");
@@ -185,13 +182,8 @@ function setup() {
     }
 
     showGameUI();
-
-
 }
 
-function selectBlueprint(index) {
-
-}
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
@@ -202,15 +194,19 @@ function draw(delta) {
 
         // Make sure player is not in chat before checking move
         if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
-            if (left.isDown)
+            if (moveKeys[0].isDown) // Left
                 player.vx = -GLOBAL.MAX_SPEED;
-            if (right.isDown)
+            if (moveKeys[1].isDown) // Right
                 player.vx = GLOBAL.MAX_SPEED;
-            if (up.isDown)
+            if (moveKeys[2].isDown) // Up
                 player.vy = GLOBAL.MAX_SPEED;
-            if (down.isDown)
+            if (moveKeys[3].isDown) // Down
                 player.vy = -GLOBAL.MAX_SPEED;
-            player.isMoving = (up.isDown || down.isDown || left.isDown || right.isDown);
+
+            player.isMoving = false;
+            for(let key of moveKeys)
+                if(key.isDown)
+                    player.isMoving = true;
         } else {
             player.isMoving = false;
 
@@ -222,10 +218,20 @@ function draw(delta) {
         }
 
         // Slow down gradually - unaffected by chat input
-        if (!up.isDown && !down.isDown)
+        if (!moveKeys[2].isDown && !moveKeys[3].isDown)
             player.vy *= GLOBAL.VELOCITY_STEP;
-        if (!left.isDown && !right.isDown)
+        if (!moveKeys[0].isDown && !moveKeys[1].isDown)
             player.vx *= GLOBAL.VELOCITY_STEP;
+
+        // Shooting
+        space.press = () => {
+            if (canCraft(selectedBlueprints[selectedCompound])) {
+                createNewCompound(selectedBlueprints[selectedCompound]);
+                // Subtract atoms needed to craft
+                deductCraftMaterial(selectedBlueprints[selectedCompound]);
+            } else
+                console.log("Not enough atoms to craft this blueprint!");
+        }
 
         // Move player
         player.tick();

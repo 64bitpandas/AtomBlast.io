@@ -1,7 +1,7 @@
 import { GLOBAL } from "./global";
 import { cookieInputs, quitGame, updateLobby } from "./app";
 import ChatClient from "./lib/chat-client";
-import { init, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
+import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
 import { spawnAtom } from "./obj/atom";
 import { createCompound } from "./obj/compound";
 
@@ -48,7 +48,7 @@ export function beginConnection() {
     socket.on('connect', () => {
         setupSocket();
         // Init pixi
-        init()
+        loadTextures()
         if (typeof app !== undefined) {
             app.start();
         }

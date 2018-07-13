@@ -5,7 +5,6 @@ export const GLOBAL = {
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,
-    KEY_CHAT: 13,
     KEY_W: 87,
     KEY_A: 65,  
     KEY_S: 83,
@@ -14,6 +13,7 @@ export const GLOBAL = {
     KEY_2: 50,
     KEY_3: 51,
     KEY_4: 52,
+    KEY_SPACE: 32,
 
     //Blueprints
     BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
@@ -85,8 +85,8 @@ export const GLOBAL = {
     ],
     ATOM_SPRITES: [
         '../assets/atom-hydrogen.png',
-        '../assets/testplayer2.png',
-        '../assets/testplayer2.png',
+        '../assets/atom_helium.png',
+        '../assets/atom_carbon.png',
         '../assets/testplayer2.png',
     ]
 };

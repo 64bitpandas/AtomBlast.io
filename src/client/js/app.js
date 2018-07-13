@@ -19,21 +19,16 @@ export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(va
 // Array containing the four chosen blueprints
 export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
 
-// Currently selected element
-export var selectedElement;
-
 const nickErrorText = document.getElementById('nickErrorText');
 
 // Mouse position - used for tooltips
 let mouseX, mouseY;
 
 // Currently selected blueprint slot
+export let selectedCompound = 0;
+
 let selectedSlot;
 
-
-export function setElement(input) {
-    selectedElement = input;
-}
 // Starts the game if the name is valid.
 function joinGame() {
 
@@ -51,8 +46,7 @@ function joinGame() {
         for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
             selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
 
-            // Check whether blueprint is selected!
-            console.log("Blueprint Selected: " + selectedBlueprints);                        
+            // Check whether blueprint is selected!                     
                 document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
         }
 
@@ -162,8 +156,8 @@ window.onload = () => {
                 swal('REQ NOT MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'warning');
                 
             }
-            selectedElement = i + 1;
-            console.log(selectedElement);
+            selectedCompound = i + 1;
+            console.log(selectedCompound);
         });
     }
 
@@ -173,10 +167,6 @@ window.onload = () => {
             showElement('bp-select');
             document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;
             selectedSlot = i;
-            
-            // revise lower line, I want to call the name variable in binaryHydrogen in blueprints.js - Muaaz
-            // document.getElementById('bp-select-header').innerHTML = BLUEPRINTS.binaryHydrogen.name;
-            // implement when you hover over the blueprint button, it will give a desc. of the button
         }
     }
 
@@ -201,12 +191,6 @@ window.onload = () => {
 
             `;
         
-        // document.getElementById('btn-blueprint-' + blueprint).onclick = () => {
-        //     console.log(blueprint + ' selected in slot ' + selectedSlot);
-        //     document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
-        //     hideElement('bp-select');
-        //     cookies.setCookie(GLOBAL.COOKIES[selectedSlot + 2], BLUEPRINTS[blueprint].name, COOKIE_DAYS);
-        // }
     }
 
     // Blueprint Slots
@@ -247,10 +231,10 @@ window.onload = () => {
     }
 };
 
-function onClick(e) {
-    swal('', 'oooooo!!!', 'info');
-    console.log("ONCLICK!");
-}
+// function onClick(e) {
+//     swal('', 'oooooo!!!', 'info');
+//     console.log("ONCLICK!");
+// }
 
 /**
  * Sets mouse positions for tooltip
@@ -329,17 +313,21 @@ export function updateAtomList(atomID) {
 
     document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atoms[atomID];
 
-    updateCompoundButtons();
+    updateCompoundButtons(); //No need to update selection
 }
 
 /**
  * 
- * @param {boolean} isSelected 
+ * @param {number} selectedSlot The index of the selected slot. 0-3
  */
-export function updateCompoundButtons(isSelected) {
-    console.log(JSON.stringify(selectedSlot));
-    for(let i = 0; i < selectedBlueprints.length; i++){
-        if(!isSelected) {
+export function updateCompoundButtons(selectedSlot) {
+    if(selectedSlot === undefined)
+        selectedSlot = selectedCompound;
+    else
+        selectedCompound = selectedSlot;
+
+    for(let i = 0; i < selectedBlueprints.length; i++) {
+        if (selectedSlot != i) {
             if(canCraft(selectedBlueprints[i])){
                 document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';
             }
@@ -347,11 +335,18 @@ export function updateCompoundButtons(isSelected) {
                 document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
             }
         }
-        
-        if(isSelected) {
-
+        else { //is selected
+            if (canCraft(selectedBlueprints[i])) {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#003CA8';
+            }
+            else {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#3D66D1';
+            }
+            document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;
         }
     }
+
+
 }
 
 /**
