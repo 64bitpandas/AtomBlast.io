@@ -122,7 +122,7 @@ function setup() {
                         createNewCompound(selectedBlueprints[key]); 
 
                         // Subtract atoms needed to craft
-                        deductCraftMaterial(electedBlueprints[key]);
+                        deductCraftMaterial(selectedBlueprints[key]);
                     }
                     else
                         console.log("Not enough atoms to craft this blueprint!");
