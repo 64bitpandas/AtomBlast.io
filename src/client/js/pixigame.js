@@ -128,18 +128,18 @@ function registerCallbacks() {
             }
         }
 
-        app.stage.on('mousedown', () => {
-            //Creates a compound of that certain blueprint
-            console.warn("--TRIG--");
-            if (canCraft(selectedBlueprints[key])) {
+        // app.stage.on('mousedown', () => {
+        //     //Creates a compound of that certain blueprint
+        //     console.warn("--TRIG--");
+        //     if (canCraft(selectedBlueprints[key])) {
     
-                createNewCompound(selectedBlueprints[key]); 
+        //         createNewCompound(selectedBlueprints[key]); 
 
-                // Subtract atoms needed to craft
-                deductCraftMaterial(selectedBlueprints[key]);
-            } else
-                console.log("Not enough atoms to craft this blueprint!");
-        });
+        //         // Subtract atoms needed to craft
+        //         deductCraftMaterial(selectedBlueprints[key]);
+        //     } else
+        //         console.log("Not enough atoms to craft this blueprint!");
+        // });
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -182,6 +182,18 @@ function registerCallbacks() {
     }
 
     showGameUI();
+}
+
+export function elementStart() {
+    console.warn("--TRIG--");
+    if (canCraft(selectedBlueprints[selectedCompound])) {
+
+        createNewCompound(selectedBlueprints[selectedCompound]); 
+
+        // Subtract atoms needed to craft
+        deductCraftMaterial(selectedBlueprints[selectedCompound]);
+    } else
+        console.log("Not enough atoms to craft this blueprint!");
 }
 
 /**
@@ -333,6 +345,8 @@ export function isFocused() {
  * @param {string} blueprint The name of the blueprint to check.
  */
 export function canCraft(blueprint) {
+    if(blueprint === undefined)
+        return false;
     for (let atom in blueprint.atoms) {
         if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])
             return false;

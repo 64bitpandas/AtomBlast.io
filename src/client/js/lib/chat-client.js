@@ -5,6 +5,7 @@
 
 import {GLOBAL} from '../global.js';
 import { socket } from '../socket.js';
+import {devTest} from '../app.js';
 
 let player, room, team;
 export default class ChatClient {
@@ -39,6 +40,16 @@ export default class ChatClient {
 
         this.registerCommand('help', 'Information about the chat commands.', () => {
             self.printHelp();
+        });
+
+        this.registerCommand('test', 'Test only', () => {
+            if(GLOBAL.DEBUG) {
+                devTest();
+                self.addSystemLine("Developer Configurations Applied!");
+            }
+            else {
+                self.addSystemLine("Invalid Permission.");
+            }
         });
 
         // this.registerCommand('login', 'Login as an admin.', function (args) {

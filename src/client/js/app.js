@@ -11,6 +11,7 @@ import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 import { player, canCraft, deductCraftMaterial, inGame, startGame } from './pixigame.js';
+import { createNewCompound} from './obj/compound';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
@@ -90,6 +91,12 @@ function allBlueprintsSelected() {
     }
     return true;
 }
+/**
+ * Its a method for testing stuff
+ */
+function testHandler() {
+    swal('SUCCESS','The test event is invoked!','info')
+}
 
 /** 
  * Onload function. Initializes the menu screen, creates click events, and loads cookies.
@@ -111,6 +118,10 @@ window.onload = () => {
     }
 
     // Add listeners to start game to enter key and button click
+
+    // Eric - Test method do not remove pls
+    document.addEventListener('pointerdown', mouseClickHandler);
+
     bindHandler('startButton', function () {
         joinGame();
     });
@@ -244,6 +255,31 @@ window.onmousemove = (e) => {
     mouseY = e.clientY;
 }
 
+function mouseClickHandler(e) {
+    console.log(e);
+    console.info("Selected Compound: " + selectedCompound);
+    if (canCraft(selectedBlueprints[selectedCompound])) {
+    
+        createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY); 
+
+        // Subtract atoms needed to craft
+        deductCraftMaterial(selectedBlueprints[selectedCompound]);
+    } else
+        console.log("Not enough atoms to craft this blueprint!");
+}
+
+// function setupEventHandlers() {  
+//     document.addEventListener('mousedown', this._onMouseDown.bind(this));    
+//     document.addEventListener('mousemove', this._onMouseMove.bind(this));  
+//     document.addEventListener('mouseup', this._onMouseUp.bind(this));    
+//     document.addEventListener('wheel', this._onWheel.bind(this));    
+//     document.addEventListener('touchstart', this._onTouchStart.bind(this));    
+//     document.addEventListener('touchmove', this._onTouchMove.bind(this));    
+//     document.addEventListener('touchend', this._onTouchEnd.bind(this));    
+//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));    
+//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
+// };
+
 /**
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
@@ -371,5 +407,15 @@ export function updateLobby(data) {
         let listItem = document.createElement('LI');
         listItem.appendChild(document.createTextNode(data[player].name));
         document.getElementById(data[player].team).appendChild(listItem);
+    }
+}
+
+export function devTest() {
+    if (GLOBAL.DEBUG) {
+        console.warn(JSON.stringify(player.atoms));
+        for (var i in player.atoms) {
+            player.atoms[i] = 5000;
+        }
+        updateCompoundButtons();
     }
 }

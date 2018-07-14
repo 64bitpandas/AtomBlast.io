@@ -41596,6 +41596,7 @@ exports.hideElement = hideElement;
 exports.updateAtomList = updateAtomList;
 exports.updateCompoundButtons = updateCompoundButtons;
 exports.updateLobby = updateLobby;
+exports.devTest = devTest;
 
 var _global = require('./global.js');
 
@@ -41614,6 +41615,8 @@ var _blueprints = require('./obj/blueprints.js');
 var _socket = require('./socket.js');
 
 var _pixigame = require('./pixigame.js');
+
+var _compound = require('./obj/compound');
 
 var _sweetalert = require('sweetalert');
 
@@ -41699,6 +41702,12 @@ function allBlueprintsSelected() {
     }
     return true;
 }
+/**
+ * Its a method for testing stuff
+ */
+function testHandler() {
+    (0, _sweetalert2.default)('SUCCESS', 'The test event is invoked!', 'info');
+}
 
 /** 
  * Onload function. Initializes the menu screen, creates click events, and loads cookies.
@@ -41726,6 +41735,8 @@ window.onload = function () {
         }
 
         // Add listeners to start game to enter key and button click
+
+        // Eric - Test method do not remove pls
     } catch (err) {
         _didIteratorError = true;
         _iteratorError = err;
@@ -41740,6 +41751,8 @@ window.onload = function () {
             }
         }
     }
+
+    document.addEventListener('pointerdown', mouseClickHandler);
 
     bindHandler('startButton', function () {
         joinGame();
@@ -41893,6 +41906,30 @@ window.onmousemove = function (e) {
     mouseY = e.clientY;
 };
 
+function mouseClickHandler(e) {
+    console.log(e);
+    console.info("Selected Compound: " + selectedCompound);
+    if ((0, _pixigame.canCraft)(selectedBlueprints[selectedCompound])) {
+
+        (0, _compound.createNewCompound)(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
+
+        // Subtract atoms needed to craft
+        (0, _pixigame.deductCraftMaterial)(selectedBlueprints[selectedCompound]);
+    } else console.log("Not enough atoms to craft this blueprint!");
+}
+
+// function setupEventHandlers() {  
+//     document.addEventListener('mousedown', this._onMouseDown.bind(this));    
+//     document.addEventListener('mousemove', this._onMouseMove.bind(this));  
+//     document.addEventListener('mouseup', this._onMouseUp.bind(this));    
+//     document.addEventListener('wheel', this._onWheel.bind(this));    
+//     document.addEventListener('touchstart', this._onTouchStart.bind(this));    
+//     document.addEventListener('touchmove', this._onTouchMove.bind(this));    
+//     document.addEventListener('touchend', this._onTouchEnd.bind(this));    
+//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));    
+//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
+// };
+
 /**
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
@@ -42010,7 +42047,17 @@ function updateLobby(data) {
     }
 }
 
-},{"./global.js":192,"./lib/cookies":194,"./obj/atom":196,"./obj/blueprints.js":197,"./obj/gameobject":199,"./obj/player":200,"./pixigame.js":201,"./socket.js":202,"sweetalert":188}],192:[function(require,module,exports){
+function devTest() {
+    if (_global.GLOBAL.DEBUG) {
+        console.warn(JSON.stringify(_pixigame.player.atoms));
+        for (var i in _pixigame.player.atoms) {
+            _pixigame.player.atoms[i] = 5000;
+        }
+        updateCompoundButtons();
+    }
+}
+
+},{"./global.js":192,"./lib/cookies":194,"./obj/atom":196,"./obj/blueprints.js":197,"./obj/compound":198,"./obj/gameobject":199,"./obj/player":200,"./pixigame.js":201,"./socket.js":202,"sweetalert":188}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42122,6 +42169,8 @@ var _global = require('../global.js');
 
 var _socket = require('../socket.js');
 
+var _app = require('../app.js');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var player = void 0,
@@ -42170,6 +42219,15 @@ var ChatClient = function () {
 
             this.registerCommand('help', 'Information about the chat commands.', function () {
                 self.printHelp();
+            });
+
+            this.registerCommand('test', 'Test only', function () {
+                if (_global.GLOBAL.DEBUG) {
+                    (0, _app.devTest)();
+                    self.addSystemLine("Developer Configurations Applied!");
+                } else {
+                    self.addSystemLine("Invalid Permission.");
+                }
             });
 
             // this.registerCommand('login', 'Login as an admin.', function (args) {
@@ -42336,7 +42394,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../global.js":192,"../socket.js":202}],194:[function(require,module,exports){
+},{"../app.js":191,"../global.js":192,"../socket.js":202}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42861,18 +42919,22 @@ var Compound = exports.Compound = function (_GameObject) {
 /**
  * Creates a Compound by sending a request to the server.
  * @param {*} blueprint Then blueprint to create the compound from
+ * @param {int} xIn x-coords
+ * @param {int} yIn y-coords
  */
 
 
-function createNewCompound(blueprint) {
+function createNewCompound(blueprint, xIn, yIn) {
     (0, _app.updateCompoundButtons)();
-    var cursor = _pixigame.app.renderer.plugins.interaction.mouse.global;
+    // let cursor = app.renderer.plugins.interaction.mouse.global;
+
     var centerX = window.innerWidth / 2;
     var centerY = window.innerHeight / 2;
     // console.log(centerX - cursor.x, cursor.y - centerY)
     _socket.socket.emit('createCompound', {
         blueprint: blueprint,
-        mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+        // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+        mousePos: { x: xIn - centerX, y: centerY - yIn }
     });
 }
 
@@ -43208,6 +43270,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.textStyle = exports.inGame = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.loadTextures = loadTextures;
+exports.elementStart = elementStart;
 exports.destroyPIXI = destroyPIXI;
 exports.showGameUI = showGameUI;
 exports.createPlayer = createPlayer;
@@ -43358,29 +43421,30 @@ function registerCallbacks() {
 
         //Bind each blueprint key
 
-        var _loop = function _loop(_key) {
-            blueprintKeys[_key].press = function () {
+        var _loop = function _loop(key) {
+            blueprintKeys[key].press = function () {
                 if (isFocused()) {
-                    (0, _app.updateCompoundButtons)(_key);
+                    (0, _app.updateCompoundButtons)(key);
                 }
             };
         };
 
-        for (var _key in blueprintKeys) {
-            _loop(_key);
+        for (var key in blueprintKeys) {
+            _loop(key);
         }
 
-        app.stage.on('mousedown', function () {
-            //Creates a compound of that certain blueprint
-            console.warn("--TRIG--");
-            if (canCraft(_app.selectedBlueprints[key])) {
+        // app.stage.on('mousedown', () => {
+        //     //Creates a compound of that certain blueprint
+        //     console.warn("--TRIG--");
+        //     if (canCraft(selectedBlueprints[key])) {
 
-                (0, _compound.createNewCompound)(_app.selectedBlueprints[key]);
+        //         createNewCompound(selectedBlueprints[key]); 
 
-                // Subtract atoms needed to craft
-                deductCraftMaterial(_app.selectedBlueprints[key]);
-            } else console.log("Not enough atoms to craft this blueprint!");
-        });
+        //         // Subtract atoms needed to craft
+        //         deductCraftMaterial(selectedBlueprints[key]);
+        //     } else
+        //         console.log("Not enough atoms to craft this blueprint!");
+        // });
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -43427,6 +43491,17 @@ function registerCallbacks() {
     showGameUI();
 }
 
+function elementStart() {
+    console.warn("--TRIG--");
+    if (canCraft(_app.selectedBlueprints[_app.selectedCompound])) {
+
+        (0, _compound.createNewCompound)(_app.selectedBlueprints[_app.selectedCompound]);
+
+        // Subtract atoms needed to craft
+        deductCraftMaterial(_app.selectedBlueprints[_app.selectedCompound]);
+    } else console.log("Not enough atoms to craft this blueprint!");
+}
+
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
@@ -43453,9 +43528,9 @@ function draw(delta) {
 
             try {
                 for (var _iterator2 = moveKeys[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                    var _key2 = _step2.value;
+                    var key = _step2.value;
 
-                    if (_key2.isDown) player.isMoving = true;
+                    if (key.isDown) player.isMoving = true;
                 }
             } catch (err) {
                 _didIteratorError2 = true;
@@ -43475,9 +43550,9 @@ function draw(delta) {
             player.isMoving = false;
 
             //Because the document is not focused disable all keys(Stops moving!)
-            for (var _key3 in moveKeys) {
-                moveKeys[_key3].isDown = false;
-                moveKeys[_key3].isUp = true;
+            for (var _key in moveKeys) {
+                moveKeys[_key].isDown = false;
+                moveKeys[_key].isUp = true;
             }
         }
 
@@ -43633,6 +43708,7 @@ function isFocused() {
  * @param {string} blueprint The name of the blueprint to check.
  */
 function canCraft(blueprint) {
+    if (blueprint === undefined) return false;
     for (var atom in blueprint.atoms) {
         if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom]) return false;
     }

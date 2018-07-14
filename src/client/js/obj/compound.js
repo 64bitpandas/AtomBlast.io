@@ -84,16 +84,20 @@ export class Compound extends GameObject {
 /**
  * Creates a Compound by sending a request to the server.
  * @param {*} blueprint Then blueprint to create the compound from
+ * @param {int} xIn x-coords
+ * @param {int} yIn y-coords
  */
-export function createNewCompound(blueprint) {
+export function createNewCompound(blueprint, xIn, yIn) {
     updateCompoundButtons();
-    let cursor = app.renderer.plugins.interaction.mouse.global;
+    // let cursor = app.renderer.plugins.interaction.mouse.global;
+
     let centerX = window.innerWidth / 2;
     let centerY = window.innerHeight / 2;
     // console.log(centerX - cursor.x, cursor.y - centerY)
     socket.emit('createCompound', {
         blueprint: blueprint,
-        mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+        // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+        mousePos: {x: xIn - centerX, y: centerY - yIn}
     });
 }
 
