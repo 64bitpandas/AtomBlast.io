@@ -42736,7 +42736,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         params: {
             speed: 3,
             damage: 3,
-            size: 1
+            size: 10
         },
         atoms: {
             c: 1,
@@ -42751,7 +42751,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         params: {
             speed: 1,
             damage: 5,
-            size: 3
+            size: 30
         },
         atoms: {
             h: 6,
@@ -42766,7 +42766,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         params: {
             speed: 4,
             damage: 1,
-            size: 1
+            size: 10
         },
         atoms: {
             h: 2,
@@ -42781,7 +42781,7 @@ var BLUEPRINTS = exports.BLUEPRINTS = {
         params: {
             speed: 3,
             damage: 3,
-            size: 2
+            size: 20
         },
         atoms: {
             n: 2
@@ -43913,6 +43913,8 @@ function setupSocket() {
             delete objects.compounds[data.id];
             if (data.collidedWith === socket.id) {
                 player.health -= 1; //TODO
+                // do we subtract the players health field
+                // or do we do it through socket?
             }
         }
     });

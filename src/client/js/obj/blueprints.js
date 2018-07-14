@@ -48,7 +48,7 @@ export const BLUEPRINTS = {
         params: {
             speed: 3,
             damage: 3,
-            size: 1
+            size: 10
         },
         atoms: {
             c: 1,
@@ -63,7 +63,7 @@ export const BLUEPRINTS = {
         params: {
             speed: 1,
             damage: 5,
-            size: 3
+            size: 30
         },
         atoms: {
             h: 6,
@@ -78,7 +78,7 @@ export const BLUEPRINTS = {
         params: {
             speed: 4,
             damage: 1,
-            size: 1
+            size: 10
         },
         atoms: {
             h: 2,
@@ -93,7 +93,7 @@ export const BLUEPRINTS = {
         params: {
             speed: 3,
             damage: 3,
-            size: 2
+            size: 20
         },
         atoms: {
             n: 2

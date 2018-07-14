@@ -145,6 +145,8 @@ function setupSocket() {
             delete objects.compounds[data.id];
             if(data.collidedWith === socket.id) {
                 player.health -= 1; //TODO
+                // do we subtract the players health field
+                // or do we do it through socket?
             }
         }
     });
