@@ -256,8 +256,10 @@ window.onmousemove = (e) => {
 }
 
 function mouseClickHandler(e) {
-    console.log(e);
-    console.info("Selected Compound: " + selectedCompound);
+    if (!inGame)
+        return false;
+    // console.log(e);
+    // console.info("Selected Compound: " + selectedCompound);
     if (canCraft(selectedBlueprints[selectedCompound])) {
     
         createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY); 

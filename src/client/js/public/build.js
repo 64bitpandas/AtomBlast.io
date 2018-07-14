@@ -41907,8 +41907,9 @@ window.onmousemove = function (e) {
 };
 
 function mouseClickHandler(e) {
-    console.log(e);
-    console.info("Selected Compound: " + selectedCompound);
+    if (!_pixigame.inGame) return false;
+    // console.log(e);
+    // console.info("Selected Compound: " + selectedCompound);
     if ((0, _pixigame.canCraft)(selectedBlueprints[selectedCompound])) {
 
         (0, _compound.createNewCompound)(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
