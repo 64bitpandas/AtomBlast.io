@@ -42849,12 +42849,12 @@ var Compound = exports.Compound = function (_GameObject) {
         // Use params
         switch (_this.blueprint.type) {
             case 'binary':
-                _this.width = _this.size;
-                _this.height = _this.size;
+                _this.width = _this.size * 4;
+                _this.height = _this.size * 4;
                 break;
             case 'basic':
-                _this.width = _this.size * 1.5;
-                _this.height = _this.size * 1.5;
+                _this.width = _this.size * 6;
+                _this.height = _this.size * 6;
                 break;
         }
         return _this;
