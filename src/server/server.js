@@ -149,7 +149,8 @@ io.on('connection', socket => {
     // posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
     // posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
     vx: 0,
-    vy: 0
+    vy: 0,
+    experience: 0
   };
 
   // Add team to database
@@ -245,7 +246,7 @@ io.on('connection', socket => {
 
   socket.to(room).on('damage', data => {
     if(rooms[room].players[data.id] !== undefined){
-      rooms[room].players[data.id].health = data;
+      rooms[room].players[data.id].health -= data.damageAmount;
     }
   });
 
@@ -268,8 +269,12 @@ io.on('connection', socket => {
   });
 
   socket.to(room).on('compoundCollision', data => {
-    // delete rooms[room].compounds[data.id];
-    // socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
+    if(rooms[room].compounds[data.id] !== undefined) {
+      delete rooms[room].compounds[data.id];
+      socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
+      socket.emit('serverSendCompoundRemoval', data);
+      rooms[room].players[data.sender].health -= data.damage;
+    }
   });
 
   // A player spawned a Compound
@@ -283,11 +288,33 @@ io.on('connection', socket => {
       posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
       vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
       vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
-      blueprint: data.blueprint
+      blueprint: data.blueprint,
+      sendingTeam: data.sendingTeam
     };
     rooms[room].compounds[newCompound.id] = newCompound;
     // socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound); //Send to everyone but the sender
     // socket.to(room).emit('serverSendCreateCompound', newCompound); //Send to the sender
+  });
+
+  //A Player has performed an action and gained experience
+  socket.to(room).on('experienceEvent', data => {
+    //data.event is the event that occured
+
+    //Add a specific amount to the players experience
+    //Get the index of the Event and then pass it into the values array to get the actual value
+    thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
+
+    // Determine the player's level based on experience
+    let oldLevel = thisPlayer.level;
+    for(let level of GLOBAL.EXPERIENCE_LEVELS){
+        if(thisPlayer.experience >= level)
+          thisPlayer.level = GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1;
+    }
+
+    // Check to see if the player leveled up
+    if(thisPlayer.level > oldLevel) {
+      socket.emit('levelUp', {newLevel: thisPlayer.level});
+    }
   });
 
   socket.on('disconnect', data => {

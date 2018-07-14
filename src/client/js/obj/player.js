@@ -22,7 +22,7 @@ export class Player extends GameObject {
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    constructor(texture, id, name, room, team, health, x, y, vx, vy) {
+    constructor(texture, id, name, room, team, health, x, y, vx, vy, experience) {
 
         // Call GameObject
         super(texture, id, x, y, vx, vy);
@@ -46,6 +46,8 @@ export class Player extends GameObject {
         this.team = team;
         this.health = health; //Set the health of the player
         this.isMoving = false;
+        this.experience = experience; //Sets the experience of the player(Passed in)
+
         this.atoms = { // List of all atoms and the number that the player has. Continue list later
             h: 0,
             he: 0,

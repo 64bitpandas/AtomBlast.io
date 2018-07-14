@@ -88,6 +88,22 @@ export const GLOBAL = {
         '../assets/atom_helium.png',
         '../assets/atom_carbon.png',
         '../assets/testplayer2.png',
+    ],
+    //Each Value corresponds with the above event
+    EXPERIENCE_VALUES: {
+        CRAFT: 10,
+        KILL: 124
+    },
+
+    //The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc
+    EXPERIENCE_LEVELS: [
+        0,
+        10,
+        20,
+        40,
+        100,
+        140,
+        160
     ]
 };
 

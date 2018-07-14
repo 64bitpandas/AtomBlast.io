@@ -42140,7 +42140,15 @@ var GLOBAL = exports.GLOBAL = {
 
     // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
     ATOM_IDS: ['h', 'he', 'c', 'cl'],
-    ATOM_SPRITES: ['../assets/atom-hydrogen.png', '../assets/atom_helium.png', '../assets/atom_carbon.png', '../assets/testplayer2.png']
+    ATOM_SPRITES: ['../assets/atom-hydrogen.png', '../assets/atom_helium.png', '../assets/atom_carbon.png', '../assets/testplayer2.png'],
+    //Each Value corresponds with the above event
+    EXPERIENCE_VALUES: {
+        CRAFT: 10,
+        KILL: 124
+    },
+
+    //The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc
+    EXPERIENCE_LEVELS: [0, 10, 20, 40, 100, 140, 160]
 };
 
 /**
@@ -42820,6 +42828,8 @@ var _pixigame = require("../pixigame");
 
 var _app = require("../app");
 
+var _global = require("../global.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -42835,12 +42845,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Compound = exports.Compound = function (_GameObject) {
     _inherits(Compound, _GameObject);
 
-    function Compound(id, x, y, vx, vy, blueprint) {
+    function Compound(id, x, y, vx, vy, blueprint, sendingTeam) {
         _classCallCheck(this, Compound);
 
         var _this = _possibleConstructorReturn(this, (Compound.__proto__ || Object.getPrototypeOf(Compound)).call(this, PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy));
 
         _this.blueprint = blueprint;
+        _this.sendingTeam = sendingTeam;
 
         // Parse params
         for (var param in _this.blueprint.params) {
@@ -42881,6 +42892,8 @@ var Compound = exports.Compound = function (_GameObject) {
                     throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
             }
 
+            this.checkCollision();
+
             // Movement
             _get(Compound.prototype.__proto__ || Object.getPrototypeOf(Compound.prototype), "tick", this).call(this);
             this.draw();
@@ -42896,19 +42909,31 @@ var Compound = exports.Compound = function (_GameObject) {
     }, {
         key: "checkCollision",
         value: function checkCollision() {
-            if (player === undefined) return false;
 
-            for (var objType in _socket.objects) {
-                if (objType !== 'atoms') for (var obj in _socket.objects[objType]) {
-                    var distance = distanceBetween(this, _socket.objects[objType][obj]);
+            if (_pixigame.player === undefined) return false;
+            // No friendly fire
+            if (this.sendingTeam === _pixigame.player.team) return false;
 
-                    // Collision with player or other powerup
-                    if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
-                        _socket.socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
-                        return true;
-                    }
-                }
+            var distance = (0, _global.distanceBetween)({ posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 }, { posX: _pixigame.player.posX + _global.GLOBAL.PLAYER_RADIUS, posY: _pixigame.player.posY - _global.GLOBAL.PLAYER_RADIUS });
+
+            // Hit player
+            if (distance < this.blueprint.params.size + _global.GLOBAL.PLAYER_RADIUS) {
+                _pixigame.player.health -= this.blueprint.params.damage;
+                _socket.socket.emit('compoundCollision', { id: this.id, sender: _socket.socket.id, damage: this.blueprint.params.damage });
+                return true;
             }
+            // for (let objType in objects) {
+            //     if (objType !== 'atoms')
+            //         for (let obj in objects[objType]) {
+            //             let distance = distanceBetween(this, objects[objType][obj]);
+
+            //             // Collision with player or other powerup
+            //             if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+            //                 socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
+            //                 return true;
+            //             }
+            //         }
+            // }
 
             return false;
         }
@@ -42934,8 +42959,14 @@ function createNewCompound(blueprint, xIn, yIn) {
     // console.log(centerX - cursor.x, cursor.y - centerY)
     _socket.socket.emit('createCompound', {
         blueprint: blueprint,
+        sendingTeam: _pixigame.player.team,
         // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
         mousePos: { x: xIn - centerX, y: centerY - yIn }
+    });
+
+    //Emits the crafting event to update experience
+    _socket.socket.emit('experienceEvent', {
+        event: 'CRAFT'
     });
 }
 
@@ -42944,10 +42975,10 @@ function createNewCompound(blueprint, xIn, yIn) {
  * @param {*} data Data sent from server
  */
 function createCompound(data) {
-    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam);
 }
 
-},{"../app":191,"../pixigame":201,"../socket":202,"./blueprints":197,"./gameobject":199,"pixi.js":142}],199:[function(require,module,exports){
+},{"../app":191,"../global.js":192,"../pixigame":201,"../socket":202,"./blueprints":197,"./gameobject":199,"pixi.js":142}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43143,7 +43174,7 @@ var Player = exports.Player = function (_GameObject) {
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-    function Player(texture, id, name, room, team, health, x, y, vx, vy) {
+    function Player(texture, id, name, room, team, health, x, y, vx, vy, experience) {
         _classCallCheck(this, Player);
 
         // Pixi Values
@@ -43170,6 +43201,8 @@ var Player = exports.Player = function (_GameObject) {
         _this.team = team;
         _this.health = health; //Set the health of the player
         _this.isMoving = false;
+        _this.experience = experience; //Sets the experience of the player(Passed in)
+
         _this.atoms = { // List of all atoms and the number that the player has. Continue list later
             h: 0,
             he: 0,
@@ -43878,6 +43911,7 @@ function setupSocket() {
                     // Already exists in database
                     if (clientObj !== undefined && clientObj !== null) {
                         if (objRef.id !== socket.id) objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                        if (objType === 'players') objects[objType][obj].health = objRef.health;
                     }
                     // Does not exist - need to clone to clientside
                     else if (_pixigame.isSetup) {
@@ -43910,13 +43944,10 @@ function setupSocket() {
     // Compound has collided
     socket.on('serverSendCompoundRemoval', function (data) {
         //An Atom was removed
+        console.log('Server send compound removal');
         if (objects.compounds[data.id] !== undefined) {
+            objects.compounds[data.id].hide();
             delete objects.compounds[data.id];
-            if (data.collidedWith === socket.id) {
-                player.health -= 1; //TODO
-                // do we subtract the players health field
-                // or do we do it through socket?
-            }
         }
     });
 
@@ -43960,6 +43991,10 @@ function setupSocket() {
     socket.on('serverSendStartGame', function (data) {
         console.log('game has started');
         (0, _pixigame.startGame)(false);
+    });
+
+    socket.on('levelUp', function (data) {
+        console.log('You LEVELED UP! Level: ' + data.newLevel);
     });
 
     //Emit join message,

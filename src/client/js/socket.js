@@ -109,6 +109,8 @@ function setupSocket() {
                     if(clientObj !== undefined && clientObj !== null) {
                         if (objRef.id !== socket.id)
                             objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                        if(objType === 'players')
+                            objects[objType][obj].health = objRef.health;
                     }
                     // Does not exist - need to clone to clientside
                     else if(isSetup) {
@@ -141,13 +143,10 @@ function setupSocket() {
     // Compound has collided
     socket.on('serverSendCompoundRemoval', (data) => {
         //An Atom was removed
+        console.log('Server send compound removal');
         if (objects.compounds[data.id] !== undefined) {
+            objects.compounds[data.id].hide();
             delete objects.compounds[data.id];
-            if(data.collidedWith === socket.id) {
-                player.health -= 1; //TODO
-                // do we subtract the players health field
-                // or do we do it through socket?
-            }
         }
     });
 
@@ -191,6 +190,10 @@ function setupSocket() {
     socket.on('serverSendStartGame', (data) => {
         console.log('game has started');
         startGame(false);
+    });
+
+    socket.on('levelUp', (data) => {
+        console.log('You LEVELED UP! Level: ' + data.newLevel)
     });
 
     //Emit join message,

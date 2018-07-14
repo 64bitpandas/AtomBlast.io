@@ -2,8 +2,9 @@ import { GameObject } from "./gameobject";
 import { socket, objects } from "../socket";
 import { BLUEPRINTS } from "./blueprints";
 import * as PIXI from 'pixi.js';
-import { app } from "../pixigame";
+import { app, player } from "../pixigame";
 import { updateCompoundButtons } from "../app";
+import { GLOBAL, distanceBetween } from "../global.js";
 
 /**
  * Generic Compound which can be instantiated into the scene as a GameObject.
@@ -11,9 +12,10 @@ import { updateCompoundButtons } from "../app";
  */
 export class Compound extends GameObject {
 
-    constructor(id, x, y, vx, vy, blueprint) {
+    constructor(id, x, y, vx, vy, blueprint, sendingTeam) {
         super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
+        this.sendingTeam = sendingTeam;
 
         // Parse params
         for (let param in this.blueprint.params) {
@@ -49,6 +51,8 @@ export class Compound extends GameObject {
                 throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
         }
 
+        this.checkCollision();
+
         // Movement
         super.tick();
         this.draw();
@@ -61,21 +65,35 @@ export class Compound extends GameObject {
      * @returns true if collision detected, false otherwise
      */
     checkCollision() {
+
         if (player === undefined)
             return false;
+        // No friendly fire
+        if(this.sendingTeam === player.team)
+            return false;
 
-        for (let objType in objects) {
-            if (objType !== 'atoms')
-                for (let obj in objects[objType]) {
-                    let distance = distanceBetween(this, objects[objType][obj]);
+        let distance = distanceBetween(
+            { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
+            { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
 
-                    // Collision with player or other powerup
-                    if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
-                        socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
-                        return true;
-                    }
-                }
+        // Hit player
+        if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+            player.health -= this.blueprint.params.damage;
+            socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.damage });
+            return true;
         }
+        // for (let objType in objects) {
+        //     if (objType !== 'atoms')
+        //         for (let obj in objects[objType]) {
+        //             let distance = distanceBetween(this, objects[objType][obj]);
+
+        //             // Collision with player or other powerup
+        //             if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+        //                 socket.emit('compoundCollision', { id: this.id, collidedWith: obj });
+        //                 return true;
+        //             }
+        //         }
+        // }
 
         return false;
     }
@@ -96,9 +114,16 @@ export function createNewCompound(blueprint, xIn, yIn) {
     // console.log(centerX - cursor.x, cursor.y - centerY)
     socket.emit('createCompound', {
         blueprint: blueprint,
+        sendingTeam: player.team,
         // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
         mousePos: {x: xIn - centerX, y: centerY - yIn}
     });
+
+    //Emits the crafting event to update experience
+    socket.emit('experienceEvent', {
+        event: 'CRAFT'
+    });
+
 }
 
 /**
@@ -106,5 +131,5 @@ export function createNewCompound(blueprint, xIn, yIn) {
  * @param {*} data Data sent from server
  */
 export function createCompound(data) {
-    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint);
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam);
 }
