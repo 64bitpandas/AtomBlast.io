@@ -40,6 +40,12 @@ canvas {
 	text-align: center;
 }
 
+@media screen and (min-width: 45em) {
+	.btn-blueprint {
+		width: 49% !important;
+	}
+}
+
 /* **********
  * * BOXES  *
  * ********** */
@@ -94,10 +100,10 @@ canvas {
 
  .button:active, .button:hover {
 	top: 1px;
-	-moz-transform: translateY(-1px);
 	outline: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
+	position: relative;
  }
 
  .btn-primary {
@@ -160,6 +166,8 @@ canvas {
  #btn-close {
 	 /* float: bottom; */
 	 width: 70%;
+	 margin-left: 15%;
+	 position: relative;
 	 /* margin-top: 200px; */
 }
 

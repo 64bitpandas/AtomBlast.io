@@ -193,7 +193,7 @@ window.onload = () => {
 
         document.getElementById('blueprint-wrapper').innerHTML +=
             `
-            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-` + blueprint + `">
+            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-secondary btn-blueprint" id="btn-blueprint-` + blueprint + `">
                 <p>` + bp.name + `</p>
                 <h6>-` + formula + `-</h6>
                 <img src="` + bp.texture + `">

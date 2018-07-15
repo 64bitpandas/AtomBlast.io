@@ -41832,7 +41832,7 @@ window.onload = function () {
             formula += atom.toUpperCase() + (bp.atoms[atom] > 1 ? bp.atoms[atom] : '');
         }
 
-        document.getElementById('blueprint-wrapper').innerHTML += '\n            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6-sm btn-secondary btn-blueprint" id="btn-blueprint-' + blueprint + '">\n                <p>' + bp.name + '</p>\n                <h6>-' + formula + '-</h6>\n                <img src="' + bp.texture + '">\n                <span class="tooltip">' + bp.tooltip + '</span>\n            </button>\n\n            ';
+        document.getElementById('blueprint-wrapper').innerHTML += '\n            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-secondary btn-blueprint" id="btn-blueprint-' + blueprint + '">\n                <p>' + bp.name + '</p>\n                <h6>-' + formula + '-</h6>\n                <img src="' + bp.texture + '">\n                <span class="tooltip">' + bp.tooltip + '</span>\n            </button>\n\n            ';
     }
 
     // Blueprint Slots
