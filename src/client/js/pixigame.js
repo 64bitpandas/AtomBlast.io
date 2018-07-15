@@ -12,7 +12,9 @@ export var player; // The player being controlled by this client
 export var screenCenterX; // X-coordinate of the center of the screen
 export var screenCenterY; // Y-coordinate of the center of the screen
 export var app; // Pixi app
-export var inGame = false; // True after game has begun
+
+
+let inGame = false; // True after game has begun
 
 // let sprites = []; // Sprites on the stage
 
@@ -122,7 +124,7 @@ function registerCallbacks() {
         //Bind each blueprint key
         for (let key in blueprintKeys) {
             blueprintKeys[key].press = () => {
-                if (isFocused()) {
+                if (isFocused() && inGame) {
                     updateCompoundButtons(key);
                 }
             }
@@ -376,7 +378,7 @@ export function deductCraftMaterial(blueprint) {
  * @param {boolean} emit True if this client should emit the event to the server.
  */
 export function startGame(emit) {
-    inGame = true;
+    setIngame(true);
     hideElement('lobby');
     showElement('hud');
     console.log(emit);
@@ -384,4 +386,12 @@ export function startGame(emit) {
         socket.emit('startGame', {
             start: true
         });
+}
+
+/**
+ * Sets the value of inGame
+ * @param {boolean} newValue Value to set inGame to 
+ */
+export function setIngame(newValue) {
+    inGame = newValue;
 }

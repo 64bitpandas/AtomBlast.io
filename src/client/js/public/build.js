@@ -41880,7 +41880,8 @@ window.onload = function () {
     }
 
     // Behavior when room type is changed
-    if (cookieInputs[7].value !== 'private') hideElement('room');
+    if (cookieInputs[7].value !== 'private') hideElement('room');else showElement('room');
+
     cookieInputs[7].onchange = function () {
         if (cookieInputs[7].value === 'private') showElement('room');else hideElement('room');
 
@@ -41907,7 +41908,7 @@ window.onmousemove = function (e) {
 };
 
 function mouseClickHandler(e) {
-    if (!_pixigame.inGame) return false;
+    if (!inGame) return false;
     // console.log(e);
     // console.info("Selected Compound: " + selectedCompound);
     if ((0, _pixigame.canCraft)(selectedBlueprints[selectedCompound])) {
@@ -41939,6 +41940,9 @@ function quitGame(msg, isError) {
 
     // Disconnect from server
     (0, _socket.disconnect)();
+
+    // Set status of ingame
+    (0, _pixigame.setIngame)(false);
 
     // menu
     hideElement('gameAreaWrapper');
@@ -43302,7 +43306,7 @@ var Player = exports.Player = function (_GameObject) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.textStyle = exports.inGame = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
+exports.textStyle = exports.app = exports.screenCenterY = exports.screenCenterX = exports.player = exports.isSetup = undefined;
 exports.loadTextures = loadTextures;
 exports.elementStart = elementStart;
 exports.destroyPIXI = destroyPIXI;
@@ -43312,6 +43316,7 @@ exports.isFocused = isFocused;
 exports.canCraft = canCraft;
 exports.deductCraftMaterial = deductCraftMaterial;
 exports.startGame = startGame;
+exports.setIngame = setIngame;
 
 var _pixi = require('pixi.js');
 
@@ -43338,7 +43343,9 @@ var player = exports.player = undefined; // The player being controlled by this 
 var screenCenterX = exports.screenCenterX = undefined; // X-coordinate of the center of the screen
 var screenCenterY = exports.screenCenterY = undefined; // Y-coordinate of the center of the screen
 var app = exports.app = undefined; // Pixi app
-var inGame = exports.inGame = false; // True after game has begun
+
+
+var inGame = false; // True after game has begun
 
 // let sprites = []; // Sprites on the stage
 
@@ -43457,7 +43464,7 @@ function registerCallbacks() {
 
         var _loop = function _loop(key) {
             blueprintKeys[key].press = function () {
-                if (isFocused()) {
+                if (isFocused() && inGame) {
                     (0, _app.updateCompoundButtons)(key);
                 }
             };
@@ -43771,13 +43778,21 @@ function deductCraftMaterial(blueprint) {
  * @param {boolean} emit True if this client should emit the event to the server.
  */
 function startGame(emit) {
-    exports.inGame = inGame = true;
+    setIngame(true);
     (0, _app.hideElement)('lobby');
     (0, _app.showElement)('hud');
     console.log(emit);
     if (emit) _socket.socket.emit('startGame', {
         start: true
     });
+}
+
+/**
+ * Sets the value of inGame
+ * @param {boolean} newValue Value to set inGame to 
+ */
+function setIngame(newValue) {
+    inGame = newValue;
 }
 
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){

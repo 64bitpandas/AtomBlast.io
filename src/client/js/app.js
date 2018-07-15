@@ -10,7 +10,7 @@ import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player, canCraft, deductCraftMaterial, inGame, startGame } from './pixigame.js';
+import { player, canCraft, deductCraftMaterial, setIngame, startGame } from './pixigame.js';
 import { createNewCompound} from './obj/compound';
 import swal from 'sweetalert';
 
@@ -227,6 +227,9 @@ window.onload = () => {
     // Behavior when room type is changed
     if (cookieInputs[7].value !== 'private')
         hideElement('room');
+    else
+        showElement('room');
+
     cookieInputs[7].onchange = () => {
         if(cookieInputs[7].value === 'private')
             showElement('room');
@@ -290,6 +293,9 @@ export function quitGame(msg, isError) {
 
     // Disconnect from server
     disconnect();
+
+    // Set status of ingame
+    setIngame(false);
 
     // menu
     hideElement('gameAreaWrapper');
