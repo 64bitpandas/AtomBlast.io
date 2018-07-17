@@ -395,3 +395,10 @@ export function startGame(emit) {
 export function setIngame(newValue) {
     inGame = newValue;
 }
+
+/**
+ * @returns {boolean} Returns inGame variable
+ */
+export function getIngame() {
+    return inGame;
+}

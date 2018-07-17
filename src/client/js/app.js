@@ -10,7 +10,7 @@ import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player, canCraft, deductCraftMaterial, setIngame, startGame } from './pixigame.js';
+import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame } from './pixigame.js';
 import { createNewCompound} from './obj/compound';
 import swal from 'sweetalert';
 
@@ -259,8 +259,9 @@ window.onmousemove = (e) => {
 }
 
 function mouseClickHandler(e) {
-    if (!inGame)
+    if (getIngame() === false) {
         return false;
+    }
     // console.log(e);
     // console.info("Selected Compound: " + selectedCompound);
     if (canCraft(selectedBlueprints[selectedCompound])) {

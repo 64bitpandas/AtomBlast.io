@@ -247,6 +247,14 @@ io.on('connection', socket => {
   socket.to(room).on('damage', data => {
     if(rooms[room].players[data.id] !== undefined){
       rooms[room].players[data.id].health -= data.damageAmount;
+      console.log("Damage rcvd health left: ".green + rooms[room].players[data.id].health + " From player: " + data.id);
+      if(rooms[room].players[data.id].health <=0) {
+        console.log('[Server]'.bold.blue + " Player destroyed: ".red + ('' + socket.id).yellow + ': ' + data );
+
+        socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
+
+        delete rooms[room].players[socket.id]; //Remove the server side player
+      }
     }
   });
 
@@ -318,7 +326,7 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', data => {
-    console.log('[Server]'.bold.blue + " Disconnect Received: ".red + ('' + socket.id).yellow + ': ' + data );
+    console.log('[Server]'.bold.blue + " Disconnect Received: ".red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);
     
     socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
     

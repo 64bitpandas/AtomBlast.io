@@ -41908,7 +41908,9 @@ window.onmousemove = function (e) {
 };
 
 function mouseClickHandler(e) {
-    if (!inGame) return false;
+    if ((0, _pixigame.getIngame)() === false) {
+        return false;
+    }
     // console.log(e);
     // console.info("Selected Compound: " + selectedCompound);
     if ((0, _pixigame.canCraft)(selectedBlueprints[selectedCompound])) {
@@ -43283,6 +43285,8 @@ var Player = exports.Player = function (_GameObject) {
             if (this.id !== _socket.socket.id) {
                 this.draw();
             }
+
+            checkHealth();
         }
 
         /**
@@ -43294,6 +43298,16 @@ var Player = exports.Player = function (_GameObject) {
         key: 'addAtom',
         value: function addAtom(id) {
             this.atoms[id]++;
+        }
+
+        /**
+         * Verify player health and display gameOver.
+         */
+
+    }, {
+        key: 'checkHealth',
+        value: function checkHealth() {
+            if (this.health <= 0) {}
         }
     }]);
 
@@ -43317,6 +43331,7 @@ exports.canCraft = canCraft;
 exports.deductCraftMaterial = deductCraftMaterial;
 exports.startGame = startGame;
 exports.setIngame = setIngame;
+exports.getIngame = getIngame;
 
 var _pixi = require('pixi.js');
 
@@ -43795,6 +43810,13 @@ function setIngame(newValue) {
     inGame = newValue;
 }
 
+/**
+ * @returns {boolean} Returns inGame variable
+ */
+function getIngame() {
+    return inGame;
+}
+
 },{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){
 "use strict";
 
@@ -43968,6 +43990,7 @@ function setupSocket() {
 
     socket.on('disconnectedPlayer', function (data) {
         console.log('Player ' + data.id + ' has disconnected');
+        chat.addSystemLine('Player ' + objects.players[data.id].name + ' has disconnected');
         if (objects.players[data.id] !== undefined) {
             objects.players[data.id].hide();
             delete objects.players[data.id];

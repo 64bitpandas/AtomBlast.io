@@ -152,6 +152,7 @@ function setupSocket() {
 
     socket.on('disconnectedPlayer', (data) => {
         console.log('Player ' + data.id + ' has disconnected');
+        chat.addSystemLine('Player ' + objects.players[data.id].name + ' has disconnected');
         if (objects.players[data.id] !== undefined) {
             objects.players[data.id].hide();
             delete objects.players[data.id];
