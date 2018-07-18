@@ -43286,7 +43286,7 @@ var Player = exports.Player = function (_GameObject) {
                 this.draw();
             }
 
-            checkHealth();
+            this.checkHealth();
         }
 
         /**

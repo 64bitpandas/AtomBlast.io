@@ -114,7 +114,7 @@ export class Player extends GameObject {
             this.draw();
         }
 
-        checkHealth();
+        this.checkHealth();
     }
 
     /**
