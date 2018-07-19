@@ -26,7 +26,7 @@ let horizLines = [];
 export let textStyle = new PIXI.TextStyle({
     fill: 'black',
     fontSize: 120
-})
+});
 
 export function loadTextures() {
     if (!isSetup) {
@@ -69,7 +69,7 @@ export function loadTextures() {
 
     // If already initialized, use existing app variable
     if (isSetup) {
-        console.info("Stage already initialized!");
+        console.info('Stage already initialized!');
         clearStage();
         registerCallbacks();
     }
@@ -97,7 +97,7 @@ function registerCallbacks() {
             keyboard(GLOBAL.KEY_2),
             keyboard(GLOBAL.KEY_3),
             keyboard(GLOBAL.KEY_4)
-        ]
+        ];
 
         esc.press = () => {
             if (isFocused()) {
@@ -106,7 +106,7 @@ function registerCallbacks() {
                 else
                     document.getElementById('chatInput').blur();
             }
-        }
+        };
 
 
         // var mousePosition = renderer.interaction.mouse.global;
@@ -115,11 +115,11 @@ function registerCallbacks() {
         // Chat box styling on select
         document.getElementById('chatInput').onfocus = () => {
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
-        }
+        };
 
         document.getElementById('chatInput').onblur = () => {
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
-        }
+        };
 
         //Bind each blueprint key
         for (let key in blueprintKeys) {
@@ -127,7 +127,7 @@ function registerCallbacks() {
                 if (isFocused() && inGame) {
                     updateCompoundButtons(key);
                 }
-            }
+            };
         }
 
         // app.stage.on('mousedown', () => {
@@ -153,7 +153,7 @@ function registerCallbacks() {
             screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
             player.x = screenCenterX;
             player.y = screenCenterY;
-        }
+        };
 
         // Begin game loop
         app.ticker.add(delta => draw(delta));
@@ -187,7 +187,7 @@ function registerCallbacks() {
 }
 
 export function elementStart() {
-    console.warn("--TRIG--");
+    console.warn('--TRIG--');
     if (canCraft(selectedBlueprints[selectedCompound])) {
 
         createNewCompound(selectedBlueprints[selectedCompound]); 
@@ -195,7 +195,7 @@ export function elementStart() {
         // Subtract atoms needed to craft
         deductCraftMaterial(selectedBlueprints[selectedCompound]);
     } else
-        console.log("Not enough atoms to craft this blueprint!");
+        console.log('Not enough atoms to craft this blueprint!');
 }
 
 /**
@@ -244,8 +244,8 @@ function draw(delta) {
                 // Subtract atoms needed to craft
                 deductCraftMaterial(selectedBlueprints[selectedCompound]);
             } else
-                console.log("Not enough atoms to craft this blueprint!");
-        }
+                console.log('Not enough atoms to craft this blueprint!');
+        };
 
         // Move player
         player.tick();

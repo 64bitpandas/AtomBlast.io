@@ -1,9 +1,9 @@
-import { GLOBAL } from "./global";
-import { cookieInputs, quitGame, updateLobby } from "./app";
-import ChatClient from "./lib/chat-client";
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
-import { spawnAtom } from "./obj/atom";
-import { createCompound } from "./obj/compound";
+import { GLOBAL } from './global';
+import { cookieInputs, quitGame, updateLobby } from './app';
+import ChatClient from './lib/chat-client';
+import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from './pixigame';
+import { spawnAtom } from './obj/atom';
+import { createCompound } from './obj/compound';
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -48,7 +48,7 @@ export function beginConnection() {
     socket.on('connect', () => {
         setupSocket();
         // Init pixi
-        loadTextures()
+        loadTextures();
         if (typeof app !== undefined) {
             app.start();
         }
@@ -82,20 +82,20 @@ function setupSocket() {
 
     // On Connection Failure
     socket.on('reconnect_failed', () => {
-        alert("You have lost connection to the server!");
+        alert('You have lost connection to the server!');
     });
 
     socket.on('reconnecting', (attempt) => {
-        console.log("Lost connection. Reconnecting on attempt: " + attempt);
+        console.log('Lost connection. Reconnecting on attempt: ' + attempt);
         quitGame('Lost connection to server');
     });
 
     socket.on('reconnect_error', (err) => {
-        console.log("CRITICAL: Reconnect failed! " + err);
+        console.log('CRITICAL: Reconnect failed! ' + err);
     });
 
     socket.on('pong', (ping) => {
-        console.log("Your Ping Is: " + ping);
+        console.log('Your Ping Is: ' + ping);
     });
 
     // Syncs all objects from server once a frame
@@ -115,15 +115,15 @@ function setupSocket() {
                     // Does not exist - need to clone to clientside
                     else if(isSetup) {
                         switch(objType) {
-                            case 'players':
-                               objects[objType][obj] = createPlayer(objRef);
-                               break;
-                            case 'atoms':
-                                objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                                break;
-                            case 'compounds':
-                                objects[objType][obj] = createCompound(objRef);
-                                break;
+                        case 'players':
+                            objects[objType][obj] = createPlayer(objRef);
+                            break;
+                        case 'atoms':
+                            objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                            break;
+                        case 'compounds':
+                            objects[objType][obj] = createCompound(objRef);
+                            break;
                         }
                     }
                 }
@@ -176,7 +176,7 @@ function setupSocket() {
     socket.on('connectionError', (data) => {
         socket.disconnect();
         quitGame(data.msg, true);
-    })
+    });
 
     // Receive information about room players
     socket.on('roomInfo', (data) => {
@@ -186,7 +186,7 @@ function setupSocket() {
         // if(GLOBAL.DEBUG) {
         //     console.log("rcvd: ",data);
         // }
-    })
+    });
 
     socket.on('serverSendStartGame', (data) => {
         console.log('game has started');
@@ -194,7 +194,7 @@ function setupSocket() {
     });
 
     socket.on('levelUp', (data) => {
-        console.log('You LEVELED UP! Level: ' + data.newLevel)
+        console.log('You LEVELED UP! Level: ' + data.newLevel);
     });
 
     //Emit join message,
@@ -203,5 +203,5 @@ function setupSocket() {
 
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
-    return v0 * (1 - t) + v1 * t
+    return v0 * (1 - t) + v1 * t;
 }

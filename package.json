@@ -4,11 +4,14 @@
     "description": "First attempt at multiplayer online io game",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "test": "echo \"$(tput setaf 1)WARN$(tput sgr0): Unit testing not configured.\nSKIPPING REQUIREMENT\" && exit 0",
         "watch": "watchify src/client/js/app.js -o src/client/js/public/build.js -v",
         "server": "nodemon src/server/entry.js",
         "start": "npm-run-all --parallel watch server",
-        "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js"
+        "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
+        "lint": "echo 'Please wait. Lint Checking...\n' && ./node_modules/.bin/eslint src/",
+        "precommit": "npm lint && npm test",
+        "prepush": "npm lint && echo 'Prepush build skipped' && npm test"
     },
     "repository": {
         "type": "git",
@@ -43,6 +46,8 @@
         "babel-preset-es2015": "^6.24.1",
         "babelify": "^8.0.0",
         "browserify": "^16.2.0",
+        "eslint": "^5.1.0",
+        "husky": "^0.14.3",
         "nodemon": "^1.17.3",
         "npm-run-all": "^4.1.2",
         "npm-run-parallel": "^0.6.0",

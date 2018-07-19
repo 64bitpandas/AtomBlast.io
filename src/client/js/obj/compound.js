@@ -1,10 +1,10 @@
-import { GameObject } from "./gameobject";
-import { socket, objects } from "../socket";
-import { BLUEPRINTS } from "./blueprints";
+import { GameObject } from './gameobject';
+import { socket, objects } from '../socket';
+import { BLUEPRINTS } from './blueprints';
 import * as PIXI from 'pixi.js';
-import { app, player } from "../pixigame";
-import { updateCompoundButtons } from "../app";
-import { GLOBAL, distanceBetween } from "../global.js";
+import { app, player } from '../pixigame';
+import { updateCompoundButtons } from '../app';
+import { GLOBAL, distanceBetween } from '../global.js';
 
 /**
  * Generic Compound which can be instantiated into the scene as a GameObject.
@@ -24,14 +24,14 @@ export class Compound extends GameObject {
 
         // Use params
         switch (this.blueprint.type) {
-            case 'binary':
-                this.width = this.size*4;
-                this.height = this.size*4;
-                break;
-            case 'basic':
-                this.width = this.size*6;
-                this.height = this.size*6;
-                break;
+        case 'binary':
+            this.width = this.size*4;
+            this.height = this.size*4;
+            break;
+        case 'basic':
+            this.width = this.size*6;
+            this.height = this.size*6;
+            break;
         }
     }
 
@@ -41,14 +41,14 @@ export class Compound extends GameObject {
     tick() {
         // Different behaviors based on type
         switch (this.blueprint.type) {
-            case 'binary':
-                //do stuff
-                break;
-            case 'basic':
-                //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
-                break;
-            default:
-                throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
+        case 'binary':
+            //do stuff
+            break;
+        case 'basic':
+            //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
+            break;
+        default:
+            throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
         }
 
         this.checkCollision();

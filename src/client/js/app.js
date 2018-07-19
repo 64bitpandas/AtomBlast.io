@@ -2,7 +2,7 @@
  * App.js is responsible for connecting the UI with the game functionality.
  * Most of the functionality is used for the main menu and connecting/disconnecting behavior.
  */
-"use strict";
+'use strict';
 import { GLOBAL } from './global.js';
 import * as cookies from './lib/cookies';
 import { Player } from './obj/player';
@@ -34,7 +34,7 @@ let selectedSlot;
 function joinGame() {
 
     if (!allBlueprintsSelected())
-        swal("Blueprint(s) not selected", "Make sure all your blueprint slots are filled before joining a game!", "error");
+        swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error');
     // check if the nick is valid
     else if (validNick()) {
 
@@ -48,7 +48,7 @@ function joinGame() {
             selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
 
             // Check whether blueprint is selected!                     
-                document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
+            document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
         }
 
         // Show game window
@@ -58,9 +58,9 @@ function joinGame() {
         // Show loading screen
         showElement('loading');
 
-       // Cookie Inputs: 0=player, 1=room, 2=team
+        // Cookie Inputs: 0=player, 1=room, 2=team
 
-       // Connect to server
+        // Connect to server
         beginConnection();
             
     } else {
@@ -95,7 +95,7 @@ function allBlueprintsSelected() {
  * Its a method for testing stuff
  */
 function testHandler() {
-    swal('SUCCESS','The test event is invoked!','info')
+    swal('SUCCESS','The test event is invoked!','info');
 }
 
 /** 
@@ -178,10 +178,10 @@ window.onload = () => {
             showElement('bp-select');
             document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;
             selectedSlot = i;
-        }
+        };
     }
 
-    document.getElementById('btn-close').onclick = () => { hideElement('bp-select') }
+    document.getElementById('btn-close').onclick = () => { hideElement('bp-select'); };
 
     // Set up blueprint selection buttons
     for(let blueprint in BLUEPRINTS) {
@@ -212,7 +212,7 @@ window.onload = () => {
             document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
             hideElement('bp-select');
             cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
-        }
+        };
 
     // Add enter listeners for all inputs
     for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
@@ -242,7 +242,7 @@ window.onload = () => {
     // Server changed
     cookieInputs[8].onchange = () => {
         cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
-    }
+    };
 };
 
 // function onClick(e) {
@@ -256,7 +256,7 @@ window.onload = () => {
 window.onmousemove = (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-}
+};
 
 function mouseClickHandler(e) {
     if (getIngame() === false) {
@@ -271,7 +271,7 @@ function mouseClickHandler(e) {
         // Subtract atoms needed to craft
         deductCraftMaterial(selectedBlueprints[selectedCompound]);
     } else
-        console.log("Not enough atoms to craft this blueprint!");
+        console.log('Not enough atoms to craft this blueprint!');
 }
 
 // function setupEventHandlers() {  
@@ -304,7 +304,7 @@ export function quitGame(msg, isError) {
     hideElement('menubox');
     showElement('startMenuWrapper');
     hideElement('lobby');
-    swal("Disconnected from Game", msg, (isError) ? 'error' : 'info');
+    swal('Disconnected from Game', msg, (isError) ? 'error' : 'info');
 }
 
 /**
@@ -340,7 +340,7 @@ window.tooltipFollow = (button) => {
     let tooltip = button.getElementsByClassName('tooltip')[0];
     tooltip.style.top = (mouseY - 150) + 'px';
     tooltip.style.left = (mouseX - 150) + 'px';
-}
+};
 
 /**
  * Updates the list of atoms that the player holds.
@@ -401,7 +401,7 @@ export function updateCompoundButtons(selectedSlot) {
 export function updateLobby(data) {
 
 // Wipe innerHTML first
-    let lobby = document.getElementById("team-display");
+    let lobby = document.getElementById('team-display');
     lobby.innerHTML = '';
     for(let player in data) {
         if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
