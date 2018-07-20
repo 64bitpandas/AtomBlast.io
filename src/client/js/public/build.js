@@ -42064,7 +42064,7 @@ function devTest() {
     }
 }
 
-},{"./global.js":192,"./lib/cookies":194,"./obj/atom":196,"./obj/blueprints.js":197,"./obj/compound":198,"./obj/gameobject":199,"./obj/player":200,"./pixigame.js":201,"./socket.js":202,"sweetalert":188}],192:[function(require,module,exports){
+},{"./global.js":192,"./lib/cookies":194,"./obj/atom":196,"./obj/blueprints.js":197,"./obj/compound":198,"./obj/gameobject":199,"./obj/player":201,"./pixigame.js":203,"./socket.js":204,"sweetalert":188}],192:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42132,7 +42132,8 @@ var GLOBAL = exports.GLOBAL = {
     ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
 
     // Map
-    MAP_SIZE: 5000,
+    TILE_TEXTURE_DIR: '../assets/map/Tiles/',
+    MAP_SIZE: 2000,
 
     // Drawing
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
@@ -42409,7 +42410,7 @@ var ChatClient = function () {
 exports.default = ChatClient;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../app.js":191,"../global.js":192,"../socket.js":202}],194:[function(require,module,exports){
+},{"../app.js":191,"../global.js":192,"../socket.js":204}],194:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -42549,7 +42550,7 @@ function keyboard(keyCode) {
    * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
    */
 
-},{"../pixigame":201}],196:[function(require,module,exports){
+},{"../pixigame":203}],196:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42695,7 +42696,7 @@ function spawnAtom(typeID, id, x, y, vx, vy) {
     return new Atom(id, typeID, texture, x, y, vx, vy);
 }
 
-},{"../app.js":191,"../global.js":192,"../obj/gameobject":199,"../pixigame.js":201,"../socket.js":202,"./player.js":200,"pixi.js":142}],197:[function(require,module,exports){
+},{"../app.js":191,"../global.js":192,"../obj/gameobject":199,"../pixigame.js":203,"../socket.js":204,"./player.js":201,"pixi.js":142}],197:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -42984,7 +42985,7 @@ function createCompound(data) {
     return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam);
 }
 
-},{"../app":191,"../global.js":192,"../pixigame":201,"../socket":202,"./blueprints":197,"./gameobject":199,"pixi.js":142}],199:[function(require,module,exports){
+},{"../app":191,"../global.js":192,"../pixigame":203,"../socket":204,"./blueprints":197,"./gameobject":199,"pixi.js":142}],199:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43090,7 +43091,7 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
         }
 
         /** TEMP
-         * Moves this player to (9999, 9999) on local screen space, effectively
+         * Moves this object to (9999, 9999) on local screen space, effectively
          * hiding it from view.
          */
 
@@ -43129,7 +43130,89 @@ var GameObject = exports.GameObject = function (_PIXI$Sprite) {
     return GameObject;
 }(PIXI.Sprite);
 
-},{"../global":192,"../pixigame":201,"pixi.js":142}],200:[function(require,module,exports){
+},{"../global":192,"../pixigame":203,"pixi.js":142}],200:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.MapTile = undefined;
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pixi = require('pixi.js');
+
+var PIXI = _interopRequireWildcard(_pixi);
+
+var _tiles = require('./tiles');
+
+var _global = require('../global');
+
+var _pixigame = require('../pixigame');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+/**
+ * One Tile component of the map. 
+ */
+var MapTile = exports.MapTile = function (_PIXI$Sprite) {
+  _inherits(MapTile, _PIXI$Sprite);
+
+  /**
+   * Constructs one Tile to add to the map.
+   * @param {string} name Name of the tile to place. Takes this name from `tiles.js` and loads its resources
+   * @param {number} gridX X-coordinate on the grid. Every 1 gridX = 400 posX 
+   * @param {number} gridY Y-coordinate on the grid.
+   */
+  function MapTile(name, gridX, gridY) {
+    _classCallCheck(this, MapTile);
+
+    var _this = _possibleConstructorReturn(this, (MapTile.__proto__ || Object.getPrototypeOf(MapTile)).call(this, PIXI.loader.resources[_global.GLOBAL.TILE_TEXTURE_DIR + _tiles.TILES[name].texture].texture));
+
+    _this.tile = _tiles.TILES[name];
+    _this.posX = gridX * _global.GLOBAL.GRID_SPACING * 2;
+    _this.posY = gridY * _global.GLOBAL.GRID_SPACING * 2;
+    _this.height = _global.GLOBAL.GRID_SPACING * 2;
+    _this.width = _global.GLOBAL.GRID_SPACING * 2;
+    _pixigame.app.stage.addChild(_this);
+    return _this;
+  }
+
+  /**
+   * Draws object in the correct position on the player screen.
+   */
+
+
+  _createClass(MapTile, [{
+    key: 'tick',
+    value: function tick() {
+      if (_pixigame.player !== undefined) {
+        this.x = _pixigame.screenCenterX + this.posX - _pixigame.player.posX;
+        this.y = _pixigame.screenCenterY + _pixigame.player.posY - this.posY;
+      }
+    }
+
+    /** TEMP
+     * Moves this tile to (9999, 9999) on local screen space, effectively
+     * hiding it from view.
+     */
+    // hide() {
+    //     this.x = 9999;
+    //     this.y = 9999;
+    // }
+
+  }]);
+
+  return MapTile;
+}(PIXI.Sprite);
+
+},{"../global":192,"../pixigame":203,"./tiles":202,"pixi.js":142}],201:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43314,7 +43397,95 @@ var Player = exports.Player = function (_GameObject) {
     return Player;
 }(_gameobject.GameObject);
 
-},{"../global.js":192,"../obj/gameobject":199,"../pixigame.js":201,"../socket.js":202,"pixi.js":142}],201:[function(require,module,exports){
+},{"../global.js":192,"../obj/gameobject":199,"../pixigame.js":203,"../socket.js":204,"pixi.js":142}],202:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+/**
+ * This constant contains all data on how to draw and manage tiles. 
+ * 
+ * Fields required:
+ * type: Choose one: spawner, teamBase, wall
+ * params: Different for each type. For example, spawner will require the `atomToSpawn` param, and teamBase will require the `teamName` param.
+ * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. 'foo.png' corresponds to '../../assets/map/Tiles/foo.png') 
+ */
+var TILES = exports.TILES = {
+    empty: {
+        texture: 'SolidTile.png',
+        type: 'none'
+    },
+    topLeft: {
+        texture: 'Corner TL.png',
+        type: 'wall',
+        params: {
+            border: ['top', 'left']
+        }
+    },
+    topRight: {
+        texture: 'Corner TR.png',
+        type: 'wall',
+        params: {
+            border: ['top', 'left']
+        }
+    },
+    bottomLeft: {
+        texture: 'Corner BL.png',
+        type: 'wall',
+        params: {
+            border: ['top', 'left']
+        }
+    },
+    bottomRight: {
+        texture: 'Corner BR.png',
+        type: 'wall',
+        params: {
+            border: ['top', 'left']
+        }
+    },
+    edgeTop: {
+        texture: 'EdgeTile T.png',
+        type: 'wall',
+        params: {
+            border: ['top']
+        }
+    },
+    edgeBottom: {
+        texture: 'EdgeTile B.png',
+        type: 'wall',
+        params: {
+            border: ['top']
+        }
+    },
+    edgeLeft: {
+        texture: 'EdgeTile L.png',
+        type: 'wall',
+        params: {
+            border: ['top']
+        }
+    },
+    edgeRight: {
+        texture: 'EdgeTile R.png',
+        type: 'wall',
+        params: {
+            border: ['top']
+        }
+    },
+    hydrogenVent: {
+        texture: 'HydrogenVent.png',
+        type: 'spawner',
+        params: {
+            atomsToSpawn: ['h']
+        }
+    }
+
+    /**
+     * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).
+     */
+};var MAP_LAYOUT = exports.MAP_LAYOUT = [['topLeft', 'edgeTop', 'topRight'], ['edgeLeft', 'empty', 'edgeRight'], ['bottomLeft', 'edgeBottom', 'bottomRight']];
+
+},{}],203:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -43351,7 +43522,13 @@ var _blueprints = require('./obj/blueprints');
 
 var _compound = require('./obj/compound');
 
+var _tiles = require('./obj/tiles');
+
+var _maptile = require('./obj/maptile');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+// import { MapTile } from './obj/maptile';
 
 var isSetup = exports.isSetup = undefined; // True after the stage is fully set up
 var player = exports.player = undefined; // The player being controlled by this client
@@ -43426,6 +43603,10 @@ function loadTextures() {
                 }
             }
         }
+
+        for (var tile in _tiles.TILES) {
+            if (TEXTURES.indexOf(_global.GLOBAL.TILE_TEXTURE_DIR + _tiles.TILES[tile].texture) < 0) TEXTURES.push(_global.GLOBAL.TILE_TEXTURE_DIR + _tiles.TILES[tile].texture);
+        }console.log(TEXTURES);
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
             PIXI.loader.add(_global.GLOBAL.PLAYER_SPRITES).add(TEXTURES).load(registerCallbacks);
@@ -43521,6 +43702,17 @@ function registerCallbacks() {
     }
 
     exports.isSetup = isSetup = true;
+
+    // Draw map
+    for (var row = 0; row < _tiles.MAP_LAYOUT.length; row++) {
+        for (var col = 0; col < _tiles.MAP_LAYOUT[0].length; col++) {
+            var tileName = 'tile_' + col + '_' + row;
+            if (_socket.objects.tiles[tileName] === undefined || _socket.objects.tiles[tileName] === null) {
+                console.log(_tiles.MAP_LAYOUT[row][col]);
+                _socket.objects.tiles[tileName] = new _maptile.MapTile(_tiles.MAP_LAYOUT[row][col], col, row);
+            }
+        }
+    }
 
     // Draw grid
     // Grid
@@ -43693,7 +43885,9 @@ function draw(delta) {
     // Handle objects except for this player
     for (var objType in _socket.objects) {
         for (var obj in _socket.objects[objType]) {
-            if (objType !== 'players' || player !== _socket.objects[objType][obj]) _socket.objects[objType][obj].tick();
+            if (objType !== 'players' || player !== _socket.objects[objType][obj]) {
+                _socket.objects[objType][obj].tick();
+            }
         }
     }
 }
@@ -43817,7 +44011,7 @@ function getIngame() {
     return inGame;
 }
 
-},{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/player":200,"./socket":202,"pixi.js":142}],202:[function(require,module,exports){
+},{"./app":191,"./global":192,"./lib/keyboard":195,"./obj/blueprints":197,"./obj/compound":198,"./obj/maptile":200,"./obj/player":201,"./obj/tiles":202,"./socket":204,"pixi.js":142}],204:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -43844,6 +44038,10 @@ var _atom = require("./obj/atom");
 
 var _compound = require("./obj/compound");
 
+var _maptile = require("./obj/maptile");
+
+var _tiles = require("./obj/tiles");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -43860,7 +44058,8 @@ var socket = exports.socket = undefined;
 var objects = exports.objects = {
     players: {},
     atoms: {},
-    compounds: {}
+    compounds: {},
+    tiles: {}
 };
 
 /**
@@ -43912,6 +44111,7 @@ function disconnect() {
  * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
  */
 function setupSocket() {
+
     //Debug
     console.log('Socket:', socket);
 
@@ -43941,31 +44141,44 @@ function setupSocket() {
     // Syncs all objects from server once a frame
     socket.on('objectSync', function (data) {
         for (var objType in data) {
-            for (var obj in data[objType]) {
-                if (data[objType][obj] !== null) {
-                    var objRef = data[objType][obj];
-                    var clientObj = objects[objType][obj];
-                    // Already exists in database
-                    if (clientObj !== undefined && clientObj !== null) {
-                        if (objRef.id !== socket.id) objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                        if (objType === 'players') objects[objType][obj].health = objRef.health;
-                    }
-                    // Does not exist - need to clone to clientside
-                    else if (_pixigame.isSetup) {
-                            switch (objType) {
-                                case 'players':
-                                    objects[objType][obj] = (0, _pixigame.createPlayer)(objRef);
-                                    break;
-                                case 'atoms':
-                                    objects[objType][obj] = (0, _atom.spawnAtom)(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                                    break;
-                                case 'compounds':
-                                    objects[objType][obj] = (0, _compound.createCompound)(objRef);
-                                    break;
-                            }
+            if (objType !== 'tiles') {
+                for (var obj in data[objType]) {
+                    if (data[objType][obj] !== null) {
+                        var objRef = data[objType][obj];
+                        var clientObj = objects[objType][obj];
+                        // Already exists in database
+                        if (clientObj !== undefined && clientObj !== null) {
+                            if (objRef.id !== socket.id) objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                            if (objType === 'players') objects[objType][obj].health = objRef.health;
                         }
+                        // Does not exist - need to clone to clientside
+                        else if (_pixigame.isSetup) {
+                                switch (objType) {
+                                    case 'players':
+                                        objects[objType][obj] = (0, _pixigame.createPlayer)(objRef);
+                                        break;
+                                    case 'atoms':
+                                        objects[objType][obj] = (0, _atom.spawnAtom)(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                                        break;
+                                    case 'compounds':
+                                        objects[objType][obj] = (0, _compound.createCompound)(objRef);
+                                        break;
+                                }
+                            }
+                    }
                 }
             }
+            // else { //Tile drawing
+            //     for (let tile of data.tiles) {
+
+            //         let tileName = 'tile_' + tile.col + '_' + tile.row;
+            //         if (objects.tiles[tileName] === undefined) {
+            //             // console.log(tileName);
+            //             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);
+            //         }
+
+            //     }
+            // }
         }
     });
 
@@ -44044,4 +44257,4 @@ function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
 }
 
-},{"./app":191,"./global":192,"./lib/chat-client":193,"./obj/atom":196,"./obj/compound":198,"./pixigame":201}]},{},[191]);
+},{"./app":191,"./global":192,"./lib/chat-client":193,"./obj/atom":196,"./obj/compound":198,"./obj/maptile":200,"./obj/tiles":202,"./pixigame":203}]},{},[191]);

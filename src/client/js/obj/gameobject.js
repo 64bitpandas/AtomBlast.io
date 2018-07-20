@@ -67,7 +67,7 @@ export class GameObject extends PIXI.Sprite {
     }
 
     /** TEMP
-     * Moves this player to (9999, 9999) on local screen space, effectively
+     * Moves this object to (9999, 9999) on local screen space, effectively
      * hiding it from view.
      */
     hide() {

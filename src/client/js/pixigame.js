@@ -6,6 +6,9 @@ import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCom
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
+import { TILES, MAP_LAYOUT } from './obj/tiles';
+import { MapTile } from './obj/maptile';
+// import { MapTile } from './obj/maptile';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -57,6 +60,10 @@ export function loadTextures() {
         for (let atom of GLOBAL.ATOM_SPRITES)
             if (TEXTURES.indexOf(atom) < 0)
                 TEXTURES.push(atom);
+        for(let tile in TILES)
+            if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0)
+                TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture);
+        console.log(TEXTURES);
 
 
         if (Object.keys(PIXI.loader.resources).length < 1) {
@@ -161,6 +168,17 @@ function registerCallbacks() {
 
     isSetup = true;
 
+    // Draw map
+    for (let row = 0; row < MAP_LAYOUT.length; row++) {
+        for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
+            let tileName = 'tile_' + col + '_' + row;
+            if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
+                console.log(MAP_LAYOUT[row][col]);
+                objects.tiles[tileName] = new MapTile(MAP_LAYOUT[row][col], col, row);
+            }
+        }
+    }
+
     // Draw grid
     // Grid
     let line;
@@ -182,6 +200,7 @@ function registerCallbacks() {
         horizLines.push(line);
         app.stage.addChild(line);
     }
+
 
     showGameUI();
 }
@@ -271,8 +290,9 @@ function draw(delta) {
     // Handle objects except for this player
     for (let objType in objects) {
         for (let obj in objects[objType])
-            if (objType !== 'players' || player !== objects[objType][obj])
+            if (objType !== 'players' || player !== objects[objType][obj]) {
                 objects[objType][obj].tick();
+            }
     }
 
 }

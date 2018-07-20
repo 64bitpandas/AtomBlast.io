@@ -4,6 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {GLOBAL, distanceBetween} from '../client/js/global.js';
+import { MAP_LAYOUT } from '../client/js/obj/tiles.js';
 var config = require('./config.json');
 
 
@@ -178,9 +179,23 @@ io.on('connection', socket => {
             tempObjects[objType][obj] = rooms[room][objType][obj];
       }
 
+      // // Populate tiles
+      // tempObjects.tiles = [];
+      // for(let row = 0; row < MAP_LAYOUT.length; row++) {
+      //   for(let col = 0; col < MAP_LAYOUT[0].length; col++)
+      //     if(distanceBetween(thisPlayer, {
+      //       posX: col * GLOBAL.GRID_SPACING * 2,
+      //       posY: row * GLOBAL.GRID_SPACING * 2
+      //     }) < GLOBAL.DRAW_RADIUS)
+      //       tempObjects.tiles.push({
+      //         row: row,
+      //         col: col
+      //       });
+      // }
+
       socket.emit('objectSync', tempObjects);
       
-      if(!rooms[room].started) {
+      if(rooms[room] !== undefined && !rooms[room].started) {
         // Send over the room player information
         // socket.to(room).broadcast.emit('roomInfo', rooms[room].players);
         socket.emit('roomInfo', rooms[room].players)
