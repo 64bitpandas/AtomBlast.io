@@ -10,8 +10,8 @@
         "start": "npm-run-all --parallel watch server",
         "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
         "lint": "echo 'Please wait. Lint Checking...\n' && ./node_modules/.bin/eslint src/",
-        "precommit": "npm lint && npm test",
-        "prepush": "npm lint && echo 'Prepush build skipped' && npm test"
+        "precommit": "npm run lint && npm test",
+        "prepush": "npm run lint && echo 'Prepush build skipped' && npm test"
     },
     "repository": {
         "type": "git",

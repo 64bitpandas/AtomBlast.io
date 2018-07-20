@@ -61,7 +61,8 @@ export const GLOBAL = {
     ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
 
     // Map
-    MAP_SIZE: 5000,
+    TILE_TEXTURE_DIR: '../assets/map/Tiles/',
+    MAP_SIZE: 2000,
 
     // Drawing
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects

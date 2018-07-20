@@ -1,9 +1,20 @@
+<<<<<<< HEAD
 import { GLOBAL } from './global';
 import { cookieInputs, quitGame, updateLobby } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from './pixigame';
 import { spawnAtom } from './obj/atom';
 import { createCompound } from './obj/compound';
+=======
+import { GLOBAL } from "./global";
+import { cookieInputs, quitGame, updateLobby } from "./app";
+import ChatClient from "./lib/chat-client";
+import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
+import { spawnAtom } from "./obj/atom";
+import { createCompound } from "./obj/compound";
+import { MapTile } from "./obj/maptile";
+import { MAP_LAYOUT } from "./obj/tiles";
+>>>>>>> 569fe83e654acf80b6260219aea3a2108a49658e
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -19,7 +30,8 @@ export var socket;
 export var objects = {
     players: {},
     atoms: {},
-    compounds: {}
+    compounds: {},
+    tiles: {}
 };
 
 /**
@@ -71,6 +83,8 @@ export function disconnect() {
  * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
  */
 function setupSocket() {
+
+
     //Debug
     console.log('Socket:', socket);
 
@@ -101,6 +115,7 @@ function setupSocket() {
     // Syncs all objects from server once a frame
     socket.on('objectSync', (data) => {
         for(let objType in data) {
+<<<<<<< HEAD
             for(let obj in data[objType]) {
                 if(data[objType][obj] !== null) {
                     let objRef = data[objType][obj];
@@ -124,12 +139,54 @@ function setupSocket() {
                         case 'compounds':
                             objects[objType][obj] = createCompound(objRef);
                             break;
+=======
+            if(objType !== 'tiles') {
+                for (let obj in data[objType]) {
+                    if (data[objType][obj] !== null) {
+                        let objRef = data[objType][obj];
+                        let clientObj = objects[objType][obj];
+                        // Already exists in database
+                        if (clientObj !== undefined && clientObj !== null) {
+                            if (objRef.id !== socket.id)
+                                objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                            if (objType === 'players')
+                                objects[objType][obj].health = objRef.health;
+                        }
+                        // Does not exist - need to clone to clientside
+                        else if (isSetup) {
+                            switch (objType) {
+                                case 'players':
+                                    objects[objType][obj] = createPlayer(objRef);
+                                    break;
+                                case 'atoms':
+                                    objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                                    break;
+                                case 'compounds':
+                                    objects[objType][obj] = createCompound(objRef);
+                                    break;
+                            }
+>>>>>>> 569fe83e654acf80b6260219aea3a2108a49658e
                         }
                     }
                 }
             }
+            // else { //Tile drawing
+            //     for (let tile of data.tiles) {
+
+            //         let tileName = 'tile_' + tile.col + '_' + tile.row;
+            //         if (objects.tiles[tileName] === undefined) {
+            //             // console.log(tileName);
+            //             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);
+            //         }
+
+            //     }
+            // }
+
         }
     });
+
+ 
+      
 
     // Sync atoms that have not been picked up
     socket.on('serverSendAtomRemoval', (data) => {
