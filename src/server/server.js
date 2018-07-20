@@ -7,7 +7,6 @@ import {GLOBAL, distanceBetween} from '../client/js/global.js';
 import { MAP_LAYOUT } from '../client/js/obj/tiles.js';
 var config = require('./config.json');
 
-
 const DEBUG = true;
 const COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection
 
@@ -159,50 +158,50 @@ io.on('connection', socket => {
     // Add team to database
     let thisPlayer = rooms[room].players[socket.id];
  
-  // Setup player array sync- once a frame
-  setInterval(() => {
-    if(rooms[room] !== undefined) {
-      // Distance checking for all objects
-      let tempObjects = {
-        players: {},
-        atoms: {},
-        compounds: {}
-      };
+    // Setup player array sync- once a frame
+    setInterval(() => {
+        if(rooms[room] !== undefined) {
+            // Distance checking for all objects
+            let tempObjects = {
+                players: {},
+                atoms: {},
+                compounds: {}
+            };
 
-      // Move compounds
-      for(let compound in rooms[room].compounds) {
-        rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
-        rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
-      }
+            // Move compounds
+            for(let compound in rooms[room].compounds) {
+                rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
+                rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+            }
 
-      for(let objType in tempObjects) {
-        for (let obj in rooms[room][objType])
-          if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
-            tempObjects[objType][obj] = rooms[room][objType][obj];
-      }
+            for(let objType in tempObjects) {
+                for (let obj in rooms[room][objType])
+                    if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
+                        tempObjects[objType][obj] = rooms[room][objType][obj];
+            }
 
-      // // Populate tiles
-      // tempObjects.tiles = [];
-      // for(let row = 0; row < MAP_LAYOUT.length; row++) {
-      //   for(let col = 0; col < MAP_LAYOUT[0].length; col++)
-      //     if(distanceBetween(thisPlayer, {
-      //       posX: col * GLOBAL.GRID_SPACING * 2,
-      //       posY: row * GLOBAL.GRID_SPACING * 2
-      //     }) < GLOBAL.DRAW_RADIUS)
-      //       tempObjects.tiles.push({
-      //         row: row,
-      //         col: col
-      //       });
-      // }
+            // // Populate tiles
+            // tempObjects.tiles = [];
+            // for(let row = 0; row < MAP_LAYOUT.length; row++) {
+            //   for(let col = 0; col < MAP_LAYOUT[0].length; col++)
+            //     if(distanceBetween(thisPlayer, {
+            //       posX: col * GLOBAL.GRID_SPACING * 2,
+            //       posY: row * GLOBAL.GRID_SPACING * 2
+            //     }) < GLOBAL.DRAW_RADIUS)
+            //       tempObjects.tiles.push({
+            //         row: row,
+            //         col: col
+            //       });
+            // }
 
-      socket.emit('objectSync', tempObjects);
+            socket.emit('objectSync', tempObjects);
       
-      if(rooms[room] !== undefined && !rooms[room].started) {
-        // Send over the room player information
-        // socket.to(room).broadcast.emit('roomInfo', rooms[room].players);
-        socket.emit('roomInfo', rooms[room].players)
-      }
-    }
+            if(rooms[room] !== undefined && !rooms[room].started) {
+                // Send over the room player information
+                // socket.to(room).broadcast.emit('roomInfo', rooms[room].players);
+                socket.emit('roomInfo', rooms[room].players);
+            }
+        }
 
 
 

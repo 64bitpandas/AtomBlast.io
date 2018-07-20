@@ -74,7 +74,7 @@ export const TILES = {
             atomsToSpawn: ['h']
         }
     }
-}
+};
 
 /**
  * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).
@@ -89,4 +89,4 @@ export const MAP_LAYOUT = [
     [
         'bottomLeft', 'edgeBottom', 'bottomRight'
     ]
-]
+];

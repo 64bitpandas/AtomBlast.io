@@ -1,20 +1,11 @@
-<<<<<<< HEAD
 import { GLOBAL } from './global';
 import { cookieInputs, quitGame, updateLobby } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from './pixigame';
 import { spawnAtom } from './obj/atom';
 import { createCompound } from './obj/compound';
-=======
-import { GLOBAL } from "./global";
-import { cookieInputs, quitGame, updateLobby } from "./app";
-import ChatClient from "./lib/chat-client";
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from "./pixigame";
-import { spawnAtom } from "./obj/atom";
-import { createCompound } from "./obj/compound";
-import { MapTile } from "./obj/maptile";
-import { MAP_LAYOUT } from "./obj/tiles";
->>>>>>> 569fe83e654acf80b6260219aea3a2108a49658e
+import { MapTile } from './obj/maptile';
+import { MAP_LAYOUT } from './obj/tiles';
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -115,31 +106,6 @@ function setupSocket() {
     // Syncs all objects from server once a frame
     socket.on('objectSync', (data) => {
         for(let objType in data) {
-<<<<<<< HEAD
-            for(let obj in data[objType]) {
-                if(data[objType][obj] !== null) {
-                    let objRef = data[objType][obj];
-                    let clientObj = objects[objType][obj];
-                    // Already exists in database
-                    if(clientObj !== undefined && clientObj !== null) {
-                        if (objRef.id !== socket.id)
-                            objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                        if(objType === 'players')
-                            objects[objType][obj].health = objRef.health;
-                    }
-                    // Does not exist - need to clone to clientside
-                    else if(isSetup) {
-                        switch(objType) {
-                        case 'players':
-                            objects[objType][obj] = createPlayer(objRef);
-                            break;
-                        case 'atoms':
-                            objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                            break;
-                        case 'compounds':
-                            objects[objType][obj] = createCompound(objRef);
-                            break;
-=======
             if(objType !== 'tiles') {
                 for (let obj in data[objType]) {
                     if (data[objType][obj] !== null) {
@@ -155,17 +121,16 @@ function setupSocket() {
                         // Does not exist - need to clone to clientside
                         else if (isSetup) {
                             switch (objType) {
-                                case 'players':
-                                    objects[objType][obj] = createPlayer(objRef);
-                                    break;
-                                case 'atoms':
-                                    objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                                    break;
-                                case 'compounds':
-                                    objects[objType][obj] = createCompound(objRef);
-                                    break;
+                            case 'players':
+                                objects[objType][obj] = createPlayer(objRef);
+                                break;
+                            case 'atoms':
+                                objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+                                break;
+                            case 'compounds':
+                                objects[objType][obj] = createCompound(objRef);
+                                break;
                             }
->>>>>>> 569fe83e654acf80b6260219aea3a2108a49658e
                         }
                     }
                 }
