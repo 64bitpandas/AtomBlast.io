@@ -4,12 +4,12 @@
     "description": "First attempt at multiplayer online io game",
     "main": "index.js",
     "scripts": {
-        "test": "(echo \"WARN: Unit testing not configured.\nSKIPPING REQUIREMENT\" && exit 0) && echo \"$(tput setaf 2)$(tput setab 0)Unit testing passed.$(tput sgr0)\"",
+        "test": "(jest && echo \"$(tput setaf 2)$(tput setab 0)Unit testing passed.$(tput sgr0)\") || (echo \"$(tput setaf 1)$(tput setab 7)Unit testing failed.\" && exit 1)",
         "watch": "watchify src/client/js/app.js -o src/client/js/public/build.js -v",
         "server": "nodemon src/server/entry.js",
         "start": "npm-run-all --parallel watch server",
         "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
-        "lint": "echo 'Please wait. Lint Checking...\n' && (./node_modules/.bin/eslint src/ || echo \"$(tput setaf 1)$(tput setab 7)linting check failed. Run 'npm run fix-lint' to attemp automatic fix$(tput sgr0)\") && echo \"$(tput setaf 2)$(tput setab 0)Linting Passed.$(tput sgr0)\"",
+        "lint": "echo 'Please wait. Lint Checking...\n' && ((./node_modules/.bin/eslint src/ && echo \"$(tput setaf 2)$(tput setab 0)Linting Passed.$(tput sgr0)\" ) || (echo \"$(tput setaf 1)$(tput setab 7)linting check failed. Run 'npm run fix-lint' to attemp automatic fix$(tput sgr0)\" && exit 1))",
         "fix-lint": "echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint src/ --fix",
         "precommit": "npm run lint && echo \"Running unit testing..\" && npm test",
         "prepush": "npm run lint && echo 'Prepush build skipped' && npm test"
@@ -49,6 +49,7 @@
         "browserify": "^16.2.0",
         "eslint": "^5.1.0",
         "husky": "^0.14.3",
+        "jest": "^23.4.1",
         "nodemon": "^1.17.3",
         "npm-run-all": "^4.1.2",
         "npm-run-parallel": "^0.6.0",
