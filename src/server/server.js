@@ -9,6 +9,8 @@ var config = require('./config.json');
 
 
 const DEBUG = true;
+const COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection
+
 app.use(express.static(`${__dirname}/../client`));
 
 /* Array of all connected players and atoms in respective rooms. All players must contain:
@@ -287,11 +289,17 @@ io.on('connection', socket => {
 
   // An atom was collected or changed
   socket.to(room).on('atomCollision', data => {
+      if (COLLISIONVERBOSE) {
+        console.log("atomCollision");
+      }
       delete rooms[room].atoms[data.id];
       socket.to(room).broadcast.emit('serverSendAtomRemoval', data);
   });
 
   socket.to(room).on('compoundCollision', data => {
+    if (COLLISIONVERBOSE) {
+      console.log("compoundCollision");
+    }
     if(rooms[room].compounds[data.id] !== undefined) {
       delete rooms[room].compounds[data.id];
       socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
