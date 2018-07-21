@@ -239,12 +239,15 @@ select {
 	width: 100%;
 	transition-duration: 1s;
 	margin-bottom: 1vh;
-	-webkit-appearance: none;
+	-webkit-appearance: none; /* Override Mac/Chrome */
+	-moz-appearance: none; /* Override Firefox */
+	
 }
 
 select:focus {
 	box-shadow: 0px 0px 1rem 0px #311B92;
-	-webkit-appearance: none;
+	-webkit-appearance: none; /* Override Mac/Chrome */
+	-moz-appearance: none; /* Override Firefox */
 }
 
 #newsBox {
