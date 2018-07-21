@@ -4,7 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {GLOBAL, distanceBetween} from '../client/js/global.js';
-import { MAP_LAYOUT } from '../client/js/obj/tiles.js';
+import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
 var config = require('./config.json');
 
 const DEBUG = true;
@@ -122,21 +122,21 @@ io.on('connection', socket => {
         rooms[room].type = socket.handshake.query.roomType;
 
         // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
-        for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
-            // let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
-            let type = 'h'; //TODO
-            let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-            let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-            let atom = {
-                typeID: type,
-                id: generateID(),
-                posX: randX,
-                posY: randY,
-                vx: 0,
-                vy: 0
-            };
-            rooms[room].atoms[atom.id] = atom;
-        }
+        // for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
+        //     // let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
+        //     let type = 'h'; //TODO
+        //     let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
+        //     let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
+        //     let atom = {
+        //         typeID: type,
+        //         id: generateID(),
+        //         posX: randX,
+        //         posY: randY,
+        //         vx: 0,
+        //         vy: 0
+        //     };
+        //     rooms[room].atoms[atom.id] = atom;
+        // }
     }
 
     // Create new player in rooms object
@@ -188,10 +188,15 @@ io.on('connection', socket => {
                     // console.log(this.vx, this.vy, this.posX, this.posY);
                     // socket.emit('move', { type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
                 }
-                else if (rooms[room].atoms[atom].vx > 0 || rooms[room].atoms[atom].vy > 0) {
+                else if (rooms[room].atoms[atom].vx > GLOBAL.DEADZONE || rooms[room].atoms[atom].vy > GLOBAL.DEADZONE) {
                     rooms[room].atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
                     rooms[room].atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
                 }
+
+                if (rooms[room].atoms[atom].vx <= GLOBAL.DEADZONE)
+                    rooms[room].atoms[atom].vx = 0;
+                if (rooms[room].atoms[atom].vy <= GLOBAL.DEADZONE)
+                    rooms[room].atoms[atom].vy = 0;
 
                 rooms[room].atoms[atom].posX += rooms[room].atoms[atom].vx;
                 rooms[room].atoms[atom].posY += rooms[room].atoms[atom].vy;
@@ -229,6 +234,30 @@ io.on('connection', socket => {
 
 
     }, 1000/60);
+
+    // Set up atom spawning once a second
+    setInterval(() => {
+        for(let row = 0; row < MAP_LAYOUT.length; row++)
+            for(let col = 0; col < MAP_LAYOUT[0].length; col++) {
+                if(TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
+                    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
+                    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+                    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
+                    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
+                    let atom = {
+                        typeID: atomToSpawn,
+                        id: generateID(),
+                        posX: x,
+                        posY: y,
+                        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
+                        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
+                    };
+                    if(rooms[room] !== undefined)
+                        rooms[room].atoms[atom.id] = atom;
+                }
+                
+            }
+    }, 3000)
 
     // Receives a chat from a player, then broadcasts it to other players
     socket.to(room).on('playerChat', data => {

@@ -49,11 +49,11 @@ export class Player extends GameObject {
         this.experience = experience; //Sets the experience of the player(Passed in)
 
         this.atoms = { // List of all atoms and the number that the player has. Continue list later
-            h: 0,
-            he: 0,
-            c: 0,
-            cl: 0,
         };
+
+        for(let atom of GLOBAL.ATOM_IDS)
+            this.atoms[atom] = 0;
+            
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
         this.setup();

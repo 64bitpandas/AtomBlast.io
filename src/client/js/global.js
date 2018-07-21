@@ -48,7 +48,7 @@ export const GLOBAL = {
     // Player Movement
     MAX_SPEED: 5,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.8, // speed multiplier when player is gliding to a stop
+    VELOCITY_STEP: 0.85, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
     DEADZONE: 0.1,
     MAX_HEALTH: 100, // Starting health of players
@@ -59,6 +59,7 @@ export const GLOBAL = {
     MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)
     ATTRACTION_RADIUS: 200, // Max distance for powerup to be attracted to player
     ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength
+    ATOM_SPAWN_SPEED: 20, // Speed that atom travels away from spawner
 
     // Map
     TILE_TEXTURE_DIR: '../assets/map/Tiles/',
@@ -82,13 +83,17 @@ export const GLOBAL = {
         'h',
         'he',
         'c',
-        'cl'
+        'cl',
+        'n',
+        'o'
     ],
     ATOM_SPRITES: [
         '../assets/atom-hydrogen.png',
         '../assets/atom_helium.png',
         '../assets/atom_carbon.png',
         '../assets/testplayer2.png',
+        '../assets/atom_nitrogen.png',
+        '../assets/atom_oxygen.png',
     ],
     //Each Value corresponds with the above event
     EXPERIENCE_VALUES: {
