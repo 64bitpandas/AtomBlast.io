@@ -131,4 +131,4 @@ export const TILE_NAMES = {
     z: 'bottomLeft',
     x: 'edgeBottom',
     c: 'bottomRight'
-}
+};

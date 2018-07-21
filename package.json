@@ -9,8 +9,8 @@
         "server": "nodemon src/server/entry.js",
         "start": "npm-run-all --parallel watch server",
         "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
-        "lint": "echo 'Please wait. Lint Checking...\n' && ((./node_modules/.bin/eslint src/ && echo \"$(tput setaf 2)$(tput setab 0)Linting Passed.$(tput sgr0)\" ) || (echo \"$(tput setaf 1)$(tput setab 7)linting check failed. Run 'npm run fix-lint' to attemp automatic fix$(tput sgr0)\" && exit 1))",
-        "fix-lint": "echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint src/ --fix",
+        "lint": "echo 'Working directory: ' && pwd && echo 'Please wait. Lint Checking...\n' && ((./node_modules/.bin/eslint ./src/ && echo \"$(tput setaf 2)$(tput setab 0)Linting Passed.$(tput sgr0)\" ) || (echo \"$(tput setaf 1)$(tput setab 7)linting check failed. Run 'npm run fix-lint' to attemp automatic fix$(tput sgr0)\" && exit 1))",
+        "fix-lint": "(echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \"$(tput setaf 1)$(tput setab 7)Auto Linting failed. Please manually fix the above errors.$(tput sgr0)\" && exit 1)",
         "precommit": "npm run lint && echo \"Running unit testing..\" && npm test",
         "prepush": "npm run lint && echo 'Prepush build skipped' && npm test"
     },

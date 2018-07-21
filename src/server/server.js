@@ -257,7 +257,7 @@ io.on('connection', socket => {
                 }
                 
             }
-    }, 3000)
+    }, 3000);
 
     // Receives a chat from a player, then broadcasts it to other players
     socket.to(room).on('playerChat', data => {
