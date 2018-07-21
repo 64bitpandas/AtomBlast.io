@@ -73,20 +73,62 @@ export const TILES = {
         params: {
             atomsToSpawn: ['h']
         }
-    }
+    },
+    oxygenVent: {
+        texture: 'OxygenVent.png',
+        type: 'spawner',
+        params: {
+            atomsToSpawn: ['o']
+        }
+    },
+    nitrogenVent: {
+        texture: 'NitrogenVent.png',
+        type: 'spawner',
+        params: {
+            atomsToSpawn: ['n']
+        }
+    },
+    carbonVent: {
+        texture: 'CarbonSource.png',
+        type: 'spawner',
+        params: {
+            atomsToSpawn: ['c']
+        }
+    },
 };
 
 /**
  * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).
+ * Shortcuts:
+ * E = Empty
+ * O = Oxygen
+ * N = Nitrogen
+ * C = Carbon
  */
 export const MAP_LAYOUT = [
-    [
-        'topLeft', 'edgeTop', 'topRight'
-    ],
-    [
-        'edgeLeft', 'empty', 'edgeRight'
-    ],
-    [
-        'bottomLeft', 'edgeBottom', 'bottomRight'
-    ]
+    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
+    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
+    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['E', 'N', 'E', 'E', 'C', 'C', 'E', 'E', 'N', 'E'],
+    ['E', 'N', 'E', 'E', 'C', 'C', 'E', 'E', 'N', 'E'],
+    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
+    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
+    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
 ];
+
+export const TILE_NAMES = {
+    E: 'empty',
+    O: 'oxygenVent',
+    N: 'nitrogenVent',
+    C: 'carbonVent',
+    q: 'topLeft',
+    w: 'edgeTop',
+    e: 'topRight',
+    a: 'edgeLeft',
+    d: 'edgeRight',
+    z: 'bottomLeft',
+    x: 'edgeBottom',
+    c: 'bottomRight'
+}

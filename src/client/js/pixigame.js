@@ -6,7 +6,7 @@ import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCom
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
-import { TILES, MAP_LAYOUT } from './obj/tiles';
+import { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles';
 import { MapTile } from './obj/maptile';
 
 export var isSetup; // True after the stage is fully set up
@@ -172,8 +172,10 @@ function registerCallbacks() {
         for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
             let tileName = 'tile_' + col + '_' + row;
             if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
-                console.log('draw ' + MAP_LAYOUT[row][col] + ' at ' + row + ', ' + col);
-                objects.tiles[tileName] = new MapTile(MAP_LAYOUT[row][col], col, MAP_LAYOUT.length - row - 1);
+                if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined)
+                    objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1);
+                else
+                    throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.');
             }
         }
     }
