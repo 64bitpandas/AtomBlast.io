@@ -57,8 +57,8 @@ export const GLOBAL = {
     ATOM_RADIUS: 30, // size of spawned atoms
     MIN_POWERUPS: 150, // minimum number of powerups to be spawned (TEMPORARY)
     MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)
-    ATTRACTION_RADIUS: 500, // Max distance for powerup to be attracted to player
-    ATTRACTION_COEFFICIENT: 0.1, // Multiplier for attraction strength
+    ATTRACTION_RADIUS: 200, // Max distance for powerup to be attracted to player
+    ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength
 
     // Map
     TILE_TEXTURE_DIR: '../assets/map/Tiles/',

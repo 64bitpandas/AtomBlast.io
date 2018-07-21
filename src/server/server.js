@@ -173,6 +173,29 @@ io.on('connection', socket => {
                 rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
                 rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
             }
+            // Move atoms
+            for(let atom in rooms[room].atoms) {
+                let distance = distanceBetween(
+                    { posX: rooms[room].atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: rooms[room].atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+                    { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
+                // Attractive force
+                if (distance < GLOBAL.ATTRACTION_RADIUS) {
+                    let theta = Math.atan2((thisPlayer.posY - rooms[room].atoms[atom].posY), (thisPlayer.posX - rooms[room].atoms[atom].posX));
+                    // rooms[room].atoms[atom].vx += 1 / (thisPlayer.posX - rooms[room].atoms[atom].posX) * GLOBAL.ATTRACTION_COEFFICIENT;
+                    // rooms[room].atoms[atom].vy += 1 / (thisPlayer.posY - rooms[room].atoms[atom].posY) * GLOBAL.ATTRACTION_COEFFICIENT;
+                    rooms[room].atoms[atom].vx = 1/distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
+                    rooms[room].atoms[atom].vy = 1/distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
+                    // console.log(this.vx, this.vy, this.posX, this.posY);
+                    // socket.emit('move', { type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
+                }
+                else if (rooms[room].atoms[atom].vx > 0 || rooms[room].atoms[atom].vy > 0) {
+                    rooms[room].atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
+                    rooms[room].atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
+                }
+
+                rooms[room].atoms[atom].posX += rooms[room].atoms[atom].vx;
+                rooms[room].atoms[atom].posY += rooms[room].atoms[atom].vy;
+            }
 
             for(let objType in tempObjects) {
                 for (let obj in rooms[room][objType])
