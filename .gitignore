@@ -62,3 +62,6 @@ src/experimental/
 
 # visual studio
 .vs/
+
+# Build file
+src/client/js/public/build.js

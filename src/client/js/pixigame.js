@@ -8,7 +8,6 @@ import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
 import { TILES, MAP_LAYOUT } from './obj/tiles';
 import { MapTile } from './obj/maptile';
-// import { MapTile } from './obj/maptile';
 
 export var isSetup; // True after the stage is fully set up
 export var player; // The player being controlled by this client
@@ -173,8 +172,8 @@ function registerCallbacks() {
         for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
             let tileName = 'tile_' + col + '_' + row;
             if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
-                console.log(MAP_LAYOUT[row][col]);
-                objects.tiles[tileName] = new MapTile(MAP_LAYOUT[row][col], col, row);
+                console.log('draw ' + MAP_LAYOUT[row][col] + ' at ' + row + ', ' + col);
+                objects.tiles[tileName] = new MapTile(MAP_LAYOUT[row][col], col, MAP_LAYOUT.length - row - 1);
             }
         }
     }

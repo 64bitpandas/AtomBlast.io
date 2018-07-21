@@ -12,56 +12,56 @@ export const TILES = {
         type: 'none'
     },
     topLeft: {
-        texture: 'Corner TL.png',
+        texture: 'InteriorCorner BR.png',
         type: 'wall',
         params: {
             border: ['top', 'left']
         }
     },
     topRight: {
-        texture: 'Corner TR.png',
+        texture: 'InteriorCorner BL.png',
         type: 'wall',
         params: {
             border: ['top', 'left']
         }
     },
     bottomLeft: {
-        texture: 'Corner BL.png',
+        texture: 'InteriorCorner TR.png',
         type: 'wall',
         params: {
             border: ['top', 'left']
         }
     },
     bottomRight: {
-        texture: 'Corner BR.png',
+        texture: 'InteriorCorner TL.png',
         type: 'wall',
         params: {
             border: ['top', 'left']
         }
     },
     edgeTop: {
-        texture: 'EdgeTile T.png',
-        type: 'wall',
-        params: {
-            border: ['top']
-        }
-    },
-    edgeBottom: {
         texture: 'EdgeTile B.png',
         type: 'wall',
         params: {
             border: ['top']
         }
     },
+    edgeBottom: {
+        texture: 'EdgeTile T.png',
+        type: 'wall',
+        params: {
+            border: ['top']
+        }
+    },
     edgeLeft: {
-        texture: 'EdgeTile L.png',
+        texture: 'EdgeTile R.png',
         type: 'wall',
         params: {
             border: ['top']
         }
     },
     edgeRight: {
-        texture: 'EdgeTile R.png',
+        texture: 'EdgeTile L.png',
         type: 'wall',
         params: {
             border: ['top']
