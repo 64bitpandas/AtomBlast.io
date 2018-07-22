@@ -47,6 +47,7 @@ export class Player extends GameObject {
         this.health = health; //Set the health of the player
         this.isMoving = false;
         this.experience = experience; //Sets the experience of the player(Passed in)
+        this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds
 
         this.atoms = { // List of all atoms and the number that the player has. Continue list later
         };
@@ -83,18 +84,6 @@ export class Player extends GameObject {
         for (let item in this.textObjects)
             this.addChild(this.textObjects[item]);
     }
-    
-    /**
-    *  Decrement player health
-    *  Called whenever a player damages, or collides with, another player
-    *  @param {number} power
-    */
-    damage(power) {
-        this.health -= power;
-        socket.emit('damage', this.health);
-    }
-
-
     /** 
     * Draws all components of a given player.
     * This method should be included in the ticker and called once a frame.

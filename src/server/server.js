@@ -313,19 +313,19 @@ io.on('connection', socket => {
 
     }); 
 
-    socket.to(room).on('damage', data => {
-        if(rooms[room].players[data.id] !== undefined){
-            rooms[room].players[data.id].health -= data.damageAmount;
-            console.log('Damage rcvd health left: '.green + rooms[room].players[data.id].health + ' From player: ' + data.id);
-            if(rooms[room].players[data.id].health <=0) {
-                console.log('[Server]'.bold.blue + ' Player destroyed: '.red + ('' + socket.id).yellow + ': ' + data );
+    // socket.to(room).on('damage', data => {
+    //     if(rooms[room].players[data.id] !== undefined){
+    //         rooms[room].players[data.id].health -= data.damageAmount;
+    //         console.log('Damage rcvd health left: '.green + rooms[room].players[data.id].health + ' From player: ' + data.id);
+    //         if(rooms[room].players[data.id].health <=0) {
+    //             console.log('[Server]'.bold.blue + ' Player destroyed: '.red + ('' + socket.id).yellow + ': ' + data );
 
-                socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
+    //             socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
 
-                delete rooms[room].players[socket.id]; //Remove the server side player
-            }
-        }
-    });
+    //             delete rooms[room].players[socket.id]; //Remove the server side player
+    //         }
+    //     }
+    // });
 
     // /**
     //  * On atom movement
@@ -357,6 +357,13 @@ io.on('connection', socket => {
             socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
             socket.emit('serverSendCompoundRemoval', data);
             rooms[room].players[data.sender].health -= data.damage;
+            
+            if(rooms[room].players[data.sender].health <= 0) {
+                console.log(data.sender + ' died');
+                rooms[room].players[data.sender].posX = 0;
+                rooms[room].players[data.sender].posY = 0;
+                rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
+            }
         }
     });
 
@@ -364,13 +371,14 @@ io.on('connection', socket => {
     socket.to(room).on('createCompound', data => {
     // Calculate velocities based on cursor position
         let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
-
+        let spacing = (data.blueprint.params.spacing !== undefined) ? data.blueprint.params.spacing : 1;
+        let stream = (data.blueprint.params.streamNumber !== undefined) ? data.blueprint.params.streamNumber : 1;
         let newCompound = {
             id: generateID(),
-            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
-            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-            vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
-            vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
+            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS + stream * Math.cos(theta) * spacing, 
+            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS + stream * Math.sin(theta) * spacing,
+            vx: data.blueprint.params.speed * Math.cos(theta),
+            vy: data.blueprint.params.speed * Math.sin(theta),
             blueprint: data.blueprint,
             sendingTeam: data.sendingTeam
         };
@@ -398,6 +406,11 @@ io.on('connection', socket => {
         if(thisPlayer.level > oldLevel) {
             socket.emit('levelUp', {newLevel: thisPlayer.level});
         }
+    });
+
+    socket.to(room).on('playerDied', data => {
+        console.log('player ' + thisPlayer.name + ' died!');
+        socket.to(room).emit('serverSendPlayerDeath', {});
     });
 
     socket.on('disconnect', data => {

@@ -229,13 +229,13 @@ function draw(delta) {
         // Make sure player is not in chat before checking move
         if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
             if (moveKeys[0].isDown) // Left
-                player.vx = -GLOBAL.MAX_SPEED;
+                player.vx = -GLOBAL.MAX_SPEED * player.speedMult;
             if (moveKeys[1].isDown) // Right
-                player.vx = GLOBAL.MAX_SPEED;
+                player.vx = GLOBAL.MAX_SPEED * player.speedMult;
             if (moveKeys[2].isDown) // Up
-                player.vy = GLOBAL.MAX_SPEED;
+                player.vy = GLOBAL.MAX_SPEED * player.speedMult;
             if (moveKeys[3].isDown) // Down
-                player.vy = -GLOBAL.MAX_SPEED;
+                player.vy = -GLOBAL.MAX_SPEED * player.speedMult;
 
             player.isMoving = false;
             for(let key of moveKeys)

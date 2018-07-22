@@ -58,7 +58,7 @@ export const BLUEPRINTS = {
     basicBenzene: {
         name: 'Benzene',
         tooltip: 'Carbon rings. They smell nice.',
-        texture: '../assets/atom-hydrogen.png',
+        texture: '../assets/atom_carbon.png',
         type: 'basic',
         params: {
             speed: 1,
@@ -74,11 +74,13 @@ export const BLUEPRINTS = {
         name: 'Water',
         tooltip: 'Why life exists. Are you trying to drown someone?',
         texture: '../assets/atom-hydrogen.png',
-        type: 'basic',
+        type: 'stream',
         params: {
             speed: 4,
             damage: 1,
-            size: 10
+            size: 15,
+            length: 10,
+            spacing: 5       
         },
         atoms: {
             h: 2,
@@ -88,7 +90,7 @@ export const BLUEPRINTS = {
     binaryNitrogen: {
         name: 'Nitrogen',
         tooltip: '78% of your air, and also why you get the bends.',
-        texture: '../assets/atom-hydrogen.png',
+        texture: '../assets/atom_nitrogen.png',
         type: 'basic',
         params: {
             speed: 3,
@@ -99,6 +101,45 @@ export const BLUEPRINTS = {
             n: 2
         }
     },
-
+    binaryHelium: {
+        name: 'Helium',
+        tooltip: 'A nonreactive, inert gas. In other words, useless.',
+        texture: '../assets/atom_helium.png',
+        type: 'basic',
+        params: {
+            speed: 4,
+            damage: 2,
+            size: 14
+        },
+        atoms: {
+            n: 2
+        }
+    },
+    glucose: {
+        name: 'Glucose',
+        tooltip: 'S U G A R R U S H !!!!',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'speed',
+        params: {
+            speedMultiplier: 1.5
+        },
+        atoms: {
+            c: 6,
+            h: 12,
+            o: 6
+        }
+    },
+    protonPack: {
+        name: 'Proton Pack',
+        tooltip: 'Easy health!',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'health',
+        params: {
+            healthModifier: 10
+        },
+        atoms: {
+            h: 10
+        }
+    }
 };
 

@@ -219,6 +219,11 @@ function setupSocket() {
         console.log('You LEVELED UP! Level: ' + data.newLevel);
     });
 
+    socket.on('serverSendPlayerDeath', (data) => {
+        player.posX = 0;
+        player.posY = 0;
+    })
+
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }

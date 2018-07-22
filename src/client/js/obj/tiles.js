@@ -15,21 +15,21 @@ export const TILES = {
         texture: 'InteriorCorner BR.png',
         type: 'wall',
         params: {
-            border: ['top', 'left']
+            border: ['bottom', 'right']
         }
     },
     topRight: {
         texture: 'InteriorCorner BL.png',
         type: 'wall',
         params: {
-            border: ['top', 'left']
+            border: ['bottom', 'left']
         }
     },
     bottomLeft: {
         texture: 'InteriorCorner TR.png',
         type: 'wall',
         params: {
-            border: ['top', 'left']
+            border: ['top', 'right']
         }
     },
     bottomRight: {
@@ -43,7 +43,7 @@ export const TILES = {
         texture: 'EdgeTile B.png',
         type: 'wall',
         params: {
-            border: ['top']
+            border: ['bottom']
         }
     },
     edgeBottom: {
@@ -57,14 +57,14 @@ export const TILES = {
         texture: 'EdgeTile R.png',
         type: 'wall',
         params: {
-            border: ['top']
+            border: ['right']
         }
     },
     edgeRight: {
         texture: 'EdgeTile L.png',
         type: 'wall',
         params: {
-            border: ['top']
+            border: ['left']
         }
     },
     hydrogenVent: {
@@ -106,7 +106,7 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
     ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
     ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
     ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
@@ -115,7 +115,7 @@ export const MAP_LAYOUT = [
     ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
     ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
     ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
-    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
 ];
 
 export const TILE_NAMES = {
@@ -123,6 +123,7 @@ export const TILE_NAMES = {
     O: 'oxygenVent',
     N: 'nitrogenVent',
     C: 'carbonVent',
+    H: 'hydrogenVent',
     q: 'topLeft',
     w: 'edgeTop',
     e: 'topRight',

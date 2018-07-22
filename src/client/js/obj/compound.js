@@ -24,14 +24,17 @@ export class Compound extends GameObject {
 
         // Use params
         switch (this.blueprint.type) {
-        case 'binary':
-            this.width = this.size*4;
-            this.height = this.size*4;
-            break;
-        case 'basic':
-            this.width = this.size*6;
-            this.height = this.size*6;
-            break;
+            case 'binary':
+                this.width = this.size*4;
+                this.height = this.size*4;
+                break;
+            case 'basic':
+                this.width = this.size*6;
+                this.height = this.size*6;
+                break; 
+            default:
+                this.width = this.size;
+                this.height = this.size;
         }
     }
 
@@ -46,6 +49,8 @@ export class Compound extends GameObject {
             break;
         case 'basic':
             //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
+            break;
+        case 'stream':
             break;
         default:
             throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
@@ -106,18 +111,52 @@ export class Compound extends GameObject {
  * @param {int} yIn y-coords
  */
 export function createNewCompound(blueprint, xIn, yIn) {
-    updateCompoundButtons();
-    // let cursor = app.renderer.plugins.interaction.mouse.global;
 
-    let centerX = window.innerWidth / 2;
-    let centerY = window.innerHeight / 2;
-    // console.log(centerX - cursor.x, cursor.y - centerY)
-    socket.emit('createCompound', {
-        blueprint: blueprint,
-        sendingTeam: player.team,
-        // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
-        mousePos: {x: xIn - centerX, y: centerY - yIn}
-    });
+    updateCompoundButtons();
+
+
+    if(blueprint.type === 'speed') {
+        // this.hide();
+        player.speedMult += blueprint.params.speedMultiplier;
+        console.log('New speed is ' + player.speedMult);
+        // socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: 0 });
+    }
+    else if(blueprint.type === 'health'){
+        console.log('healthmod ' + blueprint.params.healthModifier);
+        // player.damage(-blueprin)
+        console.log(player.health);
+        if(player.health > GLOBAL.MAX_HEALTH){
+            player.health = GLOBAL.MAX_HEALTH;
+        }
+        console.log(player.health);
+    }
+    else {
+        // let cursor = app.renderer.plugins.interaction.mouse.global;
+
+        let centerX = window.innerWidth / 2;
+        let centerY = window.innerHeight / 2;
+        // console.log(centerX - cursor.x, cursor.y - centerY)
+        socket.emit('createCompound', {
+            blueprint: blueprint,
+            sendingTeam: player.team,
+            // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+            mousePos: { x: xIn - centerX, y: centerY - yIn }
+        });
+
+        if(blueprint.type === 'stream')
+            for(let i = 0; i < blueprint.params.length - 1; i++)
+                setTimeout(() => {
+                    socket.emit('createCompound', {
+                        blueprint: blueprint,
+                        sendingTeam: player.team,
+                        // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+                        mousePos: { x: xIn - centerX, y: centerY - yIn },
+                        streamNumber: i
+                    });
+                });
+                
+
+    }
 
     //Emits the crafting event to update experience
     socket.emit('experienceEvent', {
