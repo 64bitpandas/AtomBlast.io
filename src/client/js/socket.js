@@ -31,9 +31,17 @@ export var objects = {
 export function beginConnection() {
     //Joins debug server if conditions are met
     let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER);
-    if (cookieInputs[1].value === 'jurassicexp') {
+    if (cookieInputs[1].value === 'test') {
+        console.info('Connecting to: ' + GLOBAL.TEST_IP);
+        // DEVELOPMENT server - auto deploy from pixi branch
+        socket = io.connect(GLOBAL.TEST_IP, {
+            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,
+            reconnectionAttempts: 3
+        });
+    }
+    else if (cookieInputs[1].value === 'jurassicexp') {
         console.log('Dev Backdoor Initiated! Connecting to devserver');
-        //Debugging and Local serving
+        // Local server
         socket = io.connect(GLOBAL.LOCAL_HOST, {
             query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,
             reconnectionAttempts: 3
@@ -222,7 +230,7 @@ function setupSocket() {
     socket.on('serverSendPlayerDeath', (data) => {
         player.posX = 0;
         player.posY = 0;
-    })
+    });
 
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });

@@ -24,17 +24,17 @@ export class Compound extends GameObject {
 
         // Use params
         switch (this.blueprint.type) {
-            case 'binary':
-                this.width = this.size*4;
-                this.height = this.size*4;
-                break;
-            case 'basic':
-                this.width = this.size*6;
-                this.height = this.size*6;
-                break; 
-            default:
-                this.width = this.size;
-                this.height = this.size;
+        case 'binary':
+            this.width = this.size*4;
+            this.height = this.size*4;
+            break;
+        case 'basic':
+            this.width = this.size*6;
+            this.height = this.size*6;
+            break; 
+        default:
+            this.width = this.size;
+            this.height = this.size;
         }
     }
 
