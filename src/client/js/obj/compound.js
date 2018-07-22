@@ -122,13 +122,10 @@ export function createNewCompound(blueprint, xIn, yIn) {
         // socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: 0 });
     }
     else if(blueprint.type === 'health'){
-        console.log('healthmod ' + blueprint.params.healthModifier);
-        // player.damage(-blueprin)
-        console.log(player.health);
+        socket.emit('damage', {damage: -blueprint.params.healthModifier, id: socket.id});
         if(player.health > GLOBAL.MAX_HEALTH){
             player.health = GLOBAL.MAX_HEALTH;
         }
-        console.log(player.health);
     }
     else {
         // let cursor = app.renderer.plugins.interaction.mouse.global;

@@ -42,10 +42,24 @@ export default class ChatClient {
             self.printHelp();
         });
 
-        this.registerCommand('test', 'Test only', () => {
+        this.registerCommand('test', 'Gives 5000 of every element', () => {
             if(GLOBAL.DEBUG) {
                 devTest();
                 self.addSystemLine("Developer Configurations Applied!");
+            }
+            else {
+                self.addSystemLine("Invalid Permission.");
+            }
+        });
+        this.registerCommand('damage', 'Damages you by the given amount.', (params) => {
+            console.log(params);
+            if(GLOBAL.DEBUG) {
+                if(params[0] !== undefined && typeof parseInt(params[0]) === 'number') {
+                    socket.emit('damage', {damage: parseInt(params[0]), id: socket.id});
+                    self.addSystemLine("Damaged player by " + params[0] + " health points");
+                }
+                else
+                    self.addSystemLine("Invalid parameter. Parameter must be of type number");
             }
             else {
                 self.addSystemLine("Invalid Permission.");

@@ -422,7 +422,7 @@ export function updateLobby(data) {
 export function devTest() {
     if (GLOBAL.DEBUG) {
         console.warn(JSON.stringify(player.atoms));
-        for (var i in player.atoms) {
+        for (let i in player.atoms) {
             player.atoms[i] = 5000;
         }
         updateCompoundButtons();

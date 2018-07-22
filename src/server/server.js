@@ -313,32 +313,6 @@ io.on('connection', socket => {
 
     }); 
 
-    // socket.to(room).on('damage', data => {
-    //     if(rooms[room].players[data.id] !== undefined){
-    //         rooms[room].players[data.id].health -= data.damageAmount;
-    //         console.log('Damage rcvd health left: '.green + rooms[room].players[data.id].health + ' From player: ' + data.id);
-    //         if(rooms[room].players[data.id].health <=0) {
-    //             console.log('[Server]'.bold.blue + ' Player destroyed: '.red + ('' + socket.id).yellow + ': ' + data );
-
-    //             socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
-
-    //             delete rooms[room].players[socket.id]; //Remove the server side player
-    //         }
-    //     }
-    // });
-
-    // /**
-    //  * On atom movement
-    //  */
-    // socket.to(room).on('atomMove', data => {
-    //   if(rooms[room].atoms[data.id] !== undefined) {
-    //     rooms[room].atoms[data.id].posX = data.posX;
-    //     rooms[room].atoms[data.id].posY = data.posY;
-    //     rooms[room].atoms[data.id].vx = data.vx;
-    //     rooms[room].atoms[data.id].vy = data.vy;
-    //   }
-    // })
-
     // An atom was collected or changed
     socket.to(room).on('atomCollision', data => {
         if (COLLISIONVERBOSE) {
@@ -356,14 +330,13 @@ io.on('connection', socket => {
             delete rooms[room].compounds[data.id];
             socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
             socket.emit('serverSendCompoundRemoval', data);
-            rooms[room].players[data.sender].health -= data.damage;
-            
-            if(rooms[room].players[data.sender].health <= 0) {
-                console.log(data.sender + ' died');
-                socket.emit('serverSendPlayerDeath', {});
-                rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
-            }
+
+            damage(data, room);   
         }
+    });
+
+    socket.to(room).on('damage', data => {
+        damage(data, room);
     });
 
     // A player spawned a Compound
@@ -446,4 +419,20 @@ http.listen(serverPort, () => {
  */
 function generateID() {
     return Math.floor(Math.random() * 90000000) + 10000000;
+}
+
+/**
+ * Changes the health of the player by the amount given.
+ * @param {*} data The data sent by the client.
+ * @param {*} room This room.
+ * Must include the player id and amount to damage.
+ * Amount may be negative (for health boost).
+ */
+function damage(data, room) {
+    rooms[room].players[data.id].health -= data.damage;
+
+    if (rooms[room].players[data.id].health <= 0) {
+        socket.emit('serverSendPlayerDeath', {});
+        rooms[room].players[data.id].health = GLOBAL.MAX_HEALTH;
+    }
 }
