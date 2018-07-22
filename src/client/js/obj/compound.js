@@ -119,7 +119,6 @@ export function createNewCompound(blueprint, xIn, yIn) {
         // this.hide();
         player.speedMult += blueprint.params.speedMultiplier;
         console.log('New speed is ' + player.speedMult);
-        // socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: 0 });
     }
     else if(blueprint.type === 'health'){
         socket.emit('damage', {damage: -blueprint.params.healthModifier, id: socket.id});
