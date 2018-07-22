@@ -360,8 +360,7 @@ io.on('connection', socket => {
             
             if(rooms[room].players[data.sender].health <= 0) {
                 console.log(data.sender + ' died');
-                rooms[room].players[data.sender].posX = 0;
-                rooms[room].players[data.sender].posY = 0;
+                socket.emit('serverSendPlayerDeath', {});
                 rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
             }
         }
@@ -406,11 +405,6 @@ io.on('connection', socket => {
         if(thisPlayer.level > oldLevel) {
             socket.emit('levelUp', {newLevel: thisPlayer.level});
         }
-    });
-
-    socket.to(room).on('playerDied', data => {
-        console.log('player ' + thisPlayer.name + ' died!');
-        socket.to(room).emit('serverSendPlayerDeath', {});
     });
 
     socket.on('disconnect', data => {

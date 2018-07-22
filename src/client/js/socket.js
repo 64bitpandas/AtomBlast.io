@@ -1,7 +1,7 @@
 import { GLOBAL } from './global';
 import { cookieInputs, quitGame, updateLobby } from './app';
 import ChatClient from './lib/chat-client';
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame } from './pixigame';
+import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player } from './pixigame';
 import { spawnAtom } from './obj/atom';
 import { createCompound } from './obj/compound';
 import { MapTile } from './obj/maptile';
@@ -228,8 +228,17 @@ function setupSocket() {
     });
 
     socket.on('serverSendPlayerDeath', (data) => {
+        console.log('ded');
         player.posX = 0;
         player.posY = 0;
+        socket.emit('move', {
+            id: socket.id,
+            posX: 0,
+            posY: 0,
+            vx: 0,
+            vy: 0,
+            type: 'players'
+        });
     });
 
     //Emit join message,
