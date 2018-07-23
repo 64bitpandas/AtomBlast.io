@@ -78,6 +78,7 @@ export const GLOBAL = {
         '../assets/testplayer.png',
         
     ],
+    IGNITE_SPRITE: '../assets/placeholder_ignited.png',
 
     // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
     ATOM_IDS: [

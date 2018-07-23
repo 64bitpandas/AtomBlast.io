@@ -51,6 +51,7 @@ export function loadTextures() {
 
         // Load resources if not already loaded
         let TEXTURES = [];
+        TEXTURES.push(GLOBAL.IGNITE_SPRITE);
         for (let bp in BLUEPRINTS) {
             // Prevent duplicate textures from being loaded
             if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)

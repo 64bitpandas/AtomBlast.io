@@ -30,11 +30,11 @@ export const BLUEPRINTS = {
         name: 'Hydrogen',
         tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
         texture: '../assets/atom-hydrogen.png',
-        type: 'binary',
+        type: 'flammable',
         params: {
             speed: 5,
             damage: 1,
-            size: 10
+            size: 20
         },
         atoms: {
             h: 2
@@ -112,7 +112,7 @@ export const BLUEPRINTS = {
             size: 14
         },
         atoms: {
-            n: 2
+            he: 2
         }
     },
     glucose: {

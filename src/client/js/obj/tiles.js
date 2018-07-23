@@ -11,6 +11,10 @@ export const TILES = {
         texture: 'SolidTile.png',
         type: 'none'
     },
+    flame: {
+        texture: 'FlameTile.png',
+        type: 'flame'
+    },
     topLeft: {
         texture: 'InteriorCorner BR.png',
         type: 'wall',
@@ -109,10 +113,10 @@ export const MAP_LAYOUT = [
     ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
     ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
     ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
-    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
-    ['E', 'N', 'E', 'E', 'C', 'C', 'E', 'E', 'N', 'E'],
-    ['E', 'N', 'E', 'E', 'C', 'C', 'E', 'E', 'N', 'E'],
-    ['E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E'],
+    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],
+    ['E', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],
+    ['F', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],
+    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],
     ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
     ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
     ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
@@ -124,6 +128,7 @@ export const TILE_NAMES = {
     N: 'nitrogenVent',
     C: 'carbonVent',
     H: 'hydrogenVent',
+    F: 'flame',
     q: 'topLeft',
     w: 'edgeTop',
     e: 'topRight',

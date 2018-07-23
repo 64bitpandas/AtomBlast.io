@@ -5,6 +5,7 @@ import * as PIXI from 'pixi.js';
 import { app, player } from '../pixigame';
 import { updateCompoundButtons } from '../app';
 import { GLOBAL, distanceBetween } from '../global.js';
+import { MAP_LAYOUT } from './tiles';
 
 /**
  * Generic Compound which can be instantiated into the scene as a GameObject.
@@ -16,6 +17,7 @@ export class Compound extends GameObject {
         super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
         this.sendingTeam = sendingTeam;
+        this.ignited = false; // Becomes true if this compound passes over a flame tile
 
         // Parse params
         for (let param in this.blueprint.params) {
@@ -23,19 +25,9 @@ export class Compound extends GameObject {
         }
 
         // Use params
-        switch (this.blueprint.type) {
-        case 'binary':
-            this.width = this.size*4;
-            this.height = this.size*4;
-            break;
-        case 'basic':
-            this.width = this.size*6;
-            this.height = this.size*6;
-            break; 
-        default:
-            this.width = this.size;
-            this.height = this.size;
-        }
+        this.width = this.size;
+        this.height = this.size;
+
     }
 
     /**
@@ -52,8 +44,18 @@ export class Compound extends GameObject {
             break;
         case 'stream':
             break;
+        case 'flammable':
+            let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));
+            let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));
+                if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined && MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === 'F' && !this.ignited) {
+                console.log('IGNITE');
+                this.ignited = true;
+                this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+            }
+            break;
+
         default:
-            throw new Error('Blueprint ' + this.blueprint.name + ' could not be found!');
+            throw new Error('Blueprint ' + this.blueprint.name + ' has invalid type ' + this.blueprint.type);
         }
 
         this.checkCollision();
