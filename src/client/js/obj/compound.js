@@ -122,7 +122,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
 
     if(blueprint.type === 'speed') {
         // this.hide();
-        player.speedMult += blueprint.params.speedMultiplier;
+        player.speedMult += blueprint.params.speedFactor * (1/player.speedMult);
         console.log('New speed is ' + player.speedMult);
     }
     else if(blueprint.type === 'health'){

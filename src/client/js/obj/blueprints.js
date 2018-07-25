@@ -109,7 +109,7 @@ export const BLUEPRINTS = {
         texture: '../assets/atom-hydrogen.png',
         type: 'speed',
         params: {
-            speedMultiplier: 1.5
+            speedFactor: 0.5
         },
         atoms: {
             c: 6,

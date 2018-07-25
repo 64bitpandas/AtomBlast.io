@@ -111,7 +111,7 @@ window.onload = () => {
         if(cookie !== null && cookie.length > 0) {
             if(cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT')
                 cookieInputs[i].value = cookie;
-            else if(cookieInputs[i].tagName === 'BUTTON')
+            else if(cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined)
                 cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
         }
         i++;
