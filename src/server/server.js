@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
-import {GLOBAL, distanceBetween} from '../client/js/global.js';
+import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
 var config = require('./config.json');
 
@@ -170,8 +170,15 @@ io.on('connection', socket => {
 
             // Move compounds
             for(let compound in rooms[room].compounds) {
-                rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
-                rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+                if(isInBounds(rooms[room].compounds[compound])) {
+                    rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
+                    rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+                }
+                else { // delete
+                    socket.to(room).broadcast.emit('serverSendCompoundRemoval', {id: compound});
+                    socket.emit('serverSendCompoundRemoval', {id: compound});
+                    delete rooms[room].compounds[compound];
+                }
             }
             // Move atoms
             for(let atom in rooms[room].atoms) {
@@ -343,12 +350,10 @@ io.on('connection', socket => {
     socket.to(room).on('createCompound', data => {
     // Calculate velocities based on cursor position
         let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
-        let spacing = (data.blueprint.params.spacing !== undefined) ? data.blueprint.params.spacing : 1;
-        let stream = (data.blueprint.params.streamNumber !== undefined) ? data.blueprint.params.streamNumber : 1;
         let newCompound = {
             id: generateID(),
-            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS + stream * Math.cos(theta) * spacing, 
-            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS + stream * Math.sin(theta) * spacing,
+            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
+            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
             vx: data.blueprint.params.speed * Math.cos(theta),
             vy: data.blueprint.params.speed * Math.sin(theta),
             blueprint: data.blueprint,

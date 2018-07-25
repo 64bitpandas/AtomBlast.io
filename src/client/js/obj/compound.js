@@ -47,7 +47,7 @@ export class Compound extends GameObject {
         case 'flammable':
             let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));
             let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));
-                if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined && MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === 'F' && !this.ignited) {
+            if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined && MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === 'F' && !this.ignited) {
                 console.log('IGNITE');
                 this.ignited = true;
                 this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
@@ -86,7 +86,10 @@ export class Compound extends GameObject {
         // Hit player
         if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
             player.health -= this.blueprint.params.damage;
-            socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.damage });
+            if(!this.ignited)
+                socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.damage });
+            else
+                socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
             return true;
         }
         // for (let objType in objects) {
@@ -151,7 +154,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
                         mousePos: { x: xIn - centerX, y: centerY - yIn },
                         streamNumber: i
                     });
-                });
+                }, blueprint.params.spacing * i);
                 
 
     }

@@ -19,7 +19,10 @@ export const BLUEPRINTS = {
         params: {
             speed: 5,
             damage: 1,
-            size: 20
+            size: 20,
+            ignitedDamage: 10,
+            splash: 50,
+            splashImage: '../assets/explosion.png'
         },
         atoms: {
             h: 2
@@ -65,7 +68,7 @@ export const BLUEPRINTS = {
             damage: 1,
             size: 15,
             length: 10,
-            spacing: 5       
+            spacing: 50     
         },
         atoms: {
             h: 2,
