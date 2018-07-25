@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { app, screenCenterX, screenCenterY, player } from '../pixigame';
 import { GLOBAL } from '../global';
+import { MAP_LAYOUT } from './tiles';
 
 /**
  * GameObject class that all objects in the game space should inherit.
@@ -91,8 +92,10 @@ export class GameObject extends PIXI.Sprite {
         if (Math.abs(this.vy) < GLOBAL.DEADZONE)
             this.vy = 0;
 
-        // Change position based on speed and direction
-        this.posX += this.vx;
-        this.posY += this.vy;
+        // Change position based on speed and direction. Don't allow objects to go out of bounds
+        if ((this.vx > 0 && this.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx < 0 && this.posX > 0))
+            this.posX += this.vx;
+        if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING))
+            this.posY += this.vy;
     }
 }
