@@ -11,21 +11,6 @@
  * Atoms: How to make the compound. Format is `Element symbol: Number required`. All excluded atoms will be considered 0.
  */
 export const BLUEPRINTS = {
-    sampleBlueprint: {
-        name: 'Sample Blueprint',
-        tooltip: 'Copyright 2018 Bananium Labs, inc.',
-        texture: '../assets/atom-hydrogen.png',
-        type: 'binary',
-        params: {
-            speed: 5,
-            damage: 5,
-            size: 5
-        },
-        atoms: {
-            h: 1,
-            cl: 5
-        }
-    },
     binaryHydrogen: {
         name: 'Hydrogen',
         tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
