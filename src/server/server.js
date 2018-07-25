@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
-import {GLOBAL, distanceBetween} from '../client/js/global.js';
+import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
 var config = require('./config.json');
 
@@ -170,8 +170,15 @@ io.on('connection', socket => {
 
             // Move compounds
             for(let compound in rooms[room].compounds) {
-                rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
-                rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+                if(isInBounds(rooms[room].compounds[compound])) {
+                    rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
+                    rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
+                }
+                else { // delete
+                    socket.to(room).broadcast.emit('serverSendCompoundRemoval', {id: compound});
+                    socket.emit('serverSendCompoundRemoval', {id: compound});
+                    delete rooms[room].compounds[compound];
+                }
             }
             // Move atoms
             for(let atom in rooms[room].atoms) {

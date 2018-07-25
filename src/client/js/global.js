@@ -1,3 +1,5 @@
+import { MAP_LAYOUT } from './obj/tiles';
+
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
     
@@ -123,4 +125,13 @@ export const GLOBAL = {
  */
 export function distanceBetween(obj1, obj2) {
     return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
+}
+
+/**
+ * Returns true if the object parameter is within the map boundaries.
+ * @param {GameObject} obj The object to test
+ * @return true if the object parameter is within the map boundaries
+ */
+export function isInBounds(obj) {
+    return obj.posX > 0 && obj.posY > -GLOBAL.GRID_SPACING * 2 && obj.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 && obj.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2;
 }
