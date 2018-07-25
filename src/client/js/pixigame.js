@@ -56,6 +56,8 @@ export function loadTextures() {
             // Prevent duplicate textures from being loaded
             if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
                 TEXTURES.push(BLUEPRINTS[bp].texture);
+            if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0)
+                TEXTURES.push(BLUEPRINTS[bp].params.splashImage);
         }
         for (let atom of GLOBAL.ATOM_SPRITES)
             if (TEXTURES.indexOf(atom) < 0)

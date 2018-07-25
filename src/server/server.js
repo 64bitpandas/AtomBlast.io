@@ -343,12 +343,10 @@ io.on('connection', socket => {
     socket.to(room).on('createCompound', data => {
     // Calculate velocities based on cursor position
         let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
-        let spacing = (data.blueprint.params.spacing !== undefined) ? data.blueprint.params.spacing : 1;
-        let stream = (data.blueprint.params.streamNumber !== undefined) ? data.blueprint.params.streamNumber : 1;
         let newCompound = {
             id: generateID(),
-            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS + stream * Math.cos(theta) * spacing, 
-            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS + stream * Math.sin(theta) * spacing,
+            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
+            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
             vx: data.blueprint.params.speed * Math.cos(theta),
             vy: data.blueprint.params.speed * Math.sin(theta),
             blueprint: data.blueprint,
