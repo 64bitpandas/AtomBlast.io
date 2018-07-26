@@ -340,7 +340,8 @@ export function destroyPIXI() {
 export function showGameUI() {
     // Hide loading screen
     hideElement('loading');
-    showElement('lobby');
+    if(!inGame)
+        showElement('lobby');
 }
 
 /**

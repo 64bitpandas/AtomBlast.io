@@ -289,15 +289,18 @@ io.on('connection', socket => {
     });
 
     // Broadcasts player join message
-    socket.to(room).on('connect', () => {
-        socket.to(room).broadcast.emit('serverSendLoginMessage', {
-            sender: socket.id
-        });
-        if(DEBUG) {
-            socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
-        }
-  
+   
+    socket.to(room).broadcast.emit('serverSendLoginMessage', {
+        sender: socket.id
     });
+    if(DEBUG) {
+        socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');
+    }
+
+    // Hides the lobby screen if the game has already started
+    if(rooms[room].started) {
+        socket.emit('serverSendStartGame', {});
+    }
 
     /**
    * On player movement:
