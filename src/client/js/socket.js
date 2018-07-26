@@ -241,6 +241,10 @@ function setupSocket() {
         });
     });
 
+    socket.on('time', (data) => {
+        document.getElementById('timer').innerHTML = '<p>' + data.time + '</p>';
+    });
+
     //Emit join message,
     socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }

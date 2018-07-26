@@ -81,6 +81,21 @@ setInterval(() => {
     }
 }, 3000);
 
+// Timer
+setInterval(() => {
+    for(let room in rooms) {
+        if(rooms[room].started) {
+            rooms[room].time.seconds++;
+            if(rooms[room].time.seconds >= 60) {
+                rooms[room].time.seconds = 0;
+                rooms[room].time.minutes++;
+            }
+
+            rooms[room].time.formattedTime = rooms[room].time.minutes + ':' + ((rooms[room].time.seconds < 10) ? '0' : '') + rooms[room].time.seconds;
+        }
+    }
+}, 1000);
+
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
     // Determine room if matchmaking is needed
@@ -147,6 +162,11 @@ io.on('connection', socket => {
         rooms[room].atoms = {};
         rooms[room].compounds = {};
         rooms[room].type = socket.handshake.query.roomType;
+        rooms[room].time = {
+            minutes: 0,
+            seconds: 0,
+            formattedTime: '0:00'
+        }
 
         // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
         // for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
@@ -257,6 +277,9 @@ io.on('connection', socket => {
             // }
 
             socket.emit('objectSync', tempObjects);
+
+            if(rooms[room].started)
+                socket.emit('time', {time: rooms[room].time.formattedTime});
       
             if(rooms[room] !== undefined && !rooms[room].started) {
                 // Send over the room player information
