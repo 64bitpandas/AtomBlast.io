@@ -54,6 +54,33 @@ let rooms = {};
  */
 let teams = {};
 
+
+// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
+setInterval(() => {
+    for(let room in rooms) {
+        for (let row = 0; row < MAP_LAYOUT.length; row++)
+            for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
+                if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
+                    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
+                    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+                    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
+                    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
+                    let atom = {
+                        typeID: atomToSpawn,
+                        id: generateID(),
+                        posX: x,
+                        posY: y,
+                        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
+                        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
+                    };
+                    if (rooms[room] !== undefined)
+                        rooms[room].atoms[atom.id] = atom;
+                }
+    
+            }
+    }
+}, 3000);
+
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
     // Determine room if matchmaking is needed
@@ -241,30 +268,6 @@ io.on('connection', socket => {
 
 
     }, 1000/60);
-
-    // Set up atom spawning once a second
-    setInterval(() => {
-        for(let row = 0; row < MAP_LAYOUT.length; row++)
-            for(let col = 0; col < MAP_LAYOUT[0].length; col++) {
-                if(TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
-                    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
-                    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
-                    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
-                    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
-                    let atom = {
-                        typeID: atomToSpawn,
-                        id: generateID(),
-                        posX: x,
-                        posY: y,
-                        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
-                        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
-                    };
-                    if(rooms[room] !== undefined)
-                        rooms[room].atoms[atom.id] = atom;
-                }
-                
-            }
-    }, 3000);
 
     // Receives a chat from a player, then broadcasts it to other players
     socket.to(room).on('playerChat', data => {
