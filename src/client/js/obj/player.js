@@ -1,8 +1,9 @@
 import {GLOBAL} from '../global.js';
 import * as PIXI from 'pixi.js';
-import { textStyle, player, screenCenterX, screenCenterY } from '../pixigame.js';
+import { player, screenCenterX, screenCenterY } from '../pixigame.js';
 import { socket } from '../socket.js';
 import { GameObject } from '../obj/gameobject';
+import { cookieInputs } from '../app.js';
 
 export class Player extends GameObject {
 
@@ -65,11 +66,11 @@ export class Player extends GameObject {
      */
     setup() {
         // Create text objects
-        this.textObjects.nametext = new PIXI.Text('name: ', textStyle);
-        this.textObjects.idtext = new PIXI.Text('id: ', textStyle);
-        this.textObjects.postext = new PIXI.Text('placeholderpos', textStyle);
-        this.textObjects.teamtext = new PIXI.Text('team: ', textStyle);
-        this.textObjects.healthtext = new PIXI.Text('health: ', textStyle);
+        this.textObjects.nametext = new PIXI.Text('name: ');
+        this.textObjects.idtext = new PIXI.Text('id: ');
+        this.textObjects.postext = new PIXI.Text('placeholderpos');
+        this.textObjects.teamtext = new PIXI.Text('team: ');
+        this.textObjects.healthtext = new PIXI.Text('health: ');
 
         // Assign values and positions
         this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);
@@ -80,14 +81,21 @@ export class Player extends GameObject {
         this.textObjects.teamtext.text += this.team;
         this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);
 
-        // Create text
-        for (let item in this.textObjects)
+        // create text and assign color
+        for (let item in this.textObjects) {
+            // Add text
+            this.textObjects[item].style = new PIXI.TextStyle({
+                fill: (cookieInputs[2].value === this.team) ? GLOBAL.FRIENDLY_COLOUR : GLOBAL.ENEMY_COLOUR,
+                fontSize: 120
+            });  
             this.addChild(this.textObjects[item]);
+        }
     }
-    /** 
-    * Draws all components of a given player.
-    * This method should be included in the ticker and called once a frame.
-    * Therefore, all setup tasks should be called in setup().
+    /**
+      * Draws all components of a given player.
+      * This method should be included in the ticker and called once a frame.
+    * Therefore, all setup tasks
+     * should be called in setup().
     */
     tick() {
         

@@ -72,8 +72,12 @@ export const GLOBAL = {
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
     GRID_SPACING: 200, // space between each line on the grid
     GRID_LINE_STROKE: 1,
-    GRID_LINE_COLOUR: 0xD3D3D3,
     FRAME_RATE: 60,
+
+    // Colors
+    GRID_LINE_COLOUR: 0xD3D3D3,
+    FRIENDLY_COLOUR: 0x2ECC71,
+    ENEMY_COLOUR: 0xEA6153,
 
     // Sprites and textures
     PLAYER_SPRITES: [

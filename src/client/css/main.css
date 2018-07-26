@@ -292,6 +292,21 @@ select:focus {
 	 text-align: center;
  }
 
+ #score {
+	 position: absolute;
+	 top: 2rem;
+	 left: 50%;
+	 transform: translateX(-50%);
+ }
+
+ #timer {
+	 position: absolute;
+	 top: 2rem;
+	 left: 2rem;
+	 max-width: 20vw;
+	 max-height: 10vh;
+ }
+
 /* **********
  * *  CHAT  *
  * ********** */

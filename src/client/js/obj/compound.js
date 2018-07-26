@@ -82,7 +82,7 @@ export class Compound extends GameObject {
         let distance = distanceBetween(
             { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
             { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
-
+        
         // Hit player
         if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
             player.health -= this.blueprint.params.damage;

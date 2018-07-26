@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound } from './app';
+import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs } from './app';
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
@@ -23,12 +23,6 @@ let inGame = false; // True after game has begun
 let esc, space, blueprintKeys, moveKeys; // Key handlers
 let vertLines = [];
 let horizLines = [];
-
-// Add text
-export let textStyle = new PIXI.TextStyle({
-    fill: 'black',
-    fontSize: 120
-});
 
 export function loadTextures() {
     if (!isSetup) {
@@ -356,6 +350,7 @@ export function createPlayer(data) {
         let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
         if (data.id === socket.id)
             player = newPlayer;
+
         return newPlayer;
     }
 }

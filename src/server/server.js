@@ -440,10 +440,10 @@ function generateID() {
  * Amount may be negative (for health boost).
  */
 function damage(data, room) {
-    rooms[room].players[data.id].health -= data.damage;
+    rooms[room].players[data.sender].health -= data.damage;
 
-    if (rooms[room].players[data.id].health <= 0) {
+    if (rooms[room].players[data.sender].health <= 0) {
         socket.emit('serverSendPlayerDeath', {});
-        rooms[room].players[data.id].health = GLOBAL.MAX_HEALTH;
+        rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
     }
 }
