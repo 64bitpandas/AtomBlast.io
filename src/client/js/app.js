@@ -105,7 +105,7 @@ window.onload = () => {
     
     // Patch logo for firefox
     if(typeof InstallTrigger !== 'undefined')
-        document.getElementById('logo').innerHTML = `<img src="assets/logo.svg" id="logo-firefox">`;
+        document.getElementById('logo').innerHTML = '<img src="assets/logo.svg" id="logo-firefox">';
 
     // Cookie loading - create array of all cookie values
     let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));
