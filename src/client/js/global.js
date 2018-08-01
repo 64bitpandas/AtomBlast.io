@@ -49,7 +49,7 @@ export const GLOBAL = {
     COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
-    MAX_SPEED: 7,
+    MAX_SPEED: 6,
     PLAYER_RADIUS: 100,
     VELOCITY_STEP: 0.85, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
