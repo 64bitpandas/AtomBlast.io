@@ -23,7 +23,7 @@ export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
 const nickErrorText = document.getElementById('nickErrorText');
 
 // Mouse position - used for tooltips
-let mouseX, mouseY;
+export let mouseX, mouseY;
 
 // Currently selected blueprint slot
 export let selectedCompound = 0;

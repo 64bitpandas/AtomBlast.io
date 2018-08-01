@@ -119,7 +119,6 @@ export function createNewCompound(blueprint, xIn, yIn) {
 
     updateCompoundButtons();
 
-
     if(blueprint.type === 'speed') {
         // this.hide();
         player.speedMult += blueprint.params.speedFactor * (1/player.speedMult);
