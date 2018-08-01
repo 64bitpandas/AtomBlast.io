@@ -119,14 +119,13 @@ export function createNewCompound(blueprint, xIn, yIn) {
 
     updateCompoundButtons();
 
-
     if(blueprint.type === 'speed') {
         // this.hide();
         player.speedMult += blueprint.params.speedFactor * (1/player.speedMult);
         console.log('New speed is ' + player.speedMult);
     }
     else if(blueprint.type === 'health'){
-        socket.emit('damage', {damage: -blueprint.params.healthModifier, id: socket.id});
+        socket.emit('damage', {damage: -blueprint.params.healthModifier, sender: socket.id});
         if(player.health > GLOBAL.MAX_HEALTH){
             player.health = GLOBAL.MAX_HEALTH;
         }
@@ -144,6 +143,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
             mousePos: { x: xIn - centerX, y: centerY - yIn }
         });
 
+        // TODO: Add proper spray directional change based on mouse position when spraying is implemented
         if(blueprint.type === 'stream')
             for(let i = 0; i < blueprint.params.length - 1; i++)
                 setTimeout(() => {

@@ -55,7 +55,7 @@ export default class ChatClient {
             console.log(params);
             if(GLOBAL.DEBUG) {
                 if(params[0] !== undefined && typeof parseInt(params[0]) === 'number') {
-                    socket.emit('damage', {damage: parseInt(params[0]), id: socket.id});
+                    socket.emit('damage', {damage: parseInt(params[0]), sender: socket.id});
                     self.addSystemLine("Damaged player by " + params[0] + " health points");
                 }
                 else
@@ -65,6 +65,9 @@ export default class ChatClient {
                 self.addSystemLine("Invalid Permission.");
             }
         });
+        this.registerCommand('spawnAtom', 'Spawns a Hydrogen atom at the bottom left vent.', () => {
+            socket.emit('spawnAtom', {row: 9, col: 0});
+        })
 
         // this.registerCommand('login', 'Login as an admin.', function (args) {
         //     self.socket.emit('pass', args);

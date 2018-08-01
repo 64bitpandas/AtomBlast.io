@@ -61,25 +61,12 @@ setInterval(() => {
         for (let row = 0; row < MAP_LAYOUT.length; row++)
             for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
                 if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
-                    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
-                    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
-                    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
-                    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
-                    let atom = {
-                        typeID: atomToSpawn,
-                        id: generateID(),
-                        posX: x,
-                        posY: y,
-                        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
-                        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
-                    };
-                    if (rooms[room] !== undefined)
-                        rooms[room].atoms[atom.id] = atom;
+                    spawnAtom(row, col, room, false);
                 }
     
             }
     }
-}, 3000);
+}, GLOBAL.ATOM_SPAWN_DELAY);
 
 // Timer
 setInterval(() => {
@@ -242,14 +229,14 @@ io.on('connection', socket => {
                     // console.log(this.vx, this.vy, this.posX, this.posY);
                     // socket.emit('move', { type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
                 }
-                else if (rooms[room].atoms[atom].vx > GLOBAL.DEADZONE || rooms[room].atoms[atom].vy > GLOBAL.DEADZONE) {
+                else if (Math.abs(rooms[room].atoms[atom].vx) > GLOBAL.DEADZONE || Math.abs(rooms[room].atoms[atom].vy) > GLOBAL.DEADZONE) {
                     rooms[room].atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
                     rooms[room].atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
                 }
 
-                if (rooms[room].atoms[atom].vx <= GLOBAL.DEADZONE)
+                if (Math.abs(rooms[room].atoms[atom].vx) <= GLOBAL.DEADZONE)
                     rooms[room].atoms[atom].vx = 0;
-                if (rooms[room].atoms[atom].vy <= GLOBAL.DEADZONE)
+                if (Math.abs(rooms[room].atoms[atom].vy) <= GLOBAL.DEADZONE)
                     rooms[room].atoms[atom].vy = 0;
 
                 rooms[room].atoms[atom].posX += rooms[room].atoms[atom].vx;
@@ -367,12 +354,12 @@ io.on('connection', socket => {
             socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
             socket.emit('serverSendCompoundRemoval', data);
 
-            damage(data, room);   
+            damage(data, room, socket);   
         }
     });
 
     socket.to(room).on('damage', data => {
-        damage(data, room);
+        damage(data, room, socket);
     });
 
     // A player spawned a Compound
@@ -438,6 +425,10 @@ io.on('connection', socket => {
         rooms[room].started = true;
     });
 
+    socket.on('spawnAtom', (data) => {
+        spawnAtom(data.row, data.col, room, true);
+    });
+
 });
 
 // Notify on console when server has started
@@ -458,15 +449,50 @@ function generateID() {
 /**
  * Changes the health of the player by the amount given.
  * @param {*} data The data sent by the client.
- * @param {*} room This room.
+ * @param {string} room This room.
+ * @param {*} socket This socket.
  * Must include the player id and amount to damage.
  * Amount may be negative (for health boost).
  */
-function damage(data, room) {
-    rooms[room].players[data.sender].health -= data.damage;
+function damage(data, room, socket) {
+    if(rooms[room].players[data.sender] !== undefined) {
+        rooms[room].players[data.sender].health -= data.damage;
 
-    if (rooms[room].players[data.sender].health <= 0) {
-        socket.emit('serverSendPlayerDeath', {});
-        rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
+        if (rooms[room].players[data.sender].health <= 0) {
+            socket.emit('serverSendPlayerDeath', {});
+            rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
+        }
     }
+    else
+        console.warn('Player of ID ' + data.id + ' couldn\'t be damaged because they don\'t exist!');
+}
+
+/**
+ * 
+ * @param {number} row The row of the vent 
+ * @param {number} col The column of the vent to spawn at
+ * @param {string} room The room to spawn in
+ * @param {boolean} verbose True if this method should output to the console
+ */
+function spawnAtom(row, col, room, verbose) {
+    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
+    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
+    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
+    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
+     
+    let atom = {
+        typeID: atomToSpawn,
+        id: generateID(),
+        posX: x,
+        posY: y,
+        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
+        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
+    };
+    if (rooms[room] !== undefined)
+        rooms[room].atoms[atom.id] = atom;
+
+    // Log to console
+    if(verbose)
+        console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
 }

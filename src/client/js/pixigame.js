@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import { keyboard } from './lib/keyboard';
 import { GLOBAL } from './global';
 import { Player } from './obj/player';
-import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs } from './app';
+import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app';
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
 import { createNewCompound} from './obj/compound';
@@ -257,7 +257,7 @@ function draw(delta) {
         // Shooting
         space.press = () => {
             if (canCraft(selectedBlueprints[selectedCompound])) {
-                createNewCompound(selectedBlueprints[selectedCompound]);
+                createNewCompound(selectedBlueprints[selectedCompound], mouseX, mouseY);
                 // Subtract atoms needed to craft
                 deductCraftMaterial(selectedBlueprints[selectedCompound]);
             } else
