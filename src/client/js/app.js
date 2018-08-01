@@ -105,7 +105,7 @@ window.onload = () => {
     
     // Patch logo for firefox
     if(typeof InstallTrigger !== 'undefined')
-        document.getElementById('logo').innerHTML = `<img src="assets/logo.svg" id="logo-firefox">`;
+        document.getElementById('logo').innerHTML = `<img src="assets/logo.svg" id="logo-firefox">`; // eslint-disable-line
 
     // Cookie loading - create array of all cookie values
     let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));
@@ -424,11 +424,15 @@ export function updateLobby(data) {
     }
 }
 
+/**
+ * Sets all player owned atoms to 9999 only if method is called on a DEBUG
+ * enabled server.
+ */
 export function devTest() {
     if (GLOBAL.DEBUG) {
         console.warn(JSON.stringify(player.atoms));
         for (let i in player.atoms) {
-            player.atoms[i] = 5000;
+            player.atoms[i] = 9999;
         }
         updateCompoundButtons();
     }

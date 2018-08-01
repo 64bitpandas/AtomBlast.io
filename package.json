@@ -10,6 +10,7 @@
         "start": "npm-run-all --parallel watch server",
         "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
         "lint": "echo 'Working directory: ' && pwd && echo '\nPlease wait. Lint Checking...\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \"$(tput setaf 2)$(tput setab 0)Linting Passed.$(tput sgr0)\" ) || ( (echo \"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix$(tput sgr0)\" && exit 1)))",
+        "lint-compatibility-mode": "./node_modules/.bin/eslint ./src/",
         "fix-lint": "npm run -s env-test; (echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \"$(tput setaf 5)$(tput setab 0)Auto Linting failed. Please manually fix the above errors.$(tput sgr0)\" && exit 1)",
         "env-test": "if [ -d './src/' ]; then echo \"$(tput setaf 2)$(tput setab 0)src directory detected!$(tput sgr0)\"; else echo \"$(tput setaf 1)$(tput setab 7)\n\nCRITICAL: src directory NOT DETECTED\nABORTING!!!\n\n$(tput sgr0)\" && exit 1; fi",
         "precommit": "npm run -s lint && echo \"Running unit testing..\" && npm test",
