@@ -65,6 +65,9 @@ export default class ChatClient {
                 self.addSystemLine("Invalid Permission.");
             }
         });
+        this.registerCommand('spawnAtom', 'Spawns a Hydrogen atom at the bottom left vent.', () => {
+            socket.emit('spawnAtom', {row: 9, col: 0});
+        })
 
         // this.registerCommand('login', 'Login as an admin.', function (args) {
         //     self.socket.emit('pass', args);

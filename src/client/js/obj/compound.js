@@ -143,6 +143,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
             mousePos: { x: xIn - centerX, y: centerY - yIn }
         });
 
+        // TODO: Add proper spray directional change based on mouse position when spraying is implemented
         if(blueprint.type === 'stream')
             for(let i = 0; i < blueprint.params.length - 1; i++)
                 setTimeout(() => {
