@@ -125,7 +125,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
         console.log('New speed is ' + player.speedMult);
     }
     else if(blueprint.type === 'health'){
-        socket.emit('damage', {damage: -blueprint.params.healthModifier, id: socket.id});
+        socket.emit('damage', {damage: -blueprint.params.healthModifier, sender: socket.id});
         if(player.health > GLOBAL.MAX_HEALTH){
             player.health = GLOBAL.MAX_HEALTH;
         }

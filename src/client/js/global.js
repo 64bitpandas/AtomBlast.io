@@ -49,7 +49,7 @@ export const GLOBAL = {
     COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
-    MAX_SPEED: 5,
+    MAX_SPEED: 7,
     PLAYER_RADIUS: 100,
     VELOCITY_STEP: 0.85, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
@@ -63,6 +63,7 @@ export const GLOBAL = {
     ATTRACTION_RADIUS: 150, // Max distance for powerup to be attracted to player
     ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength
     ATOM_SPAWN_SPEED: 15, // Speed that atom travels away from spawner
+    ATOM_SPAWN_DELAY: 5000, // Atom spawn delay, in milliseconds
 
     // Map
     TILE_TEXTURE_DIR: '../assets/map/Tiles/',

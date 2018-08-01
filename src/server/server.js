@@ -66,7 +66,7 @@ setInterval(() => {
     
             }
     }
-}, 3000);
+}, GLOBAL.ATOM_SPAWN_DELAY);
 
 // Timer
 setInterval(() => {
@@ -354,12 +354,12 @@ io.on('connection', socket => {
             socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
             socket.emit('serverSendCompoundRemoval', data);
 
-            damage(data, room);   
+            damage(data, room, socket);   
         }
     });
 
     socket.to(room).on('damage', data => {
-        damage(data, room);
+        damage(data, room, socket);
     });
 
     // A player spawned a Compound
@@ -449,11 +449,12 @@ function generateID() {
 /**
  * Changes the health of the player by the amount given.
  * @param {*} data The data sent by the client.
- * @param {*} room This room.
+ * @param {string} room This room.
+ * @param {*} socket This socket.
  * Must include the player id and amount to damage.
  * Amount may be negative (for health boost).
  */
-function damage(data, room) {
+function damage(data, room, socket) {
     if(rooms[room].players[data.sender] !== undefined) {
         rooms[room].players[data.sender].health -= data.damage;
 
