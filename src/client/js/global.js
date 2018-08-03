@@ -68,6 +68,12 @@ export const GLOBAL = {
     // Map
     TILE_TEXTURE_DIR: '../assets/map/Tiles/',
     MAP_SIZE: 2000,
+    SPAWN_POINTS: [
+        {x: 0, y: 0},
+        {x: 9, y: 9},
+        {x: 0, y: 9},
+        {x: 9, y: 0}
+    ],  // Spawn points for different teams
 
     // Drawing
     DRAW_RADIUS: 1000, // Radius around player in which to draw other objects

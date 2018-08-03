@@ -87,49 +87,47 @@ setInterval(() => {
 io.on('connection', socket => {
     // Determine room if matchmaking is needed
     let room = socket.handshake.query.room;
-    if(room === GLOBAL.NO_ROOM_IDENTIFIER) {
-        let roomType = socket.handshake.query.roomType;
-    
-        // Check if the team already exists
-        let team = teams[socket.handshake.query.team];
-        if(team !== undefined) {
-            // Make sure everything is compatible
-            if(rooms[team.room].type !== roomType)
-                socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
-            else if(!team.joinable)
-                socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
-            else {// is joinable
-                room = team.room;
-                teams[socket.handshake.query.team].players.push(socket.id);
-                if(roomType === '2v2v2v2' && team.players.length === 2)
-                    teams[socket.handshake.query.team].joinable = false;
-                else if(team.players.length === 4)
-                    teams[socket.handshake.query.team].joinable = false;
-            }
-        } 
-        // Team not found 
-        else {
-            // Try joining a room
-            for(let roomName in rooms) {
-                if(roomName.indexOf(roomType) > -1)
-                    if((roomType === '4v4' && rooms[roomName].teamCount < 2) || rooms[roomName].teamCount < 4) {
-                        rooms[roomName].teamCount++;
-                        room = roomName;
-                    }
-            }
 
-            // No matching rooms - must create a new room
-            if(room === GLOBAL.NO_ROOM_IDENTIFIER)
-                room = 'NA_' + roomType + '_' + generateID();
+    let roomType = socket.handshake.query.roomType;
 
-            // Make team
-            teams[socket.handshake.query.team] = {
-                room: room,
-                players: [socket.id],
-                joinable: true
-            };
+    // Check if the team already exists
+    let team = teams[socket.handshake.query.team];
+    if(team !== undefined) {
+        // Make sure everything is compatible
+        if(rooms[team.room].type !== roomType)
+            socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
+        else if(!team.joinable)
+            socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
+        else {// is joinable
+            room = team.room;
+            teams[socket.handshake.query.team].players.push(socket.id);
+            if(roomType === '2v2v2v2' && team.players.length === 2)
+                teams[socket.handshake.query.team].joinable = false;
+            else if(team.players.length === 4)
+                teams[socket.handshake.query.team].joinable = false;
         }
-      
+    } 
+    // Team not found 
+    else {
+        // Try joining a room
+        for(let roomName in rooms) {
+            if(roomName.indexOf(roomType) > -1)
+                if((roomType === '4v4' && rooms[roomName].teams.length < 2) || rooms[roomName].teams.length < 4) {
+                    room = roomName;
+                }
+        }
+
+        // No matching rooms - must create a new room
+        if(room === GLOBAL.NO_ROOM_IDENTIFIER)
+            room = 'NA_' + roomType + '_' + generateID();
+
+        // Make team
+        teams[socket.handshake.query.team] = {
+            room: room,
+            players: [socket.id],
+            joinable: true
+        };
+       
     }
 
     // Join custom room
@@ -138,13 +136,13 @@ io.on('connection', socket => {
     });
 
     // Player team name
-    let team = socket.handshake.query.team;
+    team = socket.handshake.query.team;
 
     // Initialize room array and spawn atoms on first player join
     if(rooms[room] === undefined || rooms[room] === null) {
         console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);
         rooms[room] = {};
-        rooms[room].teamCount = 0;
+        rooms[room].teams = [];
         rooms[room].players = {};
         rooms[room].atoms = {};
         rooms[room].compounds = {};
@@ -191,6 +189,7 @@ io.on('connection', socket => {
 
     // Add team to database
     let thisPlayer = rooms[room].players[socket.id];
+    rooms[room].teams.push(team);
  
     // Setup player array sync- once a frame
     setInterval(() => {
@@ -459,7 +458,8 @@ function damage(data, room, socket) {
         rooms[room].players[data.sender].health -= data.damage;
 
         if (rooms[room].players[data.sender].health <= 0) {
-            socket.emit('serverSendPlayerDeath', {});
+            console.log(rooms[room].teams.indexOf(socket.handshake.query.team));
+            socket.emit('serverSendPlayerDeath', {teamNumber: rooms[room].teams.indexOf(socket.handshake.query.team)});
             rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
         }
     }

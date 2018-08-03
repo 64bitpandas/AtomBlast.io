@@ -227,20 +227,22 @@ function setupSocket() {
         console.log('You LEVELED UP! Level: ' + data.newLevel);
     });
 
+    // Respawn
     socket.on('serverSendPlayerDeath', (data) => {
-        console.log('ded');
-        player.posX = 0;
-        player.posY = 0;
+        console.log('You Died!');
+        player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2;
+        player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2;
         socket.emit('move', {
             id: socket.id,
-            posX: 0,
-            posY: 0,
+            posX: player.posX,
+            posY: player.posY,
             vx: 0,
             vy: 0,
             type: 'players'
         });
     });
 
+    // Update timer
     socket.on('time', (data) => {
         document.getElementById('timer').innerHTML = '<p>' + data.time + '</p>';
     });
