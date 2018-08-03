@@ -155,8 +155,6 @@ export function createNewCompound(blueprint, xIn, yIn) {
                         streamNumber: i
                     });
                 }, blueprint.params.spacing * i);
-                
-
     }
 
     //Emits the crafting event to update experience

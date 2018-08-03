@@ -1,4 +1,4 @@
-import { GLOBAL } from './global';
+import { GLOBAL, distanceBetween } from './global';
 import { cookieInputs, quitGame, updateLobby } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player } from './pixigame';
@@ -123,8 +123,9 @@ function setupSocket() {
                         if (clientObj !== undefined && clientObj !== null) {
                             if (objRef.id !== socket.id)
                                 objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                            if (objType === 'players')
+                            if (objType === 'players') {
                                 objects[objType][obj].health = objRef.health;
+                            }
                         }
                         // Does not exist - need to clone to clientside
                         else if (isSetup) {
@@ -161,22 +162,12 @@ function setupSocket() {
  
       
 
-    // Sync atoms that have not been picked up
-    socket.on('serverSendAtomRemoval', (data) => {
+    // Sync objects when they are deleted or move out of view
+    socket.on('serverSendObjectRemoval', (data) => {
         //An Atom was removed
-        if (objects.atoms[data.id] !== undefined) {
-            objects.atoms[data.id].hide();
-            delete objects.atoms[data.id];
-        }
-    });
-
-    // Compound has collided
-    socket.on('serverSendCompoundRemoval', (data) => {
-        //An Atom was removed
-        console.log('Server send compound removal');
-        if (objects.compounds[data.id] !== undefined) {
-            objects.compounds[data.id].hide();
-            delete objects.compounds[data.id];
+        if (objects[data.type][data.id] !== undefined) {
+            objects[data.type][data.id].hide();
+            delete objects[data.type][data.id];
         }
     });
 

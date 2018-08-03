@@ -208,8 +208,8 @@ io.on('connection', socket => {
                     rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
                 }
                 else { // delete
-                    socket.to(room).broadcast.emit('serverSendCompoundRemoval', {id: compound});
-                    socket.emit('serverSendCompoundRemoval', {id: compound});
+                    socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: compound, type: 'compounds'});
+                    socket.emit('serverSendObjectRemoval', {id: compound, type: 'compounds'});
                     delete rooms[room].compounds[compound];
                 }
             }
@@ -243,9 +243,12 @@ io.on('connection', socket => {
             }
 
             for(let objType in tempObjects) {
-                for (let obj in rooms[room][objType])
+                for (let obj in rooms[room][objType]) {
                     if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
                         tempObjects[objType][obj] = rooms[room][objType][obj];
+                    else if(objType === 'players') // Player left view
+                        socket.emit('serverSendObjectRemoval', {id: obj, type: objType});
+                }
             }
 
             // // Populate tiles
@@ -273,8 +276,6 @@ io.on('connection', socket => {
                 socket.emit('roomInfo', rooms[room].players);
             }
         }
-
-
 
     }, 1000/60);
 
@@ -341,7 +342,7 @@ io.on('connection', socket => {
             console.log('atomCollision');
         }
         delete rooms[room].atoms[data.id];
-        socket.to(room).broadcast.emit('serverSendAtomRemoval', data);
+        socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});
     });
 
     socket.to(room).on('compoundCollision', data => {
@@ -350,8 +351,8 @@ io.on('connection', socket => {
         }
         if(rooms[room].compounds[data.id] !== undefined) {
             delete rooms[room].compounds[data.id];
-            socket.to(room).broadcast.emit('serverSendCompoundRemoval', data);
-            socket.emit('serverSendCompoundRemoval', data);
+            socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
+            socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
 
             damage(data, room, socket);   
         }
