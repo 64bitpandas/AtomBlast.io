@@ -164,16 +164,8 @@ window.onload = () => {
 
     for(let i = 0; i < selectedBlueprints.length; i++) {
         bindHandler('bp-ingame-' + (i + 1), function() {
-            if (canCraft(selectedBlueprints[i])) {
-                swal('MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'success');
-                deductCraftMaterial(selectedBlueprints[i]); 
-            }
-            else {
-                swal('REQ NOT MET: ', JSON.stringify(selectedBlueprints[i]) + ' have been invoked', 'warning');
-                
-            }
-            selectedCompound = i + 1;
-            console.log(selectedCompound);
+            selectedCompound = i;
+            updateCompoundButtons();
         });
     }
 
