@@ -24,17 +24,19 @@ app.use(express.static(`${__dirname}/../client`));
  * 
  * Structure of Rooms object:
  * rooms: {
- *    players: {
- *      sampleID: {
- *        Insert Player object here
- *      }
- *    }
- *    atoms: [
- *       0: {
- *          Insert Atom object here
- *       }
- *    ]
- * }
+ *    ${roomName}: {
+*    players: {
+*      sampleID: {
+*        Insert Player object here
+*      }
+*    }
+*    atoms: [
+*       0: {
+*          Insert Atom object here
+*       }
+*    ]
+* }
+}
 */
 let rooms = {};
 
@@ -152,24 +154,10 @@ io.on('connection', socket => {
             seconds: 0,
             formattedTime: '0:00'
         };
-
-        // Generate Atoms. Atoms have a random ID between 10000000 and 99999999, inclusive.
-        // for(let num = 0; num < Math.floor(Math.random() * (GLOBAL.MAX_POWERUPS - GLOBAL.MIN_POWERUPS) + GLOBAL.MIN_POWERUPS); num++) {
-        //     // let type = GLOBAL.ATOM_IDS[Math.floor(Math.random() * GLOBAL.ATOM_IDS.length)];
-        //     let type = 'h'; //TODO
-        //     let randX = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-        //     let randY = Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE;
-        //     let atom = {
-        //         typeID: type,
-        //         id: generateID(),
-        //         posX: randX,
-        //         posY: randY,
-        //         vx: 0,
-        //         vy: 0
-        //     };
-        //     rooms[room].atoms[atom.id] = atom;
-        // }
     }
+    
+    // Add team to database
+    rooms[room].teams.push(team);
 
     // Create new player in rooms object
     rooms[room].players[socket.id] = {
@@ -178,19 +166,15 @@ io.on('connection', socket => {
         room: socket.handshake.query.room,
         team: socket.handshake.query.team,
         health: GLOBAL.MAX_HEALTH,
-        posX: 0,
-        posY: 0,
-        // posX: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
-        // posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
+        posX: GLOBAL.SPAWN_POINTS[rooms[room].teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
+        posY: GLOBAL.SPAWN_POINTS[rooms[room].teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
         vx: 0,
         vy: 0,
         experience: 0,
         damagedBy: {}
     };
-
-    // Add team to database
     let thisPlayer = rooms[room].players[socket.id];
-    rooms[room].teams.push(team);
+    console.log(thisPlayer);
  
     // Setup player array sync- once a frame
     setInterval(() => {
@@ -251,20 +235,6 @@ io.on('connection', socket => {
                         socket.emit('serverSendObjectRemoval', {id: obj, type: objType});
                 }
             }
-
-            // // Populate tiles
-            // tempObjects.tiles = [];
-            // for(let row = 0; row < MAP_LAYOUT.length; row++) {
-            //   for(let col = 0; col < MAP_LAYOUT[0].length; col++)
-            //     if(distanceBetween(thisPlayer, {
-            //       posX: col * GLOBAL.GRID_SPACING * 2,
-            //       posY: row * GLOBAL.GRID_SPACING * 2
-            //     }) < GLOBAL.DRAW_RADIUS)
-            //       tempObjects.tiles.push({
-            //         row: row,
-            //         col: col
-            //       });
-            // }
 
             socket.emit('objectSync', tempObjects);
 
