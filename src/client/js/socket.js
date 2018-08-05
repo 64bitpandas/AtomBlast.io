@@ -1,5 +1,5 @@
 import { GLOBAL, distanceBetween } from './global';
-import { cookieInputs, quitGame, updateLobby } from './app';
+import { cookieInputs, quitGame, updateLobby, updateScores } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player } from './pixigame';
 import { spawnAtom } from './obj/atom';
@@ -125,6 +125,7 @@ function setupSocket() {
                                 objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
                             if (objType === 'players') {
                                 objects[objType][obj].health = objRef.health;
+                                objects[objType][obj].damagedBy = objRef.damagedBy;
                             }
                         }
                         // Does not exist - need to clone to clientside
@@ -211,7 +212,7 @@ function setupSocket() {
 
     socket.on('serverSendStartGame', (data) => {
         console.log('game has started');
-        startGame(false);
+        startGame(false, data.teams);
     });
 
     socket.on('levelUp', (data) => {
@@ -236,6 +237,11 @@ function setupSocket() {
     // Update timer
     socket.on('time', (data) => {
         document.getElementById('timer').innerHTML = '<p>' + data.time + '</p>';
+    });
+
+    // Update scores
+    socket.on('serverSendScoreUpdate', (data) => {
+        updateScores(data.teamSlot, data.increment);
     });
 
     //Emit join message,

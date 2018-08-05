@@ -84,7 +84,9 @@ export const GLOBAL = {
     // Colors
     GRID_LINE_COLOUR: 0xD3D3D3,
     FRIENDLY_COLOUR: 0x2ECC71,
+    FRIENDLY_COLOUR_HEX: '#2ECC71',
     ENEMY_COLOUR: 0xEA6153,
+    ENEMY_COLOUR_HEX: '#EA6153',
 
     // Sprites and textures
     PLAYER_SPRITES: [
@@ -125,7 +127,10 @@ export const GLOBAL = {
         100,
         140,
         160
-    ]
+    ],
+
+    KILL_SCORE: 2, // How many points are awarded to the player/team who dealt the most damage to the player
+    ASSIST_SCORE: 1 // How many points are awarded to all players who assist in killing the player
 };
 
 /**

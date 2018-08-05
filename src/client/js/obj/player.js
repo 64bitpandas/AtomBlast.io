@@ -49,6 +49,7 @@ export class Player extends GameObject {
         this.isMoving = false;
         this.experience = experience; //Sets the experience of the player(Passed in)
         this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds
+        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.
 
         this.atoms = { // List of all atoms and the number that the player has. Continue list later
         };

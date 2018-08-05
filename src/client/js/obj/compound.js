@@ -13,10 +13,11 @@ import { MAP_LAYOUT } from './tiles';
  */
 export class Compound extends GameObject {
 
-    constructor(id, x, y, vx, vy, blueprint, sendingTeam) {
+    constructor(id, x, y, vx, vy, blueprint, sendingTeam, sender) {
         super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
         this.blueprint = blueprint;
         this.sendingTeam = sendingTeam;
+        this.sender = sender;
         this.ignited = false; // Becomes true if this compound passes over a flame tile
 
         // Parse params
@@ -78,7 +79,6 @@ export class Compound extends GameObject {
         // No friendly fire
         if(this.sendingTeam === player.team)
             return false;
-
         let distance = distanceBetween(
             { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
             { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
@@ -87,9 +87,9 @@ export class Compound extends GameObject {
         if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
             player.health -= this.blueprint.params.damage;
             if(!this.ignited)
-                socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.damage });
+                socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.damage });
             else
-                socket.emit('compoundCollision', { id: this.id, sender: socket.id, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
+                socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
             return true;
         }
         // for (let objType in objects) {
@@ -139,6 +139,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
         socket.emit('createCompound', {
             blueprint: blueprint,
             sendingTeam: player.team,
+            sender: socket.id,
             // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
             mousePos: { x: xIn - centerX, y: centerY - yIn }
         });
@@ -150,6 +151,7 @@ export function createNewCompound(blueprint, xIn, yIn) {
                     socket.emit('createCompound', {
                         blueprint: blueprint,
                         sendingTeam: player.team,
+                        sender: socket.id,
                         // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
                         mousePos: { x: xIn - centerX, y: centerY - yIn },
                         streamNumber: i
@@ -169,5 +171,5 @@ export function createNewCompound(blueprint, xIn, yIn) {
  * @param {*} data Data sent from server
  */
 export function createCompound(data) {
-    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam);
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam, data.sender);
 }

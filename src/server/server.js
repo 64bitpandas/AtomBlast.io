@@ -184,7 +184,8 @@ io.on('connection', socket => {
         // posY: Math.round(Math.random() * GLOBAL.MAP_SIZE * 2 - GLOBAL.MAP_SIZE),
         vx: 0,
         vy: 0,
-        experience: 0
+        experience: 0,
+        damagedBy: {}
     };
 
     // Add team to database
@@ -312,7 +313,7 @@ io.on('connection', socket => {
 
     // Hides the lobby screen if the game has already started
     if(rooms[room].started) {
-        socket.emit('serverSendStartGame', {});
+        socket.emit('serverSendStartGame', {teams: rooms[room].teams});
     }
 
     /**
@@ -350,11 +351,11 @@ io.on('connection', socket => {
             console.log('compoundCollision');
         }
         if(rooms[room].compounds[data.id] !== undefined) {
+            damage(data, room, socket);   
             delete rooms[room].compounds[data.id];
             socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
             socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
 
-            damage(data, room, socket);   
         }
     });
 
@@ -373,7 +374,8 @@ io.on('connection', socket => {
             vx: data.blueprint.params.speed * Math.cos(theta),
             vy: data.blueprint.params.speed * Math.sin(theta),
             blueprint: data.blueprint,
-            sendingTeam: data.sendingTeam
+            sendingTeam: data.sendingTeam,
+            sender: data.sender
         };
         rooms[room].compounds[newCompound.id] = newCompound;
     // socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound); //Send to everyone but the sender
@@ -421,7 +423,8 @@ io.on('connection', socket => {
 
     socket.on('startGame', data => {
         console.log('Game has started in room ' + room);
-        socket.broadcast.to(room).emit('serverSendStartGame', data);
+        socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
+        socket.emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
         rooms[room].started = true;
     });
 
@@ -455,13 +458,45 @@ function generateID() {
  * Amount may be negative (for health boost).
  */
 function damage(data, room, socket) {
-    if(rooms[room].players[data.sender] !== undefined) {
-        rooms[room].players[data.sender].health -= data.damage;
+    if(rooms[room].players[data.player] !== undefined) {
+        rooms[room].players[data.player].health -= data.damage;
 
-        if (rooms[room].players[data.sender].health <= 0) {
+        // Add damage to database
+        if (rooms[room].players[data.player].damagedBy[data.sentBy] === undefined)
+            rooms[room].players[data.player].damagedBy[data.sentBy] = 0;
+        rooms[room].players[data.player].damagedBy[data.sentBy] += data.damage;
+
+        if (rooms[room].players[data.player].health <= 0) {
             console.log(rooms[room].teams.indexOf(socket.handshake.query.team));
             socket.emit('serverSendPlayerDeath', {teamNumber: rooms[room].teams.indexOf(socket.handshake.query.team)});
-            rooms[room].players[data.sender].health = GLOBAL.MAX_HEALTH;
+            rooms[room].players[data.player].health = GLOBAL.MAX_HEALTH;
+
+            // Read damagedBy to award points, clear in the process
+            let max = null;
+            let dataToSend;
+            for(let pl in rooms[room].players[data.player].damagedBy) {
+                dataToSend = { 
+                    player: pl, 
+                    teamSlot: rooms[room].teams.indexOf(rooms[room].compounds[data.id].sendingTeam), 
+                    increment: GLOBAL.ASSIST_SCORE, 
+                    kill: false };
+
+                socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
+                socket.emit('serverSendScoreUpdate', dataToSend);
+                if (max === null || rooms[room].players[data.player].damagedBy[pl] > rooms[room].players[data.player].damagedBy[max])
+                    max = pl;
+            }
+
+            // Add to score of person who dealt the most damage
+            dataToSend.player = max;
+            dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE;
+            dataToSend.kill = true;
+            socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
+            socket.emit('serverSendScoreUpdate', dataToSend);
+
+            // Clear damagedBy values
+            for (let pl in rooms[room].players[data.player].damagedBy)
+                rooms[room].players[data.player].damagedBy[pl] = 0;
         }
     }
     else

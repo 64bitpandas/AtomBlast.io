@@ -95,12 +95,57 @@ export const BLUEPRINTS = {
         texture: '../assets/atom_helium.png',
         type: 'basic',
         params: {
-            speed: 4*3,
+            speed: 4 * 3,
             damage: 2,
             size: 14
         },
         atoms: {
             he: 2
+        }
+    },
+    ionicSodiumChloride: {
+        name: 'Sodium Chloride',
+        tooltip: 'Can kill small insects, slugs, and snails. Cannot kill much else.',
+        texture: '../assets/atom_helium.png',
+        type: 'ionic',
+        params: {
+            speed: 4 * 3,
+            damage: 2,
+            size: 14
+        },
+        atoms: {
+            na: 1,
+            cl: 1
+        }
+    },
+    acidicHydrogenChloride: {
+        name: 'Hydrochloric Acid',
+        tooltip: 'In a pure form, can corrode metal.',
+        texture: '../assets/atom_helium.png',
+        type: 'acidic',
+        params: {
+            speed: 4 * 3,
+            damage: 2,
+            size: 14
+        },
+        atoms: {
+            h: 1,
+            cl: 1
+        }
+    },
+    nuclearLithiumHydrogen: {
+        name: 'Lithium Deuteride',
+        tooltip: 'Used as the primary fuel in thermonuclear weapons.',
+        texture: '../assets/atom_lithium.png',
+        type: 'nuclear',
+        params: {
+            speed: 1 * 3,
+            damage: 2,
+            size: 14
+        },
+        atoms: {
+            h: 1,
+            li: 1
         }
     },
     glucose: {

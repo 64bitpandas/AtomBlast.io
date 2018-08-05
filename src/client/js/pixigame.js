@@ -396,16 +396,26 @@ export function deductCraftMaterial(blueprint) {
 /**
  * Starts the game after lobby closes.
  * @param {boolean} emit True if this client should emit the event to the server.
+ * @param {*} teams Array of teams on the scoreboard.
  */
-export function startGame(emit) {
+export function startGame(emit, teams) {
     setIngame(true);
     hideElement('lobby');
     showElement('hud');
-    console.log(emit);
     if (emit)
         socket.emit('startGame', {
             start: true
         });
+    
+    // Init scoreboard
+    if(teams !== undefined) {
+        for(let i = 0; i < teams.length; i++) {
+            document.getElementById('score').innerHTML += '-<span id="team-score-' + i + '">0</span>';
+            document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i]) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);
+        }
+        document.getElementById('score').style.fontSize = '3vw';
+        document.getElementById('score').innerHTML += '-';
+    }
 }
 
 /**

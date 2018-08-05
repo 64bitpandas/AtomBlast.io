@@ -395,8 +395,13 @@ export function updateCompoundButtons(selectedSlot) {
             document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;
         }
     }
+}
 
-
+/**
+ * Updates the team scoreboard on screen.
+ */
+export function updateScores(teamSlot, increment) {
+    document.getElementById('team-score-' + teamSlot).innerHTML = parseInt(document.getElementById('team-score-' + teamSlot).innerHTML) + increment;
 }
 
 /**
