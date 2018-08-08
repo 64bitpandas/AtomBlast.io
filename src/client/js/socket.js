@@ -1,7 +1,7 @@
 import { GLOBAL, distanceBetween } from './global';
-import { cookieInputs, quitGame, updateLobby, updateScores } from './app';
+import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner } from './app';
 import ChatClient from './lib/chat-client';
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player } from './pixigame';
+import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame';
 import { spawnAtom } from './obj/atom';
 import { createCompound } from './obj/compound';
 import { MapTile } from './obj/maptile';
@@ -194,6 +194,11 @@ function setupSocket() {
         chat.addLoginMessage(data.sender, false);
     });
 
+    socket.on('serverSendDisconnect', () => {
+        quitGame('The game has ended.', false);
+        hideElement('winner-panel');
+    });
+
     // Errors on join
     socket.on('connectionError', (data) => {
         socket.disconnect();
@@ -242,6 +247,12 @@ function setupSocket() {
     // Update scores
     socket.on('serverSendScoreUpdate', (data) => {
         updateScores(data.teamSlot, data.increment);
+    });
+
+    // A player has won
+    socket.on('serverSendWinner', (data) => {
+        setIngame(false); // Disable keyboard controls and rendering
+        displayWinner(data);
     });
 
     //Emit join message,

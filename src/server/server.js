@@ -157,7 +157,7 @@ io.on('connection', socket => {
     }
     
     // Add team to database
-    rooms[room].teams.push(team);
+    rooms[room].teams.push({name: team});
 
     // Create new player in rooms object
     rooms[room].players[socket.id] = {
@@ -174,7 +174,7 @@ io.on('connection', socket => {
         damagedBy: {}
     };
     let thisPlayer = rooms[room].players[socket.id];
-    console.log(thisPlayer);
+    // console.log(thisPlayer);
  
     // Setup player array sync- once a frame
     setInterval(() => {
@@ -437,8 +437,8 @@ function damage(data, room, socket) {
         rooms[room].players[data.player].damagedBy[data.sentBy] += data.damage;
 
         if (rooms[room].players[data.player].health <= 0) {
-            console.log(rooms[room].teams.indexOf(socket.handshake.query.team));
-            socket.emit('serverSendPlayerDeath', {teamNumber: rooms[room].teams.indexOf(socket.handshake.query.team)});
+            // console.log(rooms[room].teams.indexOf(socket.handshake.query.team));
+            socket.emit('serverSendPlayerDeath', {teamNumber: getTeamNumber(room, socket.handshake.query.team)});
             rooms[room].players[data.player].health = GLOBAL.MAX_HEALTH;
 
             // Read damagedBy to award points, clear in the process
@@ -447,10 +447,18 @@ function damage(data, room, socket) {
             for(let pl in rooms[room].players[data.player].damagedBy) {
                 dataToSend = { 
                     player: pl, 
-                    teamSlot: rooms[room].teams.indexOf(rooms[room].compounds[data.id].sendingTeam), 
+                    teamSlot: getTeamNumber(room, rooms[room].compounds[data.id].sendingTeam), 
                     increment: GLOBAL.ASSIST_SCORE, 
                     kill: false };
 
+                // Init team score if it hasn't been previously
+                if (rooms[room].teams[dataToSend.teamSlot].score === undefined)
+                    rooms[room].teams[dataToSend.teamSlot].score = 0;
+                
+                // Add to team score
+                rooms[room].teams[dataToSend.teamSlot].score += dataToSend.increment;
+
+                
                 socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
                 socket.emit('serverSendScoreUpdate', dataToSend);
                 if (max === null || rooms[room].players[data.player].damagedBy[pl] > rooms[room].players[data.player].damagedBy[max])
@@ -464,9 +472,32 @@ function damage(data, room, socket) {
             socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
             socket.emit('serverSendScoreUpdate', dataToSend);
 
+            // Add to team score
+            rooms[room].teams[dataToSend.teamSlot].score += dataToSend.increment;
+
             // Clear damagedBy values
             for (let pl in rooms[room].players[data.player].damagedBy)
                 rooms[room].players[data.player].damagedBy[pl] = 0;
+
+            // Check if a team won
+            for(let tm of rooms[room].teams) {
+                if(tm.score >= GLOBAL.WINNING_SCORE) {
+
+                    let dataToSend = {
+                        winner: tm
+                        // teamScore: rooms[room].teams[dataToSend.teamSlot].score             
+                        //other data here TODO post ranking
+                    };
+                    socket.to(room).broadcast.emit('serverSendWinner', dataToSend); 
+                    socket.emit('serverSendWinner', dataToSend); 
+
+                    // Close room after delay (kick all players)
+                    setTimeout(() => {
+                        socket.emit('serverSendDisconnect', {});
+                        socket.to(room).broadcast.emit('serverSendDisconnect', {});
+                    },GLOBAL.ROOM_DELETE_DELAY);
+                }
+            }
         }
     }
     else
@@ -501,4 +532,18 @@ function spawnAtom(row, col, room, verbose) {
     // Log to console
     if(verbose)
         console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
+}
+
+
+/**
+ * Returns the index of the given team within the team array of the given room.
+ * @param {string} room The room name to check
+ * @param {string} teamName The team name to return the number of
+ */
+function getTeamNumber(room, teamName) {
+    for(let i = 0; i < rooms[room].teams.length; i++)
+        if(rooms[room].teams[i].name === teamName)
+            return i;
+    
+    return -1; //Team not found
 }

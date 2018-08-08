@@ -135,6 +135,10 @@ window.onload = () => {
         quitGame('You have left the game.', false);
     });
 
+    bindHandler('exitButton', function () {
+        quitGame('The game has ended.', false);
+    });
+
     bindHandler('resumeButton', function () {
         hideElement('menubox');
     });
@@ -419,6 +423,16 @@ export function updateLobby(data) {
         listItem.appendChild(document.createTextNode(data[player].name));
         document.getElementById(data[player].team).appendChild(listItem);
     }
+}
+
+/**
+ * Displays the winner panel after a game has concluded.
+ * @param {*} data Server sent data, including name and score of winning team.
+ */
+export function displayWinner(data) {
+    // console.log(data);
+    document.getElementById('winner-name').innerHTML = data.winner.name + ' has won!';
+    showElement('winner-panel');
 }
 
 /**

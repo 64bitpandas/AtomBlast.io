@@ -33,6 +33,7 @@ export const GLOBAL = {
     LOCAL_HOST: 'localhost:3000',
     TEST_IP: 'https://atomblast.herokuapp.com/',
     NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required
+    ROOM_DELETE_DELAY: 30000, // Time, in ms, between winning and room closing
 
     // Cookies
     COOKIES: [
@@ -129,8 +130,9 @@ export const GLOBAL = {
         160
     ],
 
-    KILL_SCORE: 2, // How many points are awarded to the player/team who dealt the most damage to the player
-    ASSIST_SCORE: 1 // How many points are awarded to all players who assist in killing the player
+    KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player
+    ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player
+    WINNING_SCORE: 20 // How many points are required to win the game per team. TODO increase
 };
 
 /**

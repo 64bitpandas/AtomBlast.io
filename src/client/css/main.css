@@ -76,6 +76,11 @@ canvas {
 	z-index: 100;
  }
 
+ /* Winner display */
+#winner-panel {
+	z-index: 100;
+}
+
 /* ************
  * * BUTTONS  *
  * ************ */
