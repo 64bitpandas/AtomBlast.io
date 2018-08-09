@@ -94,7 +94,7 @@ io.on('connection', socket => {
 
     // Check if the team already exists
     let team = teams[socket.handshake.query.team];
-    if(team !== undefined) {
+    if(team !== undefined && team.room !== undefined) {
         // Make sure everything is compatible
         if(rooms[team.room].type !== roomType)
             socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
@@ -373,24 +373,6 @@ io.on('connection', socket => {
         }
     });
 
-    socket.on('disconnect', data => {
-        console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);
-    
-        socket.to(room).broadcast.emit('disconnectedPlayer', {id: socket.id}); //Broadcast to everyone in the room to delete the player
-    
-        delete rooms[room].players[socket.id]; //Remove the server side player
-
-        // Delete room if there is nobody inside
-        if(Object.keys(rooms[room].players).length === 0)  {
-            console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);
-            delete io.sockets.adapter.rooms[socket.id];
-            delete rooms[room];
-
-            if(room !== GLOBAL.NO_ROOM_IDENTIFIER)
-                delete teams[team];
-        }
-    });
-
     socket.on('startGame', data => {
         console.log('Game has started in room ' + room);
         socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
@@ -407,6 +389,33 @@ io.on('connection', socket => {
         for(let at in data.atoms) {
             for(let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++)
                 spawnAtom(data.x, data.y, at, room, false);
+        }
+    });
+
+
+
+    socket.on('disconnect', data => {
+        console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);
+
+        socket.to(room).broadcast.emit('disconnectedPlayer', { id: socket.id }); //Broadcast to everyone in the room to delete the player
+
+        delete rooms[room].players[socket.id]; //Remove the server side player
+
+        // Delete room if there is nobody inside
+        if (Object.keys(rooms[room].players).length === 0) {
+            console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);
+            delete io.sockets.adapter.rooms[socket.id];
+            delete rooms[room];
+
+            if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {
+                // Remove from teams array
+                teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);
+
+                // Delete team if all players have left
+                if (teams[team].players.length === 0)
+                    delete teams[team];
+
+            }
         }
     });
 

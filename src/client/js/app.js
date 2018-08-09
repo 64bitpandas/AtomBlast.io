@@ -137,6 +137,7 @@ window.onload = () => {
 
     bindHandler('exitButton', function () {
         quitGame('The game has ended.', false);
+        hideElement('winner-panel')
     });
 
     bindHandler('resumeButton', function () {
