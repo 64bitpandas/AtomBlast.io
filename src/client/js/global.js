@@ -130,9 +130,11 @@ export const GLOBAL = {
         160
     ],
 
+    // Deaths
     KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player
     ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player
-    WINNING_SCORE: 20 // How many points are required to win the game per team. TODO increase
+    WINNING_SCORE: 20, // How many points are required to win the game per team. TODO increase
+    MAX_DEATH_ATOMS: 100, // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.
 };
 
 /**

@@ -63,7 +63,7 @@ setInterval(() => {
         for (let row = 0; row < MAP_LAYOUT.length; row++)
             for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
                 if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
-                    spawnAtom(row, col, room, false);
+                    spawnAtomAtVent(row, col, room, false);
                 }
     
             }
@@ -399,7 +399,15 @@ io.on('connection', socket => {
     });
 
     socket.on('spawnAtom', (data) => {
-        spawnAtom(data.row, data.col, room, true);
+        spawnAtomAtVent(data.row, data.col, room, true);
+    });
+
+    // Atom information sent on player death. Spreads atoms randomly in a circle around the death area.
+    socket.on('playerDeathAtoms', (data) => {
+        for(let at in data.atoms) {
+            for(let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++)
+                spawnAtom(data.x, data.y, at, room, false);
+        }
     });
 
 });
@@ -505,21 +513,37 @@ function damage(data, room, socket) {
 }
 
 /**
- * 
+ * Spawns an atom at the vent at the given row and column.
  * @param {number} row The row of the vent 
  * @param {number} col The column of the vent to spawn at
  * @param {string} room The room to spawn in
  * @param {boolean} verbose True if this method should output to the console
  */
-function spawnAtom(row, col, room, verbose) {
+function spawnAtomAtVent(row, col, room, verbose) {
     // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
     let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
-    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+
     let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
     let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
      
+    spawnAtom(x, y, atomToSpawn, room, verbose);
+    
+}
+
+/**
+ * 
+ * @param {number} x X-position of center
+ * @param {number} y Y-position of center
+ * @param {string} type Type of atom to spawn
+ * @param {string} room The room to spawn in
+ * @param {boolean} verbose True if this method should output to the console
+ */
+function spawnAtom(x, y, type, room, verbose) {
+
+    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+
     let atom = {
-        typeID: atomToSpawn,
+        typeID: type,
         id: generateID(),
         posX: x,
         posY: y,
@@ -530,10 +554,9 @@ function spawnAtom(row, col, room, verbose) {
         rooms[room].atoms[atom.id] = atom;
 
     // Log to console
-    if(verbose)
+    if (verbose)
         console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
 }
-
 
 /**
  * Returns the index of the given team within the team array of the given room.

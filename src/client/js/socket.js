@@ -1,5 +1,5 @@
 import { GLOBAL, distanceBetween } from './global';
-import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner } from './app';
+import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame';
 import { spawnAtom } from './obj/atom';
@@ -227,6 +227,16 @@ function setupSocket() {
     // Respawn
     socket.on('serverSendPlayerDeath', (data) => {
         console.log('You Died!');
+
+        // TODO move trigger to server
+        // Releases atoms and deletes the entire atoms array in player
+        socket.emit('playerDeathAtoms', {atoms: player.atoms, x: player.posX, y: player.posY});
+        for(let at in player.atoms) {
+            player.atoms[at] = 0;
+            updateAtomList(at);
+        }
+
+        // Reset position to spawnpoint
         player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2;
         player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2;
         socket.emit('move', {
