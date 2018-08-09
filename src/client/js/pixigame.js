@@ -224,7 +224,7 @@ function draw(delta) {
     if (player !== undefined) {
 
         // Make sure player is not in chat before checking move
-        if (document.activeElement !== document.getElementById('chatInput') && document.hasFocus() && inGame) {
+        if (isFocused() && inGame) {
             if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) // Left
                 player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult;
             if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) // Right
@@ -256,12 +256,14 @@ function draw(delta) {
 
         // Shooting
         space.press = () => {
-            if (canCraft(selectedBlueprints[selectedCompound])) {
-                createNewCompound(selectedBlueprints[selectedCompound], mouseX, mouseY);
-                // Subtract atoms needed to craft
-                deductCraftMaterial(selectedBlueprints[selectedCompound]);
-            } else
-                console.log('Not enough atoms to craft this blueprint!');
+            if(isFocused() && inGame) {
+                if (canCraft(selectedBlueprints[selectedCompound])) {
+                    createNewCompound(selectedBlueprints[selectedCompound], mouseX, mouseY);
+                    // Subtract atoms needed to craft
+                    deductCraftMaterial(selectedBlueprints[selectedCompound]);
+                } else
+                    console.log('Not enough atoms to craft this blueprint!');
+            }
         };
 
         // Move player
@@ -359,7 +361,7 @@ export function createPlayer(data) {
  * If the document is Focused return true otherwise false
  **/
 export function isFocused() {
-    return document.hasFocus();
+    return document.hasFocus() && document.activeElement !== document.getElementById('chatInput');
 }
 
 /**
@@ -431,4 +433,24 @@ export function setIngame(newValue) {
  */
 export function getIngame() {
     return inGame;
+}
+
+/**
+ * Called on mouse click from app.js
+ * @param {*} e Click event
+ */
+export function mouseClickHandler(e) {
+    if (!inGame || !isFocused()) {
+        return false;
+    }
+    // console.log(e);
+    // console.info("Selected Compound: " + selectedCompound);
+    if (canCraft(selectedBlueprints[selectedCompound])) {
+
+        createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
+
+        // Subtract atoms needed to craft
+        deductCraftMaterial(selectedBlueprints[selectedCompound]);
+    } else
+        console.log('Not enough atoms to craft this blueprint!');
 }

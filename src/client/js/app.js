@@ -10,7 +10,7 @@ import { spawnAtom } from './obj/atom';
 import { GameObject } from './obj/gameobject';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame } from './pixigame.js';
+import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';
 import { createNewCompound} from './obj/compound';
 import swal from 'sweetalert';
 
@@ -137,7 +137,7 @@ window.onload = () => {
 
     bindHandler('exitButton', function () {
         quitGame('The game has ended.', false);
-        hideElement('winner-panel')
+        hideElement('winner-panel');
     });
 
     bindHandler('resumeButton', function () {
@@ -259,22 +259,6 @@ window.onmousemove = (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
 };
-
-function mouseClickHandler(e) {
-    if (getIngame() === false) {
-        return false;
-    }
-    // console.log(e);
-    // console.info("Selected Compound: " + selectedCompound);
-    if (canCraft(selectedBlueprints[selectedCompound])) {
-    
-        createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY); 
-
-        // Subtract atoms needed to craft
-        deductCraftMaterial(selectedBlueprints[selectedCompound]);
-    } else
-        console.log('Not enough atoms to craft this blueprint!');
-}
 
 // function setupEventHandlers() {  
 //     document.addEventListener('mousedown', this._onMouseDown.bind(this));    
