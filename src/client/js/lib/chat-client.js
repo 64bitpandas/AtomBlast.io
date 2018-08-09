@@ -3,10 +3,11 @@
  * Created 17 April 2018
  */
 
-import {GLOBAL} from './global.js';
-import { socket } from './app.js';
+import {GLOBAL} from '../global.js';
+import { socket } from '../socket.js';
+import {devTest} from '../app.js';
 
-let player, room;
+let player, room, team;
 export default class ChatClient {
 
     // Use this constructor during init to connect ChatClient to the server
@@ -14,8 +15,10 @@ export default class ChatClient {
         // this.canvas = params.canvas;
         // this.mobile = params.mobile;
         this.player = params.player;
+        this.team = params.team;
         const self = this;
         this.commands = {};
+        this.commandPrefix = "-";
         let input = document.getElementById('chatInput');
         input.addEventListener('keypress', key => {this.sendChat(key);}); //This works WTF
         input.addEventListener('keyup', key => {
@@ -38,6 +41,33 @@ export default class ChatClient {
         this.registerCommand('help', 'Information about the chat commands.', () => {
             self.printHelp();
         });
+
+        this.registerCommand('test', 'Gives 5000 of every element', () => {
+            if(GLOBAL.DEBUG) {
+                devTest();
+                self.addSystemLine("Developer Configurations Applied!");
+            }
+            else {
+                self.addSystemLine("Invalid Permission.");
+            }
+        });
+        this.registerCommand('damage', 'Damages you by the given amount.', (params) => {
+            console.log(params);
+            if(GLOBAL.DEBUG) {
+                if(params[0] !== undefined && typeof parseInt(params[0]) === 'number') {
+                    socket.emit('damage', {damage: parseInt(params[0]), sender: socket.id});
+                    self.addSystemLine("Damaged player by " + params[0] + " health points");
+                }
+                else
+                    self.addSystemLine("Invalid parameter. Parameter must be of type number");
+            }
+            else {
+                self.addSystemLine("Invalid Permission.");
+            }
+        });
+        this.registerCommand('spawnAtom', 'Spawns a Hydrogen atom at the bottom left vent.', () => {
+            socket.emit('spawnAtom', {row: 9, col: 0});
+        })
 
         // this.registerCommand('login', 'Login as an admin.', function (args) {
         //     self.socket.emit('pass', args);
@@ -88,6 +118,19 @@ export default class ChatClient {
         );
     }
 
+    /**
+     * Chat box implementation for the users.
+     * @param {string} name Name of the player who sent the message
+     * @param {string} message Message that was sent
+     * @param {boolean} me True if the sender matches the receiver
+     */
+    addPrivateMessage(name, message, me) {
+       this.appendMessage(
+           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,
+           (me) ? 'me' : 'friend'
+        );
+    }
+
     // Message to notify players when a new player joins
     addLoginMessage(name, me) {
         console.log(`${name} joined`);
@@ -130,7 +173,7 @@ export default class ChatClient {
             if (text !== '') {
 
                 // Chat command.
-                if (text.indexOf('-') === 0) {
+                if (text.indexOf(this.commandPrefix) === 0) {
                     const args = text.substring(1).split(' ');
                     if (commands[args[0]]) {
                         commands[args[0]].callback(args.slice(1));

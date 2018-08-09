@@ -4,32 +4,21 @@
  * *  GLOBAL STYLES  *
  * ******************* */
 * {
-	font-family: 'Aldrich', sans-serif;
-	font-size: 14px;
+	font-family: 'Aldrich', sans-serif !important;
 }
 
 html, body {
 	margin: 0; padding: 0;
 	width: 100%; height: 100%;
-	background: linear-gradient(to top left, #311B92, black);
-	overflow: hidden;
+	background: linear-gradient(to top left, #311B92, black) no-repeat bottom fixed;
+	/* overflow: hidden; */
 }
 
 canvas {
 	width: 100%; height: 100%;
 	margin: 0; padding: 0;
-}
-
-.box {
-	padding: 2rem;
-	border-radius: 7px 7px 7px 7px;
-	-moz-border-radius: 7px 7px 7px 7px;
-	-webkit-border-radius: 7px 7px 7px 7px;
-	background-color: white;
-	-webkit-box-shadow: 0px 0px 1rem 0px rgb(180, 180, 180);
-	-moz-box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
-	box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
-	box-sizing: border-box;
+	position: absolute;
+	z-index: 0;
 }
 
 .centered {
@@ -51,6 +40,47 @@ canvas {
 	text-align: center;
 }
 
+@media screen and (min-width: 45em) {
+	.btn-blueprint {
+		width: 49% !important;
+	}
+}
+
+/* **********
+ * * BOXES  *
+ * ********** */
+.box {
+	padding: 2rem;
+	border-radius: 7px 7px 7px 7px;
+	-moz-border-radius: 7px 7px 7px 7px;
+	-webkit-border-radius: 7px 7px 7px 7px;
+	background-color: white;
+	-webkit-box-shadow: 0px 0px 1rem 0px rgb(180, 180, 180);
+	-moz-box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
+	box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
+	box-sizing: border-box;
+}
+
+/* Blueprint Select Window */
+#bp-select {
+	z-index: 100;
+	position: absolute;
+	margin: auto;
+	width: 80%;
+	height: 70%;
+}
+
+/* Ingame Menu */
+.menubox {
+	position: absolute;
+	z-index: 100;
+ }
+
+ /* Winner display */
+#winner-panel {
+	z-index: 100;
+}
+
 /* ************
  * * BUTTONS  *
  * ************ */
@@ -61,6 +91,7 @@ canvas {
 	width: 100%;
 	height: 40px;
 	box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	font-size: large;
 	
 	text-align: center;
@@ -77,6 +108,7 @@ canvas {
 	outline: none;
 	-webkit-box-shadow: none;
 	box-shadow: none;
+	position: relative;
  }
 
  .btn-primary {
@@ -131,35 +163,37 @@ canvas {
 	background: rgb(238, 74, 74);
  }
 
+ .btn-slot {
+	background: rgba(200, 200, 200, 0.8);
+	color: black;
+ }
+
+ #btn-close {
+	 /* float: bottom; */
+	 width: 70%;
+	 margin-left: 15%;
+	 position: relative;
+	 /* margin-top: 200px; */
+}
+
+ .btn-slot:active, .btn-slot:hover {
+	background: rgba(220, 220, 220,0.9);
+ }
+
 /* ***************
  * * START MENU  *
  * *************** */
 
 /* box */
 #startMenu {
-	margin:auto;
-	margin-top:100px;
-	width: 30rem;
 	box-sizing: border-box;
 }
 
-#startMenu p {
+#startMenuWrapper p {
 	padding: 0;
 	text-align:center;
 	font-size: x-large;
 	font-weight: bold;
-}
-
-#startMenuMessage {
-	width: 30rem;
-	margin: auto;
-	box-sizing: border-box;
-	margin-top: 2vh;
-	color:red;
-	height: 2vh;
-	text-align: center;
-	/* Hidden on start */
-	display: none;
 }
 
 .menuInputBox {
@@ -194,13 +228,88 @@ canvas {
   font-size : 12px;
 }
 
-/* *****************
- * *  INGAME MENU  *
- * ***************** */
- .menubox {
-	position: absolute;
-	z-index: 100;
+/* TODO make better logo! */
+#logo img {
+	max-height: 20vh;
+	padding-top: 5vh;
+}
+
+#logo-firefox {
+	margin: auto;
+	display: block;
+}
+
+select {
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 1rem 0px rgba(180, 180, 180);
+	z-index: 1;
+	border-radius: 5px;
+	padding: 0.7rem 1rem;
+	outline: none;
+	width: 100%;
+	transition-duration: 1s;
+	margin-bottom: 1vh;
+	-webkit-appearance: none; /* Override Mac/Chrome */
+	-moz-appearance: none; /* Override Firefox */
 	
+}
+
+select:focus {
+	box-shadow: 0px 0px 1rem 0px #311B92;
+	-webkit-appearance: none; /* Override Mac/Chrome */
+	-moz-appearance: none; /* Override Firefox */
+}
+
+#newsBox {
+	margin-top: 5vh;
+	padding-top: 1vh;
+}
+
+/* *********
+ * *  HUD  *
+ * ********* */
+ #hud {
+	position: absolute;
+	z-index: 20;
+	width: 100%;
+	height: 100%;
+ }
+
+ #bp-ingame {
+	 position: absolute;
+	 bottom: 2rem;
+	 right: 2rem;
+	 max-width: 30vw;
+ }
+
+ .bp-ingame {
+	 right: 0;
+ }
+
+ #atom-count-wrapper {
+	position: absolute;
+	top: 2rem;
+	right: 2rem;
+	max-width: 30vw;
+ }
+
+ #atom-count-wrapper h3 {
+	 text-align: center;
+ }
+
+ #score {
+	 position: absolute;
+	 top: 2rem;
+	 left: 50%;
+	 transform: translateX(-50%);
+ }
+
+ #timer {
+	 position: absolute;
+	 top: 2rem;
+	 left: 2rem;
+	 max-width: 20vw;
+	 max-height: 10vh;
  }
 
 /* **********
@@ -208,12 +317,12 @@ canvas {
  * ********** */
 
 .chatbox {
-	position: absolute;
     width: 25vw;
     height: 45vh;
     bottom: 2rem;
     left: 2rem;
 	padding: 1.2rem;
+	position: absolute;
 }
 
 .chatbox .chat-list {
@@ -260,6 +369,8 @@ canvas {
     border-top: 1px solid #DDD;
 	outline: none;
 	height: 5vh;
+	z-index: 50;
+	transition-duration: 0.7s;
 }
 
 /* ***************************************************
@@ -276,9 +387,8 @@ canvas {
 .spinner {
   width: 8vw;
   height: 8vw;
-
   position: relative;
-  margin: 100px auto;
+  margin: auto;
 }
 
 .double-bounce1, .double-bounce2 {
@@ -355,3 +465,68 @@ canvas {
   color: rgb(60, 26, 214);
   text-shadow: 0 0 0.5rem rgba(26, 0, 172, 0.8);
 }
+
+
+/* **************
+ * * BLUEPRINTS *
+ * ************** */
+
+ .blueprint-wrapper {
+	 height: 80%;
+	 overflow-y: scroll;
+ }
+
+ .btn-blueprint {
+	 height: 60%;
+	 top: 0;
+ }
+
+ .btn-blueprint h6 {
+	font-weight: 100;
+	margin-top: 5%;
+	max-height: 10%;
+ }
+
+ .btn-blueprint p {
+	 margin-top: 5%;
+	 line-height: 1;
+	 max-height: 5%;
+ }
+
+ .btn-blueprint img {
+	 margin-bottom: 5%;
+	 max-height: 45%;
+ }
+
+ .tooltip {
+	visibility: hidden;
+	width: 30%;
+    background-color: rgba(255,255,255, 0.8);
+    color: black;
+    text-align: center;
+    padding: 5vh 0;
+	border-radius: 6px;
+	position: fixed;
+    z-index: 200;
+ }
+
+ .btn-blueprint:hover .tooltip {
+	 visibility: visible;
+ }
+
+ /* ********
+ * * LOBBY *
+ * ********* */
+ 
+ #lobby {
+	 position: absolute;
+	 height: 100%;
+	 width: 100%;
+	 z-index: 30;
+	 background-color: rgba(0, 0, 0, 0.25);
+ }
+
+ #lobbybox {
+	 height: 70vh;
+	 width: 70vw;
+ }

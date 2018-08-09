@@ -1,43 +1,55 @@
 /** 
- * App.js is responsible for connecting the renderer (game.js) to the server (server.js).
- * Uses socket.io to set up listeners in the setupSocket() function.
+ * App.js is responsible for connecting the UI with the game functionality.
+ * Most of the functionality is used for the main menu and connecting/disconnecting behavior.
  */
-import {GLOBAL} from './global.js';
-import ChatClient from './chat-client.js';
-import * as cookies from './cookies.js';
-import p5game from './p5game.js';
-import p5 from './lib/p5.min.js';
-import { Player } from './player.js';
-import { createPowerup } from './powerup.js';
+'use strict';
+import { GLOBAL } from './global.js';
+import * as cookies from './lib/cookies';
+import { Player } from './obj/player';
+import { spawnAtom } from './obj/atom';
+import { GameObject } from './obj/gameobject';
+import { BLUEPRINTS } from './obj/blueprints.js';
+import { beginConnection, disconnect } from './socket.js';
+import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';
+import { createNewCompound} from './obj/compound';
+import swal from 'sweetalert';
 
-// Socket. Yes this is a var, and this is intentional because it is a global variable.
-export var socket;
+// Array containing all inputs which require cookies, and their values
+export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));
 
-/* Array of all connected players in the form of Player objects */
-export var players = {};
-
-// Array of all powerups that have not been picked up, in the form of Powerup objects\
-export var powerups = [];
+// Array containing the four chosen blueprints
+export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
 
 const nickErrorText = document.getElementById('nickErrorText');
-const playerNameInput = document.getElementById('playerNameInput');
-const roomNameInput = document.getElementById('roomNameInput');
 
-let playerName;
-let roomName;
+// Mouse position - used for tooltips
+export let mouseX, mouseY;
+
+// Currently selected blueprint slot
+export let selectedCompound = 0;
+
+let selectedSlot;
 
 // Starts the game if the name is valid.
-function startGame() {
+function joinGame() {
+
+    if (!allBlueprintsSelected())
+        swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error');
     // check if the nick is valid
-    if (validNick()) {
+    else if (validNick()) {
 
-        // Start game sequence
-        playerName = playerNameInput.value.replace(/(<([^>]+)>)/ig, '');
-        roomName = roomNameInput.value.replace(/(<([^>]+)>)/ig, '');
+        // Set cookies for inputs
+        for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
+            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
+        }
 
-        // Set cookies
-        cookies.setCookie(GLOBAL.NAME_COOKIE, playerName, GLOBAL.COOKIE_DAYS);
-        cookies.setCookie(GLOBAL.ROOM_COOKIE, roomName, GLOBAL.COOKIE_DAYS);
+        // Use cookies to set the ingame blueprint slot values
+        for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
+            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
+
+            // Check whether blueprint is selected!                     
+            document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
+        }
 
         // Show game window
         showElement('gameAreaWrapper');
@@ -46,28 +58,11 @@ function startGame() {
         // Show loading screen
         showElement('loading');
 
-        //Debugging and Local serving
-        socket = io.connect(GLOBAL.LOCAL_HOST, {
-            query: `room=${roomName}&name=${playerName}`,
-            reconnectionAttempts: 3
-        });
-        
-        //Production server
-        setTimeout(() => {
-            if(!socket.connected) {
-                console.log('connecting to main server');
-                socket.disconnect();
-                socket = io.connect(GLOBAL.SERVER_IP, { query: `room=${roomName}&name=${playerName}` });
-            }
-            if (socket !== null)
-                SetupSocket(socket);
-            // Init p5
-            new p5(p5game);
-            // Hide loading screen
-            hideElement('loading');
-            showElement('chatbox');
+        // Cookie Inputs: 0=player, 1=room, 2=team
+
+        // Connect to server
+        beginConnection();
             
-        }, 1000);
     } else {
         nickErrorText.style.display = 'inline';
     }
@@ -77,179 +72,235 @@ function startGame() {
  * @returns true if the nickname is valid, false otherwise
  */
 function validNick() {
-    const regex = /^\w*$/;
-    return regex.exec(playerNameInput.value) !== null && regex.exec(roomNameInput.value) !== null;
+    const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
+    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
+        if(regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private'))
+            return false;
+    }
+
+    return true;
+}
+
+/**
+ * Returns true if all four blueprint slots are filled.
+ */
+function allBlueprintsSelected() {
+    for(let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
+        if(cookieInputs[i].innerHTML.substring(0, 1) === '-')
+            return false;
+    }
+    return true;
+}
+/**
+ * Its a method for testing stuff
+ */
+function testHandler() {
+    swal('SUCCESS','The test event is invoked!','info');
 }
 
 /** 
- * Onload function. Initializes the menu screen and loads cookies.
+ * Onload function. Initializes the menu screen, creates click events, and loads cookies.
  */
 window.onload = () => {
-    // Cookie loading
-    const playerCookie = cookies.getCookie(GLOBAL.NAME_COOKIE);
-    const roomCookie = cookies.getCookie(GLOBAL.ROOM_COOKIE);
+    
+    // Patch logo for firefox
+    if(typeof InstallTrigger !== 'undefined')
+        document.getElementById('logo').innerHTML = `<img src="assets/logo.svg" id="logo-firefox">`; // eslint-disable-line
 
-    // Continue loading cookie only if it exists
-    if(playerCookie !== null && playerCookie.length > 0)
-        playerNameInput.value = playerCookie;
-    if(roomCookie !== null && roomCookie.length > 0)
-        roomNameInput.value = roomCookie;
+    // Cookie loading - create array of all cookie values
+    let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));
+
+    // Continue loading cookies only if it exists
+    let i = 0;
+    for(let cookie of cookieValues) {
+        if(cookie !== null && cookie.length > 0) {
+            if(cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT')
+                cookieInputs[i].value = cookie;
+            else if(cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined)
+                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
+        }
+        i++;
+    }
 
     // Add listeners to start game to enter key and button click
-    document.getElementById('startButton').onclick = () => {
-        startGame();
-    };
 
-    document.getElementById('quitButton').onclick = () => {
-        quitGame('You have left the game.');
-    };
+    // Eric - Test method do not remove pls
+    document.addEventListener('pointerdown', mouseClickHandler);
 
-    document.getElementById('resumeButton').onclick = () => {
-        hideElement('menubox');
-    };
-
-    playerNameInput.addEventListener('keypress', e => {
-        const key = e.which || e.keyCode;
-
-        if (key === GLOBAL.KEY_ENTER)
-           startGame();
+    bindHandler('startButton', function () {
+        joinGame();
     });
+
+    bindHandler('quitButton', function () {
+        quitGame('You have left the game.', false);
+    });
+
+    bindHandler('exitButton', function () {
+        quitGame('The game has ended.', false);
+        hideElement('winner-panel');
+    });
+
+    bindHandler('resumeButton', function () {
+        hideElement('menubox');
+    });
+
+    bindHandler('optionsButton', function () {
+        swal('', 'This feature is not implemented.', 'info');
+    });
+
+    bindHandler('controlsButton', function () {
+        swal('', 'This feature is not implemented.', 'info');
+    });
+
+    bindHandler('creditsButton', function () {
+        swal('', 'Created by BananiumLabs.com', 'info');
+    });
+
+    bindHandler('btn-start-game', function () {
+        console.log('starting game');
+        startGame(true);
+    });
+
+    bindHandler('newsBox', function() {
+        swal('','hello world','info');
+    });
+
+    // document.getElementById('gameView', onClick, false);
+
+    for(let i = 0; i < selectedBlueprints.length; i++) {
+        bindHandler('bp-ingame-' + (i + 1), function() {
+            selectedCompound = i;
+            updateCompoundButtons();
+        });
+    }
+
+    // Set up the blueprint slot buttons
+    for(let i = 1; i <= GLOBAL.BP_MAX; i++) {
+        document.getElementById('bp-slot-' + i).onclick = () => {
+            showElement('bp-select');
+            document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;
+            selectedSlot = i;
+        };
+    }
+
+    document.getElementById('btn-close').onclick = () => { hideElement('bp-select'); };
+
+    // Set up blueprint selection buttons
+    for(let blueprint in BLUEPRINTS) {
+        let bp = BLUEPRINTS[blueprint];
+        let formula = '';
+        for(let atom in bp.atoms) {
+            formula += atom.toUpperCase() + ((bp.atoms[atom] > 1) ? bp.atoms[atom] : '');
+        }
+
+        document.getElementById('blueprint-wrapper').innerHTML +=
+            `
+            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-secondary btn-blueprint" id="btn-blueprint-` + blueprint + `">
+                <p>` + bp.name + `</p>
+                <h6>-` + formula + `-</h6>
+                <img src="` + bp.texture + `">
+                <span class="tooltip">` + bp.tooltip + `</span>
+            </button>
+
+            `;
+        
+    }
+
+    // Blueprint Slots
+    for(let btn of document.getElementsByClassName('btn-blueprint'))
+        btn.onclick = () =>  {
+            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'
+            console.log(blueprint + ' selected in slot ' + selectedSlot);
+            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+            hideElement('bp-select');
+            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
+        };
+
+    // Add enter listeners for all inputs
+    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
+        cookieInputs[i].addEventListener('keypress', e => {
+            const key = e.which || e.keyCode;
+    
+            if (key === GLOBAL.KEY_ENTER)
+                joinGame();
+        });
+    }
+
+    // Behavior when room type is changed
+    if (cookieInputs[7].value !== 'private')
+        hideElement('room');
+    else
+        showElement('room');
+
+    cookieInputs[7].onchange = () => {
+        if(cookieInputs[7].value === 'private')
+            showElement('room');
+        else
+            hideElement('room');
+
+        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);
+    };
+
+    // Server changed
+    cookieInputs[8].onchange = () => {
+        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
+    };
 };
 
-/** 
- * First time setup when connection starts.
+// function onClick(e) {
+//     swal('', 'oooooo!!!', 'info');
+//     console.log("ONCLICK!");
+// }
+
+/**
+ * Sets mouse positions for tooltip
  */
-function SetupSocket(socket) {
-    //Debug
-    console.log('Socket:', socket);
-    
-    //Instantiate Chat System
-    let chat = new ChatClient({ player: playerName, room: roomName });
-    chat.addLoginMessage(playerName, true);
-    chat.registerFunctions();
+window.onmousemove = (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+};
 
-    // On Connection Failure
-    socket.on('reconnect_failed', () => {
-        alert("You have lost connection to the server!");
-    });
-
-    socket.on('reconnecting', (attempt) => {
-        console.log("Lost connection. Reconnecting on attempt: " + attempt);
-        quitGame('Lost connection to server');
-    });
-
-    socket.on('reconnect_error', (err) => {
-        console.log("CRITICAL: Reconnect failed! " + err);
-    });
-
-    socket.on('pong', (ping) => {
-        console.log("Your Ping Is: " + ping);
-    });
-
-    // Sync players between server and client
-    socket.on('playerSync', (data) => {
-        // Create temp array for lerping
-        let oldPlayers = players;
-        //assigning local array to data sent by server
-
-        // Reconstruct player objects based on transferred data
-        for (let player in data) {
-            let pl = data[player];
-
-            // Valid player
-            if(pl !== null) {
-                // Player already exists in database
-                if (players[player] !== undefined && players[player] !== null)
-                    players[player].setData(pl.x, pl.y, pl.theta, pl.speed);
-                // Does not exist - need to create new player
-                else
-                    players[player] = new Player(pl.id, pl.name, pl.room, pl.x, pl.y, pl.theta, pl.speed, pl.powerups);
-            }
-            // Delete if it is a player that has disconnected
-            else {
-                delete players[player];
-            }
-        }
-
-        if (oldPlayers !== undefined && players !== undefined) {
-            // Lerp predictions with actual for other players
-            for (let pl in players) {
-                if (players[pl] !== null && players[pl] !== undefined && oldPlayers[pl] !== undefined && pl !== socket.id) {
-                    players[pl].x = lerp(players[pl].x, oldPlayers[pl].x, GLOBAL.LERP_VALUE);
-                    players[pl].y = lerp(players[pl].y, oldPlayers[pl].y, GLOBAL.LERP_VALUE);
-                    players[pl].theta = lerp(players[pl].theta, oldPlayers[pl].theta, GLOBAL.LERP_VALUE);
-                    players[pl].speed = lerp(players[pl].speed, oldPlayers[pl].speed, GLOBAL.LERP_VALUE);
-                }
-            }
-        }
-        
-    });
-
-    // Sync powerups that have not been picked up
-    socket.on('serverSendPowerupChange', (data) => {
-        //A powerup was removed (TODO create new powerups?)
-            powerups.splice(data.index, 1);
-    });
-
-    // Sync powerups on first connect
-    socket.on('serverSendPowerupArray', (data) => {
-        // First time sync - copy over entire array data
-        console.log('Generating powerups...');
-        for (let powerup of data.powerups) {
-            powerups.push(createPowerup(powerup.typeID, powerups.length));
-        }
-    })
-
-    //Chat system receiver
-    socket.on('serverMSG', data => {
-        chat.addSystemLine(data);
-    });
-
-    socket.on('serverSendPlayerChat', data => {
-        chat.addChatLine(data.sender, data.message, false);
-    });
-
-    socket.on('serverSendLoginMessage', data => {
-        chat.addLoginMessage(data.sender, false);
-    });
-
-    // Event Trigger When Player Disconnects
-    socket.on('serverSendDisconnectMessage', data => {
-        chat.addLoginMessage(data.sender, false);
-        chat.addLoginMessage(data.reason, false);
-    });
-
-    //Emit join message
-    socket.emit('playerJoin', { sender: chat.player });
-}
-
-// Linear Interpolation function. Adapted from p5.lerp
-function lerp(v0, v1, t) {
-    return v0 * (1 - t) + v1 * t
-}
+// function setupEventHandlers() {  
+//     document.addEventListener('mousedown', this._onMouseDown.bind(this));    
+//     document.addEventListener('mousemove', this._onMouseMove.bind(this));  
+//     document.addEventListener('mouseup', this._onMouseUp.bind(this));    
+//     document.addEventListener('wheel', this._onWheel.bind(this));    
+//     document.addEventListener('touchstart', this._onTouchStart.bind(this));    
+//     document.addEventListener('touchmove', this._onTouchMove.bind(this));    
+//     document.addEventListener('touchend', this._onTouchEnd.bind(this));    
+//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));    
+//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
+// };
 
 /**
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
  */
-function quitGame(msg) {
+export function quitGame(msg, isError) {
 
     // Disconnect from server
-    socket.disconnect();
+    disconnect();
 
-    // Wipe players list
-    players = {};
-    // Wipe powerups list
-    powerups = [];
+    // Set status of ingame
+    setIngame(false);
 
     // menu
     hideElement('gameAreaWrapper');
-    hideElement('chatbox');
+    hideElement('hud');
     hideElement('menubox');
-    showElement('startMenuMessage');
     showElement('startMenuWrapper');
-    document.getElementById('startMenuMessage').innerHTML = msg;
-} 
+    hideElement('lobby');
+    swal('Disconnected from Game', msg, (isError) ? 'error' : 'info');
+}
+
+/**
+ * Binds handlerMethod to onclick event for element id.
+ * @param {string} id 
+ * @param {function} handlerMethod 
+ */
+export function bindHandler(id, handlerMethod) {
+    document.getElementById(id).onclick = handlerMethod;
+}
 
 /**
  * Displays a hidden element
@@ -268,11 +319,117 @@ export function hideElement(el) {
 }
 
 /**
- * Returns the distance between two objects.
- * Both objects must have a 'x' and 'y' field.
- * @param {*} obj1 First object 
- * @param {*} obj2 Second object
+ * Makes tooltip follow the mouse. Call when a button is hovered.
+ * @param {HTMLElement} button The element reference for the button currently being hovered.
  */
-export function distanceBetween(obj1, obj2) {
-    return Math.sqrt(Math.pow(obj1.x - obj2.x, 2) + Math.pow(obj1.y - obj2.y, 2));
+window.tooltipFollow = (button) => {
+    let tooltip = button.getElementsByClassName('tooltip')[0];
+    tooltip.style.top = (mouseY - 150) + 'px';
+    tooltip.style.left = (mouseX - 150) + 'px';
+};
+
+/**
+ * Updates the list of atoms that the player holds.
+ * Only updates the entry for the particular ID given.
+ * @param {string} atomID The ID of the atom to update.
+ */
+export function updateAtomList(atomID) {
+    let list = document.getElementById('atom-count');
+
+    if(document.getElementById('atom-list-' + atomID) === null) {
+        let newEntry = document.createElement('li');
+        newEntry.setAttribute('id', 'atom-list-' + atomID);
+        list.appendChild(newEntry);
+    }
+
+    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atoms[atomID];
+
+    updateCompoundButtons(); //No need to update selection
+}
+
+/**
+ * 
+ * @param {number} selectedSlot The index of the selected slot. 0-3
+ */
+export function updateCompoundButtons(selectedSlot) {
+    if(selectedSlot === undefined)
+        selectedSlot = selectedCompound;
+    else
+        selectedCompound = selectedSlot;
+
+    for(let i = 0; i < selectedBlueprints.length; i++) {
+        if (selectedSlot != i) {
+            if(canCraft(selectedBlueprints[i])){
+                document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';
+            }
+            else{
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';
+            }
+        }
+        else { //is selected
+            if (canCraft(selectedBlueprints[i])) {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#003CA8';
+            }
+            else {
+                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#3D66D1';
+            }
+            document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;
+        }
+    }
+}
+
+/**
+ * Updates the team scoreboard on screen.
+ */
+export function updateScores(teamSlot, increment) {
+    document.getElementById('team-score-' + teamSlot).innerHTML = parseInt(document.getElementById('team-score-' + teamSlot).innerHTML) + increment;
+}
+
+/**
+ * Run on new player join to sync lobby information
+ * @param {*} data The data transferred from server
+ */
+export function updateLobby(data) {
+
+// Wipe innerHTML first
+    let lobby = document.getElementById('team-display');
+    lobby.innerHTML = '';
+    for(let player in data) {
+        if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
+            lobby.innerHTML += `
+            <div class="col-3">
+                <h3>` + data[player].team + `</h3>
+                <ul id="` + data[player].team + `">
+                </ul>
+            </div>
+            `;
+        }
+        let listItem = document.createElement('LI');
+        listItem.appendChild(document.createTextNode(data[player].name));
+        document.getElementById(data[player].team).appendChild(listItem);
+    }
+}
+
+/**
+ * Displays the winner panel after a game has concluded.
+ * @param {*} data Server sent data, including name and score of winning team.
+ */
+export function displayWinner(data) {
+    // console.log(data);
+    document.getElementById('winner-name').innerHTML = data.winner.name + ' has won!';
+    showElement('winner-panel');
+}
+
+/**
+ * Sets all player owned atoms to 9999 only if method is called on a DEBUG
+ * enabled server.
+ */
+export function devTest() {
+    if (GLOBAL.DEBUG) {
+        console.warn(JSON.stringify(player.atoms));
+        for (let i in player.atoms) {
+            player.atoms[i] = 9999;
+        }
+        updateCompoundButtons();
+    }
 }
