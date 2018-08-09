@@ -59,3 +59,9 @@ typings/
 
 # @eric REMOVE THIS SOON
 src/experimental/
+
+# visual studio
+.vs/
+
+# Build file
+src/client/js/public/build.js

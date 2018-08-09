@@ -1,14 +1,28 @@
-// Contains all global constants for the client.
+import { MAP_LAYOUT } from './obj/tiles';
+
+// Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
     
+    DEBUG: true,
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,
-    KEY_CHAT: 13,
     KEY_W: 87,
-    KEY_A: 65,
+    KEY_A: 65,  
     KEY_S: 83,
     KEY_D: 68,
+    KEY_1: 49,
+    KEY_2: 50,
+    KEY_3: 51,
+    KEY_4: 52,
+    KEY_SPACE: 32,
+
+    //Blueprints
+    BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
+    BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time
+
+    // Main menu
+    INPUT_COUNT: 3, // Number of input boxes on main menu
 
     // Chat
     PLACEHOLDER_NAME: 'Unnamed Player',
@@ -17,31 +31,127 @@ export const GLOBAL = {
     // Server
     SERVER_IP: 'https://iogame-test.herokuapp.com/', // Change during production!!!!!
     LOCAL_HOST: 'localhost:3000',
+    TEST_IP: 'https://atomblast.herokuapp.com/',
+    NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required
+    ROOM_DELETE_DELAY: 30000, // Time, in ms, between winning and room closing
 
     // Cookies
-    NAME_COOKIE: 'name',
-    ROOM_COOKIE: 'room',
-    COOKIE_DAYS: 14,
+    COOKIES: [
+        'name', //0
+        'room', //1
+        'team', //2
+        'bp-slot-1', //3
+        'bp-slot-2', //4
+        'bp-slot-3', //5 
+        'bp-slot-4', //6
+        'room-type', //7
+        'server', //8
+    ],
+    COOKIE_DAYS: 14, // Cookie lifetime
 
     // Player Movement
-    MAX_SPEED: 5,
+    MAX_SPEED: 6,
     PLAYER_RADIUS: 100,
-    VELOCITY_STEP: 0.3,
+    VELOCITY_STEP: 0.85, // speed multiplier when player is gliding to a stop
     LERP_VALUE: 0.2,
+    DEADZONE: 0.1,
+    MAX_HEALTH: 100, // Starting health of players
 
-    // Powerups
-    POWERUP_RADIUS: 30, // size of spawned powerups
-    MIN_POWERUPS: 50, // minimum number of powerups to be spawned
-    MAX_POWERUPS: 100, // maximum number of powerups to be spawned
-    POWERUP_TYPES: 1, // number of types of powerups
-    P_HEALTH: 0, // HealthPowerup
+    // Atoms
+    ATOM_RADIUS: 30, // size of spawned atoms
+    MIN_POWERUPS: 150, // minimum number of powerups to be spawned (TEMPORARY)
+    MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)
+    ATTRACTION_RADIUS: 150, // Max distance for powerup to be attracted to player
+    ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength
+    ATOM_SPAWN_SPEED: 15, // Speed that atom travels away from spawner
+    ATOM_SPAWN_DELAY: 5000, // Atom spawn delay, in milliseconds
 
     // Map
-    MAP_SIZE: 5000,
+    TILE_TEXTURE_DIR: '../assets/map/Tiles/',
+    MAP_SIZE: 2000,
+    SPAWN_POINTS: [
+        {x: 0, y: 0},
+        {x: 9, y: 9},
+        {x: 0, y: 9},
+        {x: 9, y: 0}
+    ],  // Spawn points for different teams
 
     // Drawing
-    SPAWN_RADIUS: 800, // Radius around player in which to draw other players and powerups
+    DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
     GRID_SPACING: 200, // space between each line on the grid
-    FRAME_RATE: 60
+    GRID_LINE_STROKE: 1,
+    FRAME_RATE: 60,
 
+    // Colors
+    GRID_LINE_COLOUR: 0xD3D3D3,
+    FRIENDLY_COLOUR: 0x2ECC71,
+    FRIENDLY_COLOUR_HEX: '#2ECC71',
+    ENEMY_COLOUR: 0xEA6153,
+    ENEMY_COLOUR_HEX: '#EA6153',
+
+    // Sprites and textures
+    PLAYER_SPRITES: [
+        '../assets/testplayer.png',
+        
+    ],
+    IGNITE_SPRITE: '../assets/placeholder_ignited.png',
+
+    // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
+    ATOM_IDS: [
+        'h',
+        'he',
+        'c',
+        'cl',
+        'n',
+        'o'
+    ],
+    ATOM_SPRITES: [
+        '../assets/atom-hydrogen.png',
+        '../assets/atom_helium.png',
+        '../assets/atom_carbon.png',
+        '../assets/testplayer2.png',
+        '../assets/atom_nitrogen.png',
+        '../assets/atom_oxygen.png',
+    ],
+    //Each Value corresponds with the above event
+    EXPERIENCE_VALUES: {
+        CRAFT: 10,
+        KILL: 124
+    },
+
+    //The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc
+    EXPERIENCE_LEVELS: [
+        0,
+        10,
+        20,
+        40,
+        100,
+        140,
+        160
+    ],
+
+    // Deaths
+    KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player
+    ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player
+    WINNING_SCORE: 20, // How many points are required to win the game per team. TODO increase
+    MAX_DEATH_ATOMS: 100, // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.
 };
+
+/**
+ * Returns the distance between two objects.
+ * Both objects must be GameObjects
+ * @param {GameObject} obj1 First object 
+ * @param {GameObject} obj2 Second object
+ */
+export function distanceBetween(obj1, obj2) {
+    return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
+}
+
+/**
+ * Returns true if the object parameter is within the map boundaries.
+ * @param {GameObject} obj The object to test
+ * @return true if the object parameter is within the map boundaries
+ */
+export function isInBounds(obj) {
+    return obj.posX > 0 && obj.posY > -GLOBAL.GRID_SPACING * 2 && obj.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 && obj.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2;
+}

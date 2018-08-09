@@ -8,26 +8,38 @@
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css" />
+    <link rel="stylesheet" href="/css/simple-grid.min.css" />
 
     <!-- Do not place scripts here! All scripts must be imported into app.js -->
 </head>
 
-<body>
+<body id="body">
 
     <div id="gameAreaWrapper" style="display:none;">
         <!-- <div id="p5CanvasHolder"></div> -->
-        <div class="chatbox box hidden" id="chatbox">
-            <ul id="chatList" class="chat-list"></ul>
-            <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50" spellcheck="false"/>
-        </div>
+        
+
+        <canvas id="gameView"></canvas>
 
         <div class="loadingbox box centered hidden" id="loading">
             <h3 class="title">Joining Game...</h3>
+            <h5 class="info">Press ESC if it's taking too long!</h5>
             <div class="spinner">
                 <div class="double-bounce1"></div>
                 <div class="double-bounce2"></div>
             </div>
         </div>
+
+        <div id="lobby" class="hidden">
+            <div class="lobbybox box centered" id="lobbybox">
+                <h3 class="title">Game Overview</h3>
+                <div class="row" id="team-display">
+
+                </div>
+                <button class="button btn-primary" id="btn-start-game">Start Game</button>
+            </div>
+        </div>
+        
 
         <div class="menubox box centered hidden" id="menubox">
             <h3 class="title">Menu</h3>
@@ -36,21 +48,112 @@
             <button id="quitButton" class="button btn-error">Quit</button>
         </div>
 
+        <div class="box centered hidden" id="winner-panel">
+            <h3 class="title">Game Over!</h3>
+            <p id="winner-name">undefined</p>
+            <button id="exitButton" class="button btn-error">Exit</button>
+        </div>
+
+        <div id="hud" class="hidden">
+            <div class="chatbox box" id="chatbox">
+                <ul id="chatList" class="chat-list"></ul>
+                <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50" spellcheck="false" />
+            </div>
+
+            <div id="bp-ingame">
+                <div class="btn-slot bp-ingame" id="bp-select-label">-Selected Element: -</div>
+                <button class="button btn-slot bp-ingame" id="bp-ingame-1">-Slot 1-</button>
+                <button class="button btn-slot bp-ingame" id="bp-ingame-2">-Slot 2-</button>
+                <button class="button btn-slot bp-ingame" id="bp-ingame-3">-Slot 3-</button>
+                <button class="button btn-slot bp-ingame" id="bp-ingame-4">-Slot 4-</button>
+            </div>
+
+            <div id="timer">
+                <!-- Auto-filled in script -->
+            </div>
+
+            <div id="score">
+                <!-- Auto-filled in script -->
+            </div>
+
+            <div id="atom-count-wrapper">
+                <h3>Atom List</h3>
+                <ul id="atom-count">
+
+                </ul>
+            </div>
+
+        </div>
+
     </div>
     <div id="startMenuWrapper">
-        <div id="startMenu" class="box">
-            <p>Enter Name</p>
-            <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput" spellcheck="false"/>
-            <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="roomNameInput" spellcheck="false"/>
-            <b class="input-error" id="nickErrorText">Name must be alphanumeric characters only!</b>
-            <br />
-            <button id="startButton" class="button btn-primary">Play</button>
-            <button class="button btn-secondary">Controls</button>
-            <button class="button btn-secondary">Credits</button>
+        <div id="logo">
+            <img src="assets/logo.svg">
         </div>
-        <div id="startMenuMessage" class="box">
-           
+        <div class="row">
+            <div class="col-3 offset-top">
+                <div id="aBox" class="box offset-top">
+                    <p>Insert ad here</p>
+                </div>
+                <div id="newsBox" class="box">
+                    <p>News</p>
+                </div>
+            </div>
+            <div id="startMenu" class="col-6 box">
+                <p>Join a Game</p>
+                <div class="row">
+
+                    <div class="col-6">
+                        <select id="room-type">
+                            <option value="2v2v2v2">2v2v2v2</option>
+                            <option value="4v4v4v4">4v4v4v4</option>
+                            <option value="4v4v4v4">4v4</option>
+                            <option value="private">Private Match</option>
+                        </select>  
+                    </div>
+
+                    <div class="col-6">
+                        <select id="server">
+                            <option value="na">North America</option>
+                            <option value="eu">Europe</option>
+                            <option value="oce">Oceania</option>
+                        </select>  
+                    </div>
+                </div>
+                
+                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="name" spellcheck="false"/>
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team" spellcheck="false"/>
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room""0" placeholder="Enter room name here" id="room" spellcheck="false" style="display:none"/>
+                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
+                <br />
+                <button id="startButton" class="button btn-primary">Play</button>
+                <!-- <button id="teamButton" class="button btn-secondary">Join A Team</button> -->
+                <button id="controlsButton" class="button btn-secondary">Controls</button>
+                <button id="creditsButton" class="button btn-secondary">Credits</button>
+            </div>
+            <div id="blueprintBox" class="col-3 box">
+                <p>Select Blueprints</p>
+                <button class="button btn-slot" id="bp-slot-1">-Slot 1-</button>
+                <button class="button btn-slot" id="bp-slot-2">-Slot 2-</button>
+                <button class="button btn-slot" id="bp-slot-3">-Slot 3-</button>
+                <button class="button btn-slot" id="bp-slot-4">-Slot 4-</button>
+            </div>
         </div>
+
+        <div id="bp-select" class="box centered hidden">
+            <div class="row">
+                <p id="bp-select-header">
+                    <!-- Auto-filled in script -->
+                </p>
+            </div>
+            <div class="row blueprint-wrapper" id="blueprint-wrapper">
+                <!-- Auto filled in script -->
+            </div>
+            
+
+            <button class="button btn-error" id="btn-close">Close</button>
+        </div>
+
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
