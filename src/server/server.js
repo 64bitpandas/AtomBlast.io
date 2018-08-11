@@ -96,7 +96,7 @@ io.on('connection', socket => {
     let team = teams[socket.handshake.query.team];
     if(team !== undefined && team.room !== undefined) {
         // Make sure everything is compatible
-        if(rooms[team.room].type !== roomType)
+        if (rooms[team.room] !== undefined && rooms[team.room].type !== roomType)
             socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
         else if(!team.joinable)
             socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
