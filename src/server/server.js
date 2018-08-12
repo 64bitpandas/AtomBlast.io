@@ -12,31 +12,28 @@ const COLLISIONVERBOSE = false; // Turn on for debug messages with collision det
 
 app.use(express.static(`${__dirname}/../client`));
 
-/* Array of all connected players and atoms in respective rooms. All players must contain:
- * id: Socket id
- * name: Player name
- * room: Room that player is currently in
- * x: Current x-position on map
- * y: Current y-position on map
- * theta: Current direction of travel to use in client prediction
- * speed: Current speed of player to use in client prediction
- * atoms: Object containing all atoms that the player has
+/* Contains all game data, including which rooms and players are active.
  * 
  * Structure of Rooms object:
- * rooms: {
- *    ${roomName}: {
-*    players: {
-*      sampleID: {
-*        Insert Player object here
-*      }
-*    }
-*    atoms: [
-*       0: {
-*          Insert Atom object here
-*       }
-*    ]
-* }
-}
+ * 
+// rooms = {
+//     roomName: {
+//         joinable: true,
+//         type: '4v4',
+//         teams: [
+//             name: 'teamname',
+//             players: [...]
+//         ],
+//         players: {...},
+//         atoms: {...},
+//         compounds: {...},
+//         time: {
+//             minutes: 0,
+//             seconds: 0,
+//             formattedTime: '0:00'
+//         }
+//     }
+// }
 */
 let rooms = {};
 
@@ -92,15 +89,23 @@ io.on('connection', socket => {
 
     let roomType = socket.handshake.query.roomType;
 
+    let validJoin = false; // This join attempt was valid.
+
     // Check if the team already exists
     let team = teams[socket.handshake.query.team];
+
+    // Make sure the room you are trying to join is valid
+    if (room !== GLOBAL.NO_ROOM_IDENTIFIER && rooms[room] !== undefined && !rooms[room].joinable) // Room full
+        socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' });
+
     if(team !== undefined && team.room !== undefined) {
         // Make sure everything is compatible
-        if (rooms[team.room] !== undefined && rooms[team.room].type !== roomType)
+        if (rooms[team.room] !== undefined && rooms[team.room].type !== roomType) // Wrong room type
             socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
-        else if(!team.joinable)
+        else if(!team.joinable) // Team full
             socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
         else {// is joinable
+            validJoin = true;
             room = team.room;
             teams[socket.handshake.query.team].players.push(socket.id);
             if(roomType === '2v2v2v2' && team.players.length === 2)
@@ -133,9 +138,10 @@ io.on('connection', socket => {
     }
 
     // Join custom room
-    socket.join(room, () => {
-        console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
-    });
+    if(validJoin)
+        socket.join(room, () => {
+            console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
+        });
 
     // Player team name
     team = socket.handshake.query.team;
@@ -144,6 +150,7 @@ io.on('connection', socket => {
     if(rooms[room] === undefined || rooms[room] === null) {
         console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);
         rooms[room] = {};
+        rooms[room].joinable = true;
         rooms[room].teams = [];
         rooms[room].players = {};
         rooms[room].atoms = {};
@@ -158,6 +165,10 @@ io.on('connection', socket => {
     
     // Add team to database
     rooms[room].teams.push({name: team});
+
+    // Check if room is full
+    if(((rooms[room].type === '4v4' || rooms[room].type === '2v2') && rooms[room].players.length === 2) || rooms[room].players.length === 4)
+        rooms[room].joinable = false;
 
     // Create new player in rooms object
     rooms[room].players[socket.id] = {
@@ -375,6 +386,12 @@ io.on('connection', socket => {
 
     socket.on('startGame', data => {
         console.log('Game has started in room ' + room);
+        // Make the room and teams unjoinable
+        for(let tm of rooms[room].teams) {
+            teams[tm.name].joinable = false;
+        }
+        rooms[room].joinable = false;
+
         socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
         socket.emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
         rooms[room].started = true;
