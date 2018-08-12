@@ -1,3 +1,5 @@
 {
-    "javascript.validate.enable": false
+    "javascript.validate.enable": false,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single"
 }

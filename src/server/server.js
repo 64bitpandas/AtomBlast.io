@@ -5,6 +5,8 @@ const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
 import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
+import { roomMatchmaker } from './matchmaker.js';
+import { generateID } from './serverutils.js';
 var config = require('./config.json');
 
 const DEBUG = true;
@@ -89,62 +91,12 @@ io.on('connection', socket => {
 
     let roomType = socket.handshake.query.roomType;
 
-    let validJoin = false; // This join attempt was valid.
+    let team = socket.handshake.query.team;
 
-    // Check if the team already exists
-    let team = teams[socket.handshake.query.team];
-
-    // Make sure the room you are trying to join is valid
-    if (room !== GLOBAL.NO_ROOM_IDENTIFIER && rooms[room] !== undefined && !rooms[room].joinable) // Room full
-        socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' });
-
-    if(team !== undefined && team.room !== undefined) {
-        // Make sure everything is compatible
-        if (rooms[team.room] !== undefined && rooms[team.room].type !== roomType) // Wrong room type
-            socket.emit('connectionError', {msg: 'Your team is playing in a ' + rooms[team.room].type + ' room, but you are trying to join a ' + roomType + ' room!'});
-        else if(!team.joinable) // Team full
-            socket.emit('connectionError', {msg: 'Your team is already in game or full!'});
-        else {// is joinable
-            validJoin = true;
-            room = team.room;
-            teams[socket.handshake.query.team].players.push(socket.id);
-            if(roomType === '2v2v2v2' && team.players.length === 2)
-                teams[socket.handshake.query.team].joinable = false;
-            else if(team.players.length === 4)
-                teams[socket.handshake.query.team].joinable = false;
-        }
-    } 
-    // Team not found 
-    else {
-        // Try joining a room
-        for(let roomName in rooms) {
-            if(roomName.indexOf(roomType) > -1)
-                if((roomType === '4v4' && rooms[roomName].teams.length < 2) || rooms[roomName].teams.length < 4) {
-                    room = roomName;
-                }
-        }
-
-        // No matching rooms - must create a new room
-        if(room === GLOBAL.NO_ROOM_IDENTIFIER)
-            room = 'NA_' + roomType + '_' + generateID();
-
-        // Make team
-        teams[socket.handshake.query.team] = {
-            room: room,
-            players: [socket.id],
-            joinable: true
-        };
-       
-    }
-
-    // Join custom room
-    if(validJoin)
-        socket.join(room, () => {
-            console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
-        });
+    // Run matchmaker
+    roomMatchmaker(socket, room, teams[team]);
 
     // Player team name
-    team = socket.handshake.query.team;
 
     // Initialize room array and spawn atoms on first player join
     if(rooms[room] === undefined || rooms[room] === null) {
@@ -445,13 +397,7 @@ http.listen(serverPort, () => {
     console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);
 });
 
-/**
- * Returns a random number between between 10000000 and 99999999, inclusive.
- * TODO Make every ID guaranteed unique
- */
-function generateID() {
-    return Math.floor(Math.random() * 90000000) + 10000000;
-}
+
 
 /**
  * Changes the health of the player by the amount given.
@@ -595,4 +541,52 @@ function getTeamNumber(room, teamName) {
             return i;
     
     return -1; //Team not found
+}
+
+/**
+ * Sets a new value for a protected server field.
+ * Adopted from https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object
+ * @param {*} value The value to set
+ * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level. 
+ *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']
+ */
+export function setField(value, path) {
+    console.log('path is ', path);
+
+    if(path === undefined || path.length === 0)
+        throw new Error('Error in setField: path cannot be empty');
+    
+    let schema = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;
+    if (schema === undefined)
+        throw new Error('Base object ' + path[0] + ' does not exist!');
+
+    let len = path.length;
+    for (let i = 1; i < len - 1; i++) {
+        let elem = path[i];
+        if (!schema[elem]) schema[elem] = {};
+        schema = schema[elem];
+    }
+
+    schema[path[len - 1]] = value;
+
+}
+
+/**
+ * Returns the value given a path to that value.
+ * Adopted from https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key
+ * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level.
+ *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']
+ * @returns The value for the given field.
+ */
+export function getField(path) {
+    if (path === undefined || path.length === 0)
+        throw new Error('Error in setField: path cannot be empty');
+    
+    let obj = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;
+    if(obj === undefined)
+        throw new Error('Base object ' + path[0] + ' does not exist!');
+
+    return path.reduce((prev, curr) => {
+        return prev ? prev[curr] : undefined;
+    }, obj || self);
 }
