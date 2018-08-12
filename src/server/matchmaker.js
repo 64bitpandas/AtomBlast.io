@@ -10,7 +10,7 @@ export function roomMatchmaker(socket, room, team) {
     let validJoin = false; // This join attempt was valid.
 
     // Make sure the room you are trying to join is valid
-    console.log(getField(['rooms', room]));
+    // console.log(getField(['rooms', room]));
     if (room !== GLOBAL.NO_ROOM_IDENTIFIER && getField(['rooms', room]) !== undefined && !getField(['rooms', room]).joinable && getField(['rooms', room]) !== undefined) // Room full
         socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' });
 

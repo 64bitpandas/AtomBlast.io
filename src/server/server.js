@@ -7,7 +7,7 @@ import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
 import { roomMatchmaker } from './matchmaker.js';
 import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './serverutils.js';
-import { initGlobal } from './serverinit.js';
+import { initGlobal, initPlayer } from './serverinit.js';
 import { frameSync } from './framesync.js';
 var config = require('./config.json');
 
@@ -72,46 +72,9 @@ io.on('connection', socket => {
     // Run matchmaker
     roomMatchmaker(socket, room, teams[team]);
 
-    // Initialize room array and spawn atoms on first player join
-    if(rooms[room] === undefined || rooms[room] === null) {
-        console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);
-        rooms[room] = {};
-        rooms[room].joinable = true;
-        rooms[room].teams = [];
-        rooms[room].players = {};
-        rooms[room].atoms = {};
-        rooms[room].compounds = {};
-        rooms[room].type = socket.handshake.query.roomType;
-        rooms[room].time = {
-            minutes: 0,
-            seconds: 0,
-            formattedTime: '0:00'
-        };
-    }
-    
-    // Add team to database
-    rooms[room].teams.push({name: team});
-
-    // Check if room is full
-    if(((rooms[room].type === '4v4' || rooms[room].type === '2v2') && rooms[room].players.length === 2) || rooms[room].players.length === 4)
-        rooms[room].joinable = false;
-
-    // Create new player in rooms object
-    rooms[room].players[socket.id] = {
-        id: socket.id, 
-        name: socket.handshake.query.name, 
-        room: socket.handshake.query.room,
-        team: socket.handshake.query.team,
-        health: GLOBAL.MAX_HEALTH,
-        posX: GLOBAL.SPAWN_POINTS[rooms[room].teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
-        posY: GLOBAL.SPAWN_POINTS[rooms[room].teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
-        vx: 0,
-        vy: 0,
-        experience: 0,
-        damagedBy: {}
-    };
+    // Init player
+    initPlayer(socket, room);
     let thisPlayer = rooms[room].players[socket.id];
-    // console.log(thisPlayer);
  
     // Setup player array sync- once a frame
     setInterval(() => {

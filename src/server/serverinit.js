@@ -2,6 +2,7 @@ import { getField, setField } from './server';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles';
 import { GLOBAL } from '../client/js/global';
 import { spawnAtomAtVent } from './serverutils';
+import colors from 'colors'; // Console colors :D
 
 /**
  * Methods to run on server initialization and player connect initialization.
@@ -48,7 +49,50 @@ export function initGlobal() {
 
 /**
  * Run on every player join.
+ * @param {*} socket The socket.io instance
+ * @param {string} room The name of the room that the player belongs to
  */
-export function initPlayer() {
+export function initPlayer(socket, room) {
+    // Initialize room array and spawn atoms on first player join
+    let thisRoom = getField(['rooms', room]);
+    if (thisRoom === undefined || thisRoom === null) {
+        console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);
+        setField({
+            joinable: true,
+            teams: [],
+            atoms: {},
+            compounds: {},
+            type: socket.handshake.query.roomType,
+            time: {
+                minutes: 0,
+                seconds: 0,
+                formattedTime: '0:00'
+            }
+        }, ['rooms', room]);
+    }
+    thisRoom = getField(['rooms', room]);
 
+    // Add team to database
+
+    // Equivalent to rooms[room].teams.push({ name: team });
+    setField({name: socket.handshake.query.team}, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length]);
+
+    // Check if room is full
+    if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4)
+        setField(false, ['rooms', room, 'joinable']);
+
+    // Create new player in rooms object
+    setField({
+        id: socket.id,
+        name: socket.handshake.query.name,
+        room: socket.handshake.query.room,
+        team: socket.handshake.query.team,
+        health: GLOBAL.MAX_HEALTH,
+        posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
+        posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
+        vx: 0,
+        vy: 0,
+        experience: 0,
+        damagedBy: {}
+    }, ['rooms', room, 'players', socket.id]);
 }
