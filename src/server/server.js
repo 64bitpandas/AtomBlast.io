@@ -6,7 +6,9 @@ import colors from 'colors'; // Console colors :D
 import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
 import { roomMatchmaker } from './matchmaker.js';
-import { generateID } from './serverutils.js';
+import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './serverutils.js';
+import { initGlobal } from './serverinit.js';
+import { frameSync } from './framesync.js';
 var config = require('./config.json');
 
 const DEBUG = true;
@@ -55,48 +57,20 @@ let rooms = {};
  */
 let teams = {};
 
+// Initializize Server. Includes atom spawning and timer mechanics
+initGlobal();
 
-// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
-setInterval(() => {
-    for(let room in rooms) {
-        for (let row = 0; row < MAP_LAYOUT.length; row++)
-            for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
-                if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
-                    spawnAtomAtVent(row, col, room, false);
-                }
-    
-            }
-    }
-}, GLOBAL.ATOM_SPAWN_DELAY);
-
-// Timer
-setInterval(() => {
-    for(let room in rooms) {
-        if(rooms[room].started) {
-            rooms[room].time.seconds++;
-            if(rooms[room].time.seconds >= 60) {
-                rooms[room].time.seconds = 0;
-                rooms[room].time.minutes++;
-            }
-
-            rooms[room].time.formattedTime = rooms[room].time.minutes + ':' + ((rooms[room].time.seconds < 10) ? '0' : '') + rooms[room].time.seconds;
-        }
-    }
-}, 1000);
 
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
-    // Determine room if matchmaking is needed
+
+    // Local variable declaration
     let room = socket.handshake.query.room;
-
     let roomType = socket.handshake.query.roomType;
-
     let team = socket.handshake.query.team;
 
     // Run matchmaker
     roomMatchmaker(socket, room, teams[team]);
-
-    // Player team name
 
     // Initialize room array and spawn atoms on first player join
     if(rooms[room] === undefined || rooms[room] === null) {
@@ -141,76 +115,7 @@ io.on('connection', socket => {
  
     // Setup player array sync- once a frame
     setInterval(() => {
-        if(rooms[room] !== undefined) {
-            // Distance checking for all objects
-            let tempObjects = {
-                players: {},
-                atoms: {},
-                compounds: {}
-            };
-
-            // Move compounds
-            for(let compound in rooms[room].compounds) {
-                if(isInBounds(rooms[room].compounds[compound])) {
-                    rooms[room].compounds[compound].posX += rooms[room].compounds[compound].vx;
-                    rooms[room].compounds[compound].posY += rooms[room].compounds[compound].vy;
-                }
-                else { // delete
-                    socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: compound, type: 'compounds'});
-                    socket.emit('serverSendObjectRemoval', {id: compound, type: 'compounds'});
-                    delete rooms[room].compounds[compound];
-                }
-            }
-            // Move atoms
-            for(let atom in rooms[room].atoms) {
-                let distance = distanceBetween(
-                    { posX: rooms[room].atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: rooms[room].atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-                    { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
-                // Attractive force
-                if (distance < GLOBAL.ATTRACTION_RADIUS) {
-                    let theta = Math.atan2((thisPlayer.posY - rooms[room].atoms[atom].posY), (thisPlayer.posX - rooms[room].atoms[atom].posX));
-                    // rooms[room].atoms[atom].vx += 1 / (thisPlayer.posX - rooms[room].atoms[atom].posX) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    // rooms[room].atoms[atom].vy += 1 / (thisPlayer.posY - rooms[room].atoms[atom].posY) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    rooms[room].atoms[atom].vx = 1/distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    rooms[room].atoms[atom].vy = 1/distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    // console.log(this.vx, this.vy, this.posX, this.posY);
-                    // socket.emit('move', { type: 'atoms', id: this.id, posX: this.posX, posY: this.posY, vx: this.vx, vy: this.vy });
-                }
-                else if (Math.abs(rooms[room].atoms[atom].vx) > GLOBAL.DEADZONE || Math.abs(rooms[room].atoms[atom].vy) > GLOBAL.DEADZONE) {
-                    rooms[room].atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
-                    rooms[room].atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
-                }
-
-                if (Math.abs(rooms[room].atoms[atom].vx) <= GLOBAL.DEADZONE)
-                    rooms[room].atoms[atom].vx = 0;
-                if (Math.abs(rooms[room].atoms[atom].vy) <= GLOBAL.DEADZONE)
-                    rooms[room].atoms[atom].vy = 0;
-
-                rooms[room].atoms[atom].posX += rooms[room].atoms[atom].vx;
-                rooms[room].atoms[atom].posY += rooms[room].atoms[atom].vy;
-            }
-
-            for(let objType in tempObjects) {
-                for (let obj in rooms[room][objType]) {
-                    if(distanceBetween(rooms[room][objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
-                        tempObjects[objType][obj] = rooms[room][objType][obj];
-                    else if(objType === 'players') // Player left view
-                        socket.emit('serverSendObjectRemoval', {id: obj, type: objType});
-                }
-            }
-
-            socket.emit('objectSync', tempObjects);
-
-            if(rooms[room].started)
-                socket.emit('time', {time: rooms[room].time.formattedTime});
-      
-            if(rooms[room] !== undefined && !rooms[room].started) {
-                // Send over the room player information
-                // socket.to(room).broadcast.emit('roomInfo', rooms[room].players);
-                socket.emit('roomInfo', rooms[room].players);
-            }
-        }
-
+        frameSync(socket, room, thisPlayer);
     }, 1000/60);
 
     // Receives a chat from a player, then broadcasts it to other players
@@ -485,65 +390,6 @@ function damage(data, room, socket) {
 }
 
 /**
- * Spawns an atom at the vent at the given row and column.
- * @param {number} row The row of the vent 
- * @param {number} col The column of the vent to spawn at
- * @param {string} room The room to spawn in
- * @param {boolean} verbose True if this method should output to the console
- */
-function spawnAtomAtVent(row, col, room, verbose) {
-    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
-    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
-
-    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
-    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
-     
-    spawnAtom(x, y, atomToSpawn, room, verbose);
-    
-}
-
-/**
- * 
- * @param {number} x X-position of center
- * @param {number} y Y-position of center
- * @param {string} type Type of atom to spawn
- * @param {string} room The room to spawn in
- * @param {boolean} verbose True if this method should output to the console
- */
-function spawnAtom(x, y, type, room, verbose) {
-
-    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
-
-    let atom = {
-        typeID: type,
-        id: generateID(),
-        posX: x,
-        posY: y,
-        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
-        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
-    };
-    if (rooms[room] !== undefined)
-        rooms[room].atoms[atom.id] = atom;
-
-    // Log to console
-    if (verbose)
-        console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
-}
-
-/**
- * Returns the index of the given team within the team array of the given room.
- * @param {string} room The room name to check
- * @param {string} teamName The team name to return the number of
- */
-function getTeamNumber(room, teamName) {
-    for(let i = 0; i < rooms[room].teams.length; i++)
-        if(rooms[room].teams[i].name === teamName)
-            return i;
-    
-    return -1; //Team not found
-}
-
-/**
  * Sets a new value for a protected server field.
  * Adopted from https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object
  * @param {*} value The value to set
@@ -551,7 +397,6 @@ function getTeamNumber(room, teamName) {
  *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']
  */
 export function setField(value, path) {
-    console.log('path is ', path);
 
     if(path === undefined || path.length === 0)
         throw new Error('Error in setField: path cannot be empty');
@@ -586,7 +431,18 @@ export function getField(path) {
     if(obj === undefined)
         throw new Error('Base object ' + path[0] + ' does not exist!');
 
-    return path.reduce((prev, curr) => {
-        return prev ? prev[curr] : undefined;
-    }, obj || self);
+    for(let i = 1; i < path.length; i++)
+        obj = obj[path[i]];
+    // console.log(path, obj);
+    return obj;
+}
+
+/**
+ * Deletes one of the three types of gameObjects synced to the server
+ * @param {string} type Either player, atom, compound 
+ * @param {*} id ID of the object to delete
+ * @param {string} room Room name to delete in
+ */
+export function deleteObject(type, id, room) {
+    delete rooms[room][type][id];
 }
