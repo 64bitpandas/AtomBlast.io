@@ -9,6 +9,7 @@ import { roomMatchmaker } from './matchmaker.js';
 import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './serverutils.js';
 import { initGlobal, initPlayer } from './serverinit.js';
 import { frameSync } from './framesync.js';
+import { damage } from './ondamage.js';
 var config = require('./config.json');
 
 const DEBUG = true;
@@ -70,7 +71,7 @@ io.on('connection', socket => {
     let team = socket.handshake.query.team;
 
     // Run matchmaker
-    roomMatchmaker(socket, room, teams[team]);
+    room = roomMatchmaker(socket, room, teams[team]);
 
     // Init player
     initPlayer(socket, room);
@@ -229,8 +230,6 @@ io.on('connection', socket => {
         }
     });
 
-
-
     socket.on('disconnect', data => {
         console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);
 
@@ -247,6 +246,7 @@ io.on('connection', socket => {
             if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {
                 // Remove from teams array
                 teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);
+                // rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);
 
                 // Delete team if all players have left
                 if (teams[team].players.length === 0)
@@ -255,7 +255,6 @@ io.on('connection', socket => {
             }
         }
     });
-
 });
 
 // Notify on console when server has started
@@ -264,93 +263,6 @@ http.listen(serverPort, () => {
     rooms = {};
     console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);
 });
-
-
-
-/**
- * Changes the health of the player by the amount given.
- * @param {*} data The data sent by the client.
- * @param {string} room This room.
- * @param {*} socket This socket.
- * Must include the player id and amount to damage.
- * Amount may be negative (for health boost).
- */
-function damage(data, room, socket) {
-    if(rooms[room].players[data.player] !== undefined) {
-        rooms[room].players[data.player].health -= data.damage;
-
-        // Add damage to database
-        if (rooms[room].players[data.player].damagedBy[data.sentBy] === undefined)
-            rooms[room].players[data.player].damagedBy[data.sentBy] = 0;
-        rooms[room].players[data.player].damagedBy[data.sentBy] += data.damage;
-
-        if (rooms[room].players[data.player].health <= 0) {
-            // console.log(rooms[room].teams.indexOf(socket.handshake.query.team));
-            socket.emit('serverSendPlayerDeath', {teamNumber: getTeamNumber(room, socket.handshake.query.team)});
-            rooms[room].players[data.player].health = GLOBAL.MAX_HEALTH;
-
-            // Read damagedBy to award points, clear in the process
-            let max = null;
-            let dataToSend;
-            for(let pl in rooms[room].players[data.player].damagedBy) {
-                dataToSend = { 
-                    player: pl, 
-                    teamSlot: getTeamNumber(room, rooms[room].compounds[data.id].sendingTeam), 
-                    increment: GLOBAL.ASSIST_SCORE, 
-                    kill: false };
-
-                // Init team score if it hasn't been previously
-                if (rooms[room].teams[dataToSend.teamSlot].score === undefined)
-                    rooms[room].teams[dataToSend.teamSlot].score = 0;
-                
-                // Add to team score
-                rooms[room].teams[dataToSend.teamSlot].score += dataToSend.increment;
-
-                
-                socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
-                socket.emit('serverSendScoreUpdate', dataToSend);
-                if (max === null || rooms[room].players[data.player].damagedBy[pl] > rooms[room].players[data.player].damagedBy[max])
-                    max = pl;
-            }
-
-            // Add to score of person who dealt the most damage
-            dataToSend.player = max;
-            dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE;
-            dataToSend.kill = true;
-            socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);
-            socket.emit('serverSendScoreUpdate', dataToSend);
-
-            // Add to team score
-            rooms[room].teams[dataToSend.teamSlot].score += dataToSend.increment;
-
-            // Clear damagedBy values
-            for (let pl in rooms[room].players[data.player].damagedBy)
-                rooms[room].players[data.player].damagedBy[pl] = 0;
-
-            // Check if a team won
-            for(let tm of rooms[room].teams) {
-                if(tm.score >= GLOBAL.WINNING_SCORE) {
-
-                    let dataToSend = {
-                        winner: tm
-                        // teamScore: rooms[room].teams[dataToSend.teamSlot].score             
-                        //other data here TODO post ranking
-                    };
-                    socket.to(room).broadcast.emit('serverSendWinner', dataToSend); 
-                    socket.emit('serverSendWinner', dataToSend); 
-
-                    // Close room after delay (kick all players)
-                    setTimeout(() => {
-                        socket.emit('serverSendDisconnect', {});
-                        socket.to(room).broadcast.emit('serverSendDisconnect', {});
-                    },GLOBAL.ROOM_DELETE_DELAY);
-                }
-            }
-        }
-    }
-    else
-        console.warn('Player of ID ' + data.id + ' couldn\'t be damaged because they don\'t exist!');
-}
 
 /**
  * Sets a new value for a protected server field.
@@ -389,10 +301,12 @@ export function setField(value, path) {
 export function getField(path) {
     if (path === undefined || path.length === 0)
         throw new Error('Error in setField: path cannot be empty');
+    if (path.length === undefined)
+        throw new Error('Error in setField: path must be an array');
     
     let obj = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;
     if(obj === undefined)
-        throw new Error('Base object ' + path[0] + ' does not exist!');
+        throw new Error('Error in setField: Base object ' + path[0] + ' does not exist!');
 
     for(let i = 1; i < path.length; i++)
         obj = obj[path[i]];

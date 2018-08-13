@@ -4,10 +4,15 @@ import { generateID } from './serverutils';
 
 /**
  * Matchmaking system for public matches. Runs after initial socket.io server connection, but before connecting to a server.
+ * @param {*} socket Socket.io instance
+ * @param {string} room Name of room
+ * @param {string} team Name of team
+ * @returns The new room that has been assigned
  */
 export function roomMatchmaker(socket, room, team) {
 
     let validJoin = false; // This join attempt was valid.
+    let roomType = socket.handshake.query.roomType;
 
     // Make sure the room you are trying to join is valid
     // console.log(getField(['rooms', room]));
@@ -16,7 +21,7 @@ export function roomMatchmaker(socket, room, team) {
 
     if (team !== undefined && team.room !== undefined) {
         // Make sure everything is compatible
-        if (getField('rooms', team.room) !== undefined && getField('rooms', team.room).type !== roomType) // Wrong room type
+        if (getField(['rooms', team.room]) !== undefined && getField(['rooms', team.room]).type !== roomType) // Wrong room type
             socket.emit('connectionError', { msg: 'Your team is playing in a ' + getField('rooms', team.room).type + ' room, but you are trying to join a ' + roomType + ' room!' });
         else if (!team.joinable) // Team full
             socket.emit('connectionError', { msg: 'Your team is already in game or full!' });
@@ -51,6 +56,8 @@ export function roomMatchmaker(socket, room, team) {
             players: [socket.id],
             joinable: true
         }, ['teams', socket.handshake.query.team]);
+
+        validJoin = true;
     }
 
     // Join custom room
@@ -58,4 +65,6 @@ export function roomMatchmaker(socket, room, team) {
         socket.join(room, () => {
             console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);
         });
+
+    return room;
 }
