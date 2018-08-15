@@ -2,7 +2,7 @@ import {GLOBAL} from '../global.js';
 import * as PIXI from 'pixi.js';
 import { player, screenCenterX, screenCenterY } from '../pixigame.js';
 import { socket } from '../socket.js';
-import { GameObject } from '../obj/gameobject';
+import { GameObject } from './gameobject.js';
 import { cookieInputs } from '../app.js';
 
 export class Player extends GameObject {
