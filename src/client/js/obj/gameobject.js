@@ -47,8 +47,8 @@ export class GameObject extends PIXI.Sprite {
      * Sets global coordinates and speeds of this player
      * @param {number} newX New x-coordinate to move to
      * @param {number} newY New y-coordinate to move to
-     * @param {number} newX New x velocity
-     * @param {number} newY New y velocity
+     * @param {number} vx New x velocity
+     * @param {number} vy New y velocity
      */
     setData(newX, newY, vx, vy) {
         this.setCoordinates(newX, newY);

@@ -275,6 +275,7 @@ window.onmousemove = (e) => {
 /**
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
+ * @param {boolean} isError True if the game quit was due to an error; false otherwise.
  */
 export function quitGame(msg, isError) {
 

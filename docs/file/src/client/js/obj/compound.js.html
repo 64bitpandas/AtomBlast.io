@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/obj/compound.js | atomblast.io</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="First attempt at multiplayer online io game"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="atomblast.io"><meta property="twitter:description" content="First attempt at multiplayer online io game"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/BananiumLabs/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-devTest">devTest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showElement">showElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateAtomList">updateAtomList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateCompoundButtons">updateCompoundButtons</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deductCraftMaterial">deductCraftMaterial</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-elementStart">elementStart</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/compound.js~Compound.html">Compound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createNewCompound">createNewCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtomAtVent">spawnAtomAtVent</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/compound.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GameObject } from &apos;./gameobject&apos;;
+import { socket, objects } from &apos;../socket&apos;;
+import { BLUEPRINTS } from &apos;./blueprints&apos;;
+import * as PIXI from &apos;pixi.js&apos;;
+import { app, player } from &apos;../pixigame&apos;;
+import { updateCompoundButtons } from &apos;../app&apos;;
+import { GLOBAL, distanceBetween } from &apos;../global&apos;;
+import { MAP_LAYOUT } from &apos;./tiles&apos;;
+
+/**
+ * Generic Compound which can be instantiated into the scene as a GameObject.
+ * Created when a player uses a Blueprint.
+ */
+export class Compound extends GameObject {
+
+    constructor(id, x, y, vx, vy, blueprint, sendingTeam, sender) {
+        super(PIXI.loader.resources[blueprint.texture].texture, id, x, y, vx, vy);
+        this.blueprint = blueprint;
+        this.sendingTeam = sendingTeam;
+        this.sender = sender;
+        this.ignited = false; // Becomes true if this compound passes over a flame tile
+
+        // Parse params
+        for (let param in this.blueprint.params) {
+            this[param] = this.blueprint.params[param];
+        }
+
+        // Use params
+        this.width = this.size;
+        this.height = this.size;
+
+    }
+
+    /**
+     * Runs once a frame.
+     */
+    tick() {
+        // Different behaviors based on type
+        switch (this.blueprint.type) {
+        case &apos;binary&apos;:
+            //do stuff
+            break;
+        case &apos;basic&apos;:
+            //do other stuff (basic is essentially level 2 binary - but uses a larger scale)
+            break;
+        case &apos;stream&apos;:
+            break;
+        case &apos;flammable&apos;:
+            let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));
+            let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));
+            if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined &amp;&amp; MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === &apos;F&apos; &amp;&amp; !this.ignited) {
+                console.log(&apos;IGNITE&apos;);
+                this.ignited = true;
+                this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+            }
+            break;
+
+        default:
+            throw new Error(&apos;Blueprint &apos; + this.blueprint.name + &apos; has invalid type &apos; + this.blueprint.type);
+        }
+
+        this.checkCollision();
+
+        // Movement
+        super.tick();
+        this.draw();
+    }
+
+    /**
+     * Run when players are nearby to check if they picked this atom up.
+     * If the player is nearby but not close enough to pick up, then it becomes attracted towards the player.
+     * @returns true if collision detected, false otherwise
+     */
+    checkCollision() {
+
+        if (player === undefined)
+            return false;
+        // No friendly fire
+        if(this.sendingTeam === player.team)
+            return false;
+        let distance = distanceBetween(
+            { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
+            { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
+        
+        // Hit player
+        if (distance &lt; this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+            player.health -= this.blueprint.params.damage;
+            if(!this.ignited)
+                socket.emit(&apos;compoundCollision&apos;, { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.damage });
+            else
+                socket.emit(&apos;compoundCollision&apos;, { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
+            return true;
+        }
+        // for (let objType in objects) {
+        //     if (objType !== &apos;atoms&apos;)
+        //         for (let obj in objects[objType]) {
+        //             let distance = distanceBetween(this, objects[objType][obj]);
+
+        //             // Collision with player or other powerup
+        //             if (distance &lt; GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+        //                 socket.emit(&apos;compoundCollision&apos;, { id: this.id, collidedWith: obj });
+        //                 return true;
+        //             }
+        //         }
+        // }
+
+        return false;
+    }
+}
+
+/**
+ * Creates a Compound by sending a request to the server.
+ * @param {*} blueprint Then blueprint to create the compound from
+ * @param {int} xIn x-coords
+ * @param {int} yIn y-coords
+ */
+export function createNewCompound(blueprint, xIn, yIn) {
+
+    updateCompoundButtons();
+
+    if(blueprint.type === &apos;speed&apos;) {
+        // this.hide();
+        player.speedMult += blueprint.params.speedFactor * (1/player.speedMult);
+        console.log(&apos;New speed is &apos; + player.speedMult);
+    }
+    else if(blueprint.type === &apos;health&apos;){
+        socket.emit(&apos;damage&apos;, {damage: -blueprint.params.healthModifier, sender: socket.id});
+        if(player.health &gt; GLOBAL.MAX_HEALTH){
+            player.health = GLOBAL.MAX_HEALTH;
+        }
+    }
+    else {
+        // let cursor = app.renderer.plugins.interaction.mouse.global;
+
+        let centerX = window.innerWidth / 2;
+        let centerY = window.innerHeight / 2;
+        // console.log(centerX - cursor.x, cursor.y - centerY)
+        socket.emit(&apos;createCompound&apos;, {
+            blueprint: blueprint,
+            sendingTeam: player.team,
+            sender: socket.id,
+            // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+            mousePos: { x: xIn - centerX, y: centerY - yIn }
+        });
+
+        // TODO: Add proper spray directional change based on mouse position when spraying is implemented
+        if(blueprint.type === &apos;stream&apos;)
+            for(let i = 0; i &lt; blueprint.params.length - 1; i++)
+                setTimeout(() =&gt; {
+                    socket.emit(&apos;createCompound&apos;, {
+                        blueprint: blueprint,
+                        sendingTeam: player.team,
+                        sender: socket.id,
+                        // mousePos: { x: cursor.x - centerX, y: centerY - cursor.y }
+                        mousePos: { x: xIn - centerX, y: centerY - yIn },
+                        streamNumber: i
+                    });
+                }, blueprint.params.spacing * i);
+    }
+
+    //Emits the crafting event to update experience
+    socket.emit(&apos;experienceEvent&apos;, {
+        event: &apos;CRAFT&apos;
+    });
+
+}
+
+/**
+ * Recreates an already spawned compound on the clientside based on server data.
+ * @param {*} data Data sent from server
+ */
+export function createCompound(data) {
+    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam, data.sender);
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

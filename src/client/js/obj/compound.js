@@ -69,7 +69,6 @@ export class Compound extends GameObject {
     /**
      * Run when players are nearby to check if they picked this atom up.
      * If the player is nearby but not close enough to pick up, then it becomes attracted towards the player.
-     * @param {Player} player Player to check collision against
      * @returns true if collision detected, false otherwise
      */
     checkCollision() {

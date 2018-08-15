@@ -1,5 +1,11 @@
 {
     "javascript.validate.enable": false,
     "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single"
+    "typescript.preferences.quoteStyle": "single",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/docs": true,
+        "**/public": true
+    }
 }

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/client/js/app.js | atomblast.io</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="First attempt at multiplayer online io game"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="atomblast.io"><meta property="twitter:description" content="First attempt at multiplayer online io game"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/BananiumLabs/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-devTest">devTest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showElement">showElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateAtomList">updateAtomList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateCompoundButtons">updateCompoundButtons</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deductCraftMaterial">deductCraftMaterial</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-elementStart">elementStart</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/compound.js~Compound.html">Compound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createNewCompound">createNewCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtomAtVent">spawnAtomAtVent</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/app.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** 
+ * App.js is responsible for connecting the UI with the game functionality.
+ * Most of the functionality is used for the main menu and connecting/disconnecting behavior.
+ */
+&apos;use strict&apos;;
+import { GLOBAL } from &apos;./global.js&apos;;
+import * as cookies from &apos;./lib/cookies.js&apos;;
+import { Player } from &apos;./obj/player.js&apos;;
+import { spawnAtom } from &apos;./obj/atom.js&apos;;
+import { GameObject } from &apos;./obj/gameobject.js&apos;;
+import { BLUEPRINTS } from &apos;./obj/blueprints.js&apos;;
+import { beginConnection, disconnect } from &apos;./socket.js&apos;;
+import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from &apos;./pixigame.js&apos;;
+import { createNewCompound} from &apos;./obj/compound.js&apos;;
+import swal from &apos;sweetalert&apos;;
+
+// Array containing all inputs which require cookies, and their values
+export const cookieInputs = GLOBAL.COOKIES.map(val =&gt; document.getElementById(val));
+
+// Array containing the four chosen blueprints
+export var selectedBlueprints = new Array(GLOBAL.BP_MAX);
+
+const nickErrorText = document.getElementById(&apos;nickErrorText&apos;);
+
+// Mouse position - used for tooltips
+export let mouseX, mouseY;
+
+// Currently selected blueprint slot
+export let selectedCompound = 0;
+
+let selectedSlot;
+
+// Starts the game if the name is valid.
+function joinGame() {
+
+    if (!allBlueprintsSelected())
+        swal(&apos;Blueprint(s) not selected&apos;, &apos;Make sure all your blueprint slots are filled before joining a game!&apos;, &apos;error&apos;);
+    // check if the nick is valid
+    else if (validNick()) {
+
+        // Set cookies for inputs
+        for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
+        }
+
+        // Use cookies to set the ingame blueprint slot values
+        for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
+            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
+
+            // Check whether blueprint is selected!                     
+            document.getElementById(&apos;bp-ingame-&apos; + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
+        }
+
+        // Show game window
+        showElement(&apos;gameAreaWrapper&apos;);
+        hideElement(&apos;startMenuWrapper&apos;);
+
+        // Show loading screen
+        showElement(&apos;loading&apos;);
+
+        // Cookie Inputs: 0=player, 1=room, 2=team
+
+        // Connect to server
+        beginConnection();
+            
+    } else {
+        nickErrorText.style.display = &apos;inline&apos;;
+    }
+}
+
+/** check if nick is valid alphanumeric characters (and underscores)
+ * @returns true if the nickname is valid, false otherwise
+ */
+function validNick() {
+    const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
+    for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+        if(regex.exec(cookieInputs[i].value) === null &amp;&amp; !(i === 1 &amp;&amp; cookieInputs[7].value !== &apos;private&apos;))
+            return false;
+    }
+
+    return true;
+}
+
+/**
+ * Returns true if all four blueprint slots are filled.
+ */
+function allBlueprintsSelected() {
+    for(let i = GLOBAL.INPUT_COUNT - 1; i &lt; GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
+        if(cookieInputs[i].innerHTML.substring(0, 1) === &apos;-&apos;)
+            return false;
+    }
+    return true;
+}
+/**
+ * Its a method for testing stuff
+ */
+function testHandler() {
+    swal(&apos;SUCCESS&apos;,&apos;The test event is invoked!&apos;,&apos;info&apos;);
+}
+
+/** 
+ * Onload function. Initializes the menu screen, creates click events, and loads cookies.
+ */
+window.onload = () =&gt; {
+    
+    // Patch logo for firefox
+    if(typeof InstallTrigger !== &apos;undefined&apos;)
+        document.getElementById(&apos;logo&apos;).innerHTML = `&lt;img src=&quot;assets/logo.svg&quot; id=&quot;logo-firefox&quot;&gt;`; // eslint-disable-line
+
+    // Cookie loading - create array of all cookie values
+    let cookieValues = GLOBAL.COOKIES.map(val =&gt; cookies.getCookie(val));
+
+    // Continue loading cookies only if it exists
+    let i = 0;
+    for(let cookie of cookieValues) {
+        if(cookie !== null &amp;&amp; cookie.length &gt; 0) {
+            if(cookieInputs[i].tagName === &apos;INPUT&apos; || cookieInputs[i].tagName === &apos;SELECT&apos;)
+                cookieInputs[i].value = cookie;
+            else if(cookieInputs[i].tagName === &apos;BUTTON&apos; &amp;&amp; BLUEPRINTS[cookie] !== undefined)
+                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
+        }
+        i++;
+    }
+
+    // Add listeners to start game to enter key and button click
+
+    // Eric - Test method do not remove pls
+    document.addEventListener(&apos;pointerdown&apos;, mouseClickHandler);
+
+    bindHandler(&apos;startButton&apos;, function () {
+        joinGame();
+    });
+
+    bindHandler(&apos;quitButton&apos;, function () {
+        quitGame(&apos;You have left the game.&apos;, false);
+    });
+
+    bindHandler(&apos;exitButton&apos;, function () {
+        quitGame(&apos;The game has ended.&apos;, false);
+        hideElement(&apos;winner-panel&apos;);
+    });
+
+    bindHandler(&apos;resumeButton&apos;, function () {
+        hideElement(&apos;menubox&apos;);
+    });
+
+    bindHandler(&apos;optionsButton&apos;, function () {
+        swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
+    });
+
+    bindHandler(&apos;controlsButton&apos;, function () {
+        swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
+    });
+
+    bindHandler(&apos;creditsButton&apos;, function () {
+        swal(&apos;&apos;, &apos;Created by BananiumLabs.com&apos;, &apos;info&apos;);
+    });
+
+    bindHandler(&apos;btn-start-game&apos;, function () {
+        console.log(&apos;starting game&apos;);
+        startGame(true);
+    });
+
+    bindHandler(&apos;newsBox&apos;, function() {
+        swal(&apos;&apos;,&apos;hello world&apos;,&apos;info&apos;);
+    });
+
+    // document.getElementById(&apos;gameView&apos;, onClick, false);
+
+    for(let i = 0; i &lt; selectedBlueprints.length; i++) {
+        bindHandler(&apos;bp-ingame-&apos; + (i + 1), function() {
+            selectedCompound = i;
+            updateCompoundButtons();
+        });
+    }
+
+    // Set up the blueprint slot buttons
+    for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
+        document.getElementById(&apos;bp-slot-&apos; + i).onclick = () =&gt; {
+            showElement(&apos;bp-select&apos;);
+            document.getElementById(&apos;bp-select-header&apos;).innerHTML = GLOBAL.BP_SELECT + i;
+            selectedSlot = i;
+        };
+    }
+
+    document.getElementById(&apos;btn-close&apos;).onclick = () =&gt; { hideElement(&apos;bp-select&apos;); };
+
+    // Set up blueprint selection buttons
+    for(let blueprint in BLUEPRINTS) {
+        let bp = BLUEPRINTS[blueprint];
+        let formula = &apos;&apos;;
+        for(let atom in bp.atoms) {
+            formula += atom.toUpperCase() + ((bp.atoms[atom] &gt; 1) ? bp.atoms[atom] : &apos;&apos;);
+        }
+
+        document.getElementById(&apos;blueprint-wrapper&apos;).innerHTML +=
+            `
+            &lt;button onmouseenter=&quot;tooltipFollow(this)&quot; class=&quot;button width-override col-6 col-12-sm btn-secondary btn-blueprint&quot; id=&quot;btn-blueprint-` + blueprint + `&quot;&gt;
+                &lt;p&gt;` + bp.name + `&lt;/p&gt;
+                &lt;h6&gt;-` + formula + `-&lt;/h6&gt;
+                &lt;img src=&quot;` + bp.texture + `&quot;&gt;
+                &lt;span class=&quot;tooltip&quot;&gt;` + bp.tooltip + `&lt;/span&gt;
+            &lt;/button&gt;
+
+            `;
+        
+    }
+
+    // Blueprint Slots
+    for(let btn of document.getElementsByClassName(&apos;btn-blueprint&apos;))
+        btn.onclick = () =&gt;  {
+            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are &apos;btn-blueprint-&apos;
+            console.log(blueprint + &apos; selected in slot &apos; + selectedSlot);
+            document.getElementById(&apos;bp-slot-&apos; + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+            hideElement(&apos;bp-select&apos;);
+            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
+        };
+
+    // Add enter listeners for all inputs
+    for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+        cookieInputs[i].addEventListener(&apos;keypress&apos;, e =&gt; {
+            const key = e.which || e.keyCode;
+    
+            if (key === GLOBAL.KEY_ENTER)
+                joinGame();
+        });
+    }
+
+    // Behavior when room type is changed
+    if (cookieInputs[7].value !== &apos;private&apos;)
+        hideElement(&apos;room&apos;);
+    else
+        showElement(&apos;room&apos;);
+
+    cookieInputs[7].onchange = () =&gt; {
+        if(cookieInputs[7].value === &apos;private&apos;)
+            showElement(&apos;room&apos;);
+        else
+            hideElement(&apos;room&apos;);
+
+        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);
+    };
+
+    // Server changed
+    cookieInputs[8].onchange = () =&gt; {
+        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
+    };
+};
+
+// function onClick(e) {
+//     swal(&apos;&apos;, &apos;oooooo!!!&apos;, &apos;info&apos;);
+//     console.log(&quot;ONCLICK!&quot;);
+// }
+
+/**
+ * Sets mouse positions for tooltip
+ */
+window.onmousemove = (e) =&gt; {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+};
+
+// function setupEventHandlers() {  
+//     document.addEventListener(&apos;mousedown&apos;, this._onMouseDown.bind(this));    
+//     document.addEventListener(&apos;mousemove&apos;, this._onMouseMove.bind(this));  
+//     document.addEventListener(&apos;mouseup&apos;, this._onMouseUp.bind(this));    
+//     document.addEventListener(&apos;wheel&apos;, this._onWheel.bind(this));    
+//     document.addEventListener(&apos;touchstart&apos;, this._onTouchStart.bind(this));    
+//     document.addEventListener(&apos;touchmove&apos;, this._onTouchMove.bind(this));    
+//     document.addEventListener(&apos;touchend&apos;, this._onTouchEnd.bind(this));    
+//     document.addEventListener(&apos;touchcancel&apos;, this._onTouchCancel.bind(this));    
+//     document.addEventListener(&apos;pointerdown&apos;, this._onPointerDown.bind(this));
+// };
+
+/**
+ * Transitions from in-game displays to the main menu.
+ * @param {string} msg The message to be displayed in the menu after disconnect. 
+ * @param {boolean} isError True if the game quit was due to an error; false otherwise.
+ */
+export function quitGame(msg, isError) {
+
+    // Disconnect from server
+    disconnect();
+
+    // Set status of ingame
+    setIngame(false);
+
+    // menu
+    hideElement(&apos;gameAreaWrapper&apos;);
+    hideElement(&apos;hud&apos;);
+    hideElement(&apos;menubox&apos;);
+    showElement(&apos;startMenuWrapper&apos;);
+    hideElement(&apos;lobby&apos;);
+    swal(&apos;Disconnected from Game&apos;, msg, (isError) ? &apos;error&apos; : &apos;info&apos;);
+}
+
+/**
+ * Binds handlerMethod to onclick event for element id.
+ * @param {string} id 
+ * @param {function} handlerMethod 
+ */
+export function bindHandler(id, handlerMethod) {
+    document.getElementById(id).onclick = handlerMethod;
+}
+
+/**
+ * Displays a hidden element
+ * @param {string} el The id of the element to show
+ */
+export function showElement(el) {
+    document.getElementById(el).style.display = &apos;block&apos;;
+}
+
+/**
+ * Hides a visible element
+ * @param {string} el The id of the element to hide
+ */
+export function hideElement(el) {
+    document.getElementById(el).style.display = &apos;none&apos;;
+}
+
+/**
+ * Makes tooltip follow the mouse. Call when a button is hovered.
+ * @param {HTMLElement} button The element reference for the button currently being hovered.
+ */
+window.tooltipFollow = (button) =&gt; {
+    let tooltip = button.getElementsByClassName(&apos;tooltip&apos;)[0];
+    tooltip.style.top = (mouseY - 150) + &apos;px&apos;;
+    tooltip.style.left = (mouseX - 150) + &apos;px&apos;;
+};
+
+/**
+ * Updates the list of atoms that the player holds.
+ * Only updates the entry for the particular ID given.
+ * @param {string} atomID The ID of the atom to update.
+ */
+export function updateAtomList(atomID) {
+    let list = document.getElementById(&apos;atom-count&apos;);
+
+    if(document.getElementById(&apos;atom-list-&apos; + atomID) === null) {
+        let newEntry = document.createElement(&apos;li&apos;);
+        newEntry.setAttribute(&apos;id&apos;, &apos;atom-list-&apos; + atomID);
+        list.appendChild(newEntry);
+    }
+
+    document.getElementById(&apos;atom-list-&apos; + atomID).innerHTML = &apos;&apos; + atomID.charAt(0).toUpperCase() + atomID.substr(1) + &apos;: &apos; + player.atoms[atomID];
+
+    updateCompoundButtons(); //No need to update selection
+}
+
+/**
+ * 
+ * @param {number} selectedSlot The index of the selected slot. 0-3
+ */
+export function updateCompoundButtons(selectedSlot) {
+    if(selectedSlot === undefined)
+        selectedSlot = selectedCompound;
+    else
+        selectedCompound = selectedSlot;
+
+    for(let i = 0; i &lt; selectedBlueprints.length; i++) {
+        if (selectedSlot != i) {
+            if(canCraft(selectedBlueprints[i])){
+                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background =&apos;#2ecc71&apos;;
+            }
+            else{
+                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#C8C8C8&apos;;
+            }
+        }
+        else { //is selected
+            if (canCraft(selectedBlueprints[i])) {
+                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#003CA8&apos;;
+            }
+            else {
+                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#3D66D1&apos;;
+            }
+            document.getElementById(&apos;bp-select-label&apos;).innerHTML = &apos;Selected Compound: &apos; + selectedBlueprints[i].name;
+        }
+    }
+}
+
+/**
+ * Updates the team scoreboard on screen.
+ */
+export function updateScores(teamSlot, increment) {
+    document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML = parseInt(document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML) + increment;
+}
+
+/**
+ * Run on new player join to sync lobby information
+ * @param {*} data The data transferred from server
+ */
+export function updateLobby(data) {
+
+// Wipe innerHTML first
+    let lobby = document.getElementById(&apos;team-display&apos;);
+    lobby.innerHTML = &apos;&apos;;
+    for(let player in data) {
+        if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
+            lobby.innerHTML += `
+            &lt;div class=&quot;col-3&quot;&gt;
+                &lt;h3&gt;` + data[player].team + `&lt;/h3&gt;
+                &lt;ul id=&quot;` + data[player].team + `&quot;&gt;
+                &lt;/ul&gt;
+            &lt;/div&gt;
+            `;
+        }
+        let listItem = document.createElement(&apos;LI&apos;);
+        listItem.appendChild(document.createTextNode(data[player].name));
+        document.getElementById(data[player].team).appendChild(listItem);
+    }
+}
+
+/**
+ * Displays the winner panel after a game has concluded.
+ * @param {*} data Server sent data, including name and score of winning team.
+ */
+export function displayWinner(data) {
+    // console.log(data);
+    document.getElementById(&apos;winner-name&apos;).innerHTML = data.winner.name + &apos; has won!&apos;;
+    showElement(&apos;winner-panel&apos;);
+}
+
+/**
+ * Sets all player owned atoms to 9999 only if method is called on a DEBUG
+ * enabled server.
+ */
+export function devTest() {
+    if (GLOBAL.DEBUG) {
+        console.warn(JSON.stringify(player.atoms));
+        for (let i in player.atoms) {
+            player.atoms[i] = 9999;
+        }
+        updateCompoundButtons();
+    }
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
