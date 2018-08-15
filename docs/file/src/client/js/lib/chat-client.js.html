@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/lib/chat-client.js | atomblast.io</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="First attempt at multiplayer online io game"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="atomblast.io"><meta property="twitter:description" content="First attempt at multiplayer online io game"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/BananiumLabs/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-devTest">devTest</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showElement">showElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateAtomList">updateAtomList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateCompoundButtons">updateCompoundButtons</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deductCraftMaterial">deductCraftMaterial</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-elementStart">elementStart</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/atom.js~Atom.html">Atom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/compound.js~Compound.html">Compound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createNewCompound">createNewCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtomAtVent">spawnAtomAtVent</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/lib/chat-client.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** 
+ * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan
+ * Created 17 April 2018
+ */
+
+import {GLOBAL} from &apos;../global.js&apos;;
+import { socket } from &apos;../socket.js&apos;;
+import {devTest} from &apos;../app.js&apos;;
+
+let player, room, team;
+export default class ChatClient {
+
+    // Use this constructor during init to connect ChatClient to the server
+    constructor(params) {
+        // this.canvas = params.canvas;
+        // this.mobile = params.mobile;
+        this.player = params.player;
+        this.team = params.team;
+        const self = this;
+        this.commands = {};
+        this.commandPrefix = &quot;-&quot;;
+        let input = document.getElementById(&apos;chatInput&apos;);
+        input.addEventListener(&apos;keypress&apos;, key =&gt; {this.sendChat(key);}); //This works WTF
+        input.addEventListener(&apos;keyup&apos;, key =&gt; {
+            input = document.getElementById(&apos;chatInput&apos;);
+            key = key.which || key.keyCode;
+            if (key === global.KEY_ESC) {
+                input.value = &apos;&apos;;
+                // self.canvas.cv.focus();
+            }
+        });
+    }
+
+    // TODO: Break out many of these GameControls into separate classes.
+    /** 
+    * MISSING COMMENT
+    */
+    registerFunctions() {
+        const self = this;
+
+        this.registerCommand(&apos;help&apos;, &apos;Information about the chat commands.&apos;, () =&gt; {
+            self.printHelp();
+        });
+
+        this.registerCommand(&apos;test&apos;, &apos;Gives 5000 of every element&apos;, () =&gt; {
+            if(GLOBAL.DEBUG) {
+                devTest();
+                self.addSystemLine(&quot;Developer Configurations Applied!&quot;);
+            }
+            else {
+                self.addSystemLine(&quot;Invalid Permission.&quot;);
+            }
+        });
+        this.registerCommand(&apos;damage&apos;, &apos;Damages you by the given amount.&apos;, (params) =&gt; {
+            console.log(params);
+            if(GLOBAL.DEBUG) {
+                if(params[0] !== undefined &amp;&amp; typeof parseInt(params[0]) === &apos;number&apos;) {
+                    socket.emit(&apos;damage&apos;, {damage: parseInt(params[0]), sender: socket.id, player: socket.id});
+                    self.addSystemLine(&quot;Damaged player by &quot; + params[0] + &quot; health points&quot;);
+                }
+                else
+                    self.addSystemLine(&quot;Invalid parameter. Parameter must be of type number&quot;);
+            }
+            else {
+                self.addSystemLine(&quot;Invalid Permission.&quot;);
+            }
+        });
+        this.registerCommand(&apos;spawnAtom&apos;, &apos;Spawns a Hydrogen atom at the bottom left vent.&apos;, () =&gt; {
+            socket.emit(&apos;spawnAtom&apos;, {row: 9, col: 0});
+        })
+
+        // this.registerCommand(&apos;login&apos;, &apos;Login as an admin.&apos;, function (args) {
+        //     self.socket.emit(&apos;pass&apos;, args);
+        // });
+
+        // this.registerCommand(&apos;kick&apos;, &apos;Kick a player, for admins only.&apos;, function (args) {
+        //     self.socket.emit(&apos;kick&apos;, args);
+        // });
+        global.chatClient = this;
+    }
+
+    /**
+     * Places the message DOM node into the chat box.
+     * @param {string} innerHTML The message to be displayed.
+     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
+     */
+    appendMessage(innerHTML, styleClass) {
+        if (this.mobile)
+            return;
+
+        const newline = document.createElement(&apos;li&apos;);
+
+        // Colours the chat input correctly.
+        newline.className = styleClass;
+        // Add content
+        newline.innerHTML = innerHTML;
+
+        const chatList = document.getElementById(&apos;chatList&apos;);
+        // Remove old chats
+        if (chatList.childNodes.length &gt; GLOBAL.MAX_CHATS) {
+            chatList.removeChild(chatList.childNodes[0]);
+        }
+        chatList.appendChild(newline);
+        //Scroll to view new chat
+        chatList.scrollTop += 100;
+    }
+
+    /**
+     * Chat box implementation for the users.
+     * @param {string} name Name of the player who sent the message
+     * @param {string} message Message that was sent
+     * @param {boolean} me True if the sender matches the receiver
+     */
+    addChatLine(name, message, me) {
+       this.appendMessage(
+           `&lt;b&gt;${(name.length &lt; 1) ? GLOBAL.PLACEHOLDER_NAME : name}&lt;/b&gt;: ${message}`,
+           (me) ? &apos;me&apos; : &apos;friend&apos;
+        );
+    }
+
+    /**
+     * Chat box implementation for the users.
+     * @param {string} name Name of the player who sent the message
+     * @param {string} message Message that was sent
+     * @param {boolean} me True if the sender matches the receiver
+     */
+    addPrivateMessage(name, message, me) {
+       this.appendMessage(
+           `&lt;b&gt;${(name.length &lt; 1) ? GLOBAL.PLACEHOLDER_NAME : name}&lt;/b&gt;: ${message}`,
+           (me) ? &apos;me&apos; : &apos;friend&apos;
+        );
+    }
+
+    // Message to notify players when a new player joins
+    addLoginMessage(name, me) {
+        console.log(`${name} joined`);
+       
+        this.appendMessage(
+            `&lt;b&gt;${(me) ? &apos;&lt;/b&gt;You have&apos; : (name.length &lt; 1) ? GLOBAL.PLACEHOLDER_NAME : name + &apos;&lt;/b&gt; has&apos;} joined the room!`,
+            &apos;join&apos;
+        );
+    }
+
+    // Chat box implementation for the system.
+    addSystemLine(message) {
+        this.appendMessage(
+            message,
+            &apos;system&apos;
+        );
+    }
+
+    // Places the message DOM node into the chat box.
+    // appendMessage(node) {
+    //     if (this.mobile) {
+    //         return;
+    //     }
+        // const chatList = document.getElementById(&apos;chatList&apos;);
+        // // if (chatList.childNodes.length &gt; 10) {
+        // //     chatList.removeChild(chatList.childNodes[0]);
+        // // }
+        // chatList.appendChild(node);
+    // }
+
+    // Sends a message or executes a command on the click of enter.
+    sendChat(key) {
+        const commands = this.commands;
+        const input = document.getElementById(&apos;chatInput&apos;);
+
+        key = key.which || key.keyCode;
+
+        if (key === GLOBAL.KEY_ENTER) {
+            const text = input.value.replace(/(&lt;([^&gt;]+)&gt;)/ig, &apos;&apos;);
+            if (text !== &apos;&apos;) {
+
+                // Chat command.
+                if (text.indexOf(this.commandPrefix) === 0) {
+                    const args = text.substring(1).split(&apos; &apos;);
+                    if (commands[args[0]]) {
+                        commands[args[0]].callback(args.slice(1));
+                    } else {
+                        this.addSystemLine(`Unrecognized Command: ${text}, type -help for more info.`);
+                    }
+
+                    // Allows for regular messages to be sent to the server.
+                } else {
+                    //Debug lines for messages - Remove on production
+                    // console.log(&quot;This Player: &quot; + this.player);
+                    // console.log(&quot;This message: &quot; + text);
+                    socket.emit(&apos;playerChat&apos;, { sender: this.player, message: text });
+                    this.addChatLine(this.player, text, true);
+                }
+
+                // Resets input.
+                input.value = &apos;&apos;;
+                // this.canvas.cv.focus();
+            }
+        }
+    }
+
+    // Allows for addition of commands.
+    registerCommand(name, description, callback) {
+        this.commands[name] = {
+            description,
+            callback
+        };
+    }
+
+    // Allows help to print the list of all the commands and their descriptions.
+    printHelp() {
+        const commands = this.commands;
+        for (const cmd in commands) {
+            if (commands.hasOwnProperty(cmd)) {
+                this.addSystemLine(`-${cmd}: ${commands[cmd].description}`);
+            }
+        }
+    }
+}</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

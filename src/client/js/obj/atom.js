@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Player } from './player.js';
 import { GLOBAL } from '../global.js';
-import { GameObject } from '../obj/gameobject';
+import { GameObject } from './gameobject.js';
 import { distanceBetween } from '../global.js';
 import { screenCenterX, screenCenterY, player } from '../pixigame.js';
 import { socket } from '../socket.js';

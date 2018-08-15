@@ -4,14 +4,14 @@
  */
 'use strict';
 import { GLOBAL } from './global.js';
-import * as cookies from './lib/cookies';
-import { Player } from './obj/player';
-import { spawnAtom } from './obj/atom';
-import { GameObject } from './obj/gameobject';
+import * as cookies from './lib/cookies.js';
+import { Player } from './obj/player.js';
+import { spawnAtom } from './obj/atom.js';
+import { GameObject } from './obj/gameobject.js';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';
-import { createNewCompound} from './obj/compound';
+import { createNewCompound} from './obj/compound.js';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
@@ -275,6 +275,7 @@ window.onmousemove = (e) => {
 /**
  * Transitions from in-game displays to the main menu.
  * @param {string} msg The message to be displayed in the menu after disconnect. 
+ * @param {boolean} isError True if the game quit was due to an error; false otherwise.
  */
 export function quitGame(msg, isError) {
 
