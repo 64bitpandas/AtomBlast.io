@@ -3,13 +3,13 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 import colors from 'colors'; // Console colors :D
-import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global.js';
-import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles.js';
-import { roomMatchmaker } from './matchmaker.js';
-import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './serverutils.js';
-import { initGlobal, initPlayer } from './serverinit.js';
-import { frameSync } from './framesync.js';
-import { damage } from './ondamage.js';
+import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global';
+import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles';
+import { roomMatchmaker } from './utils/matchmaker';
+import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './utils/serverutils';
+import { initGlobal, initPlayer } from './utils/serverinit';
+import { frameSync } from './utils/framesync';
+import { damage } from './utils/ondamage';
 var config = require('./config.json');
 
 const DEBUG = true;

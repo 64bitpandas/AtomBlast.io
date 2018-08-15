@@ -1,5 +1,5 @@
-import { GLOBAL } from '../client/js/global';
-import { getField, setField } from './server';
+import { GLOBAL } from '../../client/js/global';
+import { getField, setField } from '../server';
 import { generateID } from './serverutils';
 
 /**

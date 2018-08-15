@@ -4,7 +4,7 @@ import { BLUEPRINTS } from './blueprints';
 import * as PIXI from 'pixi.js';
 import { app, player } from '../pixigame';
 import { updateCompoundButtons } from '../app';
-import { GLOBAL, distanceBetween } from '../global.js';
+import { GLOBAL, distanceBetween } from '../global';
 import { MAP_LAYOUT } from './tiles';
 
 /**

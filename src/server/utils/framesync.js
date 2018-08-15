@@ -1,5 +1,5 @@
-import { distanceBetween, isInBounds, GLOBAL } from '../client/js/global';
-import { deleteObject, getField, setField } from './server';
+import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global';
+import { deleteObject, getField, setField } from '../server';
 
 /**
  * Runs once a frame, per player.

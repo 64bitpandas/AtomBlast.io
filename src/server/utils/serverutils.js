@@ -1,6 +1,6 @@
-import { TILES, TILE_NAMES, MAP_LAYOUT } from '../client/js/obj/tiles';
-import { getField, setField } from './server';
-import { GLOBAL } from '../client/js/global';
+import { TILES, TILE_NAMES, MAP_LAYOUT } from '../../client/js/obj/tiles';
+import { getField, setField } from '../server';
+import { GLOBAL } from '../../client/js/global';
 
 /**
  * Misc. standalone utilities for the server.
