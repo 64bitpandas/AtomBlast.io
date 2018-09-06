@@ -111,8 +111,6 @@ export class Player extends GameObject {
         if(this.id !== socket.id) {
             this.draw();
         }
-
-        this.checkHealth();
     }
 
     /**
@@ -121,14 +119,5 @@ export class Player extends GameObject {
         */
     addAtom(id) {
         this.atoms[id]++;
-    }
-
-    /**
-     * Verify player health and display gameOver.
-     */
-    checkHealth() {
-        if (this.health <= 0) {
-            
-        }
     }
 }

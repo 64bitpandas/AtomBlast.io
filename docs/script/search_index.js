@@ -1056,12 +1056,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/client/js/obj/player.js~player#checkhealth",
-    "class/src/client/js/obj/player.js~Player.html#instance-method-checkHealth",
-    "src/client/js/obj/player.js~Player#checkHealth",
-    "method"
-  ],
-  [
     "src/client/js/obj/player.js~player#constructor",
     "class/src/client/js/obj/player.js~Player.html#instance-constructor-constructor",
     "src/client/js/obj/player.js~Player#constructor",

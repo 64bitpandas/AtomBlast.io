@@ -2945,7 +2945,7 @@
     "__docId__": 160,
     "kind": "file",
     "name": "src/client/js/obj/player.js",
-    "content": "import {GLOBAL} from '../global.js';\r\nimport * as PIXI from 'pixi.js';\r\nimport { player, screenCenterX, screenCenterY } from '../pixigame.js';\r\nimport { socket } from '../socket.js';\r\nimport { GameObject } from './gameobject.js';\r\nimport { cookieInputs } from '../app.js';\r\n\r\nexport class Player extends GameObject {\r\n\r\n    /**\r\n     * Constructor for creating a new Player in the server side.\r\n     * Player is a Sprite instance that can be added to the stage.\r\n     * Each Player should only be created once, and updated subsequently with\r\n     * setData().\r\n     * @param {PIXI.Texture} texture The texture associated with this sprite\r\n     * @param {string} id Socket ID of the player\r\n     * @param {string} name Name of the player\r\n     * @param {string} room Room that the player belongs to\r\n     * @param {string} team Team that the player belongs to\r\n     * @param {number} health Health of the player\r\n     * @param {number} x Global x-coordinate\r\n     * @param {number} y Global y-coordinate\r\n     * @param {number} vx Horizontal velocity\r\n     * @param {number} vy Vertical velocity\r\n     */\r\n    constructor(texture, id, name, room, team, health, x, y, vx, vy, experience) {\r\n\r\n        // Call GameObject\r\n        super(texture, id, x, y, vx, vy);\r\n\r\n        // Pixi Values\r\n        this.width = GLOBAL.PLAYER_RADIUS * 2;\r\n        this.height = GLOBAL.PLAYER_RADIUS * 2;\r\n\r\n        if(id === socket.id) {\r\n            // console.log('this player');\r\n            this.x = screenCenterX;\r\n            this.y = screenCenterY;\r\n        }\r\n        else { // take this player off screen until it can be processed\r\n            this.hide();\r\n        }\r\n\r\n        // Custom fields\r\n        this.name = name;\r\n        this.room = room;\r\n        this.team = team;\r\n        this.health = health; //Set the health of the player\r\n        this.isMoving = false;\r\n        this.experience = experience; //Sets the experience of the player(Passed in)\r\n        this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds\r\n        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.\r\n\r\n        this.atoms = { // List of all atoms and the number that the player has. Continue list later\r\n        };\r\n\r\n        for(let atom of GLOBAL.ATOM_IDS)\r\n            this.atoms[atom] = 0;\r\n            \r\n        this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)\r\n\r\n        this.setup();\r\n    }\r\n\r\n    /**\r\n     * First-time setup for this player. All of the functions in this method will only be called once.\r\n     */\r\n    setup() {\r\n        // Create text objects\r\n        this.textObjects.nametext = new PIXI.Text('name: ');\r\n        this.textObjects.idtext = new PIXI.Text('id: ');\r\n        this.textObjects.postext = new PIXI.Text('placeholderpos');\r\n        this.textObjects.teamtext = new PIXI.Text('team: ');\r\n        this.textObjects.healthtext = new PIXI.Text('health: ');\r\n\r\n        // Assign values and positions\r\n        this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);\r\n        this.textObjects.idtext.text += this.id;\r\n        this.textObjects.nametext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 100);\r\n        this.textObjects.nametext.text += this.name;\r\n        this.textObjects.postext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200);\r\n        this.textObjects.teamtext.text += this.team;\r\n        this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);\r\n\r\n        // create text and assign color\r\n        for (let item in this.textObjects) {\r\n            // Add text\r\n            this.textObjects[item].style = new PIXI.TextStyle({\r\n                fill: (cookieInputs[2].value === this.team) ? GLOBAL.FRIENDLY_COLOUR : GLOBAL.ENEMY_COLOUR,\r\n                fontSize: 120\r\n            });  \r\n            this.addChild(this.textObjects[item]);\r\n        }\r\n    }\r\n    /**\r\n      * Draws all components of a given player.\r\n      * This method should be included in the ticker and called once a frame.\r\n    * Therefore, all setup tasks\r\n     * should be called in setup().\r\n    */\r\n    tick() {\r\n        \r\n        // Movement\r\n        super.tick();\r\n        \r\n        // Update text\r\n        this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';\r\n        this.textObjects.healthtext.text = 'health: ' + this.health;\r\n\r\n        // Draw other player\r\n        if(this.id !== socket.id) {\r\n            this.draw();\r\n        }\r\n\r\n        this.checkHealth();\r\n    }\r\n\r\n    /**\r\n        * Adds an atom to the list\r\n        * @param {string} id The ID of the atom to add to the player\r\n        */\r\n    addAtom(id) {\r\n        this.atoms[id]++;\r\n    }\r\n\r\n    /**\r\n     * Verify player health and display gameOver.\r\n     */\r\n    checkHealth() {\r\n        if (this.health <= 0) {\r\n            \r\n        }\r\n    }\r\n}",
+    "content": "import {GLOBAL} from '../global.js';\r\nimport * as PIXI from 'pixi.js';\r\nimport { player, screenCenterX, screenCenterY } from '../pixigame.js';\r\nimport { socket } from '../socket.js';\r\nimport { GameObject } from './gameobject.js';\r\nimport { cookieInputs } from '../app.js';\r\n\r\nexport class Player extends GameObject {\r\n\r\n    /**\r\n     * Constructor for creating a new Player in the server side.\r\n     * Player is a Sprite instance that can be added to the stage.\r\n     * Each Player should only be created once, and updated subsequently with\r\n     * setData().\r\n     * @param {PIXI.Texture} texture The texture associated with this sprite\r\n     * @param {string} id Socket ID of the player\r\n     * @param {string} name Name of the player\r\n     * @param {string} room Room that the player belongs to\r\n     * @param {string} team Team that the player belongs to\r\n     * @param {number} health Health of the player\r\n     * @param {number} x Global x-coordinate\r\n     * @param {number} y Global y-coordinate\r\n     * @param {number} vx Horizontal velocity\r\n     * @param {number} vy Vertical velocity\r\n     */\r\n    constructor(texture, id, name, room, team, health, x, y, vx, vy, experience) {\r\n\r\n        // Call GameObject\r\n        super(texture, id, x, y, vx, vy);\r\n\r\n        // Pixi Values\r\n        this.width = GLOBAL.PLAYER_RADIUS * 2;\r\n        this.height = GLOBAL.PLAYER_RADIUS * 2;\r\n\r\n        if(id === socket.id) {\r\n            // console.log('this player');\r\n            this.x = screenCenterX;\r\n            this.y = screenCenterY;\r\n        }\r\n        else { // take this player off screen until it can be processed\r\n            this.hide();\r\n        }\r\n\r\n        // Custom fields\r\n        this.name = name;\r\n        this.room = room;\r\n        this.team = team;\r\n        this.health = health; //Set the health of the player\r\n        this.isMoving = false;\r\n        this.experience = experience; //Sets the experience of the player(Passed in)\r\n        this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds\r\n        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.\r\n\r\n        this.atoms = { // List of all atoms and the number that the player has. Continue list later\r\n        };\r\n\r\n        for(let atom of GLOBAL.ATOM_IDS)\r\n            this.atoms[atom] = 0;\r\n            \r\n        this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)\r\n\r\n        this.setup();\r\n    }\r\n\r\n    /**\r\n     * First-time setup for this player. All of the functions in this method will only be called once.\r\n     */\r\n    setup() {\r\n        // Create text objects\r\n        this.textObjects.nametext = new PIXI.Text('name: ');\r\n        this.textObjects.idtext = new PIXI.Text('id: ');\r\n        this.textObjects.postext = new PIXI.Text('placeholderpos');\r\n        this.textObjects.teamtext = new PIXI.Text('team: ');\r\n        this.textObjects.healthtext = new PIXI.Text('health: ');\r\n\r\n        // Assign values and positions\r\n        this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);\r\n        this.textObjects.idtext.text += this.id;\r\n        this.textObjects.nametext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 100);\r\n        this.textObjects.nametext.text += this.name;\r\n        this.textObjects.postext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200);\r\n        this.textObjects.teamtext.text += this.team;\r\n        this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);\r\n\r\n        // create text and assign color\r\n        for (let item in this.textObjects) {\r\n            // Add text\r\n            this.textObjects[item].style = new PIXI.TextStyle({\r\n                fill: (cookieInputs[2].value === this.team) ? GLOBAL.FRIENDLY_COLOUR : GLOBAL.ENEMY_COLOUR,\r\n                fontSize: 120\r\n            });  \r\n            this.addChild(this.textObjects[item]);\r\n        }\r\n    }\r\n    /**\r\n      * Draws all components of a given player.\r\n      * This method should be included in the ticker and called once a frame.\r\n    * Therefore, all setup tasks\r\n     * should be called in setup().\r\n    */\r\n    tick() {\r\n        \r\n        // Movement\r\n        super.tick();\r\n        \r\n        // Update text\r\n        this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';\r\n        this.textObjects.healthtext.text = 'health: ' + this.health;\r\n\r\n        // Draw other player\r\n        if(this.id !== socket.id) {\r\n            this.draw();\r\n        }\r\n    }\r\n\r\n    /**\r\n        * Adds an atom to the list\r\n        * @param {string} id The ID of the atom to add to the player\r\n        */\r\n    addAtom(id) {\r\n        this.atoms[id]++;\r\n    }\r\n}",
     "static": true,
     "longname": "C:/Users/BenCu/Documents/AtomBlast.io/src/client/js/obj/player.js",
     "access": "public",
@@ -3365,7 +3365,7 @@
     "longname": "src/client/js/obj/player.js~Player#addAtom",
     "access": "public",
     "description": "Adds an atom to the list",
-    "lineNumber": 122,
+    "lineNumber": 120,
     "params": [
       {
         "nullable": null,
@@ -3382,21 +3382,6 @@
   },
   {
     "__docId__": 180,
-    "kind": "method",
-    "name": "checkHealth",
-    "memberof": "src/client/js/obj/player.js~Player",
-    "generator": false,
-    "async": false,
-    "static": false,
-    "longname": "src/client/js/obj/player.js~Player#checkHealth",
-    "access": "public",
-    "description": "Verify player health and display gameOver.",
-    "lineNumber": 129,
-    "params": [],
-    "return": null
-  },
-  {
-    "__docId__": 181,
     "kind": "file",
     "name": "src/client/js/obj/tiles.js",
     "content": "/**\r\n * This constant contains all data on how to draw and manage tiles. \r\n * \r\n * Fields required:\r\n * type: Choose one: spawner, teamBase, wall\r\n * params: Different for each type. For example, spawner will require the `atomToSpawn` param, and teamBase will require the `teamName` param.\r\n * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. 'foo.png' corresponds to '../../assets/map/Tiles/foo.png') \r\n */\r\nexport const TILES = {\r\n    empty: {\r\n        texture: 'SolidTile.png',\r\n        type: 'none'\r\n    },\r\n    flame: {\r\n        texture: 'FlameTile.png',\r\n        type: 'flame'\r\n    },\r\n    topLeft: {\r\n        texture: 'InteriorCorner BR.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['bottom', 'right']\r\n        }\r\n    },\r\n    topRight: {\r\n        texture: 'InteriorCorner BL.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['bottom', 'left']\r\n        }\r\n    },\r\n    bottomLeft: {\r\n        texture: 'InteriorCorner TR.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['top', 'right']\r\n        }\r\n    },\r\n    bottomRight: {\r\n        texture: 'InteriorCorner TL.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['top', 'left']\r\n        }\r\n    },\r\n    edgeTop: {\r\n        texture: 'EdgeTile B.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['bottom']\r\n        }\r\n    },\r\n    edgeBottom: {\r\n        texture: 'EdgeTile T.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['top']\r\n        }\r\n    },\r\n    edgeLeft: {\r\n        texture: 'EdgeTile R.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['right']\r\n        }\r\n    },\r\n    edgeRight: {\r\n        texture: 'EdgeTile L.png',\r\n        type: 'wall',\r\n        params: {\r\n            border: ['left']\r\n        }\r\n    },\r\n    hydrogenVent: {\r\n        texture: 'HydrogenVent.png',\r\n        type: 'spawner',\r\n        params: {\r\n            atomsToSpawn: ['h']\r\n        }\r\n    },\r\n    oxygenVent: {\r\n        texture: 'OxygenVent.png',\r\n        type: 'spawner',\r\n        params: {\r\n            atomsToSpawn: ['o']\r\n        }\r\n    },\r\n    nitrogenVent: {\r\n        texture: 'NitrogenVent.png',\r\n        type: 'spawner',\r\n        params: {\r\n            atomsToSpawn: ['n']\r\n        }\r\n    },\r\n    carbonVent: {\r\n        texture: 'CarbonSource.png',\r\n        type: 'spawner',\r\n        params: {\r\n            atomsToSpawn: ['c']\r\n        }\r\n    },\r\n};\r\n\r\n/**\r\n * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).\r\n * Shortcuts:\r\n * E = Empty\r\n * O = Oxygen\r\n * N = Nitrogen\r\n * C = Carbon\r\n */\r\nexport const MAP_LAYOUT = [\r\n    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],\r\n    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],\r\n    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],\r\n    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],\r\n    ['E', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],\r\n    ['F', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],\r\n    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],\r\n    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],\r\n    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],\r\n    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],\r\n];\r\n\r\nexport const TILE_NAMES = {\r\n    E: 'empty',\r\n    O: 'oxygenVent',\r\n    N: 'nitrogenVent',\r\n    C: 'carbonVent',\r\n    H: 'hydrogenVent',\r\n    F: 'flame',\r\n    q: 'topLeft',\r\n    w: 'edgeTop',\r\n    e: 'topRight',\r\n    a: 'edgeLeft',\r\n    d: 'edgeRight',\r\n    z: 'bottomLeft',\r\n    x: 'edgeBottom',\r\n    c: 'bottomRight'\r\n};",
@@ -3407,7 +3392,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 182,
+    "__docId__": 181,
     "kind": "variable",
     "name": "TILES",
     "memberof": "src/client/js/obj/tiles.js",
@@ -3426,7 +3411,7 @@
     }
   },
   {
-    "__docId__": 183,
+    "__docId__": 182,
     "kind": "variable",
     "name": "MAP_LAYOUT",
     "memberof": "src/client/js/obj/tiles.js",
@@ -3445,7 +3430,7 @@
     }
   },
   {
-    "__docId__": 184,
+    "__docId__": 183,
     "kind": "variable",
     "name": "TILE_NAMES",
     "memberof": "src/client/js/obj/tiles.js",
@@ -3465,7 +3450,7 @@
     }
   },
   {
-    "__docId__": 185,
+    "__docId__": 184,
     "kind": "file",
     "name": "src/client/js/pixigame.js",
     "content": "import * as PIXI from 'pixi.js';\r\nimport { keyboard } from './lib/keyboard';\r\nimport { GLOBAL } from './global';\r\nimport { Player } from './obj/player';\r\nimport { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app';\r\nimport { socket, objects } from './socket';\r\nimport { BLUEPRINTS } from './obj/blueprints';\r\nimport { createNewCompound} from './obj/compound';\r\nimport { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles';\r\nimport { MapTile } from './obj/maptile';\r\n\r\nexport var isSetup; // True after the stage is fully set up\r\nexport var player; // The player being controlled by this client\r\nexport var screenCenterX; // X-coordinate of the center of the screen\r\nexport var screenCenterY; // Y-coordinate of the center of the screen\r\nexport var app; // Pixi app\r\n\r\n\r\nlet inGame = false; // True after game has begun\r\n\r\n// let sprites = []; // Sprites on the stage\r\n\r\nlet esc, space, blueprintKeys, moveKeys; // Key handlers\r\nlet vertLines = [];\r\nlet horizLines = [];\r\n\r\nexport function loadTextures() {\r\n    if (!isSetup) {\r\n        //Initialization\r\n        let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';\r\n        PIXI.utils.sayHello(type);\r\n\r\n        //Create a Pixi Application\r\n        app = new PIXI.Application(0, 0, {\r\n            view: document.getElementById('gameView')\r\n        });\r\n        //Add the canvas that Pixi automatically created for you to the HTML document\r\n        // document.body.appendChild(app.view);\r\n\r\n        // Renderer settings\r\n        app.renderer.autoResize = true;\r\n        app.renderer.resize(window.innerWidth, window.innerHeight);\r\n        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;\r\n        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;\r\n\r\n        // Load resources if not already loaded\r\n        let TEXTURES = [];\r\n        TEXTURES.push(GLOBAL.IGNITE_SPRITE);\r\n        for (let bp in BLUEPRINTS) {\r\n            // Prevent duplicate textures from being loaded\r\n            if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)\r\n                TEXTURES.push(BLUEPRINTS[bp].texture);\r\n            if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0)\r\n                TEXTURES.push(BLUEPRINTS[bp].params.splashImage);\r\n        }\r\n        for (let atom of GLOBAL.ATOM_SPRITES)\r\n            if (TEXTURES.indexOf(atom) < 0)\r\n                TEXTURES.push(atom);\r\n        for(let tile in TILES)\r\n            if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0)\r\n                TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture);\r\n        console.log(TEXTURES);\r\n\r\n\r\n        if (Object.keys(PIXI.loader.resources).length < 1) {\r\n            PIXI.loader\r\n                .add(GLOBAL.PLAYER_SPRITES)\r\n                .add(TEXTURES)\r\n                .load(registerCallbacks);\r\n        }\r\n    }\r\n\r\n    // If already initialized, use existing app variable\r\n    if (isSetup) {\r\n        console.info('Stage already initialized!');\r\n        clearStage();\r\n        registerCallbacks();\r\n    }\r\n}\r\n\r\n/**\r\n * Sets up the stage. Call after init(), and begins the draw() loop once complete.\r\n */\r\nfunction registerCallbacks() {\r\n    if (!isSetup) {\r\n        // Set up key listeners\r\n        esc = keyboard(GLOBAL.KEY_ESC);\r\n        space = keyboard(GLOBAL.KEY_SPACE);\r\n\r\n        //All the movement keys for easy access\r\n        moveKeys = [\r\n            keyboard(GLOBAL.KEY_A), // Left           \r\n            keyboard(GLOBAL.KEY_D), // Right                 \r\n            keyboard(GLOBAL.KEY_W), // Up               \r\n            keyboard(GLOBAL.KEY_S), // Down              \r\n        ];\r\n        //Set up the blueprint key listeners\r\n        blueprintKeys = [\r\n            keyboard(GLOBAL.KEY_1),\r\n            keyboard(GLOBAL.KEY_2),\r\n            keyboard(GLOBAL.KEY_3),\r\n            keyboard(GLOBAL.KEY_4)\r\n        ];\r\n\r\n        esc.press = () => {\r\n            if (isFocused()) {\r\n                if (document.activeElement !== document.getElementById('chatInput'))\r\n                    toggleMenu();\r\n                else\r\n                    document.getElementById('chatInput').blur();\r\n            }\r\n        };\r\n\r\n\r\n        // var mousePosition = renderer.interaction.mouse.global;\r\n\r\n\r\n        // Chat box styling on select\r\n        document.getElementById('chatInput').onfocus = () => {\r\n            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';\r\n        };\r\n\r\n        document.getElementById('chatInput').onblur = () => {\r\n            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';\r\n        };\r\n\r\n        //Bind each blueprint key\r\n        for (let key in blueprintKeys) {\r\n            blueprintKeys[key].press = () => {\r\n                if (isFocused() && inGame) {\r\n                    updateCompoundButtons(key);\r\n                }\r\n            };\r\n        }\r\n\r\n        // app.stage.on('mousedown', () => {\r\n        //     //Creates a compound of that certain blueprint\r\n        //     console.warn(\"--TRIG--\");\r\n        //     if (canCraft(selectedBlueprints[key])) {\r\n    \r\n        //         createNewCompound(selectedBlueprints[key]); \r\n\r\n        //         // Subtract atoms needed to craft\r\n        //         deductCraftMaterial(selectedBlueprints[key]);\r\n        //     } else\r\n        //         console.log(\"Not enough atoms to craft this blueprint!\");\r\n        // });\r\n\r\n        // Background\r\n        app.renderer.backgroundColor = 0xFFFFFF;\r\n\r\n        // Resize\r\n        document.getElementsByTagName('body')[0].onresize = () => {\r\n            app.renderer.resize(window.innerWidth, window.innerHeight);\r\n            screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;\r\n            screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;\r\n            player.x = screenCenterX;\r\n            player.y = screenCenterY;\r\n        };\r\n\r\n        // Begin game loop\r\n        app.ticker.add(delta => draw(delta));\r\n    }\r\n\r\n    isSetup = true;\r\n\r\n    // Draw map\r\n    for (let row = 0; row < MAP_LAYOUT.length; row++) {\r\n        for (let col = 0; col < MAP_LAYOUT[0].length; col++) {\r\n            let tileName = 'tile_' + col + '_' + row;\r\n            if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {\r\n                if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined)\r\n                    objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1);\r\n                else\r\n                    throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.');\r\n            }\r\n        }\r\n    }\r\n\r\n    // Draw grid\r\n    // Grid\r\n    let line;\r\n    for (let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {\r\n        line = new PIXI.Graphics();\r\n        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);\r\n        line.oX = x * GLOBAL.GRID_SPACING;\r\n        line.moveTo(line.oX, 0);\r\n        line.lineTo(line.oX, window.innerHeight);\r\n        vertLines.push(line);\r\n        app.stage.addChild(line);\r\n    }\r\n    for (let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {\r\n        line = new PIXI.Graphics();\r\n        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);\r\n        line.oY = y * GLOBAL.GRID_SPACING;\r\n        line.moveTo(0, line.oY);\r\n        line.lineTo(window.innerWidth, line.oY);\r\n        horizLines.push(line);\r\n        app.stage.addChild(line);\r\n    }\r\n\r\n\r\n    showGameUI();\r\n}\r\n\r\nexport function elementStart() {\r\n    console.warn('--TRIG--');\r\n    if (canCraft(selectedBlueprints[selectedCompound])) {\r\n\r\n        createNewCompound(selectedBlueprints[selectedCompound]); \r\n\r\n        // Subtract atoms needed to craft\r\n        deductCraftMaterial(selectedBlueprints[selectedCompound]);\r\n    } else\r\n        console.log('Not enough atoms to craft this blueprint!');\r\n}\r\n\r\n/**\r\n * Called once per frame. Updates all moving sprites on the stage.\r\n * @param {number} delta Time value from Pixi\r\n */\r\nfunction draw(delta) {\r\n    // Handle this player and movement\r\n    if (player !== undefined) {\r\n\r\n        // Make sure player is not in chat before checking move\r\n        if (isFocused() && inGame) {\r\n            if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) // Left\r\n                player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult;\r\n            if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) // Right\r\n                player.vx += GLOBAL.VELOCITY_STEP * player.speedMult;\r\n            if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) // Up\r\n                player.vy += GLOBAL.VELOCITY_STEP * player.speedMult;\r\n            if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) // Down\r\n                player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult;\r\n\r\n            player.isMoving = false;\r\n            for(let key of moveKeys)\r\n                if(key.isDown)\r\n                    player.isMoving = true;\r\n        } else {\r\n            player.isMoving = false;\r\n\r\n            //Because the document is not focused disable all keys(Stops moving!)\r\n            for (let key in moveKeys) {\r\n                moveKeys[key].isDown = false;\r\n                moveKeys[key].isUp = true;\r\n            }\r\n        }\r\n\r\n        // Slow down gradually - unaffected by chat input\r\n        if (!moveKeys[2].isDown && !moveKeys[3].isDown)\r\n            player.vy *= GLOBAL.VELOCITY_STEP;\r\n        if (!moveKeys[0].isDown && !moveKeys[1].isDown)\r\n            player.vx *= GLOBAL.VELOCITY_STEP;\r\n\r\n        // Shooting\r\n        space.press = () => {\r\n            if(isFocused() && inGame) {\r\n                if (canCraft(selectedBlueprints[selectedCompound])) {\r\n                    createNewCompound(selectedBlueprints[selectedCompound], mouseX, mouseY);\r\n                    // Subtract atoms needed to craft\r\n                    deductCraftMaterial(selectedBlueprints[selectedCompound]);\r\n                } else\r\n                    console.log('Not enough atoms to craft this blueprint!');\r\n            }\r\n        };\r\n\r\n        // Move player\r\n        player.tick();\r\n\r\n        // Send coordinates\r\n        socket.emit('move', {\r\n            type: 'players',\r\n            id: player.id,\r\n            posX: player.posX,\r\n            posY: player.posY,\r\n            vx: player.vx,\r\n            vy: player.vy\r\n        });\r\n\r\n        // Move grid\r\n        for (let line of vertLines)\r\n            line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2);\r\n\r\n        for (let line of horizLines)\r\n            line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);\r\n    }\r\n\r\n    // Handle objects except for this player\r\n    for (let objType in objects) {\r\n        for (let obj in objects[objType])\r\n            if (objType !== 'players' || player !== objects[objType][obj]) {\r\n                objects[objType][obj].tick();\r\n            }\r\n    }\r\n\r\n}\r\n\r\n/**\r\n * Shows or hides the in-game menu box\r\n */\r\nfunction toggleMenu() {\r\n    if (document.getElementById('menubox').offsetParent === null)\r\n        showElement('menubox');\r\n    else\r\n        hideElement('menubox');\r\n}\r\n\r\n/**\r\n * Remove all elements pre-rendered on stage.\r\n */\r\nfunction clearStage() {\r\n    for (var i = app.stage.children.length - 1; i >= 0; i--) {\r\n        app.stage.removeChild(app.stage.children[i]);\r\n    }\r\n}\r\n\r\n/**\r\n * Destroy everything in PIXI. DANGEROUS avoid!\r\n */\r\nexport function destroyPIXI() {\r\n    app.destroy(true, {\r\n        children: true,\r\n        texture: true,\r\n        baseTexture: true\r\n    });\r\n    PIXI.loader.reset();\r\n    isSetup = false;\r\n    app = undefined;\r\n}\r\n\r\n/**\r\n * Call this function to hide loading div and show UI\r\n */\r\nexport function showGameUI() {\r\n    // Hide loading screen\r\n    hideElement('loading');\r\n    if(!inGame)\r\n        showElement('lobby');\r\n}\r\n\r\n/**\r\n * Creates a Player instance once the stage is fully set up and ready.\r\n * @param {*} data Starting values to assign to the player. Generated from server\r\n * @returns {Player} The Player object that was created\r\n */\r\nexport function createPlayer(data) {\r\n    if (isSetup) {\r\n        console.log('create player ' + data.id);\r\n        console.log(data);\r\n        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);\r\n        if (data.id === socket.id)\r\n            player = newPlayer;\r\n\r\n        return newPlayer;\r\n    }\r\n}\r\n\r\n/**\r\n * If the document is Focused return true otherwise false\r\n **/\r\nexport function isFocused() {\r\n    return document.hasFocus() && document.activeElement !== document.getElementById('chatInput');\r\n}\r\n\r\n/**\r\n * Returns true if the player has the materials necessary to create a particular blueprint.\r\n * @param {string} blueprint The name of the blueprint to check.\r\n */\r\nexport function canCraft(blueprint) {\r\n    if(blueprint === undefined)\r\n        return false;\r\n    for (let atom in blueprint.atoms) {\r\n        if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])\r\n            return false;\r\n    }\r\n\r\n    return true;\r\n}\r\n\r\n/**\r\n * Deduct material needed to craft. \r\n * @param {string} blueprint The name of the blueprint to check.\r\n * @returns {boolean} Returns true if success, false if fail.\r\n */\r\nexport function deductCraftMaterial(blueprint) {\r\n    if (canCraft) {\r\n        for (let atom in blueprint.atoms) {\r\n            player.atoms[atom] -= blueprint.atoms[atom];\r\n            updateAtomList(atom);\r\n        }\r\n        return true;\r\n    }\r\n    return false;\r\n}\r\n\r\n/**\r\n * Starts the game after lobby closes.\r\n * @param {boolean} emit True if this client should emit the event to the server.\r\n * @param {*} teams Array of teams on the scoreboard.\r\n */\r\nexport function startGame(emit, teams) {\r\n    setIngame(true);\r\n    hideElement('lobby');\r\n    showElement('hud');\r\n    if (emit)\r\n        socket.emit('startGame', {\r\n            start: true\r\n        });\r\n    \r\n    // Init scoreboard\r\n    if(teams !== undefined) {\r\n        for(let i = 0; i < teams.length; i++) {\r\n            document.getElementById('score').innerHTML += '-<span id=\"team-score-' + i + '\">0</span>';\r\n            document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);\r\n        }\r\n        document.getElementById('score').style.fontSize = '3vw';\r\n        document.getElementById('score').innerHTML += '-';\r\n    }\r\n}\r\n\r\n/**\r\n * Sets the value of inGame\r\n * @param {boolean} newValue Value to set inGame to \r\n */\r\nexport function setIngame(newValue) {\r\n    inGame = newValue;\r\n}\r\n\r\n/**\r\n * @returns {boolean} Returns inGame variable\r\n */\r\nexport function getIngame() {\r\n    return inGame;\r\n}\r\n\r\n/**\r\n * Called on mouse click from app.js\r\n * @param {*} e Click event\r\n */\r\nexport function mouseClickHandler(e) {\r\n    if (!inGame || !isFocused()) {\r\n        return false;\r\n    }\r\n    // console.log(e);\r\n    // console.info(\"Selected Compound: \" + selectedCompound);\r\n    if (canCraft(selectedBlueprints[selectedCompound])) {\r\n\r\n        createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);\r\n\r\n        // Subtract atoms needed to craft\r\n        deductCraftMaterial(selectedBlueprints[selectedCompound]);\r\n    } else\r\n        console.log('Not enough atoms to craft this blueprint!');\r\n}",
@@ -3476,7 +3461,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 186,
+    "__docId__": 185,
     "kind": "variable",
     "name": "inGame",
     "memberof": "src/client/js/pixigame.js",
@@ -3497,7 +3482,7 @@
     "ignore": true
   },
   {
-    "__docId__": 187,
+    "__docId__": 186,
     "kind": "variable",
     "name": "vertLines",
     "memberof": "src/client/js/pixigame.js",
@@ -3518,7 +3503,7 @@
     "ignore": true
   },
   {
-    "__docId__": 188,
+    "__docId__": 187,
     "kind": "variable",
     "name": "horizLines",
     "memberof": "src/client/js/pixigame.js",
@@ -3539,7 +3524,7 @@
     "ignore": true
   },
   {
-    "__docId__": 189,
+    "__docId__": 188,
     "kind": "function",
     "name": "loadTextures",
     "memberof": "src/client/js/pixigame.js",
@@ -3558,7 +3543,7 @@
     "return": null
   },
   {
-    "__docId__": 190,
+    "__docId__": 189,
     "kind": "function",
     "name": "registerCallbacks",
     "memberof": "src/client/js/pixigame.js",
@@ -3577,7 +3562,7 @@
     "ignore": true
   },
   {
-    "__docId__": 191,
+    "__docId__": 190,
     "kind": "function",
     "name": "elementStart",
     "memberof": "src/client/js/pixigame.js",
@@ -3596,7 +3581,7 @@
     "return": null
   },
   {
-    "__docId__": 192,
+    "__docId__": 191,
     "kind": "function",
     "name": "draw",
     "memberof": "src/client/js/pixigame.js",
@@ -3626,7 +3611,7 @@
     "ignore": true
   },
   {
-    "__docId__": 193,
+    "__docId__": 192,
     "kind": "function",
     "name": "toggleMenu",
     "memberof": "src/client/js/pixigame.js",
@@ -3645,7 +3630,7 @@
     "ignore": true
   },
   {
-    "__docId__": 194,
+    "__docId__": 193,
     "kind": "function",
     "name": "clearStage",
     "memberof": "src/client/js/pixigame.js",
@@ -3664,7 +3649,7 @@
     "ignore": true
   },
   {
-    "__docId__": 195,
+    "__docId__": 194,
     "kind": "function",
     "name": "destroyPIXI",
     "memberof": "src/client/js/pixigame.js",
@@ -3682,7 +3667,7 @@
     "return": null
   },
   {
-    "__docId__": 196,
+    "__docId__": 195,
     "kind": "function",
     "name": "showGameUI",
     "memberof": "src/client/js/pixigame.js",
@@ -3700,7 +3685,7 @@
     "return": null
   },
   {
-    "__docId__": 197,
+    "__docId__": 196,
     "kind": "function",
     "name": "createPlayer",
     "memberof": "src/client/js/pixigame.js",
@@ -3742,7 +3727,7 @@
     }
   },
   {
-    "__docId__": 198,
+    "__docId__": 197,
     "kind": "function",
     "name": "isFocused",
     "memberof": "src/client/js/pixigame.js",
@@ -3764,7 +3749,7 @@
     }
   },
   {
-    "__docId__": 199,
+    "__docId__": 198,
     "kind": "function",
     "name": "canCraft",
     "memberof": "src/client/js/pixigame.js",
@@ -3797,7 +3782,7 @@
     }
   },
   {
-    "__docId__": 200,
+    "__docId__": 199,
     "kind": "function",
     "name": "deductCraftMaterial",
     "memberof": "src/client/js/pixigame.js",
@@ -3839,7 +3824,7 @@
     }
   },
   {
-    "__docId__": 201,
+    "__docId__": 200,
     "kind": "function",
     "name": "startGame",
     "memberof": "src/client/js/pixigame.js",
@@ -3878,7 +3863,7 @@
     "return": null
   },
   {
-    "__docId__": 202,
+    "__docId__": 201,
     "kind": "function",
     "name": "setIngame",
     "memberof": "src/client/js/pixigame.js",
@@ -3907,7 +3892,7 @@
     "return": null
   },
   {
-    "__docId__": 203,
+    "__docId__": 202,
     "kind": "function",
     "name": "getIngame",
     "memberof": "src/client/js/pixigame.js",
@@ -3938,7 +3923,7 @@
     "params": []
   },
   {
-    "__docId__": 204,
+    "__docId__": 203,
     "kind": "function",
     "name": "mouseClickHandler",
     "memberof": "src/client/js/pixigame.js",
@@ -3971,7 +3956,7 @@
     }
   },
   {
-    "__docId__": 205,
+    "__docId__": 204,
     "kind": "file",
     "name": "src/client/js/socket.js",
     "content": "import { GLOBAL, distanceBetween } from './global';\r\nimport { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from './app';\r\nimport ChatClient from './lib/chat-client';\r\nimport { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame';\r\nimport { spawnAtom } from './obj/atom';\r\nimport { createCompound } from './obj/compound';\r\nimport { MapTile } from './obj/maptile';\r\nimport { MAP_LAYOUT } from './obj/tiles';\r\n\r\n/**\r\n * Socket.js contains all of the clientside networking interface.\r\n * It contains all variables which are synced between client and server.\r\n */\r\n\r\n// Socket.io instance\r\nexport var socket;\r\n\r\n/* Object containing all synced objects. Contains nested objects, which correspond to different types\r\n * (for example, objects[atoms], objects[players], objects[compounds])\r\n */\r\nexport var objects = {\r\n    players: {},\r\n    atoms: {},\r\n    compounds: {},\r\n    tiles: {}\r\n};\r\n\r\n/**\r\n * Attempts to connect to the server.\r\n */\r\nexport function beginConnection() {\r\n    //Joins debug server if conditions are met\r\n    let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER);\r\n    if (cookieInputs[1].value === 'test') {\r\n        console.info('Connecting to: ' + GLOBAL.TEST_IP);\r\n        // DEVELOPMENT server - auto deploy from pixi branch\r\n        socket = io.connect(GLOBAL.TEST_IP, {\r\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\r\n            reconnectionAttempts: 3\r\n        });\r\n    }\r\n    else if (cookieInputs[1].value === 'jurassicexp') {\r\n        console.log('Dev Backdoor Initiated! Connecting to devserver');\r\n        // Local server\r\n        socket = io.connect(GLOBAL.LOCAL_HOST, {\r\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\r\n            reconnectionAttempts: 3\r\n        });\r\n    }\r\n    else {\r\n        // Production server\r\n        console.log('connecting to main server');\r\n        socket = io.connect(GLOBAL.SERVER_IP, {\r\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\r\n            reconnectionAttempts: 3\r\n        });\r\n    }\r\n\r\n    socket.on('connect', () => {\r\n        setupSocket();\r\n        // Init pixi\r\n        loadTextures();\r\n        if (typeof app !== undefined) {\r\n            app.start();\r\n        }\r\n    });\r\n}\r\n\r\n/**\r\n * Run on disconnect to reset all server-based variables and connections\r\n */\r\nexport function disconnect() {\r\n    app.stop();\r\n    socket.disconnect();\r\n\r\n    // Wipe objects list\r\n    for(let objType in objects)\r\n        objects[objType] = {};\r\n}\r\n\r\n/** \r\n * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.\r\n */\r\nfunction setupSocket() {\r\n\r\n\r\n    //Debug\r\n    console.log('Socket:', socket);\r\n\r\n    //Instantiate Chat System\r\n    let chat = new ChatClient({ player: cookieInputs[0].value, room: cookieInputs[1].value, team: cookieInputs[2].value });\r\n    chat.addLoginMessage(cookieInputs[0].value, true);\r\n    chat.registerFunctions();\r\n\r\n\r\n    // On Connection Failure\r\n    socket.on('reconnect_failed', () => {\r\n        alert('You have lost connection to the server!');\r\n    });\r\n\r\n    socket.on('reconnecting', (attempt) => {\r\n        console.log('Lost connection. Reconnecting on attempt: ' + attempt);\r\n        quitGame('Lost connection to server');\r\n    });\r\n\r\n    socket.on('reconnect_error', (err) => {\r\n        console.log('CRITICAL: Reconnect failed! ' + err);\r\n    });\r\n\r\n    socket.on('pong', (ping) => {\r\n        console.log('Your Ping Is: ' + ping);\r\n    });\r\n\r\n    // Syncs all objects from server once a frame\r\n    socket.on('objectSync', (data) => {\r\n        for(let objType in data) {\r\n            if(objType !== 'tiles') {\r\n                for (let obj in data[objType]) {\r\n                    if (data[objType][obj] !== null) {\r\n                        let objRef = data[objType][obj];\r\n                        let clientObj = objects[objType][obj];\r\n                        // Already exists in database\r\n                        if (clientObj !== undefined && clientObj !== null) {\r\n                            if (objRef.id !== socket.id)\r\n                                objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);\r\n                            if (objType === 'players') {\r\n                                objects[objType][obj].health = objRef.health;\r\n                                objects[objType][obj].damagedBy = objRef.damagedBy;\r\n                            }\r\n                        }\r\n                        // Does not exist - need to clone to clientside\r\n                        else if (isSetup) {\r\n                            switch (objType) {\r\n                            case 'players':\r\n                                objects[objType][obj] = createPlayer(objRef);\r\n                                break;\r\n                            case 'atoms':\r\n                                objects[objType][obj] = spawnAtom(objRef.typeID, objRef.id, objRef.posX, objRef.posY, objRef.vx, objRef.vy);\r\n                                break;\r\n                            case 'compounds':\r\n                                objects[objType][obj] = createCompound(objRef);\r\n                                break;\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n            // else { //Tile drawing\r\n            //     for (let tile of data.tiles) {\r\n\r\n            //         let tileName = 'tile_' + tile.col + '_' + tile.row;\r\n            //         if (objects.tiles[tileName] === undefined) {\r\n            //             // console.log(tileName);\r\n            //             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);\r\n            //         }\r\n\r\n            //     }\r\n            // }\r\n\r\n        }\r\n    });\r\n\r\n \r\n      \r\n\r\n    // Sync objects when they are deleted or move out of view\r\n    socket.on('serverSendObjectRemoval', (data) => {\r\n        //An Atom was removed\r\n        if (objects[data.type][data.id] !== undefined) {\r\n            objects[data.type][data.id].hide();\r\n            delete objects[data.type][data.id];\r\n        }\r\n    });\r\n\r\n    socket.on('disconnectedPlayer', (data) => {\r\n        console.log('Player ' + data.id + ' has disconnected');\r\n        chat.addSystemLine('Player ' + objects.players[data.id].name + ' has disconnected');\r\n        if (objects.players[data.id] !== undefined) {\r\n            objects.players[data.id].hide();\r\n            delete objects.players[data.id];\r\n        }\r\n    });\r\n\r\n    //Chat system receiver\r\n    socket.on('serverMSG', data => {\r\n        chat.addSystemLine(data);\r\n    });\r\n\r\n    socket.on('serverSendPlayerChat', data => {\r\n        chat.addChatLine(data.sender, data.message, false);\r\n    });\r\n\r\n    socket.on('serverSendLoginMessage', data => {\r\n        chat.addLoginMessage(data.sender, false);\r\n    });\r\n\r\n    socket.on('serverSendDisconnect', () => {\r\n        quitGame('The game has ended.', false);\r\n        hideElement('winner-panel');\r\n    });\r\n\r\n    // Errors on join\r\n    socket.on('connectionError', (data) => {\r\n        socket.disconnect();\r\n        quitGame(data.msg, true);\r\n    });\r\n\r\n    // Receive information about room players\r\n    socket.on('roomInfo', (data) => {\r\n        // Update lobby info. Pass to app.js\r\n        updateLobby(data);\r\n\r\n        // if(GLOBAL.DEBUG) {\r\n        //     console.log(\"rcvd: \",data);\r\n        // }\r\n    });\r\n\r\n    socket.on('serverSendStartGame', (data) => {\r\n        console.log('game has started');\r\n        startGame(false, data.teams);\r\n    });\r\n\r\n    socket.on('levelUp', (data) => {\r\n        console.log('You LEVELED UP! Level: ' + data.newLevel);\r\n    });\r\n\r\n    // Respawn\r\n    socket.on('serverSendPlayerDeath', (data) => {\r\n        console.log('You Died!');\r\n\r\n        // TODO move trigger to server\r\n        // Releases atoms and deletes the entire atoms array in player\r\n        socket.emit('playerDeathAtoms', {atoms: player.atoms, x: player.posX, y: player.posY});\r\n        for(let at in player.atoms) {\r\n            player.atoms[at] = 0;\r\n            updateAtomList(at);\r\n        }\r\n\r\n        // Reset position to spawnpoint\r\n        player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2;\r\n        player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2;\r\n        socket.emit('move', {\r\n            id: socket.id,\r\n            posX: player.posX,\r\n            posY: player.posY,\r\n            vx: 0,\r\n            vy: 0,\r\n            type: 'players'\r\n        });\r\n    });\r\n\r\n    // Update timer\r\n    socket.on('time', (data) => {\r\n        document.getElementById('timer').innerHTML = '<p>' + data.time + '</p>';\r\n    });\r\n\r\n    // Update scores\r\n    socket.on('serverSendScoreUpdate', (data) => {\r\n        updateScores(data.teamSlot, data.increment);\r\n    });\r\n\r\n    // A player has won\r\n    socket.on('serverSendWinner', (data) => {\r\n        setIngame(false); // Disable keyboard controls and rendering\r\n        displayWinner(data);\r\n    });\r\n\r\n    //Emit join message,\r\n    socket.emit('playerJoin', { sender: chat.player, team: chat.team });\r\n}\r\n\r\n// Linear Interpolation function. Adapted from p5.lerp\r\nfunction lerp(v0, v1, t) {\r\n    return v0 * (1 - t) + v1 * t;\r\n}",
@@ -3982,7 +3967,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 206,
+    "__docId__": 205,
     "kind": "variable",
     "name": "objects",
     "memberof": "src/client/js/socket.js",
@@ -4002,7 +3987,7 @@
     }
   },
   {
-    "__docId__": 207,
+    "__docId__": 206,
     "kind": "function",
     "name": "beginConnection",
     "memberof": "src/client/js/socket.js",
@@ -4020,7 +4005,7 @@
     "return": null
   },
   {
-    "__docId__": 208,
+    "__docId__": 207,
     "kind": "function",
     "name": "disconnect",
     "memberof": "src/client/js/socket.js",
@@ -4038,7 +4023,7 @@
     "return": null
   },
   {
-    "__docId__": 209,
+    "__docId__": 208,
     "kind": "function",
     "name": "setupSocket",
     "memberof": "src/client/js/socket.js",
@@ -4057,7 +4042,7 @@
     "ignore": true
   },
   {
-    "__docId__": 210,
+    "__docId__": 209,
     "kind": "function",
     "name": "lerp",
     "memberof": "src/client/js/socket.js",
@@ -4100,7 +4085,7 @@
     "ignore": true
   },
   {
-    "__docId__": 211,
+    "__docId__": 210,
     "kind": "file",
     "name": "src/server/entry.js",
     "content": "/**\r\n * ENTRY POINT for server.js.\r\n * Uses babel to compile es6 into \r\n */\r\nrequire('babel-register')({\r\n    presets: ['env']\r\n});\r\n\r\nmodule.exports = require('./server.js');",
@@ -4111,7 +4096,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 212,
+    "__docId__": 211,
     "kind": "file",
     "name": "src/server/server.js",
     "content": "const express = require('express');\r\nconst app = express();\r\nconst http = require('http').Server(app);\r\nconst io = require('socket.io')(http);\r\nimport colors from 'colors'; // Console colors :D\r\nimport {GLOBAL, distanceBetween, isInBounds} from '../client/js/global';\r\nimport { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles';\r\nimport { roomMatchmaker } from './utils/matchmaker';\r\nimport { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './utils/serverutils';\r\nimport { initGlobal, initPlayer } from './utils/serverinit';\r\nimport { frameSync } from './utils/framesync';\r\nimport { damage } from './utils/ondamage';\r\nvar config = require('./config.json');\r\n\r\nconst DEBUG = true;\r\nconst COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection\r\n\r\napp.use(express.static(`${__dirname}/../client`));\r\n\r\n/* Contains all game data, including which rooms and players are active.\r\n * \r\n * Structure of Rooms object:\r\n * \r\n// rooms = {\r\n//     roomName: {\r\n//         joinable: true,\r\n//         type: '4v4',\r\n//         teams: [\r\n//             name: 'teamname',\r\n//             players: [...]\r\n//         ],\r\n//         players: {...},\r\n//         atoms: {...},\r\n//         compounds: {...},\r\n//         time: {\r\n//             minutes: 0,\r\n//             seconds: 0,\r\n//             formattedTime: '0:00'\r\n//         }\r\n//     }\r\n// }\r\n*/\r\nlet rooms = {};\r\n\r\n/**\r\n * Teams object containing all the currently playing teams.\r\n * Structure:\r\n * teamName: {\r\n *    room: 'roomName',\r\n *    players: ['playerSocketId', 'player2SocketId', ...],\r\n *    joinable: false/true\r\n * }\r\n * \r\n * -> Create a Team when the first player joins any lobby. Populate room when this occurs.\r\n * -> Change joinable to false when a Team is either full or the game has begun.\r\n * -> Delete the room from the database when the last player leaves.\r\n * -> There cannot be two teams with the same name. Throw an error if this occurs.\r\n */\r\nlet teams = {};\r\n\r\n// Initializize Server. Includes atom spawning and timer mechanics\r\ninitGlobal();\r\n\r\n\r\n// Initialize all socket listeners when a request is established\r\nio.on('connection', socket => {\r\n\r\n    // Local variable declaration\r\n    let room = socket.handshake.query.room;\r\n    let roomType = socket.handshake.query.roomType;\r\n    let team = socket.handshake.query.team;\r\n\r\n    // Run matchmaker\r\n    room = roomMatchmaker(socket, room, teams[team]);\r\n\r\n    // Init player\r\n    initPlayer(socket, room);\r\n    let thisPlayer = rooms[room].players[socket.id];\r\n \r\n    // Setup player array sync- once a frame\r\n    setInterval(() => {\r\n        frameSync(socket, room, thisPlayer);\r\n    }, 1000/60);\r\n\r\n    // Receives a chat from a player, then broadcasts it to other players\r\n    socket.to(room).on('playerChat', data => {\r\n    // console.log('sender: ' + data.sender);\r\n        const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');\r\n        const _message = data.message.replace(/(<([^>]+)>)/ig, '');\r\n\r\n        console.log('[CHAT] '.bold.blue + `${(new Date()).getHours()}:${(new Date()).getMinutes()} ${_sender}: ${_message}`.magenta);\r\n\r\n        socket.to(room).broadcast.emit('serverSendPlayerChat', { sender: _sender, message: _message.substring(0, 35) });\r\n    });\r\n\r\n    // Other player joins the socket.to(room)\r\n    socket.to(room).on('playerJoin', data => {\r\n    // console.log('sender: ' + data.sender);\r\n        const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');\r\n        socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender, team: data.team });\r\n        if(DEBUG) {\r\n            socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');\r\n        }\r\n\r\n    });\r\n\r\n    // Broadcasts player join message\r\n   \r\n    socket.to(room).broadcast.emit('serverSendLoginMessage', {\r\n        sender: socket.id\r\n    });\r\n    if(DEBUG) {\r\n        socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');\r\n    }\r\n\r\n    // Hides the lobby screen if the game has already started\r\n    if(rooms[room].started) {\r\n        socket.emit('serverSendStartGame', {teams: rooms[room].teams});\r\n    }\r\n\r\n    /**\r\n   * On player movement:\r\n   * data is in format\r\n   *  - id: index of player that moved\r\n   *  - type: atoms, players, or compounds\r\n   *  - posX: new x position\r\n   *  - posY: new y position\r\n   *  - vx: x-velocity\r\n   *  - vy: y-velocity\r\n   */\r\n    socket.to(room).on('move', data => {\r\n    // Player exists in database already because it was created serverside - no need for extra checking\r\n        if(rooms[room][data.type][data.id] !== undefined) {\r\n            rooms[room][data.type][data.id].posX = data.posX;\r\n            rooms[room][data.type][data.id].posY = data.posY;\r\n            rooms[room][data.type][data.id].vx = data.vx;\r\n            rooms[room][data.type][data.id].vy = data.vy;\r\n        }\r\n\r\n    }); \r\n\r\n    // An atom was collected or changed\r\n    socket.to(room).on('atomCollision', data => {\r\n        if (COLLISIONVERBOSE) {\r\n            console.log('atomCollision');\r\n        }\r\n        delete rooms[room].atoms[data.id];\r\n        socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});\r\n    });\r\n\r\n    socket.to(room).on('compoundCollision', data => {\r\n        if (COLLISIONVERBOSE) {\r\n            console.log('compoundCollision');\r\n        }\r\n        if(rooms[room].compounds[data.id] !== undefined) {\r\n            damage(data, room, socket);   \r\n            delete rooms[room].compounds[data.id];\r\n            socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});\r\n            socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});\r\n\r\n        }\r\n    });\r\n\r\n    socket.to(room).on('damage', data => {\r\n        damage(data, room, socket);\r\n    });\r\n\r\n    // A player spawned a Compound\r\n    socket.to(room).on('createCompound', data => {\r\n    // Calculate velocities based on cursor position\r\n        let theta = Math.atan2(data.mousePos.y,data.mousePos.x);\r\n        let newCompound = {\r\n            id: generateID(),\r\n            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, \r\n            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,\r\n            vx: data.blueprint.params.speed * Math.cos(theta),\r\n            vy: data.blueprint.params.speed * Math.sin(theta),\r\n            blueprint: data.blueprint,\r\n            sendingTeam: data.sendingTeam,\r\n            sender: data.sender\r\n        };\r\n        rooms[room].compounds[newCompound.id] = newCompound;\r\n    // socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound); //Send to everyone but the sender\r\n    // socket.to(room).emit('serverSendCreateCompound', newCompound); //Send to the sender\r\n    });\r\n\r\n    //A Player has performed an action and gained experience\r\n    socket.to(room).on('experienceEvent', data => {\r\n    //data.event is the event that occured\r\n\r\n    //Add a specific amount to the players experience\r\n    //Get the index of the Event and then pass it into the values array to get the actual value\r\n        thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];\r\n\r\n        // Determine the player's level based on experience\r\n        let oldLevel = thisPlayer.level;\r\n        for(let level of GLOBAL.EXPERIENCE_LEVELS){\r\n            if(thisPlayer.experience >= level)\r\n                thisPlayer.level = GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1;\r\n        }\r\n\r\n        // Check to see if the player leveled up\r\n        if(thisPlayer.level > oldLevel) {\r\n            socket.emit('levelUp', {newLevel: thisPlayer.level});\r\n        }\r\n    });\r\n\r\n    socket.on('startGame', data => {\r\n        console.log('Game has started in room ' + room);\r\n        // Make the room and teams unjoinable\r\n        for(let tm of rooms[room].teams) {\r\n            teams[tm.name].joinable = false;\r\n        }\r\n        rooms[room].joinable = false;\r\n\r\n        socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});\r\n        socket.emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});\r\n        rooms[room].started = true;\r\n    });\r\n\r\n    socket.on('spawnAtom', (data) => {\r\n        spawnAtomAtVent(data.row, data.col, room, true);\r\n    });\r\n\r\n    // Atom information sent on player death. Spreads atoms randomly in a circle around the death area.\r\n    socket.on('playerDeathAtoms', (data) => {\r\n        for(let at in data.atoms) {\r\n            for(let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++)\r\n                spawnAtom(data.x, data.y, at, room, false);\r\n        }\r\n    });\r\n\r\n    socket.on('disconnect', data => {\r\n        console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);\r\n\r\n        socket.to(room).broadcast.emit('disconnectedPlayer', { id: socket.id }); //Broadcast to everyone in the room to delete the player\r\n\r\n        delete rooms[room].players[socket.id]; //Remove the server side player\r\n\r\n        // Delete room if there is nobody inside\r\n        if (Object.keys(rooms[room].players).length === 0) {\r\n            console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);\r\n            delete io.sockets.adapter.rooms[socket.id];\r\n            delete rooms[room];\r\n\r\n            if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {\r\n                // Remove from teams array\r\n                teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);\r\n                // rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);\r\n\r\n                // Delete team if all players have left\r\n                if (teams[team].players.length === 0)\r\n                    delete teams[team];\r\n\r\n            }\r\n        }\r\n    });\r\n});\r\n\r\n// Notify on console when server has started\r\nconst serverPort = process.env.PORT || config.port;\r\nhttp.listen(serverPort, () => {\r\n    rooms = {};\r\n    console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);\r\n});\r\n\r\n/**\r\n * Sets a new value for a protected server field.\r\n * Adopted from https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object\r\n * @param {*} value The value to set\r\n * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level. \r\n *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']\r\n */\r\nexport function setField(value, path) {\r\n\r\n    if(path === undefined || path.length === 0)\r\n        throw new Error('Error in setField: path cannot be empty');\r\n    \r\n    let schema = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;\r\n    if (schema === undefined)\r\n        throw new Error('Base object ' + path[0] + ' does not exist!');\r\n\r\n    let len = path.length;\r\n    for (let i = 1; i < len - 1; i++) {\r\n        let elem = path[i];\r\n        if (!schema[elem]) schema[elem] = {};\r\n        schema = schema[elem];\r\n    }\r\n\r\n    schema[path[len - 1]] = value;\r\n\r\n}\r\n\r\n/**\r\n * Returns the value given a path to that value.\r\n * Adopted from https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key\r\n * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level.\r\n *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']\r\n * @returns The value for the given field.\r\n */\r\nexport function getField(path) {\r\n    if (path === undefined || path.length === 0)\r\n        throw new Error('Error in setField: path cannot be empty');\r\n    if (path.length === undefined)\r\n        throw new Error('Error in setField: path must be an array');\r\n    \r\n    let obj = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;\r\n    if(obj === undefined)\r\n        throw new Error('Error in setField: Base object ' + path[0] + ' does not exist!');\r\n\r\n    for(let i = 1; i < path.length; i++)\r\n        obj = obj[path[i]];\r\n    // console.log(path, obj);\r\n    return obj;\r\n}\r\n\r\n/**\r\n * Deletes one of the three types of gameObjects synced to the server\r\n * @param {string} type Either player, atom, compound \r\n * @param {*} id ID of the object to delete\r\n * @param {string} room Room name to delete in\r\n */\r\nexport function deleteObject(type, id, room) {\r\n    delete rooms[room][type][id];\r\n}",
@@ -4122,7 +4107,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 213,
+    "__docId__": 212,
     "kind": "variable",
     "name": "express",
     "memberof": "src/server/server.js",
@@ -4143,7 +4128,7 @@
     "ignore": true
   },
   {
-    "__docId__": 214,
+    "__docId__": 213,
     "kind": "variable",
     "name": "app",
     "memberof": "src/server/server.js",
@@ -4164,7 +4149,7 @@
     "ignore": true
   },
   {
-    "__docId__": 215,
+    "__docId__": 214,
     "kind": "variable",
     "name": "http",
     "memberof": "src/server/server.js",
@@ -4185,7 +4170,7 @@
     "ignore": true
   },
   {
-    "__docId__": 216,
+    "__docId__": 215,
     "kind": "variable",
     "name": "io",
     "memberof": "src/server/server.js",
@@ -4206,7 +4191,7 @@
     "ignore": true
   },
   {
-    "__docId__": 217,
+    "__docId__": 216,
     "kind": "variable",
     "name": "config",
     "memberof": "src/server/server.js",
@@ -4227,7 +4212,7 @@
     "ignore": true
   },
   {
-    "__docId__": 218,
+    "__docId__": 217,
     "kind": "variable",
     "name": "DEBUG",
     "memberof": "src/server/server.js",
@@ -4248,7 +4233,7 @@
     "ignore": true
   },
   {
-    "__docId__": 219,
+    "__docId__": 218,
     "kind": "variable",
     "name": "COLLISIONVERBOSE",
     "memberof": "src/server/server.js",
@@ -4269,7 +4254,7 @@
     "ignore": true
   },
   {
-    "__docId__": 220,
+    "__docId__": 219,
     "kind": "variable",
     "name": "rooms",
     "memberof": "src/server/server.js",
@@ -4290,7 +4275,7 @@
     "ignore": true
   },
   {
-    "__docId__": 221,
+    "__docId__": 220,
     "kind": "variable",
     "name": "teams",
     "memberof": "src/server/server.js",
@@ -4310,7 +4295,7 @@
     "ignore": true
   },
   {
-    "__docId__": 222,
+    "__docId__": 221,
     "kind": "variable",
     "name": "serverPort",
     "memberof": "src/server/server.js",
@@ -4331,7 +4316,7 @@
     "ignore": true
   },
   {
-    "__docId__": 223,
+    "__docId__": 222,
     "kind": "function",
     "name": "setField",
     "memberof": "src/server/server.js",
@@ -4370,7 +4355,7 @@
     "return": null
   },
   {
-    "__docId__": 224,
+    "__docId__": 223,
     "kind": "function",
     "name": "getField",
     "memberof": "src/server/server.js",
@@ -4412,7 +4397,7 @@
     }
   },
   {
-    "__docId__": 225,
+    "__docId__": 224,
     "kind": "function",
     "name": "deleteObject",
     "memberof": "src/server/server.js",
@@ -4461,7 +4446,7 @@
     "return": null
   },
   {
-    "__docId__": 226,
+    "__docId__": 225,
     "kind": "file",
     "name": "src/server/utils/framesync.js",
     "content": "import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global';\r\nimport { deleteObject, getField, setField } from '../server';\r\n\r\n/**\r\n * Runs once a frame, per player.\r\n * @param {*} socket The socket.io instance\r\n * @param {string} room The name of the room\r\n * @param {*} thisPlayer The player object\r\n */\r\nexport function frameSync(socket, room, thisPlayer) {\r\n    if(socket.connected) {\r\n\r\n        let thisRoom = getField(['rooms', room]);\r\n    \r\n        if (thisRoom !== undefined) {\r\n            // Distance checking for all objects\r\n            let tempObjects = {\r\n                players: {},\r\n                atoms: {},\r\n                compounds: {}\r\n            };\r\n    \r\n            // Move compounds\r\n            for (let compound in thisRoom.compounds) {\r\n                let compoundRef = thisRoom.compounds[compound];\r\n                if (isInBounds(compoundRef)) {\r\n                    setField(compoundRef.posX + compoundRef.vx, ['rooms', room, 'compounds', compound, 'posX']);\r\n                    setField(compoundRef.posY + compoundRef.vy, ['rooms', room, 'compounds', compound, 'posY']);\r\n                    // compoundRef.posX += compoundRef.vx;\r\n                    // compoundRef.posY += compoundRef.vy;\r\n                }\r\n                else { // delete\r\n                    socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\r\n                    socket.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\r\n                    deleteObject('compounds', compound, room);\r\n                }\r\n            }\r\n            // Move atoms\r\n            for (let atom in thisRoom.atoms) {\r\n                let distance = distanceBetween(\r\n                    { posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },\r\n                    { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });\r\n                // Attractive force\r\n                if (distance < GLOBAL.ATTRACTION_RADIUS) {\r\n                    let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX));\r\n    \r\n                    // Attraction is based on logarithmic algorithm\r\n    \r\n                    setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, ['rooms', room, 'atoms', atom, 'vx']);\r\n                    setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, ['rooms', room, 'atoms', atom, 'vy']);\r\n                    // thisRoom.atoms[atom].vx = 1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;\r\n                    // thisRoom.atoms[atom].vy = 1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;\r\n                    // console.log(this.vx, this.vy, this.posX, this.posY);\r\n                }\r\n                // Atom slowing down\r\n                else if (Math.abs(thisRoom.atoms[atom].vx) > GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) > GLOBAL.DEADZONE) {\r\n                    setField(thisRoom.atoms[atom].vx * GLOBAL.VELOCITY_STEP, ['rooms', room, 'atoms', atom, 'vx']);\r\n                    setField(thisRoom.atoms[atom].vy * GLOBAL.VELOCITY_STEP, ['rooms', room, 'atoms', atom, 'vy']);\r\n                    // thisRoom.atoms[atom].vx *= GLOBAL.VELOCITY_STEP;\r\n                    // thisRoom.atoms[atom].vy *= GLOBAL.VELOCITY_STEP;\r\n                }\r\n    \r\n                if (Math.abs(thisRoom.atoms[atom].vx) <= GLOBAL.DEADZONE)\r\n                    setField(0, ['rooms', room, 'atoms', atom, 'vx']);\r\n                if (Math.abs(thisRoom.atoms[atom].vy) <= GLOBAL.DEADZONE)\r\n                    setField(0, ['rooms', room, 'atoms', atom, 'vy']);\r\n    \r\n                // Move atom\r\n                setField(thisRoom.atoms[atom].posX + thisRoom.atoms[atom].vx, ['rooms', room, 'atoms', atom, 'posX']);\r\n                setField(thisRoom.atoms[atom].posY + thisRoom.atoms[atom].vy, ['rooms', room, 'atoms', atom, 'posY']);\r\n                // thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;\r\n                // thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;\r\n            }\r\n    \r\n            for (let objType in tempObjects) {\r\n                for (let obj in thisRoom[objType]) {\r\n                    if (distanceBetween(thisRoom[objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)\r\n                        tempObjects[objType][obj] = thisRoom[objType][obj];\r\n                    else if (objType === 'players') // Player left view\r\n                        socket.emit('serverSendObjectRemoval', { id: obj, type: objType });\r\n                }\r\n            }\r\n    \r\n            socket.emit('objectSync', tempObjects);\r\n    \r\n            if (thisRoom.started)\r\n                socket.emit('time', { time: thisRoom.time.formattedTime });\r\n    \r\n            if (thisRoom !== undefined && !thisRoom.started) {\r\n                // Send over the room player information\r\n                // socket.to(room).broadcast.emit('roomInfo', thisRoom.players);\r\n                socket.emit('roomInfo', thisRoom.players);\r\n            }\r\n        }\r\n    }\r\n}",
@@ -4472,7 +4457,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 227,
+    "__docId__": 226,
     "kind": "function",
     "name": "frameSync",
     "memberof": "src/server/utils/framesync.js",
@@ -4521,7 +4506,7 @@
     "return": null
   },
   {
-    "__docId__": 228,
+    "__docId__": 227,
     "kind": "file",
     "name": "src/server/utils/matchmaker.js",
     "content": "import { GLOBAL } from '../../client/js/global';\r\nimport { getField, setField } from '../server';\r\nimport { generateID } from './serverutils';\r\n\r\n/**\r\n * Matchmaking system for public matches. Runs after initial socket.io server connection, but before connecting to a server.\r\n * @param {*} socket Socket.io instance\r\n * @param {string} room Name of room\r\n * @param {string} team Name of team\r\n * @returns The new room that has been assigned\r\n */\r\nexport function roomMatchmaker(socket, room, team) {\r\n\r\n    let validJoin = false; // This join attempt was valid.\r\n    let roomType = socket.handshake.query.roomType;\r\n\r\n    // Make sure the room you are trying to join is valid\r\n    // console.log(getField(['rooms', room]));\r\n    if (room !== GLOBAL.NO_ROOM_IDENTIFIER && getField(['rooms', room]) !== undefined && !getField(['rooms', room]).joinable && getField(['rooms', room]) !== undefined) // Room full\r\n        socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' });\r\n\r\n    if (team !== undefined && team.room !== undefined) {\r\n        // Make sure everything is compatible\r\n        if (getField(['rooms', team.room]) !== undefined && getField(['rooms', team.room]).type !== roomType) // Wrong room type\r\n            socket.emit('connectionError', { msg: 'Your team is playing in a ' + getField('rooms', team.room).type + ' room, but you are trying to join a ' + roomType + ' room!' });\r\n        else if (!team.joinable) // Team full\r\n            socket.emit('connectionError', { msg: 'Your team is already in game or full!' });\r\n        else {// is joinable\r\n            validJoin = true;\r\n            room = team.room;\r\n\r\n            // Equivalent to teams[socket.handshake.query.team].players.push(socket.id);\r\n            setField(socket.id, ['teams', socket.handshake.query.team, 'players', getField(['teams', socket.handshake.query.team, 'players']).length ]);\r\n\r\n            if ((roomType === '2v2v2v2' && team.players.length === 2) || team.players.length === 4)\r\n                setField(false, ['teams', socket.handshake.query.team, 'joinable']);\r\n        }\r\n    }\r\n    // Team not found \r\n    else {\r\n        // Try joining a room\r\n        for (let roomName in getField(['rooms'])) {\r\n            if (roomName.indexOf(roomType) > -1)\r\n                if ((roomType === '4v4' && getField(['rooms', roomName, 'teams']).length < 2) || getField(['rooms', roomName, 'teams']).length < 4) {\r\n                    room = roomName;\r\n                }\r\n        }\r\n\r\n        // No matching rooms - must create a new room\r\n        if (room === GLOBAL.NO_ROOM_IDENTIFIER)\r\n            room = 'NA_' + roomType + '_' + generateID();\r\n\r\n        // Make team\r\n        setField({\r\n            room: room,\r\n            players: [socket.id],\r\n            joinable: true\r\n        }, ['teams', socket.handshake.query.team]);\r\n\r\n        validJoin = true;\r\n    }\r\n\r\n    // Join custom room\r\n    if (validJoin)\r\n        socket.join(room, () => {\r\n            console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);\r\n        });\r\n\r\n    return room;\r\n}",
@@ -4532,7 +4517,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 229,
+    "__docId__": 228,
     "kind": "function",
     "name": "roomMatchmaker",
     "memberof": "src/server/utils/matchmaker.js",
@@ -4594,7 +4579,7 @@
     }
   },
   {
-    "__docId__": 230,
+    "__docId__": 229,
     "kind": "file",
     "name": "src/server/utils/ondamage.js",
     "content": "import { GLOBAL } from '../../client/js/global';\r\nimport { getField, setField } from '../server';\r\nimport { getTeamNumber } from './serverutils';\r\n\r\n/**\r\n * Changes the health of the player by the amount given.\r\n * @param {*} data The data sent by the client.\r\n * @param {string} room This room.\r\n * @param {*} socket This socket.\r\n * Must include the player id and amount to damage.\r\n * Amount may be negative (for health boost).\r\n */\r\nexport function damage(data, room, socket) {\r\n\r\n    let thisRoom = getField(['rooms', room]);\r\n    let thisPlayer = thisRoom.players[data.player];\r\n\r\n    if (thisPlayer !== undefined) {\r\n\r\n        // thisPlayer.health -= data.damage;\r\n        setField(thisPlayer.health - data.damage, ['rooms', room, 'players', data.player, 'health']);\r\n\r\n        // Add damage to database\r\n        if (thisPlayer.damagedBy[data.sentBy] === undefined)\r\n            setField(0, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]);\r\n        // thisPlayer.damagedBy[data.sentBy] += data.damage;\r\n        setField(thisPlayer.damagedBy[data.sentBy] + data.damage, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]);\r\n\r\n        if (thisPlayer.health <= 0) {\r\n            // console.log(thisRoom.teams.indexOf(socket.handshake.query.team));\r\n            socket.emit('serverSendPlayerDeath', { teamNumber: getTeamNumber(room, socket.handshake.query.team) });\r\n            setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', data.player, 'health']);\r\n\r\n            if(data.id !== undefined) {\r\n                // Read damagedBy to award points, clear in the process\r\n                let max = null;\r\n                let dataToSend;\r\n                for (let pl in thisPlayer.damagedBy) {\r\n                    dataToSend = {\r\n                        player: pl,\r\n                        teamSlot: getTeamNumber(room, thisRoom.compounds[data.id].sendingTeam),\r\n                        increment: GLOBAL.ASSIST_SCORE,\r\n                        kill: false\r\n                    };\r\n\r\n                    // Add to team score, checking if team score is initialized\r\n                    setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score']);\r\n\r\n\r\n                    socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);\r\n                    socket.emit('serverSendScoreUpdate', dataToSend);\r\n                    if (max === null || thisPlayer.damagedBy[pl] > thisPlayer.damagedBy[max])\r\n                        max = pl;\r\n                }\r\n\r\n                // Add to score of person who dealt the most damage\r\n                dataToSend.player = max;\r\n                dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE;\r\n                dataToSend.kill = true;\r\n                socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);\r\n                socket.emit('serverSendScoreUpdate', dataToSend);\r\n\r\n                // Add to team score\r\n                setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score']);\r\n\r\n                // Clear damagedBy values\r\n                for (let pl in thisPlayer.damagedBy)\r\n                    setField(0, ['rooms', room, 'players', data.player, 'damagedBy', pl]);\r\n\r\n                // Check if a team won\r\n                for (let tm of thisRoom.teams) {\r\n                    if (tm.score >= GLOBAL.WINNING_SCORE) {\r\n\r\n                        let dataToSend = {\r\n                            winner: tm\r\n                            // teamScore: thisRoom.teams[dataToSend.teamSlot].score             \r\n                            //other data here TODO post ranking\r\n                        };\r\n                        socket.to(room).broadcast.emit('serverSendWinner', dataToSend);\r\n                        socket.emit('serverSendWinner', dataToSend);\r\n\r\n                        // Close room after delay (kick all players)\r\n                        setTimeout(() => {\r\n                            socket.emit('serverSendDisconnect', {});\r\n                            socket.to(room).broadcast.emit('serverSendDisconnect', {});\r\n                        }, GLOBAL.ROOM_DELETE_DELAY);\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n    else\r\n        console.warn('Player of ID ' + data.id + ' couldn\\'t be damaged because they don\\'t exist!');\r\n}",
@@ -4605,7 +4590,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 231,
+    "__docId__": 230,
     "kind": "function",
     "name": "damage",
     "memberof": "src/server/utils/ondamage.js",
@@ -4654,7 +4639,7 @@
     "return": null
   },
   {
-    "__docId__": 232,
+    "__docId__": 231,
     "kind": "file",
     "name": "src/server/utils/serverinit.js",
     "content": "import { getField, setField } from '../server';\r\nimport { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles';\r\nimport { GLOBAL } from '../../client/js/global';\r\nimport { spawnAtomAtVent } from './serverutils';\r\nimport colors from 'colors'; // Console colors :D\r\n\r\n/**\r\n * Methods to run on server initialization and player connect initialization.\r\n */\r\n\r\n/**\r\n * Global initialiation. Run once on server start.\r\n */\r\nexport function initGlobal() {\r\n    // Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.\r\n    setInterval(() => {\r\n        for (let room in getField(['rooms'])) {\r\n            for (let row = 0; row < MAP_LAYOUT.length; row++)\r\n                for (let col = 0; col < MAP_LAYOUT[0].length; col++) {\r\n                    if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {\r\n                        spawnAtomAtVent(row, col, room, false);\r\n                    }\r\n\r\n                }\r\n        }\r\n    }, GLOBAL.ATOM_SPAWN_DELAY);\r\n\r\n    // Timer\r\n    setInterval(() => {\r\n        for (let room in getField(['rooms'])) {\r\n            if (getField(['rooms', room, 'started'])) {\r\n                let seconds = getField(['rooms', room, 'time', 'seconds']), \r\n                    minutes = getField(['rooms', room, 'time', 'minutes']);\r\n                    \r\n                // Equivalent to rooms[room].time.seconds++;\r\n                setField(seconds + 1, ['rooms', room, 'time', 'seconds']);\r\n\r\n                if (seconds >= 60) {\r\n                    setField(0, ['rooms', room, 'time', 'seconds']);\r\n                    setField(minutes + 1, ['rooms', room, 'time', 'minutes']);\r\n                }\r\n\r\n                // Set formatted Time\r\n                setField(minutes + ':' + ((seconds < 10) ? '0' : '') + seconds, ['rooms', room, 'time', 'formattedTime']);\r\n            }\r\n        }\r\n    }, 1000);\r\n}\r\n\r\n/**\r\n * Run on every player join.\r\n * @param {*} socket The socket.io instance\r\n * @param {string} room The name of the room that the player belongs to\r\n */\r\nexport function initPlayer(socket, room) {\r\n    // Initialize room array and spawn atoms on first player join\r\n    let thisRoom = getField(['rooms', room]);\r\n    if (thisRoom === undefined || thisRoom === null) {\r\n        console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);\r\n        setField({\r\n            joinable: true,\r\n            teams: [],\r\n            atoms: {},\r\n            compounds: {},\r\n            type: socket.handshake.query.roomType,\r\n            time: {\r\n                minutes: 0,\r\n                seconds: 0,\r\n                formattedTime: '0:00'\r\n            }\r\n        }, ['rooms', room]);\r\n    }\r\n    thisRoom = getField(['rooms', room]);\r\n\r\n    // Add team to database\r\n\r\n    // Equivalent to rooms[room].teams.push({ name: team });\r\n    setField({name: socket.handshake.query.team}, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length]);\r\n\r\n    // Check if room is full\r\n    if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4)\r\n        setField(false, ['rooms', room, 'joinable']);\r\n\r\n    // Create new player in rooms object\r\n    setField({\r\n        id: socket.id,\r\n        name: socket.handshake.query.name,\r\n        room: socket.handshake.query.room,\r\n        team: socket.handshake.query.team,\r\n        health: GLOBAL.MAX_HEALTH,\r\n        posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,\r\n        posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,\r\n        vx: 0,\r\n        vy: 0,\r\n        experience: 0,\r\n        damagedBy: {}\r\n    }, ['rooms', room, 'players', socket.id]);\r\n}",
@@ -4665,7 +4650,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 233,
+    "__docId__": 232,
     "kind": "function",
     "name": "initGlobal",
     "memberof": "src/server/utils/serverinit.js",
@@ -4683,7 +4668,7 @@
     "return": null
   },
   {
-    "__docId__": 234,
+    "__docId__": 233,
     "kind": "function",
     "name": "initPlayer",
     "memberof": "src/server/utils/serverinit.js",
@@ -4722,7 +4707,7 @@
     "return": null
   },
   {
-    "__docId__": 235,
+    "__docId__": 234,
     "kind": "file",
     "name": "src/server/utils/serverutils.js",
     "content": "import { TILES, TILE_NAMES, MAP_LAYOUT } from '../../client/js/obj/tiles';\r\nimport { getField, setField } from '../server';\r\nimport { GLOBAL } from '../../client/js/global';\r\n\r\n/**\r\n * Misc. standalone utilities for the server.\r\n */\r\n\r\n/**\r\n* Returns a random number between between 10000000 and 99999999, inclusive.\r\n* TODO Make every ID guaranteed unique\r\n* @returns random id between 10000000 and 99999999\r\n*/\r\nexport function generateID() {\r\n    return Math.floor(Math.random() * 90000000) + 10000000;\r\n}\r\n\r\n/**\r\n * Spawns an atom at the vent at the given row and column.\r\n * @param {number} row The row of the vent \r\n * @param {number} col The column of the vent to spawn at\r\n * @param {string} room The room to spawn in\r\n * @param {boolean} verbose True if this method should output to the console\r\n */\r\nexport function spawnAtomAtVent(row, col, room, verbose) {\r\n    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`\r\n    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];\r\n\r\n    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;\r\n    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;\r\n\r\n    spawnAtom(x, y, atomToSpawn, room, verbose);\r\n\r\n}\r\n\r\n/**\r\n * \r\n * @param {number} x X-position of center\r\n * @param {number} y Y-position of center\r\n * @param {string} type Type of atom to spawn\r\n * @param {string} room The room to spawn in\r\n * @param {boolean} verbose True if this method should output to the console\r\n */\r\nexport function spawnAtom(x, y, type, room, verbose) {\r\n\r\n    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned\r\n\r\n    let atom = {\r\n        typeID: type,\r\n        id: generateID(),\r\n        posX: x,\r\n        posY: y,\r\n        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,\r\n        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED\r\n    };\r\n    if (getField(['rooms', room]) !== undefined)\r\n        setField(atom, ['rooms', room, 'atoms', atom.id]);\r\n\r\n    // Log to console\r\n    if (verbose)\r\n        console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);\r\n}\r\n\r\n/**\r\n * Returns the index of the given team within the team array of the given room.\r\n * @param {string} room The room name to check\r\n * @param {string} teamName The team name to return the number of\r\n */\r\nexport function getTeamNumber(room, teamName) {\r\n    for (let i = 0; i < getField(['rooms', room, 'teams']).length; i++)\r\n        if (getField(['rooms', room, 'teams'])[i].name === teamName)\r\n            return i;\r\n\r\n    return -1; //Team not found\r\n}",
@@ -4733,7 +4718,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 236,
+    "__docId__": 235,
     "kind": "function",
     "name": "generateID",
     "memberof": "src/server/utils/serverutils.js",
@@ -4764,7 +4749,7 @@
     "params": []
   },
   {
-    "__docId__": 237,
+    "__docId__": 236,
     "kind": "function",
     "name": "spawnAtomAtVent",
     "memberof": "src/server/utils/serverutils.js",
@@ -4823,7 +4808,7 @@
     "return": null
   },
   {
-    "__docId__": 238,
+    "__docId__": 237,
     "kind": "function",
     "name": "spawnAtom",
     "memberof": "src/server/utils/serverutils.js",
@@ -4892,7 +4877,7 @@
     "return": null
   },
   {
-    "__docId__": 239,
+    "__docId__": 238,
     "kind": "function",
     "name": "getTeamNumber",
     "memberof": "src/server/utils/serverutils.js",
@@ -4944,7 +4929,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n    \"name\": \"atomblast.io\",\n    \"version\": \"1.0.0\",\n    \"description\": \"First attempt at multiplayer online io game\",\n    \"main\": \"index.js\",\n    \"scripts\": {\n        \"test\": \"(jest && echo \\\" \\\\033[1;40;32m Unit testing passed.\\\\033[m \\\") || (echo \\\" \\\\033[1;41;33m Unit testing failed.\\\\033[m \\\" && exit 1)\",\n        \"watch\": \"watchify src/client/js/app.js -o src/client/js/public/build.js -v\",\n        \"server\": \"nodemon src/server/entry.js\",\n        \"start\": \"npm-run-all --parallel watch server\",\n        \"build\": \"browserify src/client/js/app.js -o  src/client/js/public/build.js\",\n        \"lint\": \"echo 'Working directory: ' && pwd && echo '\\nPlease wait. Lint Checking...\\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \\\" \\\\033[1;40;32m Linting Passed. \\\\033[m \\\" ) || ( (echo \\\"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix \\\\033[m \\\" && exit 1)))\",\n        \"lint-compatibility-mode\": \"./node_modules/.bin/eslint ./src/\",\n        \"fix-lint\": \"npm run -s env-test; (echo 'Please wait. Linting...\\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \\\" \\\\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\\\033[m \\\" && exit 1)\",\n        \"env-test\": \"if [ -d './src/' ]; then echo \\\" \\\\033[1;40;32m src directory detected! \\\\033[m \\\"; else echo \\\" \\\\033[1;41;33m \\n\\nCRITICAL: src directory NOT DETECTED\\nABORTING!!!\\n\\n \\\\033[m \\\" && exit 1; fi\",\n        \"precommit\": \"npm run -s lint && echo \\\"Running unit testing..\\\" && npm test\",\n        \"prepush\": \"npm run -s lint && echo 'Prepush build skipped' && npm test\",\n        \"docs\": \"esdoc\"\n    },\n    \"repository\": {\n        \"type\": \"git\",\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io.git\"\n    },\n    \"keywords\": [\n        \"io\",\n        \"game\"\n    ],\n    \"author\": \"Bananium Labs\",\n    \"license\": \"MIT\",\n    \"contributors\": [\n        \"Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)\",\n        \"Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)\",\n        \"Eric Qian <eric@enumc.com> (https://github.com/EnumC)\"\n    ],\n    \"bugs\": {\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io/issues\"\n    },\n    \"homepage\": \"https://github.com/BananiumLabs/AtomBlast.io#readme\",\n    \"dependencies\": {\n        \"babel-preset-env\": \"^1.7.0\",\n        \"babel-register\": \"^6.26.0\",\n        \"colors\": \"^1.2.4\",\n        \"express\": \"^4.13.0\",\n        \"pixi.js\": \"^4.8.1\",\n        \"socket.io\": \"^1.3.5\",\n        \"sweetalert\": \"^2.1.0\"\n    },\n    \"devDependencies\": {\n        \"babel-core\": \"^6.26.3\",\n        \"babel-preset-es2015\": \"^6.24.1\",\n        \"babelify\": \"^8.0.0\",\n        \"browserify\": \"^16.2.0\",\n        \"esdoc\": \"^1.1.0\",\n        \"esdoc-standard-plugin\": \"^1.0.0\",\n        \"eslint\": \"^5.1.0\",\n        \"husky\": \"^0.14.3\",\n        \"jest\": \"^23.4.1\",\n        \"nodemon\": \"^1.17.3\",\n        \"npm-run-all\": \"^4.1.2\",\n        \"npm-run-parallel\": \"^0.6.0\",\n        \"watchify\": \"^3.11.0\"\n    },\n    \"browserify\": {\n        \"transform\": [\n            [\n                \"babelify\",\n                {\n                    \"presets\": [\n                        \"es2015\"\n                    ]\n                }\n            ]\n        ]\n    }\n}\n",
+    "content": "{\r\n    \"name\": \"atomblast.io\",\r\n    \"version\": \"1.0.0\",\r\n    \"description\": \"First attempt at multiplayer online io game\",\r\n    \"main\": \"index.js\",\r\n    \"scripts\": {\r\n        \"test\": \"(jest && echo \\\" \\\\033[1;40;32m Unit testing passed.\\\\033[m \\\") || (echo \\\" \\\\033[1;41;33m Unit testing failed.\\\\033[m \\\" && exit 1)\",\r\n        \"watch\": \"watchify src/client/js/app.js -o src/client/js/public/build.js -v\",\r\n        \"server\": \"nodemon src/server/entry.js\",\r\n        \"start\": \"npm-run-all --parallel watch server\",\r\n        \"build\": \"browserify src/client/js/app.js -o  src/client/js/public/build.js\",\r\n        \"lint\": \"echo 'Working directory: ' && pwd && echo '\\nPlease wait. Lint Checking...\\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \\\" \\\\033[1;40;32m Linting Passed. \\\\033[m \\\" ) || ( (echo \\\"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix \\\\033[m \\\" && exit 1)))\",\r\n        \"lint-compatibility-mode\": \"./node_modules/.bin/eslint ./src/\",\r\n        \"fix-lint\": \"npm run -s env-test; (echo 'Please wait. Linting...\\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \\\" \\\\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\\\033[m \\\" && exit 1)\",\r\n        \"env-test\": \"if [ -d './src/' ]; then echo \\\" \\\\033[1;40;32m src directory detected! \\\\033[m \\\"; else echo \\\" \\\\033[1;41;33m \\n\\nCRITICAL: src directory NOT DETECTED\\nABORTING!!!\\n\\n \\\\033[m \\\" && exit 1; fi\",\r\n        \"precommit\": \"npm run -s lint && echo \\\"Running unit testing..\\\" && npm test\",\r\n        \"prepush\": \"npm run -s lint && echo 'Prepush build skipped' && npm test\",\r\n        \"docs\": \"esdoc\"\r\n    },\r\n    \"repository\": {\r\n        \"type\": \"git\",\r\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io.git\"\r\n    },\r\n    \"keywords\": [\r\n        \"io\",\r\n        \"game\"\r\n    ],\r\n    \"author\": \"Bananium Labs\",\r\n    \"license\": \"MIT\",\r\n    \"contributors\": [\r\n        \"Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)\",\r\n        \"Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)\",\r\n        \"Eric Qian <eric@enumc.com> (https://github.com/EnumC)\"\r\n    ],\r\n    \"bugs\": {\r\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io/issues\"\r\n    },\r\n    \"homepage\": \"https://github.com/BananiumLabs/AtomBlast.io#readme\",\r\n    \"dependencies\": {\r\n        \"babel-preset-env\": \"^1.7.0\",\r\n        \"babel-register\": \"^6.26.0\",\r\n        \"colors\": \"^1.2.4\",\r\n        \"express\": \"^4.13.0\",\r\n        \"pixi.js\": \"^4.8.1\",\r\n        \"socket.io\": \"^2.1.1\",\r\n        \"sweetalert\": \"^2.1.0\"\r\n    },\r\n    \"devDependencies\": {\r\n        \"babel-core\": \"^6.26.3\",\r\n        \"babel-preset-es2015\": \"^6.24.1\",\r\n        \"babelify\": \"^8.0.0\",\r\n        \"browserify\": \"^16.2.0\",\r\n        \"esdoc\": \"^1.1.0\",\r\n        \"esdoc-standard-plugin\": \"^1.0.0\",\r\n        \"eslint\": \"^5.1.0\",\r\n        \"husky\": \"^0.14.3\",\r\n        \"jest\": \"^23.4.1\",\r\n        \"nodemon\": \"^1.18.4\",\r\n        \"npm-run-all\": \"^4.1.2\",\r\n        \"npm-run-parallel\": \"^0.6.0\",\r\n        \"watchify\": \"^3.11.0\"\r\n    },\r\n    \"browserify\": {\r\n        \"transform\": [\r\n            [\r\n                \"babelify\",\r\n                {\r\n                    \"presets\": [\r\n                        \"es2015\"\r\n                    ]\r\n                }\r\n            ]\r\n        ]\r\n    }\r\n}\r\n",
     "longname": "C:\\Users\\BenCu\\Documents\\AtomBlast.io\\package.json",
     "name": "package.json",
     "static": true,
