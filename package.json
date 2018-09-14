@@ -14,7 +14,7 @@
         "fix-lint": "npm run -s env-test; (echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \" \\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\033[m \" && exit 1)",
         "env-test": "if [ -d './src/' ]; then echo \" \\033[1;40;32m src directory detected! \\033[m \"; else echo \" \\033[1;41;33m \n\nCRITICAL: src directory NOT DETECTED\nABORTING!!!\n\n \\033[m \" && exit 1; fi",
         "precommit": "npm run -s lint && echo \"Running unit testing..\" && npm test",
-        "prepush": "echo \"Generating Documentation...\" && npm run docs && git add . && git commit -m\"Documentation Update [prepush]\" --no-verify && git push --no-verify",
+        "prepush": "echo \"Generating Documentation...\" && npm run docs && git add . && git commit -m\"Documentation Update [prepush]\" --no-verify && git pull && git push --no-verify",
         "docs": "esdoc"
     },
     "repository": {
