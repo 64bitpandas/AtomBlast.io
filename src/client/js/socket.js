@@ -172,6 +172,13 @@ function setupSocket() {
         }
     });
 
+    // Atom was collected by player
+    socket.on('atomCollected', (data) => {
+        objects.atoms[data.id].isEquipped = true;
+        player.addAtom(data.typeID);
+        updateAtomList(data.typeID);
+    });
+
     socket.on('disconnectedPlayer', (data) => {
         console.log('Player ' + data.id + ' has disconnected');
         chat.addSystemLine('Player ' + objects.players[data.id].name + ' has disconnected');

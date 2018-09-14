@@ -59,19 +59,17 @@ export class Atom extends GameObject {
         // }
 
         // Collected by player
-        let distance = distanceBetween(
-            { posX: this.posX + GLOBAL.ATOM_RADIUS, posY: this.posY - GLOBAL.ATOM_RADIUS },
-            { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
+        // let distance = distanceBetween(
+        //     { posX: this.posX + GLOBAL.ATOM_RADIUS, posY: this.posY - GLOBAL.ATOM_RADIUS },
+        //     { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
 
-        if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
-            this.isEquipped = true;
-            player.addAtom(this.typeID);
-            updateAtomList(this.typeID);
-            socket.emit('atomCollision', {id: this.id});
-            return true;
-        }
+        // if (distance < GLOBAL.ATOM_RADIUS + GLOBAL.PLAYER_RADIUS) {
+           
+        //     socket.emit('atomCollision', {id: this.id});
+        //     return true;
+        // }
 
-        return false;
+        // return false;
     }
 
     tick() {
@@ -80,7 +78,6 @@ export class Atom extends GameObject {
         super.tick();
 
         if (!this.isEquipped) {
-            this.checkCollision();
             this.draw();
         }
         else
