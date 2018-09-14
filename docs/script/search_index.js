@@ -84,6 +84,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/collision.js~collisiondetect",
+    "function/index.html#static-function-collisionDetect",
+    "<span>collisionDetect</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/collision.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/app.js~cookieinputs",
     "variable/index.html#static-variable-cookieInputs",
     "<span>cookieInputs</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
@@ -1179,6 +1185,12 @@ window.esdocSearchIndex = [
     "src/server/server.js",
     "file/src/server/server.js.html",
     "src/server/server.js",
+    "file"
+  ],
+  [
+    "src/server/utils/collision.js",
+    "file/src/server/utils/collision.js.html",
+    "src/server/utils/collision.js",
     "file"
   ],
   [

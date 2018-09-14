@@ -1,7 +1,7 @@
 {
-  "coverage": "50.31%",
-  "expectCount": 157,
-  "actualCount": 79,
+  "coverage": "50.63%",
+  "expectCount": 158,
+  "actualCount": 80,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 18,
@@ -58,7 +58,7 @@
         30,
         31,
         32,
-        77
+        75
       ]
     },
     "src/client/js/obj/blueprints.js": {
@@ -151,7 +151,7 @@
       "actualCount": 3,
       "undocumentLines": [
         21,
-        273
+        280
       ]
     },
     "src/server/server.js": {
@@ -168,6 +168,11 @@
         43,
         261
       ]
+    },
+    "src/server/utils/collision.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
     },
     "src/server/utils/framesync.js": {
       "expectCount": 1,

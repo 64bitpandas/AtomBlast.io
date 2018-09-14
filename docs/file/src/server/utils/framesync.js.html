@@ -80,7 +80,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
@@ -96,6 +97,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/framesync.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, isInBounds, GLOBAL } from &apos;../../client/js/global&apos;;
 import { deleteObject, getField, setField } from &apos;../server&apos;;
+import { collisionDetect } from &apos;./collision&apos;;
 
 /**
  * Runs once a frame, per player.
@@ -167,7 +169,8 @@ export function frameSync(socket, room, thisPlayer) {
                 // thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;
                 // thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;
             }
-    
+            
+            // Populate tempObjects
             for (let objType in tempObjects) {
                 for (let obj in thisRoom[objType]) {
                     if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS)
@@ -176,6 +179,9 @@ export function frameSync(socket, room, thisPlayer) {
                         socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType });
                 }
             }
+
+            // Run collision detection script
+            collisionDetect(socket, room, thisPlayer, tempObjects);
     
             socket.emit(&apos;objectSync&apos;, tempObjects);
     

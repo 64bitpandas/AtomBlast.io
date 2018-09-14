@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">src/server/server.js | atomblast.io</title>
+  <base data-ice="baseUrl" href="../../../../">
+  <title data-ice="title">src/server/utils/collision.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -94,331 +94,32 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/server.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const express = require(&apos;express&apos;);
-const app = express();
-const http = require(&apos;http&apos;).Server(app);
-const io = require(&apos;socket.io&apos;)(http);
-import colors from &apos;colors&apos;; // Console colors :D
-import {GLOBAL, distanceBetween, isInBounds} from &apos;../client/js/global&apos;;
-import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../client/js/obj/tiles&apos;;
-import { roomMatchmaker } from &apos;./utils/matchmaker&apos;;
-import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from &apos;./utils/serverutils&apos;;
-import { initGlobal, initPlayer } from &apos;./utils/serverinit&apos;;
-import { frameSync } from &apos;./utils/framesync&apos;;
-import { damage } from &apos;./utils/ondamage&apos;;
-var config = require(&apos;./config.json&apos;);
-
-const DEBUG = true;
-const COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection
-
-app.use(express.static(`${__dirname}/../client`));
-
-/* Contains all game data, including which rooms and players are active.
- * 
- * Structure of Rooms object:
- * 
-// rooms = {
-//     roomName: {
-//         joinable: true,
-//         type: &apos;4v4&apos;,
-//         teams: [
-//             name: &apos;teamname&apos;,
-//             players: [...]
-//         ],
-//         players: {...},
-//         atoms: {...},
-//         compounds: {...},
-//         time: {
-//             minutes: 0,
-//             seconds: 0,
-//             formattedTime: &apos;0:00&apos;
-//         }
-//     }
-// }
-*/
-let rooms = {};
+<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/collision.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, GLOBAL } from &apos;../../client/js/global&apos;;
 
 /**
- * Teams object containing all the currently playing teams.
- * Structure:
- * teamName: {
- *    room: &apos;roomName&apos;,
- *    players: [&apos;playerSocketId&apos;, &apos;player2SocketId&apos;, ...],
- *    joinable: false/true
- * }
- * 
- * -&gt; Create a Team when the first player joins any lobby. Populate room when this occurs.
- * -&gt; Change joinable to false when a Team is either full or the game has begun.
- * -&gt; Delete the room from the database when the last player leaves.
- * -&gt; There cannot be two teams with the same name. Throw an error if this occurs.
+ * Runs once a frame, checks for collisions between objects and handles them accordingly.
+ * Run using 
+ * @param {*} socket The socket.io instance
+ * @param {string} room The name of the room
+ * @param {*} thisPlayer The player object
+ * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer.
  */
-let teams = {};
-
-// Initializize Server. Includes atom spawning and timer mechanics
-initGlobal();
-
-
-// Initialize all socket listeners when a request is established
-io.on(&apos;connection&apos;, socket =&gt; {
-
-    // Local variable declaration
-    let room = socket.handshake.query.room;
-    let roomType = socket.handshake.query.roomType;
-    let team = socket.handshake.query.team;
-
-    // Run matchmaker
-    room = roomMatchmaker(socket, room, teams[team]);
-
-    // Init player
-    initPlayer(socket, room);
-    let thisPlayer = rooms[room].players[socket.id];
- 
-    // Setup player array sync- once a frame
-    setInterval(() =&gt; {
-        frameSync(socket, room, thisPlayer);
-    }, 1000/60);
-
-    // Receives a chat from a player, then broadcasts it to other players
-    socket.to(room).on(&apos;playerChat&apos;, data =&gt; {
-    // console.log(&apos;sender: &apos; + data.sender);
-        const _sender = data.sender.replace(/(&lt;([^&gt;]+)&gt;)/ig, &apos;&apos;);
-        const _message = data.message.replace(/(&lt;([^&gt;]+)&gt;)/ig, &apos;&apos;);
-
-        console.log(&apos;[CHAT] &apos;.bold.blue + `${(new Date()).getHours()}:${(new Date()).getMinutes()} ${_sender}: ${_message}`.magenta);
-
-        socket.to(room).broadcast.emit(&apos;serverSendPlayerChat&apos;, { sender: _sender, message: _message.substring(0, 35) });
-    });
-
-    // Other player joins the socket.to(room)
-    socket.to(room).on(&apos;playerJoin&apos;, data =&gt; {
-    // console.log(&apos;sender: &apos; + data.sender);
-        const _sender = data.sender.replace(/(&lt;([^&gt;]+)&gt;)/ig, &apos;&apos;);
-        socket.to(room).broadcast.emit(&apos;serverSendLoginMessage&apos;, { sender: _sender, team: data.team });
-        if(DEBUG) {
-            socket.to(room).broadcast.emit(&apos;serverMSG&apos;, &apos;You are connected to a DEBUG enabled server. &apos;);
-        }
-
-    });
-
-    // Broadcasts player join message
-   
-    socket.to(room).broadcast.emit(&apos;serverSendLoginMessage&apos;, {
-        sender: socket.id
-    });
-    if(DEBUG) {
-        socket.to(room).broadcast.emit(&apos;serverMSG&apos;, &apos;You are connected to a DEBUG enabled server. &apos;);
-    }
-
-    // Hides the lobby screen if the game has already started
-    if(rooms[room].started) {
-        socket.emit(&apos;serverSendStartGame&apos;, {teams: rooms[room].teams});
-    }
-
-    /**
-   * On player movement:
-   * data is in format
-   *  - id: index of player that moved
-   *  - type: atoms, players, or compounds
-   *  - posX: new x position
-   *  - posY: new y position
-   *  - vx: x-velocity
-   *  - vy: y-velocity
-   */
-    socket.to(room).on(&apos;move&apos;, data =&gt; {
-    // Player exists in database already because it was created serverside - no need for extra checking
-        if(rooms[room][data.type][data.id] !== undefined) {
-            rooms[room][data.type][data.id].posX = data.posX;
-            rooms[room][data.type][data.id].posY = data.posY;
-            rooms[room][data.type][data.id].vx = data.vx;
-            rooms[room][data.type][data.id].vy = data.vy;
-        }
-
-    }); 
-
-    // An atom was collected or changed
-    socket.to(room).on(&apos;atomCollision&apos;, data =&gt; {
-        if (COLLISIONVERBOSE) {
-            console.log(&apos;atomCollision&apos;);
-        }
-        delete rooms[room].atoms[data.id];
-        socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;atoms&apos;});
-    });
-
-    socket.to(room).on(&apos;compoundCollision&apos;, data =&gt; {
-        if (COLLISIONVERBOSE) {
-            console.log(&apos;compoundCollision&apos;);
-        }
-        if(rooms[room].compounds[data.id] !== undefined) {
-            damage(data, room, socket);   
-            delete rooms[room].compounds[data.id];
-            socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
-            socket.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
-
-        }
-    });
-
-    socket.to(room).on(&apos;damage&apos;, data =&gt; {
-        damage(data, room, socket);
-    });
-
-    // A player spawned a Compound
-    socket.to(room).on(&apos;createCompound&apos;, data =&gt; {
-    // Calculate velocities based on cursor position
-        let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
-        let newCompound = {
-            id: generateID(),
-            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
-            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-            vx: data.blueprint.params.speed * Math.cos(theta),
-            vy: data.blueprint.params.speed * Math.sin(theta),
-            blueprint: data.blueprint,
-            sendingTeam: data.sendingTeam,
-            sender: data.sender
-        };
-        rooms[room].compounds[newCompound.id] = newCompound;
-    // socket.to(room).broadcast.emit(&apos;serverSendCreateCompound&apos;, newCompound); //Send to everyone but the sender
-    // socket.to(room).emit(&apos;serverSendCreateCompound&apos;, newCompound); //Send to the sender
-    });
-
-    //A Player has performed an action and gained experience
-    socket.to(room).on(&apos;experienceEvent&apos;, data =&gt; {
-    //data.event is the event that occured
-
-    //Add a specific amount to the players experience
-    //Get the index of the Event and then pass it into the values array to get the actual value
-        thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
-
-        // Determine the player&apos;s level based on experience
-        let oldLevel = thisPlayer.level;
-        for(let level of GLOBAL.EXPERIENCE_LEVELS){
-            if(thisPlayer.experience &gt;= level)
-                thisPlayer.level = GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1;
-        }
-
-        // Check to see if the player leveled up
-        if(thisPlayer.level &gt; oldLevel) {
-            socket.emit(&apos;levelUp&apos;, {newLevel: thisPlayer.level});
-        }
-    });
-
-    socket.on(&apos;startGame&apos;, data =&gt; {
-        console.log(&apos;Game has started in room &apos; + room);
-        // Make the room and teams unjoinable
-        for(let tm of rooms[room].teams) {
-            teams[tm.name].joinable = false;
-        }
-        rooms[room].joinable = false;
-
-        socket.broadcast.to(room).emit(&apos;serverSendStartGame&apos;, {start: data.start, teams: rooms[room].teams});
-        socket.emit(&apos;serverSendStartGame&apos;, {start: data.start, teams: rooms[room].teams});
-        rooms[room].started = true;
-    });
-
-    socket.on(&apos;spawnAtom&apos;, (data) =&gt; {
-        spawnAtomAtVent(data.row, data.col, room, true);
-    });
-
-    // Atom information sent on player death. Spreads atoms randomly in a circle around the death area.
-    socket.on(&apos;playerDeathAtoms&apos;, (data) =&gt; {
-        for(let at in data.atoms) {
-            for(let i = 0; i &lt; GLOBAL.MAX_DEATH_ATOMS &amp;&amp; i &lt; data.atoms[at]; i++)
-                spawnAtom(data.x, data.y, at, room, false);
-        }
-    });
-
-    socket.on(&apos;disconnect&apos;, data =&gt; {
-        console.log(&apos;[Server]&apos;.bold.blue + &apos; Disconnect Received: &apos;.red + (&apos;&apos; + socket.id).yellow + (&apos;&apos; + rooms[room].players[socket.id]).green + &apos;: &apos; + data);
-
-        socket.to(room).broadcast.emit(&apos;disconnectedPlayer&apos;, { id: socket.id }); //Broadcast to everyone in the room to delete the player
-
-        delete rooms[room].players[socket.id]; //Remove the server side player
-
-        // Delete room if there is nobody inside
-        if (Object.keys(rooms[room].players).length === 0) {
-            console.log(&apos;[Server] &apos;.bold.blue + &apos;Closing room &apos;.red + (room + &apos;&apos;).bold.red);
-            delete io.sockets.adapter.rooms[socket.id];
-            delete rooms[room];
-
-            if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {
-                // Remove from teams array
-                teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);
-                // rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);
-
-                // Delete team if all players have left
-                if (teams[team].players.length === 0)
-                    delete teams[team];
-
-            }
-        }
-    });
-});
-
-// Notify on console when server has started
-const serverPort = process.env.PORT || config.port;
-http.listen(serverPort, () =&gt; {
-    rooms = {};
-    console.log(&apos;[Server] &apos;.bold.blue + `started on port: ${serverPort}`.blue);
-});
-
-/**
- * Sets a new value for a protected server field.
- * Adopted from https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object
- * @param {*} value The value to set
- * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level. 
- *                 Example: rooms.myRoom.players could be accessed through a path value of [&apos;rooms&apos;, &apos;myRoom&apos;, &apos;players&apos;]
- */
-export function setField(value, path) {
-
-    if(path === undefined || path.length === 0)
-        throw new Error(&apos;Error in setField: path cannot be empty&apos;);
+export function collisionDetect(socket, room, thisPlayer, tempObjects) {
     
-    let schema = (path[0] === &apos;rooms&apos;) ? rooms : (path[0] === &apos;teams&apos;) ? teams : undefined;
-    if (schema === undefined)
-        throw new Error(&apos;Base object &apos; + path[0] + &apos; does not exist!&apos;);
-
-    let len = path.length;
-    for (let i = 1; i &lt; len - 1; i++) {
-        let elem = path[i];
-        if (!schema[elem]) schema[elem] = {};
-        schema = schema[elem];
+    // Check for collected atoms
+    for(let atom in tempObjects.atoms) {
+        let distance = distanceBetween(
+            { posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+            { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
+        
+        if(distance &lt; GLOBAL.ATOM_COLLECT_THRESHOLD)
+            socket.emit(&apos;atomCollected&apos;, {
+                id: atom,
+                typeID: tempObjects.atoms[atom].typeID
+            });
     }
 
-    schema[path[len - 1]] = value;
-
-}
-
-/**
- * Returns the value given a path to that value.
- * Adopted from https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key
- * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level.
- *                 Example: rooms.myRoom.players could be accessed through a path value of [&apos;rooms&apos;, &apos;myRoom&apos;, &apos;players&apos;]
- * @returns The value for the given field.
- */
-export function getField(path) {
-    if (path === undefined || path.length === 0)
-        throw new Error(&apos;Error in setField: path cannot be empty&apos;);
-    if (path.length === undefined)
-        throw new Error(&apos;Error in setField: path must be an array&apos;);
-    
-    let obj = (path[0] === &apos;rooms&apos;) ? rooms : (path[0] === &apos;teams&apos;) ? teams : undefined;
-    if(obj === undefined)
-        throw new Error(&apos;Error in setField: Base object &apos; + path[0] + &apos; does not exist!&apos;);
-
-    for(let i = 1; i &lt; path.length; i++)
-        obj = obj[path[i]];
-    // console.log(path, obj);
-    return obj;
-}
-
-/**
- * Deletes one of the three types of gameObjects synced to the server
- * @param {string} type Either player, atom, compound 
- * @param {*} id ID of the object to delete
- * @param {string} room Room name to delete in
- */
-export function deleteObject(type, id, room) {
-    delete rooms[room][type][id];
 }</code></pre>
 
 </div>
