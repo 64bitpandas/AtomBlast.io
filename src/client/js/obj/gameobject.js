@@ -29,6 +29,7 @@ export class GameObject extends PIXI.Sprite {
         this.posY = y;
         this.vx = vx;
         this.vy = vy;
+        this.destroyed = false;
         
         app.stage.addChild(this);
     }
@@ -61,7 +62,7 @@ export class GameObject extends PIXI.Sprite {
      * Draws object in the correct position on the player screen.
      */
     draw() {
-        if(player !== undefined) {
+        if(player !== undefined && !this.destroyed) {
             this.x = screenCenterX + this.posX - player.posX;
             this.y = screenCenterY + player.posY - this.posY;
         }
@@ -87,6 +88,9 @@ export class GameObject extends PIXI.Sprite {
      */
     tick() {
         // Prevent drifting due to minimal negative values
+        if(this.destroyed)
+            return;
+
         if (Math.abs(this.vx) < GLOBAL.DEADZONE)
             this.vx = 0;
         if (Math.abs(this.vy) < GLOBAL.DEADZONE)
@@ -98,4 +102,13 @@ export class GameObject extends PIXI.Sprite {
         if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING))
             this.posY += this.vy;
     }
+
+    /**
+     * Destroyes the Sprite
+     */
+    destroy() {
+        this.destroyed = true;
+        super.destroy();
+    }
+
 }

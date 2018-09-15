@@ -28,7 +28,6 @@ export class Atom extends GameObject {
         super(texture, id, x, y, vx, vy);
         this.height = GLOBAL.ATOM_RADIUS * 2;
         this.width = GLOBAL.ATOM_RADIUS * 2;
-        this.isEquipped = false;
         this.typeID = typeID;
     }
 
@@ -38,7 +37,7 @@ export class Atom extends GameObject {
      * @returns true if collision detected, false otherwise
      */
     checkCollision() {
-        if (this.isEquipped || player === undefined)
+        if ( player === undefined)
             return false;
         
         // let distance = distanceBetween(
@@ -77,11 +76,7 @@ export class Atom extends GameObject {
         // Movement
         super.tick();
 
-        if (!this.isEquipped) {
-            this.draw();
-        }
-        else
-            this.hide();
+        super.draw();
     }
 
 }

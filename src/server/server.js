@@ -76,6 +76,7 @@ io.on('connection', socket => {
     // Init player
     initPlayer(socket, room);
     let thisPlayer = rooms[room].players[socket.id];
+    thisPlayer.team = team;
  
     // Setup player array sync- once a frame
     setInterval(() => {
@@ -140,26 +141,25 @@ io.on('connection', socket => {
     }); 
 
     // An atom was collected or changed
-    socket.to(room).on('atomCollision', data => {
-        if (COLLISIONVERBOSE) {
-            console.log('atomCollision');
-        }
-        delete rooms[room].atoms[data.id];
-        socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});
-    });
+    // socket.to(room).on('atomCollision', data => {
+    //     if (COLLISIONVERBOSE) {
+    //         console.log('atomCollision');
+    //     }
+    //     socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});
+    //     delete rooms[room].atoms[data.id];
+    // });
+    
+    // have field collect who did what damage to the player
+    // when the player dies, compare all players who shot at him
+    // whoever did most damage gets 2 pts, everyone else gets 1 pt
+    // push a global notification that says the player died, and who killed the player - Muaaz
 
-    socket.to(room).on('compoundCollision', data => {
-        if (COLLISIONVERBOSE) {
-            console.log('compoundCollision');
-        }
-        if(rooms[room].compounds[data.id] !== undefined) {
-            damage(data, room, socket);   
-            delete rooms[room].compounds[data.id];
-            socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
-            socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
+    // in client, create a display on the HUD of how many points, kills, and assists that you have
+    // store the number of points every player has within rooms[room].players[player].score to read later
 
-        }
-    });
+    // MOVED to collision.js
+    // socket.to(room).on('compoundCollision', data => {
+    // });
 
     socket.to(room).on('damage', data => {
         damage(data, room, socket);
