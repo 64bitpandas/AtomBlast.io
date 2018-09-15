@@ -257,21 +257,17 @@ function setupSocket() {
         }
     });
 
- 
-      
-
     // Sync objects when they are deleted or move out of view
     socket.on(&apos;serverSendObjectRemoval&apos;, (data) =&gt; {
-        //An Atom was removed
-        if (objects[data.type][data.id] !== undefined) {
-            objects[data.type][data.id].hide();
-            delete objects[data.type][data.id];
+        //An object was removed
+        removeObject(data);
+        if (objects[data.type][data.id] === undefined) {
+            let thisInterval = setTimeout(() =&gt; { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval);}, 200);
         }
     });
 
     // Atom was collected by player
-    socket.on(&apos;atomCollected&apos;, (data) =&gt; {
-        objects.atoms[data.id].isEquipped = true;
+    socket.on(&apos;serverSendAtomCollected&apos;, (data) =&gt; {
         player.addAtom(data.typeID);
         updateAtomList(data.typeID);
     });
@@ -376,6 +372,15 @@ function setupSocket() {
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
+}
+
+// Helper function for serverSendObjectRemoval
+function removeObject(data) {
+    if (objects[data.type][data.id] !== undefined) {
+        objects[data.type][data.id].hide();
+        objects[data.type][data.id].destroy();
+        // delete objects[data.type][data.id];
+    }
 }</code></pre>
 
 </div>

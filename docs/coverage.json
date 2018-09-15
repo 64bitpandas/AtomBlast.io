@@ -1,7 +1,7 @@
 {
-  "coverage": "50.63%",
-  "expectCount": 158,
-  "actualCount": 80,
+  "coverage": "50.62%",
+  "expectCount": 160,
+  "actualCount": 81,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 18,
@@ -51,14 +51,13 @@
       ]
     },
     "src/client/js/obj/atom.js": {
-      "expectCount": 9,
+      "expectCount": 8,
       "actualCount": 4,
       "undocumentLines": [
         29,
         30,
         31,
-        32,
-        75
+        74
       ]
     },
     "src/client/js/obj/blueprints.js": {
@@ -82,16 +81,17 @@
       ]
     },
     "src/client/js/obj/gameobject.js": {
-      "expectCount": 15,
-      "actualCount": 8,
+      "expectCount": 17,
+      "actualCount": 9,
       "undocumentLines": [
         27,
         28,
         29,
         30,
         31,
-        65,
-        66
+        32,
+        66,
+        67
       ]
     },
     "src/client/js/obj/maptile.js": {
@@ -147,11 +147,12 @@
       ]
     },
     "src/client/js/socket.js": {
-      "expectCount": 5,
+      "expectCount": 6,
       "actualCount": 3,
       "undocumentLines": [
         21,
-        280
+        276,
+        281
       ]
     },
     "src/server/server.js": {
