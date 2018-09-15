@@ -101,7 +101,11 @@ import { getTeamNumber } from &apos;./serverutils&apos;;
 
 /**
  * Changes the health of the player by the amount given.
- * @param {*} data The data sent by the client.
+ * @param {*} data The data sent by the client. Contains:
+ *  - damage (number)
+ *  - player (id string of player that was hit)
+ *  - id (id string of compound)
+ *  - sentBy (id string of player that sent compound)
  * @param {string} room This room.
  * @param {*} socket This socket.
  * Must include the player id and amount to damage.
@@ -187,7 +191,7 @@ export function damage(data, room, socket) {
         }
     }
     else
-        console.warn(&apos;Player of ID &apos; + data.id + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
+        console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
 }</code></pre>
 
 </div>

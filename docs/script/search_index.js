@@ -792,12 +792,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/client/js/obj/atom.js~atom#isequipped",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-isEquipped",
-    "src/client/js/obj/atom.js~Atom#isEquipped",
-    "member"
-  ],
-  [
     "src/client/js/obj/atom.js~atom#tick",
     "class/src/client/js/obj/atom.js~Atom.html#instance-method-tick",
     "src/client/js/obj/atom.js~Atom#tick",
@@ -904,6 +898,18 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/gameobject.js~GameObject.html#instance-constructor-constructor",
     "src/client/js/obj/gameobject.js~GameObject#constructor",
     "method"
+  ],
+  [
+    "src/client/js/obj/gameobject.js~gameobject#destroy",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-method-destroy",
+    "src/client/js/obj/gameobject.js~GameObject#destroy",
+    "method"
+  ],
+  [
+    "src/client/js/obj/gameobject.js~gameobject#destroyed",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-member-destroyed",
+    "src/client/js/obj/gameobject.js~GameObject#destroyed",
+    "member"
   ],
   [
     "src/client/js/obj/gameobject.js~gameobject#draw",
