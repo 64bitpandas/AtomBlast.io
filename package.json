@@ -15,7 +15,7 @@
         "env-test": "if [ -d './src/' ]; then echo \" \\033[1;40;32m src directory detected! \\033[m \"; else echo \" \\033[1;41;33m \n\nCRITICAL: src directory NOT DETECTED\nABORTING!!!\n\n \\033[m \" && exit 1; fi",
         "precommitold": "npm run -s lint && echo \"Running unit testing..\" && npm test",
         "precommit": "npm run -s lint && echo \"Generating Documentation...\" && npm run docs",
-        "prepush": "(git diff-index --quiet HEAD -- && git add . && git commit -m\"$(git log --format=%B -n1)\" -m\" [updatedDoc]\" --no-verify && git push --no-verify) || echo \"No Doc changes detected in current work tree. Skipping doc update!\" ",
+        "prepush": "(!git diff-index --quiet HEAD -- && git add . && git commit -m\"$(git log --format=%B -n1)\" -m\" [updatedDoc]\" --no-verify && git push --no-verify) || echo \"No Doc changes detected in current work tree. Skipping doc update!\" ",
         "docs": "esdoc"
     },
     "repository": {
