@@ -1,11 +1,5 @@
 window.esdocSearchIndex = [
   [
-    "atomblast.io/src/client/js/obj/atom.js~atom",
-    "class/src/client/js/obj/atom.js~Atom.html",
-    "<span>Atom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/atom.js</span>",
-    "class"
-  ],
-  [
     "atomblast.io/src/client/js/obj/blueprints.js~blueprints",
     "variable/index.html#static-variable-BLUEPRINTS",
     "<span>BLUEPRINTS</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/blueprints.js</span>",
@@ -96,15 +90,33 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "atomblast.io/src/client/js/obj/create.js~createatom",
+    "function/index.html#static-function-createAtom",
+    "<span>createAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/obj/compound.js~createcompound",
     "function/index.html#static-function-createCompound",
     "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
     "function"
   ],
   [
+    "atomblast.io/src/client/js/obj/create.js~createcompound",
+    "function/index.html#static-function-createCompound",
+    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/obj/compound.js~createnewcompound",
     "function/index.html#static-function-createNewCompound",
     "<span>createNewCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~createplayer",
+    "function/index.html#static-function-createPlayer",
+    "<span>createPlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
     "function"
   ],
   [
@@ -315,12 +327,6 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~showgameui",
     "function/index.html#static-function-showGameUI",
     "<span>showGameUI</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/obj/atom.js~spawnatom",
-    "function/index.html#static-function-spawnAtom",
-    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/atom.js</span>",
     "function"
   ],
   [
@@ -774,48 +780,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/atom.js",
-    "file/src/client/js/obj/atom.js.html",
-    "src/client/js/obj/atom.js",
-    "file"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#checkcollision",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-method-checkCollision",
-    "src/client/js/obj/atom.js~Atom#checkCollision",
-    "method"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#constructor",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-constructor-constructor",
-    "src/client/js/obj/atom.js~Atom#constructor",
-    "method"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#height",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-height",
-    "src/client/js/obj/atom.js~Atom#height",
-    "member"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#tick",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-method-tick",
-    "src/client/js/obj/atom.js~Atom#tick",
-    "method"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#typeid",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-typeID",
-    "src/client/js/obj/atom.js~Atom#typeID",
-    "member"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#width",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-width",
-    "src/client/js/obj/atom.js~Atom#width",
-    "member"
-  ],
-  [
     "src/client/js/obj/blueprints.js",
     "file/src/client/js/obj/blueprints.js.html",
     "src/client/js/obj/blueprints.js",
@@ -892,6 +856,12 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/compound.js~Compound.html#instance-member-width",
     "src/client/js/obj/compound.js~Compound#width",
     "member"
+  ],
+  [
+    "src/client/js/obj/create.js",
+    "file/src/client/js/obj/create.js.html",
+    "src/client/js/obj/create.js",
+    "file"
   ],
   [
     "src/client/js/obj/gameobject.js",
