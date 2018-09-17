@@ -1,7 +1,7 @@
 {
-  "coverage": "50.62%",
-  "expectCount": 160,
-  "actualCount": 81,
+  "coverage": "51.82%",
+  "expectCount": 164,
+  "actualCount": 85,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 18,
@@ -147,12 +147,12 @@
       ]
     },
     "src/client/js/socket.js": {
-      "expectCount": 6,
-      "actualCount": 3,
+      "expectCount": 9,
+      "actualCount": 6,
       "undocumentLines": [
         21,
-        276,
-        281
+        313,
+        318
       ]
     },
     "src/server/server.js": {
@@ -186,8 +186,8 @@
       "undocumentLines": []
     },
     "src/server/utils/ondamage.js": {
-      "expectCount": 1,
-      "actualCount": 1,
+      "expectCount": 2,
+      "actualCount": 2,
       "undocumentLines": []
     },
     "src/server/utils/serverinit.js": {

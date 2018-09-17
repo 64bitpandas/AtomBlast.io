@@ -84,6 +84,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
@@ -508,6 +509,9 @@ export function startGame(emit, teams) {
     
     // Init scoreboard
     if(teams !== undefined) {
+        // Reset scoreboard from previous rounds
+        document.getElementById(&apos;score&apos;).innerHTML = &apos;&apos;;
+        
         for(let i = 0; i &lt; teams.length; i++) {
             document.getElementById(&apos;score&apos;).innerHTML += &apos;-&lt;span id=&quot;team-score-&apos; + i + &apos;&quot;&gt;0&lt;/span&gt;&apos;;
             document.getElementById(&apos;team-score-&apos; + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);

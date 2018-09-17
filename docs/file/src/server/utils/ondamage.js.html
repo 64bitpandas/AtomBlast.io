@@ -84,6 +84,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
@@ -98,6 +99,14 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../../client/js/global&apos;;
 import { getField, setField } from &apos;../server&apos;;
 import { getTeamNumber } from &apos;./serverutils&apos;;
+
+/**
+ * ondamage.js
+ * Contains functions:
+ *  - damage() Runs when a player gets damaged. Updates scores and checks if a player has been killed.
+ *  - splash() Runs when a collision needs to cause splash damage. Creates explosion effect and deals extra damage.
+ */
+
 
 /**
  * Changes the health of the player by the amount given.
@@ -192,6 +201,13 @@ export function damage(data, room, socket) {
     }
     else
         console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
+}
+
+/**
+ * TODO
+ */
+export function splash() {
+
 }</code></pre>
 
 </div>

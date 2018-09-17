@@ -84,6 +84,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
@@ -1298,6 +1299,35 @@ enabled server.</p>
           
           
           
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span><span class="code" data-ice="signature">()</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>TODO</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span><span class="code" data-ice="signature">(emit: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>, teams: <span>*</span>)</span>
         </p>
       </div>
@@ -1445,14 +1475,20 @@ enabled server.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber31">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber35">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber31">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber35">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Attempts to connect to the server.</p>
+  <div data-ice="description"><p>Attempts to connect to the server. Run on &apos;start game&apos; press.</p>
+<ul>
+<li>Manages connecting to main server vs. devserver</li>
+<li>Sets up socket listeners</li>
+<li>Loads textures</li>
+<li>Loads pixi</li>
+</ul>
 </div>
 
   
@@ -1933,11 +1969,11 @@ Run using </p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber25">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {damage} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber17">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {damage} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber25">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Changes the health of the player by the amount given.</p>
@@ -2254,11 +2290,11 @@ enabled server.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber72">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber76">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber72">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber76">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Run on disconnect to reset all server-based variables and connections</p>
@@ -2827,11 +2863,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber434">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber437">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber434">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber437">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3380,11 +3416,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber442">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber445">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseClickHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber442">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseClickHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber445">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Called on mouse click from app.js</p>
@@ -3754,11 +3790,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber427">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber430">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber427">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber430">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets the value of inGame</p>
@@ -4167,6 +4203,50 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
 </tbody>
   </table>
 </div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-splash">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">splash</span><span class="code" data-ice="signature">()</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber111">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {splash} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber111">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>TODO</p>
+</div>
+
+  
+
+  <div data-ice="properties">
 </div>
 
   
