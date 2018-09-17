@@ -65,6 +65,7 @@ export const GLOBAL = {
     ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength
     ATOM_SPAWN_SPEED: 15, // Speed that atom travels away from spawner
     ATOM_SPAWN_DELAY: 5000, // Atom spawn delay, in milliseconds
+    ATOM_COLLECT_THRESHOLD: 100, // Distance away from center of player that the atom must be before being collected
 
     // Map
     TILE_TEXTURE_DIR: '../assets/map/Tiles/',

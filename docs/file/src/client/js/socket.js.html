@@ -80,7 +80,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
@@ -256,16 +257,19 @@ function setupSocket() {
         }
     });
 
- 
-      
-
     // Sync objects when they are deleted or move out of view
     socket.on(&apos;serverSendObjectRemoval&apos;, (data) =&gt; {
-        //An Atom was removed
-        if (objects[data.type][data.id] !== undefined) {
-            objects[data.type][data.id].hide();
-            delete objects[data.type][data.id];
+        //An object was removed
+        removeObject(data);
+        if (objects[data.type][data.id] === undefined) {
+            let thisInterval = setTimeout(() =&gt; { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval);}, 200);
         }
+    });
+
+    // Atom was collected by player
+    socket.on(&apos;serverSendAtomCollected&apos;, (data) =&gt; {
+        player.addAtom(data.typeID);
+        updateAtomList(data.typeID);
     });
 
     socket.on(&apos;disconnectedPlayer&apos;, (data) =&gt; {
@@ -368,6 +372,15 @@ function setupSocket() {
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {
     return v0 * (1 - t) + v1 * t;
+}
+
+// Helper function for serverSendObjectRemoval
+function removeObject(data) {
+    if (objects[data.type][data.id] !== undefined) {
+        objects[data.type][data.id].hide();
+        objects[data.type][data.id].destroy();
+        // delete objects[data.type][data.id];
+    }
 }</code></pre>
 
 </div>

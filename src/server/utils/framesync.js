@@ -1,5 +1,6 @@
 import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global';
 import { deleteObject, getField, setField } from '../server';
+import { collisionDetect } from './collision';
 
 /**
  * Runs once a frame, per player.
@@ -71,7 +72,8 @@ export function frameSync(socket, room, thisPlayer) {
                 // thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;
                 // thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;
             }
-    
+            
+            // Populate tempObjects
             for (let objType in tempObjects) {
                 for (let obj in thisRoom[objType]) {
                     if (distanceBetween(thisRoom[objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)
@@ -80,6 +82,9 @@ export function frameSync(socket, room, thisPlayer) {
                         socket.emit('serverSendObjectRemoval', { id: obj, type: objType });
                 }
             }
+
+            // Run collision detection script
+            collisionDetect(socket, room, thisPlayer, tempObjects);
     
             socket.emit('objectSync', tempObjects);
     

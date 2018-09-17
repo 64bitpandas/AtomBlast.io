@@ -80,7 +80,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
@@ -100,7 +101,11 @@ import { getTeamNumber } from &apos;./serverutils&apos;;
 
 /**
  * Changes the health of the player by the amount given.
- * @param {*} data The data sent by the client.
+ * @param {*} data The data sent by the client. Contains:
+ *  - damage (number)
+ *  - player (id string of player that was hit)
+ *  - id (id string of compound)
+ *  - sentBy (id string of player that sent compound)
  * @param {string} room This room.
  * @param {*} socket This socket.
  * Must include the player id and amount to damage.
@@ -186,7 +191,7 @@ export function damage(data, room, socket) {
         }
     }
     else
-        console.warn(&apos;Player of ID &apos; + data.id + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
+        console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
 }</code></pre>
 
 </div>

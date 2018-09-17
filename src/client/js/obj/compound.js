@@ -59,7 +59,7 @@ export class Compound extends GameObject {
             throw new Error('Blueprint ' + this.blueprint.name + ' has invalid type ' + this.blueprint.type);
         }
 
-        this.checkCollision();
+        // this.checkCollision();
 
         // Movement
         super.tick();

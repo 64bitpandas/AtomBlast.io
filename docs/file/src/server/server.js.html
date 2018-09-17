@@ -80,7 +80,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
@@ -172,6 +173,7 @@ io.on(&apos;connection&apos;, socket =&gt; {
     // Init player
     initPlayer(socket, room);
     let thisPlayer = rooms[room].players[socket.id];
+    thisPlayer.team = team;
  
     // Setup player array sync- once a frame
     setInterval(() =&gt; {
@@ -236,26 +238,25 @@ io.on(&apos;connection&apos;, socket =&gt; {
     }); 
 
     // An atom was collected or changed
-    socket.to(room).on(&apos;atomCollision&apos;, data =&gt; {
-        if (COLLISIONVERBOSE) {
-            console.log(&apos;atomCollision&apos;);
-        }
-        delete rooms[room].atoms[data.id];
-        socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;atoms&apos;});
-    });
+    // socket.to(room).on(&apos;atomCollision&apos;, data =&gt; {
+    //     if (COLLISIONVERBOSE) {
+    //         console.log(&apos;atomCollision&apos;);
+    //     }
+    //     socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;atoms&apos;});
+    //     delete rooms[room].atoms[data.id];
+    // });
+    
+    // have field collect who did what damage to the player
+    // when the player dies, compare all players who shot at him
+    // whoever did most damage gets 2 pts, everyone else gets 1 pt
+    // push a global notification that says the player died, and who killed the player - Muaaz
 
-    socket.to(room).on(&apos;compoundCollision&apos;, data =&gt; {
-        if (COLLISIONVERBOSE) {
-            console.log(&apos;compoundCollision&apos;);
-        }
-        if(rooms[room].compounds[data.id] !== undefined) {
-            damage(data, room, socket);   
-            delete rooms[room].compounds[data.id];
-            socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
-            socket.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
+    // in client, create a display on the HUD of how many points, kills, and assists that you have
+    // store the number of points every player has within rooms[room].players[player].score to read later
 
-        }
-    });
+    // MOVED to collision.js
+    // socket.to(room).on(&apos;compoundCollision&apos;, data =&gt; {
+    // });
 
     socket.to(room).on(&apos;damage&apos;, data =&gt; {
         damage(data, room, socket);

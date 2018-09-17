@@ -80,7 +80,8 @@
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
@@ -125,6 +126,7 @@ export class GameObject extends PIXI.Sprite {
         this.posY = y;
         this.vx = vx;
         this.vy = vy;
+        this.destroyed = false;
         
         app.stage.addChild(this);
     }
@@ -157,7 +159,7 @@ export class GameObject extends PIXI.Sprite {
      * Draws object in the correct position on the player screen.
      */
     draw() {
-        if(player !== undefined) {
+        if(player !== undefined &amp;&amp; !this.destroyed) {
             this.x = screenCenterX + this.posX - player.posX;
             this.y = screenCenterY + player.posY - this.posY;
         }
@@ -183,6 +185,9 @@ export class GameObject extends PIXI.Sprite {
      */
     tick() {
         // Prevent drifting due to minimal negative values
+        if(this.destroyed)
+            return;
+
         if (Math.abs(this.vx) &lt; GLOBAL.DEADZONE)
             this.vx = 0;
         if (Math.abs(this.vy) &lt; GLOBAL.DEADZONE)
@@ -194,6 +199,15 @@ export class GameObject extends PIXI.Sprite {
         if ((this.vy &gt; 0 &amp;&amp; this.posY &lt; (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy &lt; 0 &amp;&amp; this.posY &gt; -GLOBAL.GRID_SPACING))
             this.posY += this.vy;
     }
+
+    /**
+     * Destroyes the Sprite
+     */
+    destroy() {
+        this.destroyed = true;
+        super.destroy();
+    }
+
 }</code></pre>
 
 </div>
