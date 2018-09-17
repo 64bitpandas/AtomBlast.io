@@ -411,6 +411,9 @@ export function startGame(emit, teams) {
     
     // Init scoreboard
     if(teams !== undefined) {
+        // Reset scoreboard from previous rounds
+        document.getElementById('score').innerHTML = '';
+        
         for(let i = 0; i < teams.length; i++) {
             document.getElementById('score').innerHTML += '-<span id="team-score-' + i + '">0</span>';
             document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);

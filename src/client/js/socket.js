@@ -26,7 +26,11 @@ export var objects = {
 };
 
 /**
- * Attempts to connect to the server.
+ * Attempts to connect to the server. Run on 'start game' press.
+ *  - Manages connecting to main server vs. devserver
+ *  - Sets up socket listeners
+ *  - Loads textures
+ *  - Loads pixi
  */
 export function beginConnection() {
     //Joins debug server if conditions are met
@@ -76,13 +80,13 @@ export function disconnect() {
     // Wipe objects list
     for(let objType in objects)
         objects[objType] = {};
+
 }
 
 /** 
  * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
  */
 function setupSocket() {
-
 
     //Debug
     console.log('Socket:', socket);
@@ -92,29 +96,25 @@ function setupSocket() {
     chat.addLoginMessage(cookieInputs[0].value, true);
     chat.registerFunctions();
 
+    // Setup listeners
+    setupSocketConnection();
+    setupSocketInfo();
+    setupSocketObjectRetrieval();
 
-    // On Connection Failure
-    socket.on('reconnect_failed', () => {
-        alert('You have lost connection to the server!');
-    });
+    //Emit join message,
+    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
+}
 
-    socket.on('reconnecting', (attempt) => {
-        console.log('Lost connection. Reconnecting on attempt: ' + attempt);
-        quitGame('Lost connection to server');
-    });
 
-    socket.on('reconnect_error', (err) => {
-        console.log('CRITICAL: Reconnect failed! ' + err);
-    });
-
-    socket.on('pong', (ping) => {
-        console.log('Your Ping Is: ' + ping);
-    });
-
+/**
+ * Sets up socket object syncing.
+ * Run in setupSocket().
+ */
+function setupSocketObjectRetrieval() {
     // Syncs all objects from server once a frame
     socket.on('objectSync', (data) => {
-        for(let objType in data) {
-            if(objType !== 'tiles') {
+        for (let objType in data) {
+            if (objType !== 'tiles') {
                 for (let obj in data[objType]) {
                     if (data[objType][obj] !== null) {
                         let objRef = data[objType][obj];
@@ -164,8 +164,11 @@ function setupSocket() {
     socket.on('serverSendObjectRemoval', (data) => {
         //An object was removed
         removeObject(data);
+
+        // Must keep checking if the object was not created at time of destruction.
+        // One example of this needing to be run is when a player instantly collects an atom on spawn.
         if (objects[data.type][data.id] === undefined) {
-            let thisInterval = setTimeout(() => { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval);}, 200);
+            let thisInterval = setTimeout(() => { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval); }, 200);
         }
     });
 
@@ -173,6 +176,30 @@ function setupSocket() {
     socket.on('serverSendAtomCollected', (data) => {
         player.addAtom(data.typeID);
         updateAtomList(data.typeID);
+    });
+}
+
+/**
+ * Sets up socket connection listeners.
+ * Run in setupSocket().
+ */
+function setupSocketConnection() {
+    // On Connection Failure
+    socket.on('reconnect_failed', () => {
+        alert('You have lost connection to the server!');
+    });
+
+    socket.on('reconnecting', (attempt) => {
+        console.log('Lost connection. Reconnecting on attempt: ' + attempt);
+        quitGame('Lost connection to server');
+    });
+
+    socket.on('reconnect_error', (err) => {
+        console.log('CRITICAL: Reconnect failed! ' + err);
+    });
+
+    socket.on('pong', (ping) => {
+        console.log('Your Ping Is: ' + ping);
     });
 
     socket.on('disconnectedPlayer', (data) => {
@@ -184,6 +211,23 @@ function setupSocket() {
         }
     });
 
+    socket.on('serverSendDisconnect', () => {
+        quitGame('The game has ended.', false);
+        hideElement('winner-panel');
+    });
+
+    // Errors on join
+    socket.on('connectionError', (data) => {
+        socket.disconnect();
+        quitGame(data.msg, true);
+    });
+}
+
+/**
+ * Sets up socket information transfer listeners.
+ * Run in setupSocket().
+ */
+function setupSocketInfo() {
     //Chat system receiver
     socket.on('serverMSG', data => {
         chat.addSystemLine(data);
@@ -195,17 +239,6 @@ function setupSocket() {
 
     socket.on('serverSendLoginMessage', data => {
         chat.addLoginMessage(data.sender, false);
-    });
-
-    socket.on('serverSendDisconnect', () => {
-        quitGame('The game has ended.', false);
-        hideElement('winner-panel');
-    });
-
-    // Errors on join
-    socket.on('connectionError', (data) => {
-        socket.disconnect();
-        quitGame(data.msg, true);
     });
 
     // Receive information about room players
@@ -233,8 +266,8 @@ function setupSocket() {
 
         // TODO move trigger to server
         // Releases atoms and deletes the entire atoms array in player
-        socket.emit('playerDeathAtoms', {atoms: player.atoms, x: player.posX, y: player.posY});
-        for(let at in player.atoms) {
+        socket.emit('playerDeathAtoms', { atoms: player.atoms, x: player.posX, y: player.posY });
+        for (let at in player.atoms) {
             player.atoms[at] = 0;
             updateAtomList(at);
         }
@@ -268,9 +301,13 @@ function setupSocket() {
         displayWinner(data);
     });
 
-    //Emit join message,
-    socket.emit('playerJoin', { sender: chat.player, team: chat.team });
 }
+
+/*
+ ********************
+ * Helper Functions *
+ ********************
+ */
 
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {

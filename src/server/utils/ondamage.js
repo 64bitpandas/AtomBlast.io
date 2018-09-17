@@ -3,6 +3,14 @@ import { getField, setField } from '../server';
 import { getTeamNumber } from './serverutils';
 
 /**
+ * ondamage.js
+ * Contains functions:
+ *  - damage() Runs when a player gets damaged. Updates scores and checks if a player has been killed.
+ *  - splash() Runs when a collision needs to cause splash damage. Creates explosion effect and deals extra damage.
+ */
+
+
+/**
  * Changes the health of the player by the amount given.
  * @param {*} data The data sent by the client. Contains:
  *  - damage (number)
@@ -95,4 +103,11 @@ export function damage(data, room, socket) {
     }
     else
         console.warn('Player of ID ' + data.player + ' couldn\'t be damaged because they don\'t exist!');
+}
+
+/**
+ * TODO
+ */
+export function splash() {
+
 }
