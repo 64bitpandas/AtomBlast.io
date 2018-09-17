@@ -84,6 +84,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
@@ -123,7 +124,11 @@ export var objects = {
 };
 
 /**
- * Attempts to connect to the server.
+ * Attempts to connect to the server. Run on &apos;start game&apos; press.
+ *  - Manages connecting to main server vs. devserver
+ *  - Sets up socket listeners
+ *  - Loads textures
+ *  - Loads pixi
  */
 export function beginConnection() {
     //Joins debug server if conditions are met
@@ -173,13 +178,13 @@ export function disconnect() {
     // Wipe objects list
     for(let objType in objects)
         objects[objType] = {};
+
 }
 
 /** 
  * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
  */
 function setupSocket() {
-
 
     //Debug
     console.log(&apos;Socket:&apos;, socket);
@@ -189,29 +194,25 @@ function setupSocket() {
     chat.addLoginMessage(cookieInputs[0].value, true);
     chat.registerFunctions();
 
+    // Setup listeners
+    setupSocketConnection();
+    setupSocketInfo();
+    setupSocketObjectRetrieval();
 
-    // On Connection Failure
-    socket.on(&apos;reconnect_failed&apos;, () =&gt; {
-        alert(&apos;You have lost connection to the server!&apos;);
-    });
+    //Emit join message,
+    socket.emit(&apos;playerJoin&apos;, { sender: chat.player, team: chat.team });
+}
 
-    socket.on(&apos;reconnecting&apos;, (attempt) =&gt; {
-        console.log(&apos;Lost connection. Reconnecting on attempt: &apos; + attempt);
-        quitGame(&apos;Lost connection to server&apos;);
-    });
 
-    socket.on(&apos;reconnect_error&apos;, (err) =&gt; {
-        console.log(&apos;CRITICAL: Reconnect failed! &apos; + err);
-    });
-
-    socket.on(&apos;pong&apos;, (ping) =&gt; {
-        console.log(&apos;Your Ping Is: &apos; + ping);
-    });
-
+/**
+ * Sets up socket object syncing.
+ * Run in setupSocket().
+ */
+function setupSocketObjectRetrieval() {
     // Syncs all objects from server once a frame
     socket.on(&apos;objectSync&apos;, (data) =&gt; {
-        for(let objType in data) {
-            if(objType !== &apos;tiles&apos;) {
+        for (let objType in data) {
+            if (objType !== &apos;tiles&apos;) {
                 for (let obj in data[objType]) {
                     if (data[objType][obj] !== null) {
                         let objRef = data[objType][obj];
@@ -261,8 +262,11 @@ function setupSocket() {
     socket.on(&apos;serverSendObjectRemoval&apos;, (data) =&gt; {
         //An object was removed
         removeObject(data);
+
+        // Must keep checking if the object was not created at time of destruction.
+        // One example of this needing to be run is when a player instantly collects an atom on spawn.
         if (objects[data.type][data.id] === undefined) {
-            let thisInterval = setTimeout(() =&gt; { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval);}, 200);
+            let thisInterval = setTimeout(() =&gt; { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval); }, 200);
         }
     });
 
@@ -270,6 +274,30 @@ function setupSocket() {
     socket.on(&apos;serverSendAtomCollected&apos;, (data) =&gt; {
         player.addAtom(data.typeID);
         updateAtomList(data.typeID);
+    });
+}
+
+/**
+ * Sets up socket connection listeners.
+ * Run in setupSocket().
+ */
+function setupSocketConnection() {
+    // On Connection Failure
+    socket.on(&apos;reconnect_failed&apos;, () =&gt; {
+        alert(&apos;You have lost connection to the server!&apos;);
+    });
+
+    socket.on(&apos;reconnecting&apos;, (attempt) =&gt; {
+        console.log(&apos;Lost connection. Reconnecting on attempt: &apos; + attempt);
+        quitGame(&apos;Lost connection to server&apos;);
+    });
+
+    socket.on(&apos;reconnect_error&apos;, (err) =&gt; {
+        console.log(&apos;CRITICAL: Reconnect failed! &apos; + err);
+    });
+
+    socket.on(&apos;pong&apos;, (ping) =&gt; {
+        console.log(&apos;Your Ping Is: &apos; + ping);
     });
 
     socket.on(&apos;disconnectedPlayer&apos;, (data) =&gt; {
@@ -281,6 +309,23 @@ function setupSocket() {
         }
     });
 
+    socket.on(&apos;serverSendDisconnect&apos;, () =&gt; {
+        quitGame(&apos;The game has ended.&apos;, false);
+        hideElement(&apos;winner-panel&apos;);
+    });
+
+    // Errors on join
+    socket.on(&apos;connectionError&apos;, (data) =&gt; {
+        socket.disconnect();
+        quitGame(data.msg, true);
+    });
+}
+
+/**
+ * Sets up socket information transfer listeners.
+ * Run in setupSocket().
+ */
+function setupSocketInfo() {
     //Chat system receiver
     socket.on(&apos;serverMSG&apos;, data =&gt; {
         chat.addSystemLine(data);
@@ -292,17 +337,6 @@ function setupSocket() {
 
     socket.on(&apos;serverSendLoginMessage&apos;, data =&gt; {
         chat.addLoginMessage(data.sender, false);
-    });
-
-    socket.on(&apos;serverSendDisconnect&apos;, () =&gt; {
-        quitGame(&apos;The game has ended.&apos;, false);
-        hideElement(&apos;winner-panel&apos;);
-    });
-
-    // Errors on join
-    socket.on(&apos;connectionError&apos;, (data) =&gt; {
-        socket.disconnect();
-        quitGame(data.msg, true);
     });
 
     // Receive information about room players
@@ -330,8 +364,8 @@ function setupSocket() {
 
         // TODO move trigger to server
         // Releases atoms and deletes the entire atoms array in player
-        socket.emit(&apos;playerDeathAtoms&apos;, {atoms: player.atoms, x: player.posX, y: player.posY});
-        for(let at in player.atoms) {
+        socket.emit(&apos;playerDeathAtoms&apos;, { atoms: player.atoms, x: player.posX, y: player.posY });
+        for (let at in player.atoms) {
             player.atoms[at] = 0;
             updateAtomList(at);
         }
@@ -365,9 +399,13 @@ function setupSocket() {
         displayWinner(data);
     });
 
-    //Emit join message,
-    socket.emit(&apos;playerJoin&apos;, { sender: chat.player, team: chat.team });
 }
+
+/*
+ ********************
+ * Helper Functions *
+ ********************
+ */
 
 // Linear Interpolation function. Adapted from p5.lerp
 function lerp(v0, v1, t) {

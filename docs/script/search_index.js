@@ -336,6 +336,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/ondamage.js~splash",
+    "function/index.html#static-function-splash",
+    "<span>splash</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/pixigame.js~startgame",
     "function/index.html#static-function-startGame",
     "<span>startGame</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
