@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">src/server/entry.js | atomblast.io</title>
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/obj/create.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -96,16 +96,45 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/entry.js</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/create.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * ENTRY POINT for server.js.
- * Uses babel to compile es6 into 
+ * Responsible for all gameObject creation scripts for the client (atoms, compounds, players)
  */
-require(&apos;babel-register&apos;)({
-    presets: [&apos;env&apos;]
-});
 
-module.exports = require(&apos;./server.js&apos;);</code></pre>
+/**
+ * Spawns an atom.
+ * @param {*} data The server object reference to spawn on the clientside. Must contain:
+ *  - typeID {string} See GLOBAL.ATOM_IDS
+ *  - id {number} Unique ID
+ *  - posX {number}
+ *  - posY {number}
+ *  - vx {number}
+ *  - vy {number}
+ */
+export function createAtom(data) {
+    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(typeID)]].texture;
+
+    if (typeID === &apos;&apos;)
+        throw new Error(&apos;The Atom object cannot be created without specifying behavior.&apos;);
+
+    if (texture === undefined)
+        throw new Error(&apos;Atom of type &apos; + typeID + &apos; could not be found!&apos;);
+
+    let result = new GameObject(data.texture, data.id, data.posX, data.posY, data.vx, data.vy);
+    result.typeID = data.typeID;
+    result.height = GLOBAL.ATOM_RADIUS * 2;
+    result.width = GLOBAL.ATOM_RADIUS * 2;
+
+    return result;
+}
+
+export function createPlayer(data) {
+
+}
+
+export function createCompound(data) {
+
+}</code></pre>
 
 </div>
 
