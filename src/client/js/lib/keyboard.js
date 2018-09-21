@@ -13,9 +13,11 @@ export function keyboard(keyCode) {
   key.isUp = true;
   key.press = undefined;
   key.release = undefined;
+  //If this is a mobile device & the joystick is being used, this will disable the handlers to stop interference.
+  key.mobile = false; 
   //The `downHandler`
   key.downHandler = event => {
-      if (event.keyCode === key.code) {
+      if (event.keyCode === key.code && !key.mobile) {
         if (isFocused()) {
           if (key.isUp && key.press){
             key.press();
@@ -34,7 +36,7 @@ export function keyboard(keyCode) {
 
   //The `upHandler`
   key.upHandler = event => {
-      if (event.keyCode === key.code) {
+      if (event.keyCode === key.code && !key.mobile) {
         if(isFocused()){
           if (key.isDown && key.release){
             key.release();
