@@ -73,24 +73,24 @@ export class Compound extends GameObject {
      */
     checkCollision() {
 
-        if (player === undefined)
-            return false;
-        // No friendly fire
-        if(this.sendingTeam === player.team)
-            return false;
-        let distance = distanceBetween(
-            { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
-            { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
+        // if (player === undefined)
+        //     return false;
+        // // No friendly fire
+        // if(this.sendingTeam === player.team)
+        //     return false;
+        // let distance = distanceBetween(
+        //     { posX: this.posX + this.width / 2, posY: this.posY - this.height / 2 },
+        //     { posX: player.posX + GLOBAL.PLAYER_RADIUS, posY: player.posY - GLOBAL.PLAYER_RADIUS });
         
-        // Hit player
-        if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
-            player.health -= this.blueprint.params.damage;
-            if(!this.ignited)
-                socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.damage });
-            else
-                socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
-            return true;
-        }
+        // // Hit player
+        // if (distance < this.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+        //     player.health -= this.blueprint.params.damage;
+        //     if(!this.ignited)
+        //         socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.damage });
+        //     else
+        //         socket.emit('compoundCollision', { id: this.id, player: socket.id, sentBy: this.sender, damage: this.blueprint.params.ignitedDamage, splash: this.blueprint.params.splash }); 
+        //     return true;
+        // }
         // for (let objType in objects) {
         //     if (objType !== 'atoms')
         //         for (let obj in objects[objType]) {

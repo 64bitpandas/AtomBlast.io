@@ -119,6 +119,11 @@ export default class ChatClient {
     }
 
     /**
+     * 
+     */
+
+
+    /**
      * Chat box implementation for the users.
      * @param {string} name Name of the player who sent the message
      * @param {string} message Message that was sent

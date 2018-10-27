@@ -38,6 +38,7 @@ export function damage(data, room, socket) {
         // thisPlayer.damagedBy[data.sentBy] += data.damage;
         setField(thisPlayer.damagedBy[data.sentBy] + data.damage, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]);
 
+        // Check if the player has died.
         if (thisPlayer.health <= 0) {
             // console.log(thisRoom.teams.indexOf(socket.handshake.query.team));
             socket.emit('serverSendPlayerDeath', { teamNumber: getTeamNumber(room, socket.handshake.query.team) });
