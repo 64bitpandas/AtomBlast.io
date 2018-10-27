@@ -6,7 +6,6 @@
 import { GLOBAL } from './global.js';
 import * as cookies from './lib/cookies.js';
 import { Player } from './obj/player.js';
-import { spawnAtom } from './obj/atom.js';
 import { GameObject } from './obj/gameobject.js';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
