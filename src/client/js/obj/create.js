@@ -1,6 +1,14 @@
 /**
  * Responsible for all gameObject creation scripts for the client (atoms, compounds, players)
  */
+import * as PIXI from 'pixi.js';
+import { Player } from './player.js';
+import { GLOBAL } from '../global.js';
+import { GameObject } from './gameobject.js';
+import { distanceBetween } from '../global.js';
+import { screenCenterX, screenCenterY, player } from '../pixigame.js';
+import { socket } from '../socket.js';
+import { updateAtomList } from '../app.js';
 
 /**
  * Spawns an atom.
@@ -13,13 +21,13 @@
  *  - vy {number}
  */
 export function createAtom(data) {
-    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(typeID)]].texture;
+    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
 
-    if (typeID === '')
+    if (data.typeID === '')
         throw new Error('The Atom object cannot be created without specifying behavior.');
 
     if (texture === undefined)
-        throw new Error('Atom of type ' + typeID + ' could not be found!');
+        throw new Error('Atom of type ' + data.typeID + ' could not be found!');
 
     let result = new GameObject(data.texture, data.id, data.posX, data.posY, data.vx, data.vy);
     result.typeID = data.typeID;

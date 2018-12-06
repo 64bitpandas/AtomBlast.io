@@ -288,8 +288,8 @@ function setupSocketInfo(chat) {
     });
 
     // Another player died
-    socket.on('serverSendNotifyPlayerDeath'), (data) => {
-        c
+    socket.on('serverSendNotifyPlayerDeath', (data) => { 
+        // c
     });
 
     // Update timer
