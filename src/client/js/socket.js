@@ -2,10 +2,9 @@ import { GLOBAL, distanceBetween } from './global';
 import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from './app';
 import ChatClient from './lib/chat-client';
 import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame';
-import { createCompound } from './obj/compound';
 import { MapTile } from './obj/maptile';
 import { MAP_LAYOUT } from './obj/tiles';
-import { createAtom } from './obj/create';
+import { createRenderAtom, createRenderCompound } from './obj/create';
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -135,10 +134,10 @@ function setupSocketObjectRetrieval() {
                                 objects[objType][obj] = createPlayer(objRef);
                                 break;
                             case 'atoms':
-                                objects[objType][obj] = createAtom(objRef);
+                                objects[objType][obj] = createRenderAtom(objRef);
                                 break;
                             case 'compounds':
-                                objects[objType][obj] = createCompound(objRef);
+                                objects[objType][obj] = createRenderCompound(objRef);
                                 break;
                             }
                         }

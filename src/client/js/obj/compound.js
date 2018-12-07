@@ -164,11 +164,3 @@ export function createNewCompound(blueprint, xIn, yIn) {
     });
 
 }
-
-/**
- * Recreates an already spawned compound on the clientside based on server data.
- * @param {*} data Data sent from server
- */
-export function createCompound(data) {
-    return new Compound(data.id, data.posX, data.posY, data.vx, data.vy, data.blueprint, data.sendingTeam, data.sender);
-}

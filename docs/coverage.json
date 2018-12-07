@@ -74,8 +74,8 @@
       "expectCount": 3,
       "actualCount": 1,
       "undocumentLines": [
-        40,
-        44
+        41,
+        45
       ]
     },
     "src/client/js/obj/gameobject.js": {

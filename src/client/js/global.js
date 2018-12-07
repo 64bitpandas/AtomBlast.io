@@ -30,7 +30,7 @@ export const GLOBAL = {
 
     // Server
     SERVER_IP: 'https://atomblast.herokuapp.com/', // Change during production!!!!!
-    LOCAL_HOST: 'localhost:3000',
+    LOCAL_HOST: 'localhost:12002',
     TEST_IP: 'https://iogame-test.herokuapp.com/',
     NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required
     ROOM_DELETE_DELAY: 30000, // Time, in ms, between winning and room closing
