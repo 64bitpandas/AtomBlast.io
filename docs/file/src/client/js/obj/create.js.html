@@ -69,11 +69,10 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createNewCompound">createNewCompound</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createAtom">createAtom</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
@@ -98,7 +97,8 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/create.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Responsible for all gameObject creation scripts for the client (atoms, compounds, players)
+ * Responsible for all gameObject creation and creation request scripts 
+ * for the client (atoms, compounds, players)
  */
 import * as PIXI from &apos;pixi.js&apos;;
 import { Player } from &apos;./player.js&apos;;
@@ -110,7 +110,7 @@ import { socket } from &apos;../socket.js&apos;;
 import { updateAtomList } from &apos;../app.js&apos;;
 
 /**
- * Spawns an atom.
+ * Renders a new atom.
  * @param {*} data The server object reference to spawn on the clientside. Must contain:
  *  - typeID {string} See GLOBAL.ATOM_IDS
  *  - id {number} Unique ID
@@ -119,7 +119,7 @@ import { updateAtomList } from &apos;../app.js&apos;;
  *  - vx {number}
  *  - vy {number}
  */
-export function createAtom(data) {
+export function createRenderAtom(data) {
 
     let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
 
@@ -141,8 +141,35 @@ export function createPlayer(data) {
 
 }
 
-export function createCompound(data) {
+/**
+ * Recreates an already spawned compound on the clientside based on server data.
+ * @param {*} data Data sent from server:
+ *  - id {number} Unique ID
+ *  - posX {number}
+ *  - posY {number}
+ *  - vx {number}
+ *  - vy {number}
+ *  - blueprint {*}
+ *  - sendingTeam {string}
+ *  - sender {number - socket ID}
+ */
+export function createRenderCompound(data) {
+    let texture = PIXI.loader.resources[data.blueprint.texture].texture;
+    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
+    result.blueprint = data.blueprint;
+    result.sendingTeam = data.sendingTeam;
+    result.sender = data.sender;
 
+    // Parse params
+    for (let param in data.blueprint.params) {
+        result[param] = data.blueprint.params[param];
+    }
+
+    // Use params
+    result.width = result.size;
+    result.height = result.size;
+
+    return result;
 }</code></pre>
 
 </div>

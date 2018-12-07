@@ -90,24 +90,6 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "atomblast.io/src/client/js/obj/create.js~createatom",
-    "function/index.html#static-function-createAtom",
-    "<span>createAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/obj/compound.js~createcompound",
-    "function/index.html#static-function-createCompound",
-    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/obj/create.js~createcompound",
-    "function/index.html#static-function-createCompound",
-    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/client/js/obj/compound.js~createnewcompound",
     "function/index.html#static-function-createNewCompound",
     "<span>createNewCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
@@ -123,6 +105,18 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~createplayer",
     "function/index.html#static-function-createPlayer",
     "<span>createPlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~createrenderatom",
+    "function/index.html#static-function-createRenderAtom",
+    "<span>createRenderAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~createrendercompound",
+    "function/index.html#static-function-createRenderCompound",
+    "<span>createRenderCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
     "function"
   ],
   [

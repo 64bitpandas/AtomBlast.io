@@ -1,6 +1,6 @@
 {
-  "coverage": "51.57%",
-  "expectCount": 159,
+  "coverage": "51.89%",
+  "expectCount": 158,
   "actualCount": 82,
   "files": {
     "src/client/js/app.js": {
@@ -56,8 +56,8 @@
       "undocumentLines": []
     },
     "src/client/js/obj/compound.js": {
-      "expectCount": 14,
-      "actualCount": 5,
+      "expectCount": 13,
+      "actualCount": 4,
       "undocumentLines": [
         16,
         18,
@@ -72,10 +72,9 @@
     },
     "src/client/js/obj/create.js": {
       "expectCount": 3,
-      "actualCount": 1,
+      "actualCount": 2,
       "undocumentLines": [
-        41,
-        45
+        42
       ]
     },
     "src/client/js/obj/gameobject.js": {
@@ -148,9 +147,9 @@
       "expectCount": 9,
       "actualCount": 6,
       "undocumentLines": [
-        21,
-        320,
-        325
+        20,
+        319,
+        324
       ]
     },
     "src/server/server.js": {
