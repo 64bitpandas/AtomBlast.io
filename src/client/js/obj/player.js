@@ -101,7 +101,7 @@ export class Player extends GameObject {
     tick() {
         
         // Movement
-        super.tick();
+        super.tick(true);
         
         // Update text
         this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';

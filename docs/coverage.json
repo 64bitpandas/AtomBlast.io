@@ -7,11 +7,11 @@
       "expectCount": 18,
       "actualCount": 13,
       "undocumentLines": [
-        18,
-        21,
-        23,
-        29,
-        34
+        17,
+        20,
+        22,
+        28,
+        33
       ]
     },
     "src/client/js/global.js": {
@@ -31,11 +31,11 @@
         18,
         20,
         21,
-        135,
-        145,
-        165,
-        201,
-        209
+        140,
+        150,
+        170,
+        206,
+        214
       ]
     },
     "src/client/js/lib/cookies.js": {
@@ -74,8 +74,8 @@
       "expectCount": 3,
       "actualCount": 1,
       "undocumentLines": [
-        32,
-        36
+        40,
+        44
       ]
     },
     "src/client/js/obj/gameobject.js": {
@@ -149,8 +149,8 @@
       "actualCount": 6,
       "undocumentLines": [
         21,
-        313,
-        318
+        320,
+        325
       ]
     },
     "src/server/server.js": {

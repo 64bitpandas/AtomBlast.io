@@ -197,7 +197,7 @@ function setupSocket() {
 
     // Setup listeners
     setupSocketConnection();
-    setupSocketInfo();
+    setupSocketInfo(chat);
     setupSocketObjectRetrieval();
 
     //Emit join message,
@@ -325,8 +325,9 @@ function setupSocketConnection() {
 /**
  * Sets up socket information transfer listeners.
  * Run in setupSocket().
+ * @param {*} chat The chat client instance to be used for notifications
  */
-function setupSocketInfo() {
+function setupSocketInfo(chat) {
     //Chat system receiver
     socket.on(&apos;serverMSG&apos;, data =&gt; {
         chat.addSystemLine(data);
@@ -382,6 +383,12 @@ function setupSocketInfo() {
             vy: 0,
             type: &apos;players&apos;
         });
+
+    });
+
+    // Another player died
+    socket.on(&apos;serverSendNotifyPlayerDeath&apos;, (data) =&gt; { 
+        // c
     });
 
     // Update timer

@@ -100,6 +100,14 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * Responsible for all gameObject creation scripts for the client (atoms, compounds, players)
  */
+import * as PIXI from &apos;pixi.js&apos;;
+import { Player } from &apos;./player.js&apos;;
+import { GLOBAL } from &apos;../global.js&apos;;
+import { GameObject } from &apos;./gameobject.js&apos;;
+import { distanceBetween } from &apos;../global.js&apos;;
+import { screenCenterX, screenCenterY, player } from &apos;../pixigame.js&apos;;
+import { socket } from &apos;../socket.js&apos;;
+import { updateAtomList } from &apos;../app.js&apos;;
 
 /**
  * Spawns an atom.
@@ -112,13 +120,13 @@
  *  - vy {number}
  */
 export function createAtom(data) {
-    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(typeID)]].texture;
+    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
 
-    if (typeID === &apos;&apos;)
+    if (data.typeID === &apos;&apos;)
         throw new Error(&apos;The Atom object cannot be created without specifying behavior.&apos;);
 
     if (texture === undefined)
-        throw new Error(&apos;Atom of type &apos; + typeID + &apos; could not be found!&apos;);
+        throw new Error(&apos;Atom of type &apos; + data.typeID + &apos; could not be found!&apos;);
 
     let result = new GameObject(data.texture, data.id, data.posX, data.posY, data.vx, data.vy);
     result.typeID = data.typeID;

@@ -85,9 +85,11 @@ export class GameObject extends PIXI.Sprite {
 
     /**
      * Override optional. Default behavior: handles movement. Call super.tick() from child class if movable.
+     * @param {boolean} noDraw - true if tick() should only process movement, not drawing.
      */
-    tick() {
+    tick(noDraw) {
         // Prevent drifting due to minimal negative values
+       
         if(this.destroyed)
             return;
 
@@ -101,6 +103,10 @@ export class GameObject extends PIXI.Sprite {
             this.posX += this.vx;
         if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING))
             this.posY += this.vy;
+
+        if(!noDraw) {
+            this.draw();
+        }
     }
 
     /**

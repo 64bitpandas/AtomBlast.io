@@ -21,6 +21,7 @@ import { updateAtomList } from '../app.js';
  *  - vy {number}
  */
 export function createAtom(data) {
+
     let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
 
     if (data.typeID === '')
@@ -29,7 +30,7 @@ export function createAtom(data) {
     if (texture === undefined)
         throw new Error('Atom of type ' + data.typeID + ' could not be found!');
 
-    let result = new GameObject(data.texture, data.id, data.posX, data.posY, data.vx, data.vy);
+    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
     result.typeID = data.typeID;
     result.height = GLOBAL.ATOM_RADIUS * 2;
     result.width = GLOBAL.ATOM_RADIUS * 2;
