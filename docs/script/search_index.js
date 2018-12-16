@@ -12,12 +12,6 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "atomblast.io/src/client/js/obj/compound.js~compound",
-    "class/src/client/js/obj/compound.js~Compound.html",
-    "<span>Compound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
-    "class"
-  ],
-  [
     "atomblast.io/src/client/js/global.js~global",
     "variable/index.html#static-variable-GLOBAL",
     "<span>GLOBAL</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
@@ -78,6 +72,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/atoms.js~cancraft",
+    "function/index.html#static-function-canCraft",
+    "<span>canCraft</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/collision.js~collisiondetect",
     "function/index.html#static-function-collisionDetect",
     "<span>collisionDetect</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/collision.js</span>",
@@ -90,9 +90,9 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "atomblast.io/src/client/js/obj/compound.js~createnewcompound",
-    "function/index.html#static-function-createNewCompound",
-    "<span>createNewCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
+    "atomblast.io/src/server/utils/compound.js~createcompound",
+    "function/index.html#static-function-createCompound",
+    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/compound.js</span>",
     "function"
   ],
   [
@@ -123,12 +123,6 @@ window.esdocSearchIndex = [
     "atomblast.io/src/server/utils/ondamage.js~damage",
     "function/index.html#static-function-damage",
     "<span>damage</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/pixigame.js~deductcraftmaterial",
-    "function/index.html#static-function-deductCraftMaterial",
-    "<span>deductCraftMaterial</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
   ],
   [
@@ -165,12 +159,6 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/global.js~distancebetween",
     "function/index.html#static-function-distanceBetween",
     "<span>distanceBetween</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/pixigame.js~elementstart",
-    "function/index.html#static-function-elementStart",
-    "<span>elementStart</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
   ],
   [
@@ -219,6 +207,18 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/app.js~hideelement",
     "function/index.html#static-function-hideElement",
     "<span>hideElement</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/atoms.js~incrementatom",
+    "function/index.html#static-function-incrementAtom",
+    "<span>incrementAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/server.js~incrementfield",
+    "function/index.html#static-function-incrementField",
+    "<span>incrementField</span> <span class=\"search-result-import-path\">atomblast.io/src/server/server.js</span>",
     "function"
   ],
   [
@@ -276,6 +276,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/obj/create.js~requestcreatecompound",
+    "function/index.html#static-function-requestCreateCompound",
+    "<span>requestCreateCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/matchmaker.js~roommatchmaker",
     "function/index.html#static-function-roomMatchmaker",
     "<span>roomMatchmaker</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/matchmaker.js</span>",
@@ -324,15 +330,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~spawnatom",
+    "atomblast.io/src/server/utils/atoms.js~spawnatom",
     "function/index.html#static-function-spawnAtom",
-    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~spawnatomatvent",
+    "atomblast.io/src/server/utils/atoms.js~spawnatomatvent",
     "function/index.html#static-function-spawnAtomAtVent",
-    "<span>spawnAtomAtVent</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>spawnAtomAtVent</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
     "function"
   ],
   [
@@ -345,6 +351,12 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~startgame",
     "function/index.html#static-function-startGame",
     "<span>startGame</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/compound.js~tickcompound",
+    "function/index.html#static-function-tickCompound",
+    "<span>tickCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/compound.js</span>",
     "function"
   ],
   [
@@ -780,78 +792,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/compound.js",
-    "file/src/client/js/obj/compound.js.html",
-    "src/client/js/obj/compound.js",
-    "file"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#[param]",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-[param]",
-    "src/client/js/obj/compound.js~Compound#[param]",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#blueprint",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-blueprint",
-    "src/client/js/obj/compound.js~Compound#blueprint",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#checkcollision",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-method-checkCollision",
-    "src/client/js/obj/compound.js~Compound#checkCollision",
-    "method"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#constructor",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-constructor-constructor",
-    "src/client/js/obj/compound.js~Compound#constructor",
-    "method"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#height",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-height",
-    "src/client/js/obj/compound.js~Compound#height",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#ignited",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-ignited",
-    "src/client/js/obj/compound.js~Compound#ignited",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#sender",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-sender",
-    "src/client/js/obj/compound.js~Compound#sender",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#sendingteam",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-sendingTeam",
-    "src/client/js/obj/compound.js~Compound#sendingTeam",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#texture",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-texture",
-    "src/client/js/obj/compound.js~Compound#texture",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#tick",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-method-tick",
-    "src/client/js/obj/compound.js~Compound#tick",
-    "method"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#width",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-width",
-    "src/client/js/obj/compound.js~Compound#width",
-    "member"
-  ],
-  [
     "src/client/js/obj/create.js",
     "file/src/client/js/obj/create.js.html",
     "src/client/js/obj/create.js",
@@ -1026,18 +966,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/player.js~player#addatom",
-    "class/src/client/js/obj/player.js~Player.html#instance-method-addAtom",
-    "src/client/js/obj/player.js~Player#addAtom",
-    "method"
-  ],
-  [
-    "src/client/js/obj/player.js~player#atoms",
-    "class/src/client/js/obj/player.js~Player.html#instance-member-atoms",
-    "src/client/js/obj/player.js~Player#atoms",
-    "member"
-  ],
-  [
     "src/client/js/obj/player.js~player#constructor",
     "class/src/client/js/obj/player.js~Player.html#instance-constructor-constructor",
     "src/client/js/obj/player.js~Player#constructor",
@@ -1164,9 +1092,21 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/server/utils/atoms.js",
+    "file/src/server/utils/atoms.js.html",
+    "src/server/utils/atoms.js",
+    "file"
+  ],
+  [
     "src/server/utils/collision.js",
     "file/src/server/utils/collision.js.html",
     "src/server/utils/collision.js",
+    "file"
+  ],
+  [
+    "src/server/utils/compound.js",
+    "file/src/server/utils/compound.js.html",
+    "src/server/utils/compound.js",
     "file"
   ],
   [

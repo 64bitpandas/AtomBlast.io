@@ -1,17 +1,17 @@
 {
-  "coverage": "51.89%",
-  "expectCount": 158,
-  "actualCount": 82,
+  "coverage": "54.42%",
+  "expectCount": 147,
+  "actualCount": 80,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 18,
       "actualCount": 13,
       "undocumentLines": [
-        17,
-        20,
-        22,
-        28,
-        33
+        16,
+        19,
+        21,
+        27,
+        32
       ]
     },
     "src/client/js/global.js": {
@@ -55,24 +55,9 @@
       "actualCount": 1,
       "undocumentLines": []
     },
-    "src/client/js/obj/compound.js": {
-      "expectCount": 13,
-      "actualCount": 4,
-      "undocumentLines": [
-        16,
-        18,
-        19,
-        20,
-        21,
-        25,
-        29,
-        30,
-        54
-      ]
-    },
     "src/client/js/obj/create.js": {
-      "expectCount": 3,
-      "actualCount": 2,
+      "expectCount": 4,
+      "actualCount": 3,
       "undocumentLines": [
         42
       ]
@@ -105,8 +90,8 @@
       ]
     },
     "src/client/js/obj/player.js": {
-      "expectCount": 19,
-      "actualCount": 4,
+      "expectCount": 17,
+      "actualCount": 3,
       "undocumentLines": [
         8,
         32,
@@ -121,8 +106,7 @@
         50,
         51,
         52,
-        54,
-        60
+        54
       ]
     },
     "src/client/js/obj/tiles.js": {
@@ -133,14 +117,13 @@
       ]
     },
     "src/client/js/pixigame.js": {
-      "expectCount": 19,
-      "actualCount": 14,
+      "expectCount": 17,
+      "actualCount": 13,
       "undocumentLines": [
         19,
         24,
         25,
-        27,
-        206
+        27
       ]
     },
     "src/client/js/socket.js": {
@@ -153,23 +136,36 @@
       ]
     },
     "src/server/server.js": {
-      "expectCount": 13,
-      "actualCount": 4,
+      "expectCount": 14,
+      "actualCount": 5,
       "undocumentLines": [
         1,
         2,
         3,
         4,
-        13,
         15,
-        16,
-        43,
-        261
+        17,
+        18,
+        45,
+        255
+      ]
+    },
+    "src/server/utils/atoms.js": {
+      "expectCount": 4,
+      "actualCount": 2,
+      "undocumentLines": [
+        9,
+        15
       ]
     },
     "src/server/utils/collision.js": {
       "expectCount": 1,
       "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/server/utils/compound.js": {
+      "expectCount": 2,
+      "actualCount": 2,
       "undocumentLines": []
     },
     "src/server/utils/framesync.js": {
@@ -193,8 +189,8 @@
       "undocumentLines": []
     },
     "src/server/utils/serverutils.js": {
-      "expectCount": 4,
-      "actualCount": 4,
+      "expectCount": 2,
+      "actualCount": 2,
       "undocumentLines": []
     }
   }

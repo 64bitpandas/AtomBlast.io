@@ -7,5 +7,8 @@
         "**/bower_components": true,
         "**/docs": true,
         "**/public": true
-    }
+    },
+    "eslint.options": {
+        "indent": ["error", "tab", {"SwitchCase": "tab"}]
+    },
 }
