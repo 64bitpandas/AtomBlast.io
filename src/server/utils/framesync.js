@@ -1,6 +1,7 @@
 import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global';
 import { deleteObject, getField, setField } from '../server';
 import { collisionDetect } from './collision';
+import { tickCompound } from './compound';
 
 /**
  * Runs once a frame, per player.
@@ -27,6 +28,7 @@ export function frameSync(socket, room, thisPlayer) {
                 if (isInBounds(compoundRef)) {
                     setField(compoundRef.posX + compoundRef.vx, ['rooms', room, 'compounds', compound, 'posX']);
                     setField(compoundRef.posY + compoundRef.vy, ['rooms', room, 'compounds', compound, 'posY']);
+                    tickCompound(compound, room);
                     // compoundRef.posX += compoundRef.vx;
                     // compoundRef.posY += compoundRef.vy;
                 }

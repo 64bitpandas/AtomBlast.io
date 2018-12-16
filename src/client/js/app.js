@@ -10,7 +10,6 @@ import { GameObject } from './obj/gameobject.js';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
 import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';
-import { createNewCompound} from './obj/compound.js';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
@@ -342,7 +341,7 @@ export function updateAtomList(atomID) {
         list.appendChild(newEntry);
     }
 
-    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atoms[atomID];
+    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atomList[atomID];
 
     updateCompoundButtons(); //No need to update selection
 }

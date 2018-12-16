@@ -1,7 +1,7 @@
 import { getField, setField } from '../server';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles';
 import { GLOBAL } from '../../client/js/global';
-import { spawnAtomAtVent } from './serverutils';
+import { spawnAtomAtVent } from './atoms';
 import colors from 'colors'; // Console colors :D
 
 /**

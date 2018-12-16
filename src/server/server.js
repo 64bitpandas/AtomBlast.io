@@ -6,10 +6,12 @@ import colors from 'colors'; // Console colors :D
 import {GLOBAL, distanceBetween, isInBounds} from '../client/js/global';
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles';
 import { roomMatchmaker } from './utils/matchmaker';
-import { generateID, getTeamNumber, spawnAtomAtVent, spawnAtom } from './utils/serverutils';
+import { generateID, getTeamNumber } from './utils/serverutils';
 import { initGlobal, initPlayer } from './utils/serverinit';
 import { frameSync } from './utils/framesync';
 import { damage } from './utils/ondamage';
+import { createCompound } from './utils/compound';
+import { spawnAtomAtVent, spawnAtom } from './utils/atoms';
 var config = require('./config.json');
 
 const DEBUG = true;
@@ -77,6 +79,10 @@ io.on('connection', socket => {
     initPlayer(socket, room);
     let thisPlayer = rooms[room].players[socket.id];
     thisPlayer.team = team;
+    thisPlayer.atomList = {};
+    thisPlayer.speedMult = 1;
+    for(let atom of GLOBAL.ATOM_IDS)
+        thisPlayer.atomList[atom] = 0;
  
     // Setup player array sync- once a frame
     setInterval(() => {
@@ -166,22 +172,10 @@ io.on('connection', socket => {
     });
 
     // A player spawned a Compound
-    socket.to(room).on('createCompound', data => {
-    // Calculate velocities based on cursor position
-        let theta = Math.atan2(data.mousePos.y,data.mousePos.x);
-        let newCompound = {
-            id: generateID(),
-            posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, 
-            posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-            vx: data.blueprint.params.speed * Math.cos(theta),
-            vy: data.blueprint.params.speed * Math.sin(theta),
-            blueprint: data.blueprint,
-            sendingTeam: data.sendingTeam,
-            sender: data.sender
-        };
-        rooms[room].compounds[newCompound.id] = newCompound;
-    // socket.to(room).broadcast.emit('serverSendCreateCompound', newCompound); //Send to everyone but the sender
-    // socket.to(room).emit('serverSendCreateCompound', newCompound); //Send to the sender
+    socket.to(room).on('requestCreateCompound', data => {
+        let newCompound = createCompound(data, room, thisPlayer);
+        if(newCompound)
+            rooms[room].compounds[newCompound.id] = newCompound;
     });
 
     //A Player has performed an action and gained experience
@@ -289,6 +283,16 @@ export function setField(value, path) {
 
     schema[path[len - 1]] = value;
 
+}
+
+/**
+ * Shorthand to add or concatenate an amount to a field.
+ * Best used with numbers or strings.
+ * @param {*} amount Amount to increment the field by.
+ * @param {*} path Path to the field.
+ */
+export function incrementField(amount, path) {
+    setField(getField(path) + amount, path);
 }
 
 /**
