@@ -50,12 +50,6 @@ export class Player extends GameObject {
         this.experience = experience; //Sets the experience of the player(Passed in)
         this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds
         this.damagedBy = {}; // Object containing the values of damage that each player has dealt.
-
-        this.atoms = { // List of all atoms and the number that the player has. Continue list later
-        };
-
-        for(let atom of GLOBAL.ATOM_IDS)
-            this.atoms[atom] = 0;
             
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
@@ -113,11 +107,4 @@ export class Player extends GameObject {
         }
     }
 
-    /**
-        * Adds an atom to the list
-        * @param {string} id The ID of the atom to add to the player
-        */
-    addAtom(id) {
-        this.atoms[id]++;
-    }
 }

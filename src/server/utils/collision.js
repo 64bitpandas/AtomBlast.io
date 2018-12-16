@@ -1,6 +1,7 @@
 import { distanceBetween, GLOBAL } from '../../client/js/global';
 import { setField, deleteObject } from '../server';
 import { damage } from './ondamage';
+import { incrementAtom } from './atoms';
 
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
@@ -19,11 +20,9 @@ export function collisionDetect(socket, room, thisPlayer, tempObjects) {
             { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
         
         if(distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
-            socket.emit('serverSendAtomCollected', {
-                id: atom,
-                typeID: tempObjects.atoms[atom].typeID
-            });
-
+            
+            // console.log(atom);
+            incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1);
             socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' });
             socket.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' });
             deleteObject('atoms', atom, room);

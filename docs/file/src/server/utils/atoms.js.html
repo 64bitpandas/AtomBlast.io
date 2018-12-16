@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">src/server/utils/collision.js | atomblast.io</title>
+  <title data-ice="title">src/server/utils/atoms.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -97,81 +97,78 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/collision.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, GLOBAL } from &apos;../../client/js/global&apos;;
-import { setField, deleteObject } from &apos;../server&apos;;
-import { damage } from &apos;./ondamage&apos;;
-import { incrementAtom } from &apos;./atoms&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/atoms.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Manages the atom list and atom usage for players.
+ */
+import {incrementField, getField, setField } from &apos;../server&apos;;
+import { generateID } from &apos;./serverutils&apos;;
+import { GLOBAL } from &apos;../../client/js/global&apos;;
+import { TILES, TILE_NAMES, MAP_LAYOUT } from &apos;../../client/js/obj/tiles&apos;;
+
+export function incrementAtom(player, room, atomType, quantity) {
+    // console.log(atomType);
+    incrementField(quantity, [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;atomList&apos;, atomType]);
+}
+
+
+export function canCraft(player, room, blueprint) {
+    // console.log(player);
+    if (blueprint === undefined)
+        return false;
+    for (let atom in blueprint.atoms) {
+        let numAtoms = getField([&apos;rooms&apos;, room, &apos;players&apos;, player.id, &apos;atomList&apos;, atom]);
+        if (numAtoms === undefined || numAtoms &lt; blueprint.atoms[atom])
+            return false;
+    }
+
+    return true;
+}
 
 /**
- * Runs once a frame, checks for collisions between objects and handles them accordingly.
- * Run using 
- * @param {*} socket The socket.io instance
- * @param {string} room The name of the room
- * @param {*} thisPlayer The player object
- * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer. Contains compounds, atoms, players
+ * Spawns an atom at the vent at the given row and column.
+ * @param {number} row The row of the vent 
+ * @param {number} col The column of the vent to spawn at
+ * @param {string} room The room to spawn in
+ * @param {boolean} verbose True if this method should output to the console
  */
-export function collisionDetect(socket, room, thisPlayer, tempObjects) {
-    
-    // Check for collected atoms
-    for(let atom in tempObjects.atoms) {
-        let distance = distanceBetween(
-            { posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-            { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
-        
-        if(distance &lt; GLOBAL.ATOM_COLLECT_THRESHOLD) {
-            
-            // console.log(atom);
-            incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1);
-            socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; });
-            socket.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; });
-            deleteObject(&apos;atoms&apos;, atom, room);
+export function spawnAtomAtVent(row, col, room, verbose) {
+    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
+    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
 
-        }
-    }
+    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
+    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
 
-    // Check for compound collisions
-    for(let compound in tempObjects.compounds) {
+    spawnAtom(x, y, atomToSpawn, room, verbose);
 
-        let cmp = tempObjects.compounds[compound];
+}
 
-        if(cmp.sendingTeam !== thisPlayer.team) {
-            let distance = distanceBetween(
-                { posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
-                { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
+/**
+ * 
+ * @param {number} x X-position of center
+ * @param {number} y Y-position of center
+ * @param {string} type Type of atom to spawn
+ * @param {string} room The room to spawn in
+ * @param {boolean} verbose True if this method should output to the console
+ */
+export function spawnAtom(x, y, type, room, verbose) {
 
-            // Hit player
-            if (distance &lt; cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
-                damage({
-                    damage: (cmp.ignited) ? cmp.blueprints.params.ignitedDamage : cmp.blueprint.params.damage,
-                    player: socket.id,
-                    sentBy: cmp.sender,
-                    id: compound
-                }, room, socket);
+    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
 
-                deleteObject(&apos;compounds&apos;, compound, room);
-                socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: compound, type: &apos;compounds&apos; });
-                socket.emit(&apos;serverSendObjectRemoval&apos;, { id: compound, type: &apos;compounds&apos; });
+    let atom = {
+        typeID: type,
+        id: generateID(),
+        posX: x,
+        posY: y,
+        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
+        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
+    };
+    if (getField([&apos;rooms&apos;, room]) !== undefined)
+        setField(atom, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom.id]);
 
-            }
-        }
-       
-//am currently migrating collision processing from client to server
-        // socket.to(room).on(&apos;compoundCollision&apos;, data =&gt; 
-        //     if (COLLISIONVERBOSE) {
-        //         console.log(&apos;compoundCollision&apos;);
-        //     }
-        //     if(rooms[room].compounds[data.id] !== undefined) {
-        //         damage(data, room, socket);   
-        //         delete rooms[room].compounds[data.id];
-        //         socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
-        //         socket.emit(&apos;serverSendObjectRemoval&apos;, {id: data.id, type: &apos;compounds&apos;});
-
-        //     }
-        // });
-        
-    }
-
+    // Log to console
+    if (verbose)
+        console.log(&apos;SPAWN ATOM &apos; + atomToSpawn + &apos; theta:&apos; + theta + &apos;, vx: &apos; + atom.vx + &apos;, vy: &apos; + atom.vy);
 }</code></pre>
 
 </div>

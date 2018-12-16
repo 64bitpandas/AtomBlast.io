@@ -1,1 +1,61 @@
-[]
+[
+  {
+    "name": "createCompound",
+    "filePath": "src/server/utils/compound.js",
+    "lines": [
+      {
+        "lineNumber": 10,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 11,
+        "line": "  * Checks if a compound can be created, deducts craft material, and returns the new compound."
+      },
+      {
+        "lineNumber": 12,
+        "line": "  * Does NOT add the new compound to the objects array."
+      },
+      {
+        "lineNumber": 13,
+        "line": "  * @param data - Data sent from the client."
+      },
+      {
+        "lineNumber": 14,
+        "line": "  *  - blueprint: The blueprint of the compound to create"
+      },
+      {
+        "lineNumber": 15,
+        "line": "  *  - sendingTeam: Team of the player who sent this"
+      },
+      {
+        "lineNumber": 16,
+        "line": "  *  - mousePos: Mouse position of the player who sent this. Contains x and y components"
+      },
+      {
+        "lineNumber": 17,
+        "line": "  *  - sender: Player who sent this"
+      },
+      {
+        "lineNumber": 18,
+        "line": "  * @param room - The name of the room"
+      },
+      {
+        "lineNumber": 19,
+        "line": "  */"
+      },
+      {
+        "lineNumber": 20,
+        "line": "export function createCompound(data, room, thisPlayer) {"
+      }
+    ],
+    "codeParams": [
+      "data",
+      "room",
+      "thisPlayer"
+    ],
+    "docParams": [
+      "data",
+      "room"
+    ]
+  }
+]

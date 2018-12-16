@@ -125,6 +125,10 @@ function setupSocketObjectRetrieval() {
                             if (objType === 'players') {
                                 objects[objType][obj].health = objRef.health;
                                 objects[objType][obj].damagedBy = objRef.damagedBy;
+                                objects[objType][obj].atomList = objRef.atomList;
+                                objects[objType][obj].speedMult = objRef.speedMult;
+                                for(let atom in objRef.atomList)
+                                    updateAtomList(atom);
                             }
                         }
                         // Does not exist - need to clone to clientside
@@ -157,6 +161,7 @@ function setupSocketObjectRetrieval() {
             // }
 
         }
+
     });
 
     // Sync objects when they are deleted or move out of view
@@ -171,11 +176,6 @@ function setupSocketObjectRetrieval() {
         }
     });
 
-    // Atom was collected by player
-    socket.on('serverSendAtomCollected', (data) => {
-        player.addAtom(data.typeID);
-        updateAtomList(data.typeID);
-    });
 }
 
 /**

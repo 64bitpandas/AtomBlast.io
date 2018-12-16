@@ -9,7 +9,7 @@ import { GameObject } from './gameobject.js';
 import { distanceBetween } from '../global.js';
 import { screenCenterX, screenCenterY, player } from '../pixigame.js';
 import { socket } from '../socket.js';
-import { updateAtomList } from '../app.js';
+import { updateAtomList, updateCompoundButtons } from '../app.js';
 
 /**
  * Renders a new atom.
@@ -72,4 +72,68 @@ export function createRenderCompound(data) {
     result.height = result.size;
 
     return result;
+}
+
+/**
+ * Creates a Compound by sending a request to the server.
+ * @param {*} blueprint Then blueprint to create the compound from
+ * @param {number} xIn x-coords
+ * @param {number} yIn y-coords
+ * @returns true if successful, false if the compound was not requested.
+ */
+export function requestCreateCompound(blueprint, xIn, yIn) {
+
+
+    updateCompoundButtons();
+
+    // if (blueprint.type === 'speed') {
+    //     // this.hide();
+    //     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);
+    //     console.log('New speed is ' + player.speedMult);
+    // } else if (blueprint.type === 'health') {
+    //     socket.emit('damage', {
+    //         damage: -blueprint.params.healthModifier,
+    //         sender: socket.id
+    //     });
+    //     if (player.health > GLOBAL.MAX_HEALTH) {
+    //         player.health = GLOBAL.MAX_HEALTH;
+    //     }
+    // } else {
+    // let cursor = app.renderer.plugins.interaction.mouse.global;
+
+    let centerX = window.innerWidth / 2;
+    let centerY = window.innerHeight / 2;
+    // console.log(centerX - cursor.x, cursor.y - centerY)
+    socket.emit('requestCreateCompound', {
+        blueprint: blueprint,
+        sendingTeam: player.team,
+        sender: socket.id,
+        mousePos: {
+            x: xIn - centerX,
+            y: centerY - yIn
+        }
+    });
+
+    // TODO: Add proper spray directional change based on mouse position when spraying is implemented
+    if (blueprint.type === 'stream')
+        for (let i = 0; i < blueprint.params.length - 1; i++)
+            setTimeout(() => {
+                socket.emit('requestCreateCompound', {
+                    blueprint: blueprint,
+                    sendingTeam: player.team,
+                    sender: socket.id,
+
+                    mousePos: {
+                        x: xIn - centerX,
+                        y: centerY - yIn
+                    },
+                    streamNumber: i
+                });
+            }, blueprint.params.spacing * i);
+    // }
+
+    //Emits the crafting event to update experience TODO
+    // socket.emit('experienceEvent', {
+    //     event: 'CRAFT'
+    // });
 }

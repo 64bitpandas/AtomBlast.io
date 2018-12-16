@@ -5,8 +5,8 @@ import { Player } from './obj/player';
 import { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app';
 import { socket, objects } from './socket';
 import { BLUEPRINTS } from './obj/blueprints';
-import { createNewCompound} from './obj/compound';
 import { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles';
+import { requestCreateCompound } from './obj/create';
 import { MapTile } from './obj/maptile';
 
 export var isSetup; // True after the stage is fully set up
@@ -114,7 +114,6 @@ function registerCallbacks() {
 
         // var mousePosition = renderer.interaction.mouse.global;
 
-
         // Chat box styling on select
         document.getElementById('chatInput').onfocus = () => {
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
@@ -132,19 +131,6 @@ function registerCallbacks() {
                 }
             };
         }
-
-        // app.stage.on('mousedown', () => {
-        //     //Creates a compound of that certain blueprint
-        //     console.warn("--TRIG--");
-        //     if (canCraft(selectedBlueprints[key])) {
-    
-        //         createNewCompound(selectedBlueprints[key]); 
-
-        //         // Subtract atoms needed to craft
-        //         deductCraftMaterial(selectedBlueprints[key]);
-        //     } else
-        //         console.log("Not enough atoms to craft this blueprint!");
-        // });
 
         // Background
         app.renderer.backgroundColor = 0xFFFFFF;
@@ -203,18 +189,6 @@ function registerCallbacks() {
     showGameUI();
 }
 
-export function elementStart() {
-    console.warn('--TRIG--');
-    if (canCraft(selectedBlueprints[selectedCompound])) {
-
-        createNewCompound(selectedBlueprints[selectedCompound]); 
-
-        // Subtract atoms needed to craft
-        deductCraftMaterial(selectedBlueprints[selectedCompound]);
-    } else
-        console.log('Not enough atoms to craft this blueprint!');
-}
-
 /**
  * Called once per frame. Updates all moving sprites on the stage.
  * @param {number} delta Time value from Pixi
@@ -257,12 +231,7 @@ function draw(delta) {
         // Shooting
         space.press = () => {
             if(isFocused() && inGame) {
-                if (canCraft(selectedBlueprints[selectedCompound])) {
-                    createNewCompound(selectedBlueprints[selectedCompound], mouseX, mouseY);
-                    // Subtract atoms needed to craft
-                    deductCraftMaterial(selectedBlueprints[selectedCompound]);
-                } else
-                    console.log('Not enough atoms to craft this blueprint!');
+                requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
             }
         };
 
@@ -369,32 +338,15 @@ export function isFocused() {
  * @param {string} blueprint The name of the blueprint to check.
  */
 export function canCraft(blueprint) {
-    if(blueprint === undefined)
+    if (blueprint === undefined)
         return false;
     for (let atom in blueprint.atoms) {
-        if (player.atoms[atom] === undefined || player.atoms[atom] < blueprint.atoms[atom])
+        if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom])
             return false;
     }
 
     return true;
 }
-
-/**
- * Deduct material needed to craft. 
- * @param {string} blueprint The name of the blueprint to check.
- * @returns {boolean} Returns true if success, false if fail.
- */
-export function deductCraftMaterial(blueprint) {
-    if (canCraft) {
-        for (let atom in blueprint.atoms) {
-            player.atoms[atom] -= blueprint.atoms[atom];
-            updateAtomList(atom);
-        }
-        return true;
-    }
-    return false;
-}
-
 /**
  * Starts the game after lobby closes.
  * @param {boolean} emit True if this client should emit the event to the server.
@@ -448,12 +400,6 @@ export function mouseClickHandler(e) {
     }
     // console.log(e);
     // console.info("Selected Compound: " + selectedCompound);
-    if (canCraft(selectedBlueprints[selectedCompound])) {
 
-        createNewCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
-
-        // Subtract atoms needed to craft
-        deductCraftMaterial(selectedBlueprints[selectedCompound]);
-    } else
-        console.log('Not enough atoms to craft this blueprint!');
+    requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
 }
