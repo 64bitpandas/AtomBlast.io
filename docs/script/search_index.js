@@ -138,12 +138,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/app.js~devtest",
-    "function/index.html#static-function-devTest",
-    "<span>devTest</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/client/js/socket.js~disconnect",
     "function/index.html#static-function-disconnect",
     "<span>disconnect</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/socket.js</span>",

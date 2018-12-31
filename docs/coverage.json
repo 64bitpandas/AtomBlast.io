@@ -1,11 +1,11 @@
 {
-  "coverage": "54.72%",
-  "expectCount": 148,
-  "actualCount": 81,
+  "coverage": "54.42%",
+  "expectCount": 147,
+  "actualCount": 80,
   "files": {
     "src/client/js/app.js": {
-      "expectCount": 19,
-      "actualCount": 14,
+      "expectCount": 18,
+      "actualCount": 13,
       "undocumentLines": [
         16,
         19,
@@ -31,11 +31,11 @@
         18,
         20,
         21,
-        140,
-        150,
-        170,
-        206,
-        214
+        141,
+        151,
+        171,
+        207,
+        215
       ]
     },
     "src/client/js/lib/cookies.js": {
@@ -131,8 +131,8 @@
       "actualCount": 6,
       "undocumentLines": [
         20,
-        319,
-        324
+        318,
+        323
       ]
     },
     "src/server/server.js": {
@@ -147,7 +147,7 @@
         17,
         18,
         45,
-        255
+        265
       ]
     },
     "src/server/utils/atoms.js": {

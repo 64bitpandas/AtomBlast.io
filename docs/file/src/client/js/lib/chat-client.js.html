@@ -30,7 +30,6 @@
   <ul>
     
   <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-devTest">devTest</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
@@ -105,7 +104,7 @@
 
 import {GLOBAL} from &apos;../global.js&apos;;
 import { socket } from &apos;../socket.js&apos;;
-import {devTest} from &apos;../app.js&apos;;
+import { updateCompoundButtons } from &apos;../app.js&apos;;
 
 let player, room, team;
 export default class ChatClient {
@@ -144,7 +143,8 @@ export default class ChatClient {
 
         this.registerCommand(&apos;test&apos;, &apos;Gives 5000 of every element&apos;, () =&gt; {
             if(GLOBAL.DEBUG) {
-                devTest();
+                socket.emit(&apos;testCommand&apos;, {player: socket.id});
+                updateCompoundButtons();
                 self.addSystemLine(&quot;Developer Configurations Applied!&quot;);
             }
             else {

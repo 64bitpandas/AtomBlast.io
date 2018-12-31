@@ -30,7 +30,6 @@
   <ul>
     
   <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-devTest">devTest</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
@@ -321,6 +320,16 @@ io.on(&apos;connection&apos;, socket =&gt; {
         for(let at in data.atoms) {
             for(let i = 0; i &lt; GLOBAL.MAX_DEATH_ATOMS &amp;&amp; i &lt; data.atoms[at]; i++)
                 spawnAtom(data.x, data.y, at, room, false);
+        }
+    });
+
+    // Testing purposes- give yourself 5000 of each atom
+    socket.on(&apos;testCommand&apos;, (data) =&gt; {
+        if (GLOBAL.DEBUG) {
+            console.log(rooms[room].players[data.player].atomList);
+            for (let i in rooms[room].players[data.player].atomList) {
+                rooms[room].players[data.player].atomList[i] += 5000;
+            }
         }
     });
 
