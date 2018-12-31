@@ -30,13 +30,14 @@ export function createCompound(data, room, thisPlayer) {
         id: generateID(),
         posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS,
         posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-        vx: data.blueprint.params.speed * Math.cos(theta),
-        vy: data.blueprint.params.speed * Math.sin(theta),
+        vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
+        vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
         blueprint: data.blueprint,
         sendingTeam: data.sendingTeam,
         sender: data.sender
     };
-
+    // console.log("This player: ");
+    // console.log(thisPlayer);
     // Add functionality for specific blueprint types
     if (data.blueprint.type === 'speed') {
         incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), ['rooms', room, 'players', thisPlayer.id, 'speedMult']);

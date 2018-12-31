@@ -77,7 +77,7 @@ export function disconnect() {
     socket.disconnect();
 
     // Wipe objects list
-    for(let objType in objects)
+    for (let objType in objects)
         objects[objType] = {};
 
 }
@@ -127,22 +127,22 @@ function setupSocketObjectRetrieval() {
                                 objects[objType][obj].damagedBy = objRef.damagedBy;
                                 objects[objType][obj].atomList = objRef.atomList;
                                 objects[objType][obj].speedMult = objRef.speedMult;
-                                for(let atom in objRef.atomList)
+                                for (let atom in objRef.atomList)
                                     updateAtomList(atom);
                             }
                         }
                         // Does not exist - need to clone to clientside
                         else if (isSetup) {
                             switch (objType) {
-                            case 'players':
-                                objects[objType][obj] = createPlayer(objRef);
-                                break;
-                            case 'atoms':
-                                objects[objType][obj] = createRenderAtom(objRef);
-                                break;
-                            case 'compounds':
-                                objects[objType][obj] = createRenderCompound(objRef);
-                                break;
+                                case 'players':
+                                    objects[objType][obj] = createPlayer(objRef);
+                                    break;
+                                case 'atoms':
+                                    objects[objType][obj] = createRenderAtom(objRef);
+                                    break;
+                                case 'compounds':
+                                    objects[objType][obj] = createRenderCompound(objRef);
+                                    break;
                             }
                         }
                     }
@@ -287,8 +287,8 @@ function setupSocketInfo(chat) {
     });
 
     // Another player died
-    socket.on('serverSendNotifyPlayerDeath', (data) => { 
-        // c
+    socket.on('serverSendNotifyPlayerDeath', (data) => {
+        // Append to chat
     });
 
     // Update timer
@@ -306,7 +306,6 @@ function setupSocketInfo(chat) {
         setIngame(false); // Disable keyboard controls and rendering
         displayWinner(data);
     });
-
 }
 
 /*

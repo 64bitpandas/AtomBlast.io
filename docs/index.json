@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/client/js/app.js",
-    "content": "/** \n * App.js is responsible for connecting the UI with the game functionality.\n * Most of the functionality is used for the main menu and connecting/disconnecting behavior.\n */\n'use strict';\nimport { GLOBAL } from './global.js';\nimport * as cookies from './lib/cookies.js';\nimport { Player } from './obj/player.js';\nimport { GameObject } from './obj/gameobject.js';\nimport { BLUEPRINTS } from './obj/blueprints.js';\nimport { beginConnection, disconnect } from './socket.js';\nimport { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';\nimport swal from 'sweetalert';\n\n// Array containing all inputs which require cookies, and their values\nexport const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));\n\n// Array containing the four chosen blueprints\nexport var selectedBlueprints = new Array(GLOBAL.BP_MAX);\n\nconst nickErrorText = document.getElementById('nickErrorText');\n\n// Mouse position - used for tooltips\nexport let mouseX, mouseY;\n\n// Currently selected blueprint slot\nexport let selectedCompound = 0;\n\nlet selectedSlot;\n\n// Starts the game if the name is valid.\nfunction joinGame() {\n\n    if (!allBlueprintsSelected())\n        swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error');\n    // check if the nick is valid\n    else if (validNick()) {\n\n        // Set cookies for inputs\n        for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);\n        }\n\n        // Use cookies to set the ingame blueprint slot values\n        for(let i = 1; i <= GLOBAL.BP_MAX; i++) {\n            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];\n\n            // Check whether blueprint is selected!                     \n            document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name;                                                                      \n        }\n\n        // Show game window\n        showElement('gameAreaWrapper');\n        hideElement('startMenuWrapper');\n\n        // Show loading screen\n        showElement('loading');\n\n        // Cookie Inputs: 0=player, 1=room, 2=team\n\n        // Connect to server\n        beginConnection();\n            \n    } else {\n        nickErrorText.style.display = 'inline';\n    }\n}\n\n/** check if nick is valid alphanumeric characters (and underscores)\n * @returns true if the nickname is valid, false otherwise\n */\nfunction validNick() {\n    const regex = /^(\\w|_|-| |!|\\.|\\?){2,16}$/;\n    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n        if(regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private'))\n            return false;\n    }\n\n    return true;\n}\n\n/**\n * Returns true if all four blueprint slots are filled.\n */\nfunction allBlueprintsSelected() {\n    for(let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {\n        if(cookieInputs[i].innerHTML.substring(0, 1) === '-')\n            return false;\n    }\n    return true;\n}\n/**\n * Its a method for testing stuff\n */\nfunction testHandler() {\n    swal('SUCCESS','The test event is invoked!','info');\n}\n\n/** \n * Onload function. Initializes the menu screen, creates click events, and loads cookies.\n */\nwindow.onload = () => {\n    \n    // Patch logo for firefox\n    if(typeof InstallTrigger !== 'undefined')\n        document.getElementById('logo').innerHTML = `<img src=\"assets/logo.svg\" id=\"logo-firefox\">`; // eslint-disable-line\n\n    // Cookie loading - create array of all cookie values\n    let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));\n\n    // Continue loading cookies only if it exists\n    let i = 0;\n    for(let cookie of cookieValues) {\n        if(cookie !== null && cookie.length > 0) {\n            if(cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT')\n                cookieInputs[i].value = cookie;\n            else if(cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined)\n                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;\n        }\n        i++;\n    }\n\n    // Add listeners to start game to enter key and button click\n\n    // Eric - Test method do not remove pls\n    document.addEventListener('pointerdown', mouseClickHandler);\n\n    bindHandler('startButton', function () {\n        joinGame();\n    });\n\n    bindHandler('quitButton', function () {\n        quitGame('You have left the game.', false);\n    });\n\n    bindHandler('exitButton', function () {\n        quitGame('The game has ended.', false);\n        hideElement('winner-panel');\n    });\n\n    bindHandler('resumeButton', function () {\n        hideElement('menubox');\n    });\n\n    bindHandler('optionsButton', function () {\n        swal('', 'This feature is not implemented.', 'info');\n    });\n\n    bindHandler('controlsButton', function () {\n        swal('', 'This feature is not implemented.', 'info');\n    });\n\n    bindHandler('creditsButton', function () {\n        swal('', 'Created by BananiumLabs.com', 'info');\n    });\n\n    bindHandler('btn-start-game', function () {\n        console.log('starting game');\n        startGame(true);\n    });\n\n    bindHandler('newsBox', function() {\n        swal('','hello world','info');\n    });\n\n    // document.getElementById('gameView', onClick, false);\n\n    for(let i = 0; i < selectedBlueprints.length; i++) {\n        bindHandler('bp-ingame-' + (i + 1), function() {\n            selectedCompound = i;\n            updateCompoundButtons();\n        });\n    }\n\n    // Set up the blueprint slot buttons\n    for(let i = 1; i <= GLOBAL.BP_MAX; i++) {\n        document.getElementById('bp-slot-' + i).onclick = () => {\n            showElement('bp-select');\n            document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;\n            selectedSlot = i;\n        };\n    }\n\n    document.getElementById('btn-close').onclick = () => { hideElement('bp-select'); };\n\n    // Set up blueprint selection buttons\n    for(let blueprint in BLUEPRINTS) {\n        let bp = BLUEPRINTS[blueprint];\n        let formula = '';\n        for(let atom in bp.atoms) {\n            formula += atom.toUpperCase() + ((bp.atoms[atom] > 1) ? bp.atoms[atom] : '');\n        }\n\n        document.getElementById('blueprint-wrapper').innerHTML +=\n            `\n            <button onmouseenter=\"tooltipFollow(this)\" class=\"button width-override col-6 col-12-sm btn-secondary btn-blueprint\" id=\"btn-blueprint-` + blueprint + `\">\n                <p>` + bp.name + `</p>\n                <h6>-` + formula + `-</h6>\n                <img src=\"` + bp.texture + `\">\n                <span class=\"tooltip\">` + bp.tooltip + `</span>\n            </button>\n\n            `;\n        \n    }\n\n    // Blueprint Slots\n    for(let btn of document.getElementsByClassName('btn-blueprint'))\n        btn.onclick = () =>  {\n            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'\n            console.log(blueprint + ' selected in slot ' + selectedSlot);\n            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;\n            hideElement('bp-select');\n            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);\n        };\n\n    // Add enter listeners for all inputs\n    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n        cookieInputs[i].addEventListener('keypress', e => {\n            const key = e.which || e.keyCode;\n    \n            if (key === GLOBAL.KEY_ENTER)\n                joinGame();\n        });\n    }\n\n    // Behavior when room type is changed\n    if (cookieInputs[7].value !== 'private')\n        hideElement('room');\n    else\n        showElement('room');\n\n    cookieInputs[7].onchange = () => {\n        if(cookieInputs[7].value === 'private')\n            showElement('room');\n        else\n            hideElement('room');\n\n        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);\n    };\n\n    // Server changed\n    cookieInputs[8].onchange = () => {\n        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);\n    };\n};\n\n// function onClick(e) {\n//     swal('', 'oooooo!!!', 'info');\n//     console.log(\"ONCLICK!\");\n// }\n\n/**\n * Sets mouse positions for tooltip\n */\nwindow.onmousemove = (e) => {\n    mouseX = e.clientX;\n    mouseY = e.clientY;\n};\n\n// function setupEventHandlers() {  \n//     document.addEventListener('mousedown', this._onMouseDown.bind(this));    \n//     document.addEventListener('mousemove', this._onMouseMove.bind(this));  \n//     document.addEventListener('mouseup', this._onMouseUp.bind(this));    \n//     document.addEventListener('wheel', this._onWheel.bind(this));    \n//     document.addEventListener('touchstart', this._onTouchStart.bind(this));    \n//     document.addEventListener('touchmove', this._onTouchMove.bind(this));    \n//     document.addEventListener('touchend', this._onTouchEnd.bind(this));    \n//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));    \n//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));\n// };\n\n/**\n * Transitions from in-game displays to the main menu.\n * @param {string} msg The message to be displayed in the menu after disconnect. \n * @param {boolean} isError True if the game quit was due to an error; false otherwise.\n */\nexport function quitGame(msg, isError) {\n\n    // Disconnect from server\n    disconnect();\n\n    // Set status of ingame\n    setIngame(false);\n\n    // menu\n    hideElement('gameAreaWrapper');\n    hideElement('hud');\n    hideElement('menubox');\n    showElement('startMenuWrapper');\n    hideElement('lobby');\n    swal('Disconnected from Game', msg, (isError) ? 'error' : 'info');\n}\n\n/**\n * Binds handlerMethod to onclick event for element id.\n * @param {string} id \n * @param {function} handlerMethod \n */\nexport function bindHandler(id, handlerMethod) {\n    document.getElementById(id).onclick = handlerMethod;\n}\n\n/**\n * Displays a hidden element\n * @param {string} el The id of the element to show\n */\nexport function showElement(el) {\n    document.getElementById(el).style.display = 'block';\n}\n\n/**\n * Hides a visible element\n * @param {string} el The id of the element to hide\n */\nexport function hideElement(el) {\n    document.getElementById(el).style.display = 'none';\n}\n\n/**\n * Makes tooltip follow the mouse. Call when a button is hovered.\n * @param {HTMLElement} button The element reference for the button currently being hovered.\n */\nwindow.tooltipFollow = (button) => {\n    let tooltip = button.getElementsByClassName('tooltip')[0];\n    tooltip.style.top = (mouseY - 150) + 'px';\n    tooltip.style.left = (mouseX - 150) + 'px';\n};\n\n/**\n * Updates the list of atoms that the player holds.\n * Only updates the entry for the particular ID given.\n * @param {string} atomID The ID of the atom to update.\n */\nexport function updateAtomList(atomID) {\n    let list = document.getElementById('atom-count');\n\n    if(document.getElementById('atom-list-' + atomID) === null) {\n        let newEntry = document.createElement('li');\n        newEntry.setAttribute('id', 'atom-list-' + atomID);\n        list.appendChild(newEntry);\n    }\n\n    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atomList[atomID];\n\n    updateCompoundButtons(); //No need to update selection\n}\n\n/**\n * \n * @param {number} selectedSlot The index of the selected slot. 0-3\n */\nexport function updateCompoundButtons(selectedSlot) {\n    if(selectedSlot === undefined)\n        selectedSlot = selectedCompound;\n    else\n        selectedCompound = selectedSlot;\n\n    for(let i = 0; i < selectedBlueprints.length; i++) {\n        if (selectedSlot != i) {\n            if(canCraft(selectedBlueprints[i])){\n                document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';\n            }\n            else{\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';\n            }\n        }\n        else { //is selected\n            if (canCraft(selectedBlueprints[i])) {\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#003CA8';\n            }\n            else {\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#3D66D1';\n            }\n            document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;\n        }\n    }\n}\n\n/**\n * Updates the team scoreboard on screen.\n */\nexport function updateScores(teamSlot, increment) {\n    document.getElementById('team-score-' + teamSlot).innerHTML = parseInt(document.getElementById('team-score-' + teamSlot).innerHTML) + increment;\n}\n\n/**\n * Run on new player join to sync lobby information\n * @param {*} data The data transferred from server\n */\nexport function updateLobby(data) {\n\n// Wipe innerHTML first\n    let lobby = document.getElementById('team-display');\n    lobby.innerHTML = '';\n    for(let player in data) {\n        if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {\n            lobby.innerHTML += `\n            <div class=\"col-3\">\n                <h3>` + data[player].team + `</h3>\n                <ul id=\"` + data[player].team + `\">\n                </ul>\n            </div>\n            `;\n        }\n        let listItem = document.createElement('LI');\n        listItem.appendChild(document.createTextNode(data[player].name));\n        document.getElementById(data[player].team).appendChild(listItem);\n    }\n}\n\n/**\n * Displays the winner panel after a game has concluded.\n * @param {*} data Server sent data, including name and score of winning team.\n */\nexport function displayWinner(data) {\n    // console.log(data);\n    document.getElementById('winner-name').innerHTML = data.winner.name + ' has won!';\n    showElement('winner-panel');\n}\n\n/**\n * Sets all player owned atoms to 9999 only if method is called on a DEBUG\n * enabled server.\n */\nexport function devTest() {\n    if (GLOBAL.DEBUG) {\n        console.warn(JSON.stringify(player.atoms));\n        for (let i in player.atoms) {\n            player.atoms[i] = 9999;\n        }\n        updateCompoundButtons();\n    }\n}",
+    "content": "/** \n * App.js is responsible for connecting the UI with the game functionality.\n * Most of the functionality is used for the main menu and connecting/disconnecting behavior.\n */\n'use strict';\nimport { GLOBAL } from './global.js';\nimport * as cookies from './lib/cookies.js';\nimport { Player } from './obj/player.js';\nimport { GameObject } from './obj/gameobject.js';\nimport { BLUEPRINTS } from './obj/blueprints.js';\nimport { beginConnection, disconnect } from './socket.js';\nimport { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';\nimport swal from 'sweetalert';\n\n// Array containing all inputs which require cookies, and their values\nexport const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val));\n\n// Array containing the four chosen blueprints\nexport var selectedBlueprints = new Array(GLOBAL.BP_MAX);\n\nconst nickErrorText = document.getElementById('nickErrorText');\n\n// Mouse position - used for tooltips\nexport let mouseX, mouseY;\n\n// Currently selected blueprint slot\nexport let selectedCompound = 0;\n\nlet selectedSlot;\n\n// Starts the game if the name is valid.\nfunction joinGame() {\n\n    if (!allBlueprintsSelected())\n        swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error');\n    // check if the nick is valid\n    else if (validNick()) {\n\n        // Set cookies for inputs\n        for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);\n        }\n\n        // Use cookies to set the ingame blueprint slot values\n        for(let i = 1; i <= GLOBAL.BP_MAX; i++) {\n            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];\n\n            // Check whether blueprint is selected!                     \n            document.getElementById('bp-ingame-' + i).innerHTML = selectedBlueprints[i-1].name + ' (' + getCompoundFormula(selectedBlueprints[i-1]) + ')';                                                                      \n        }\n\n        // Show game window\n        showElement('gameAreaWrapper');\n        hideElement('startMenuWrapper');\n\n        // Show loading screen\n        showElement('loading');\n\n        // Cookie Inputs: 0=player, 1=room, 2=team\n\n        // Connect to server\n        beginConnection();\n            \n    } else {\n        nickErrorText.style.display = 'inline';\n    }\n}\n\n/** check if nick is valid alphanumeric characters (and underscores)\n * @returns true if the nickname is valid, false otherwise\n */\nfunction validNick() {\n    const regex = /^(\\w|_|-| |!|\\.|\\?){2,16}$/;\n    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n        if(regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private'))\n            return false;\n    }\n\n    return true;\n}\n\n/**\n * Returns true if all four blueprint slots are filled.\n */\nfunction allBlueprintsSelected() {\n    for(let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {\n        if(cookieInputs[i].innerHTML.substring(0, 1) === '-')\n            return false;\n    }\n    return true;\n}\n/**\n * Its a method for testing stuff\n */\nfunction testHandler() {\n    swal('SUCCESS','The test event is invoked!','info');\n}\n\n/** \n * Onload function. Initializes the menu screen, creates click events, and loads cookies.\n */\nwindow.onload = () => {\n    \n    // Patch logo for firefox\n    if(typeof InstallTrigger !== 'undefined')\n        document.getElementById('logo').innerHTML = `<img src=\"assets/logo.svg\" id=\"logo-firefox\">`; // eslint-disable-line\n\n    // Cookie loading - create array of all cookie values\n    let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val));\n\n    // Continue loading cookies only if it exists\n    let i = 0;\n    for(let cookie of cookieValues) {\n        if(cookie !== null && cookie.length > 0) {\n            if(cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT')\n                cookieInputs[i].value = cookie;\n            else if(cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined)\n                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;\n        }\n        i++;\n    }\n\n    // Add listeners to start game to enter key and button click\n\n    // Eric - Test method do not remove pls\n    document.addEventListener('pointerdown', mouseClickHandler);\n\n    bindHandler('startButton', function () {\n        joinGame();\n    });\n\n    bindHandler('quitButton', function () {\n        quitGame('You have left the game.', false);\n    });\n\n    bindHandler('exitButton', function () {\n        quitGame('The game has ended.', false);\n        hideElement('winner-panel');\n    });\n\n    bindHandler('resumeButton', function () {\n        hideElement('menubox');\n    });\n\n    bindHandler('optionsButton', function () {\n        swal('', 'This feature is not implemented.', 'info');\n    });\n\n    bindHandler('controlsButton', function () {\n        swal('', 'This feature is not implemented.', 'info');\n    });\n\n    bindHandler('creditsButton', function () {\n        swal('', 'Created by BananiumLabs.com', 'info');\n    });\n\n    bindHandler('btn-start-game', function () {\n        console.log('starting game');\n        startGame(true);\n    });\n\n    bindHandler('newsBox', function() {\n        swal('','hello world','info');\n    });\n\n    // document.getElementById('gameView', onClick, false);\n\n    for(let i = 0; i < selectedBlueprints.length; i++) {\n        bindHandler('bp-ingame-' + (i + 1), function() {\n            selectedCompound = i;\n            updateCompoundButtons();\n        });\n    }\n\n    // Set up the blueprint slot buttons\n    for(let i = 1; i <= GLOBAL.BP_MAX; i++) {\n        document.getElementById('bp-slot-' + i).onclick = () => {\n            showElement('bp-select');\n            document.getElementById('bp-select-header').innerHTML = GLOBAL.BP_SELECT + i;\n            selectedSlot = i;\n        };\n    }\n\n    document.getElementById('btn-close').onclick = () => { hideElement('bp-select'); };\n\n    // Set up blueprint selection buttons\n    for(let blueprint in BLUEPRINTS) {\n        let bp = BLUEPRINTS[blueprint];\n\n        document.getElementById('blueprint-wrapper').innerHTML +=\n            `\n            <button onmouseenter=\"tooltipFollow(this)\" class=\"button width-override col-6 col-12-sm btn-secondary btn-blueprint\" id=\"btn-blueprint-` + blueprint + `\">\n                <p>` + bp.name + `</p>\n                <h6>-` + getCompoundFormula(bp) + `-</h6>\n                <img src=\"` + bp.texture + `\">\n                <span class=\"tooltip\">` + bp.tooltip + `</span>\n            </button>\n\n            `;\n    }\n    // Blueprint Slots\n    for(let btn of document.getElementsByClassName('btn-blueprint'))\n        btn.onclick = () =>  {\n            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are 'btn-blueprint-'\n            console.log(blueprint + ' selected in slot ' + selectedSlot);\n            document.getElementById('bp-slot-' + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;\n            hideElement('bp-select');\n            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);\n        };\n\n    // Add enter listeners for all inputs\n    for(let i = 0; i < GLOBAL.INPUT_COUNT; i++) {\n        cookieInputs[i].addEventListener('keypress', e => {\n            const key = e.which || e.keyCode;\n    \n            if (key === GLOBAL.KEY_ENTER)\n                joinGame();\n        });\n    }\n\n    // Behavior when room type is changed\n    if (cookieInputs[7].value !== 'private')\n        hideElement('room');\n    else\n        showElement('room');\n\n    cookieInputs[7].onchange = () => {\n        if(cookieInputs[7].value === 'private')\n            showElement('room');\n        else\n            hideElement('room');\n\n        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);\n    };\n\n    // Server changed\n    cookieInputs[8].onchange = () => {\n        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);\n    };\n};\n\n/**\n * Sets mouse positions for tooltip\n */\nwindow.onmousemove = (e) => {\n    mouseX = e.clientX;\n    mouseY = e.clientY;\n};\n\n// function setupEventHandlers() {  \n//     document.addEventListener('mousedown', this._onMouseDown.bind(this));    \n//     document.addEventListener('mousemove', this._onMouseMove.bind(this));  \n//     document.addEventListener('mouseup', this._onMouseUp.bind(this));    \n//     document.addEventListener('wheel', this._onWheel.bind(this));    \n//     document.addEventListener('touchstart', this._onTouchStart.bind(this));    \n//     document.addEventListener('touchmove', this._onTouchMove.bind(this));    \n//     document.addEventListener('touchend', this._onTouchEnd.bind(this));    \n//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));    \n//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));\n// };\n\n/**\n * Transitions from in-game displays to the main menu.\n * @param {string} msg The message to be displayed in the menu after disconnect. \n * @param {boolean} isError True if the game quit was due to an error; false otherwise.\n */\nexport function quitGame(msg, isError) {\n\n    // Disconnect from server\n    disconnect();\n\n    // Set status of ingame\n    setIngame(false);\n\n    // menu\n    hideElement('gameAreaWrapper');\n    hideElement('hud');\n    hideElement('menubox');\n    showElement('startMenuWrapper');\n    hideElement('lobby');\n    swal('Disconnected from Game', msg, (isError) ? 'error' : 'info');\n}\n\n/**\n * Binds handlerMethod to onclick event for element id.\n * @param {string} id \n * @param {function} handlerMethod \n */\nexport function bindHandler(id, handlerMethod) {\n    document.getElementById(id).onclick = handlerMethod;\n}\n\n/**\n * Displays a hidden element\n * @param {string} el The id of the element to show\n */\nexport function showElement(el) {\n    document.getElementById(el).style.display = 'block';\n}\n\n/**\n * Hides a visible element\n * @param {string} el The id of the element to hide\n */\nexport function hideElement(el) {\n    document.getElementById(el).style.display = 'none';\n}\n\n/**\n * Makes tooltip follow the mouse. Call when a button is hovered.\n * @param {HTMLElement} button The element reference for the button currently being hovered.\n */\nwindow.tooltipFollow = (button) => {\n    let tooltip = button.getElementsByClassName('tooltip')[0];\n    tooltip.style.top = (mouseY - 150) + 'px';\n    tooltip.style.left = (mouseX - 150) + 'px';\n};\n\n/**\n * Updates the list of atoms that the player holds.\n * Only updates the entry for the particular ID given.\n * @param {string} atomID The ID of the atom to update.\n */\nexport function updateAtomList(atomID) {\n    let list = document.getElementById('atom-count');\n\n    if(document.getElementById('atom-list-' + atomID) === null) {\n        let newEntry = document.createElement('li');\n        newEntry.setAttribute('id', 'atom-list-' + atomID);\n        list.appendChild(newEntry);\n    }\n\n    document.getElementById('atom-list-' + atomID).innerHTML = '' + atomID.charAt(0).toUpperCase() + atomID.substr(1) + ': ' + player.atomList[atomID];\n\n    updateCompoundButtons(); //No need to update selection\n}\n\n/**\n * \n * @param {number} selectedSlot The index of the selected slot. 0-3\n */\nexport function updateCompoundButtons(selectedSlot) {\n    if(selectedSlot === undefined)\n        selectedSlot = selectedCompound;\n    else\n        selectedCompound = selectedSlot;\n\n    for(let i = 0; i < selectedBlueprints.length; i++) {\n        if (selectedSlot != i) {\n            if(canCraft(selectedBlueprints[i])){\n                document.getElementById('bp-ingame-' + (i + 1)).style.background ='#2ecc71';\n            }\n            else{\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#C8C8C8';\n            }\n        }\n        else { //is selected\n            if (canCraft(selectedBlueprints[i])) {\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#003CA8';\n            }\n            else {\n                document.getElementById('bp-ingame-' + (i + 1)).style.background = '#3D66D1';\n            }\n            document.getElementById('bp-select-label').innerHTML = 'Selected Compound: ' + selectedBlueprints[i].name;\n        }\n    }\n}\n\n/**\n * Updates the team scoreboard on screen.\n */\nexport function updateScores(teamSlot, increment) {\n    document.getElementById('team-score-' + teamSlot).innerHTML = parseInt(document.getElementById('team-score-' + teamSlot).innerHTML) + increment;\n}\n\n/**\n * Run on new player join to sync lobby information\n * @param {*} data The data transferred from server\n */\nexport function updateLobby(data) {\n\n// Wipe innerHTML first\n    let lobby = document.getElementById('team-display');\n    lobby.innerHTML = '';\n    for(let player in data) {\n        if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {\n            lobby.innerHTML += `\n            <div class=\"col-3\">\n                <h3>` + data[player].team + `</h3>\n                <ul id=\"` + data[player].team + `\">\n                </ul>\n            </div>\n            `;\n        }\n        let listItem = document.createElement('LI');\n        listItem.appendChild(document.createTextNode(data[player].name));\n        document.getElementById(data[player].team).appendChild(listItem);\n    }\n}\n\n/**\n * Displays the winner panel after a game has concluded.\n * @param {*} data Server sent data, including name and score of winning team.\n */\nexport function displayWinner(data) {\n    // console.log(data);\n    document.getElementById('winner-name').innerHTML = data.winner.name + ' has won!';\n    showElement('winner-panel');\n}\n\n/**\n * Sets all player owned atoms to 9999 only if method is called on a DEBUG\n * enabled server.\n */\nexport function devTest() {\n    if (GLOBAL.DEBUG) {\n        console.warn(JSON.stringify(player.atoms));\n        for (let i in player.atoms) {\n            player.atoms[i] = 9999;\n        }\n        updateCompoundButtons();\n    }\n}\n\n/**\n * Gets the formatted formula of a compound (e.g. C6H12O6).\n * @param {*} blueprint The blueprint object as defined in blueprints.js\n * @returns {string} The formula of the compound\n */\nfunction getCompoundFormula(blueprint) {\n    let formula = '';\n    for (let atom in blueprint.atoms) {\n        formula += atom.toUpperCase() + ((blueprint.atoms[atom] > 1) ? blueprint.atoms[atom] : '');\n    }\n\n    return formula;\n}",
     "static": true,
     "longname": "/home/dbqeo/Documents/AtomBlast.io/src/client/js/app.js",
     "access": "public",
@@ -763,7 +763,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{quitGame}",
     "description": "Transitions from in-game displays to the main menu.",
-    "lineNumber": 278,
+    "lineNumber": 267,
     "params": [
       {
         "nullable": null,
@@ -802,7 +802,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{bindHandler}",
     "description": "Binds handlerMethod to onclick event for element id.",
-    "lineNumber": 300,
+    "lineNumber": 289,
     "params": [
       {
         "nullable": null,
@@ -841,7 +841,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{showElement}",
     "description": "Displays a hidden element",
-    "lineNumber": 308,
+    "lineNumber": 297,
     "params": [
       {
         "nullable": null,
@@ -870,7 +870,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{hideElement}",
     "description": "Hides a visible element",
-    "lineNumber": 316,
+    "lineNumber": 305,
     "params": [
       {
         "nullable": null,
@@ -899,7 +899,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{updateAtomList}",
     "description": "Updates the list of atoms that the player holds.\nOnly updates the entry for the particular ID given.",
-    "lineNumber": 335,
+    "lineNumber": 324,
     "params": [
       {
         "nullable": null,
@@ -928,7 +928,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{updateCompoundButtons}",
     "description": "",
-    "lineNumber": 353,
+    "lineNumber": 342,
     "params": [
       {
         "nullable": null,
@@ -957,7 +957,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{updateScores}",
     "description": "Updates the team scoreboard on screen.",
-    "lineNumber": 383,
+    "lineNumber": 372,
     "params": [
       {
         "name": "teamSlot",
@@ -988,7 +988,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{updateLobby}",
     "description": "Run on new player join to sync lobby information",
-    "lineNumber": 391,
+    "lineNumber": 380,
     "params": [
       {
         "nullable": null,
@@ -1017,7 +1017,7 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{displayWinner}",
     "description": "Displays the winner panel after a game has concluded.",
-    "lineNumber": 416,
+    "lineNumber": 405,
     "params": [
       {
         "nullable": null,
@@ -1046,12 +1046,55 @@
     "importPath": "atomblast.io/src/client/js/app.js",
     "importStyle": "{devTest}",
     "description": "Sets all player owned atoms to 9999 only if method is called on a DEBUG\nenabled server.",
-    "lineNumber": 426,
+    "lineNumber": 415,
     "params": [],
     "return": null
   },
   {
     "__docId__": 67,
+    "kind": "function",
+    "name": "getCompoundFormula",
+    "memberof": "src/client/js/app.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/client/js/app.js~getCompoundFormula",
+    "access": "public",
+    "export": false,
+    "importPath": "atomblast.io/src/client/js/app.js",
+    "importStyle": null,
+    "description": "Gets the formatted formula of a compound (e.g. C6H12O6).",
+    "lineNumber": 430,
+    "unknown": [
+      {
+        "tagName": "@returns",
+        "tagValue": "{string} The formula of the compound"
+      }
+    ],
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "*"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "blueprint",
+        "description": "The blueprint object as defined in blueprints.js"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The formula of the compound"
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 68,
     "kind": "file",
     "name": "src/client/js/app.test.js",
     "content": "test('Placeholder test', () => {\n    expect();\n});",
@@ -1062,7 +1105,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 68,
+    "__docId__": 69,
     "kind": "file",
     "name": "src/client/js/global.js",
     "content": "import { MAP_LAYOUT } from './obj/tiles';\n\n// Contains all global constants and functions for both the client and server.\nexport const GLOBAL = {\n    \n    DEBUG: true,\n    // Keys and other mathematical constants\n    KEY_ESC: 27,\n    KEY_ENTER: 13,\n    KEY_W: 87,\n    KEY_A: 65,  \n    KEY_S: 83,\n    KEY_D: 68,\n    KEY_1: 49,\n    KEY_2: 50,\n    KEY_3: 51,\n    KEY_4: 52,\n    KEY_SPACE: 32,\n\n    //Blueprints\n    BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header\n    BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time\n\n    // Main menu\n    INPUT_COUNT: 3, // Number of input boxes on main menu\n\n    // Chat\n    PLACEHOLDER_NAME: 'Unnamed Player',\n    MAX_CHATS: 50, // Max number of chats to be displayed before deleting\n\n    // Server\n    SERVER_IP: 'https://atomblast.herokuapp.com/', // Change during production!!!!!\n    LOCAL_HOST: 'localhost:12002',\n    TEST_IP: 'https://iogame-test.herokuapp.com/',\n    NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required\n    ROOM_DELETE_DELAY: 30000, // Time, in ms, between winning and room closing\n\n    // Cookies\n    COOKIES: [\n        'name', //0\n        'room', //1\n        'team', //2\n        'bp-slot-1', //3\n        'bp-slot-2', //4\n        'bp-slot-3', //5 \n        'bp-slot-4', //6\n        'room-type', //7\n        'server', //8\n    ],\n    COOKIE_DAYS: 14, // Cookie lifetime\n\n    // Player Movement\n    MAX_SPEED: 6,\n    PLAYER_RADIUS: 100,\n    VELOCITY_STEP: 0.85, // speed multiplier when player is gliding to a stop\n    LERP_VALUE: 0.2,\n    DEADZONE: 0.1,\n    MAX_HEALTH: 100, // Starting health of players\n\n    // Atoms\n    ATOM_RADIUS: 30, // size of spawned atoms\n    MIN_POWERUPS: 150, // minimum number of powerups to be spawned (TEMPORARY)\n    MAX_POWERUPS: 300, // maximum number of powerups to be spawned (TEMPORARY)\n    ATTRACTION_RADIUS: 150, // Max distance for powerup to be attracted to player\n    ATTRACTION_COEFFICIENT: 100, // Multiplier for attraction strength\n    ATOM_SPAWN_SPEED: 15, // Speed that atom travels away from spawner\n    ATOM_SPAWN_DELAY: 5000, // Atom spawn delay, in milliseconds\n    ATOM_COLLECT_THRESHOLD: 100, // Distance away from center of player that the atom must be before being collected\n\n    // Map\n    TILE_TEXTURE_DIR: '../assets/map/Tiles/',\n    MAP_SIZE: 2000,\n    SPAWN_POINTS: [\n        {x: 0, y: 0},\n        {x: 9, y: 9},\n        {x: 0, y: 9},\n        {x: 9, y: 0}\n    ],  // Spawn points for different teams\n\n    // Drawing\n    DRAW_RADIUS: 1000, // Radius around player in which to draw other objects\n    GRID_SPACING: 200, // space between each line on the grid\n    GRID_LINE_STROKE: 1,\n    FRAME_RATE: 60,\n\n    // Colors\n    GRID_LINE_COLOUR: 0xD3D3D3,\n    FRIENDLY_COLOUR: 0x2ECC71,\n    FRIENDLY_COLOUR_HEX: '#2ECC71',\n    ENEMY_COLOUR: 0xEA6153,\n    ENEMY_COLOUR_HEX: '#EA6153',\n\n    // Sprites and textures\n    PLAYER_SPRITES: [\n        '../assets/testplayer.png',\n        \n    ],\n    IGNITE_SPRITE: '../assets/placeholder_ignited.png',\n\n    // Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.\n    ATOM_IDS: [\n        'h',\n        'he',\n        'c',\n        'cl',\n        'n',\n        'o'\n    ],\n    ATOM_SPRITES: [\n        '../assets/atom-hydrogen.png',\n        '../assets/atom_helium.png',\n        '../assets/atom_carbon.png',\n        '../assets/testplayer2.png',\n        '../assets/atom_nitrogen.png',\n        '../assets/atom_oxygen.png',\n    ],\n    //Each Value corresponds with the above event\n    EXPERIENCE_VALUES: {\n        CRAFT: 10,\n        KILL: 124\n    },\n\n    //The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc\n    EXPERIENCE_LEVELS: [\n        0,\n        10,\n        20,\n        40,\n        100,\n        140,\n        160\n    ],\n\n    // Deaths\n    KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player\n    ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player\n    WINNING_SCORE: 20, // How many points are required to win the game per team. TODO increase\n    MAX_DEATH_ATOMS: 100, // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.\n};\n\n/**\n * Returns the distance between two objects.\n * Both objects must be GameObjects\n * @param {GameObject} obj1 First object \n * @param {GameObject} obj2 Second object\n */\nexport function distanceBetween(obj1, obj2) {\n    return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));\n}\n\n/**\n * Returns true if the object parameter is within the map boundaries.\n * @param {GameObject} obj The object to test\n * @return true if the object parameter is within the map boundaries\n */\nexport function isInBounds(obj) {\n    return obj.posX > 0 && obj.posY > -GLOBAL.GRID_SPACING * 2 && obj.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 && obj.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2;\n}",
@@ -1073,7 +1116,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 69,
+    "__docId__": 70,
     "kind": "variable",
     "name": "GLOBAL",
     "memberof": "src/client/js/global.js",
@@ -1093,7 +1136,7 @@
     }
   },
   {
-    "__docId__": 70,
+    "__docId__": 71,
     "kind": "function",
     "name": "distanceBetween",
     "memberof": "src/client/js/global.js",
@@ -1136,7 +1179,7 @@
     }
   },
   {
-    "__docId__": 71,
+    "__docId__": 72,
     "kind": "function",
     "name": "isInBounds",
     "memberof": "src/client/js/global.js",
@@ -1172,7 +1215,7 @@
     }
   },
   {
-    "__docId__": 72,
+    "__docId__": 73,
     "kind": "file",
     "name": "src/client/js/lib/chat-client.js",
     "content": "/** \n * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan\n * Created 17 April 2018\n */\n\nimport {GLOBAL} from '../global.js';\nimport { socket } from '../socket.js';\nimport {devTest} from '../app.js';\n\nlet player, room, team;\nexport default class ChatClient {\n\n    // Use this constructor during init to connect ChatClient to the server\n    constructor(params) {\n        // this.canvas = params.canvas;\n        // this.mobile = params.mobile;\n        this.player = params.player;\n        this.team = params.team;\n        const self = this;\n        this.commands = {};\n        this.commandPrefix = \"-\";\n        let input = document.getElementById('chatInput');\n        input.addEventListener('keypress', key => {this.sendChat(key);}); //This works WTF\n        input.addEventListener('keyup', key => {\n            input = document.getElementById('chatInput');\n            key = key.which || key.keyCode;\n            if (key === global.KEY_ESC) {\n                input.value = '';\n                // self.canvas.cv.focus();\n            }\n        });\n    }\n\n    // TODO: Break out many of these GameControls into separate classes.\n    /** \n    * MISSING COMMENT\n    */\n    registerFunctions() {\n        const self = this;\n\n        this.registerCommand('help', 'Information about the chat commands.', () => {\n            self.printHelp();\n        });\n\n        this.registerCommand('test', 'Gives 5000 of every element', () => {\n            if(GLOBAL.DEBUG) {\n                devTest();\n                self.addSystemLine(\"Developer Configurations Applied!\");\n            }\n            else {\n                self.addSystemLine(\"Invalid Permission.\");\n            }\n        });\n        this.registerCommand('damage', 'Damages you by the given amount.', (params) => {\n            console.log(params);\n            if(GLOBAL.DEBUG) {\n                if(params[0] !== undefined && typeof parseInt(params[0]) === 'number') {\n                    socket.emit('damage', {damage: parseInt(params[0]), sender: socket.id, player: socket.id});\n                    self.addSystemLine(\"Damaged player by \" + params[0] + \" health points\");\n                }\n                else\n                    self.addSystemLine(\"Invalid parameter. Parameter must be of type number\");\n            }\n            else {\n                self.addSystemLine(\"Invalid Permission.\");\n            }\n        });\n        this.registerCommand('spawnAtom', 'Spawns a Hydrogen atom at the bottom left vent.', () => {\n            socket.emit('spawnAtom', {row: 9, col: 0});\n        })\n\n        // this.registerCommand('login', 'Login as an admin.', function (args) {\n        //     self.socket.emit('pass', args);\n        // });\n\n        // this.registerCommand('kick', 'Kick a player, for admins only.', function (args) {\n        //     self.socket.emit('kick', args);\n        // });\n        global.chatClient = this;\n    }\n\n    /**\n     * Places the message DOM node into the chat box.\n     * @param {string} innerHTML The message to be displayed.\n     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.\n     */\n    appendMessage(innerHTML, styleClass) {\n        if (this.mobile)\n            return;\n\n        const newline = document.createElement('li');\n\n        // Colours the chat input correctly.\n        newline.className = styleClass;\n        // Add content\n        newline.innerHTML = innerHTML;\n\n        const chatList = document.getElementById('chatList');\n        // Remove old chats\n        if (chatList.childNodes.length > GLOBAL.MAX_CHATS) {\n            chatList.removeChild(chatList.childNodes[0]);\n        }\n        chatList.appendChild(newline);\n        //Scroll to view new chat\n        chatList.scrollTop += 100;\n    }\n\n    /**\n     * Chat box implementation for the users.\n     * @param {string} name Name of the player who sent the message\n     * @param {string} message Message that was sent\n     * @param {boolean} me True if the sender matches the receiver\n     */\n    addChatLine(name, message, me) {\n       this.appendMessage(\n           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,\n           (me) ? 'me' : 'friend'\n        );\n    }\n\n    /**\n     * \n     */\n\n\n    /**\n     * Chat box implementation for the users.\n     * @param {string} name Name of the player who sent the message\n     * @param {string} message Message that was sent\n     * @param {boolean} me True if the sender matches the receiver\n     */\n    addPrivateMessage(name, message, me) {\n       this.appendMessage(\n           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,\n           (me) ? 'me' : 'friend'\n        );\n    }\n\n    // Message to notify players when a new player joins\n    addLoginMessage(name, me) {\n        console.log(`${name} joined`);\n       \n        this.appendMessage(\n            `<b>${(me) ? '</b>You have' : (name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name + '</b> has'} joined the room!`,\n            'join'\n        );\n    }\n\n    // Chat box implementation for the system.\n    addSystemLine(message) {\n        this.appendMessage(\n            message,\n            'system'\n        );\n    }\n\n    // Places the message DOM node into the chat box.\n    // appendMessage(node) {\n    //     if (this.mobile) {\n    //         return;\n    //     }\n        // const chatList = document.getElementById('chatList');\n        // // if (chatList.childNodes.length > 10) {\n        // //     chatList.removeChild(chatList.childNodes[0]);\n        // // }\n        // chatList.appendChild(node);\n    // }\n\n    // Sends a message or executes a command on the click of enter.\n    sendChat(key) {\n        const commands = this.commands;\n        const input = document.getElementById('chatInput');\n\n        key = key.which || key.keyCode;\n\n        if (key === GLOBAL.KEY_ENTER) {\n            const text = input.value.replace(/(<([^>]+)>)/ig, '');\n            if (text !== '') {\n\n                // Chat command.\n                if (text.indexOf(this.commandPrefix) === 0) {\n                    const args = text.substring(1).split(' ');\n                    if (commands[args[0]]) {\n                        commands[args[0]].callback(args.slice(1));\n                    } else {\n                        this.addSystemLine(`Unrecognized Command: ${text}, type -help for more info.`);\n                    }\n\n                    // Allows for regular messages to be sent to the server.\n                } else {\n                    //Debug lines for messages - Remove on production\n                    // console.log(\"This Player: \" + this.player);\n                    // console.log(\"This message: \" + text);\n                    socket.emit('playerChat', { sender: this.player, message: text });\n                    this.addChatLine(this.player, text, true);\n                }\n\n                // Resets input.\n                input.value = '';\n                // this.canvas.cv.focus();\n            }\n        }\n    }\n\n    // Allows for addition of commands.\n    registerCommand(name, description, callback) {\n        this.commands[name] = {\n            description,\n            callback\n        };\n    }\n\n    // Allows help to print the list of all the commands and their descriptions.\n    printHelp() {\n        const commands = this.commands;\n        for (const cmd in commands) {\n            if (commands.hasOwnProperty(cmd)) {\n                this.addSystemLine(`-${cmd}: ${commands[cmd].description}`);\n            }\n        }\n    }\n}",
@@ -1183,7 +1226,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 73,
+    "__docId__": 74,
     "kind": "class",
     "name": "ChatClient",
     "memberof": "src/client/js/lib/chat-client.js",
@@ -1199,7 +1242,7 @@
     "interface": false
   },
   {
-    "__docId__": 74,
+    "__docId__": 75,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1213,7 +1256,7 @@
     "undocument": true
   },
   {
-    "__docId__": 75,
+    "__docId__": 76,
     "kind": "member",
     "name": "player",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1230,7 +1273,7 @@
     }
   },
   {
-    "__docId__": 76,
+    "__docId__": 77,
     "kind": "member",
     "name": "team",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1247,7 +1290,7 @@
     }
   },
   {
-    "__docId__": 77,
+    "__docId__": 78,
     "kind": "member",
     "name": "commands",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1264,7 +1307,7 @@
     }
   },
   {
-    "__docId__": 78,
+    "__docId__": 79,
     "kind": "member",
     "name": "commandPrefix",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1281,7 +1324,7 @@
     }
   },
   {
-    "__docId__": 79,
+    "__docId__": 80,
     "kind": "method",
     "name": "registerFunctions",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1296,7 +1339,7 @@
     "return": null
   },
   {
-    "__docId__": 80,
+    "__docId__": 81,
     "kind": "method",
     "name": "appendMessage",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1332,7 +1375,7 @@
     "return": null
   },
   {
-    "__docId__": 81,
+    "__docId__": 82,
     "kind": "method",
     "name": "addChatLine",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1378,7 +1421,7 @@
     "return": null
   },
   {
-    "__docId__": 82,
+    "__docId__": 83,
     "kind": "method",
     "name": "addPrivateMessage",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1424,7 +1467,7 @@
     "return": null
   },
   {
-    "__docId__": 83,
+    "__docId__": 84,
     "kind": "method",
     "name": "addLoginMessage",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1453,7 +1496,7 @@
     "return": null
   },
   {
-    "__docId__": 84,
+    "__docId__": 85,
     "kind": "method",
     "name": "addSystemLine",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1476,7 +1519,7 @@
     "return": null
   },
   {
-    "__docId__": 85,
+    "__docId__": 86,
     "kind": "method",
     "name": "sendChat",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1499,7 +1542,7 @@
     "return": null
   },
   {
-    "__docId__": 86,
+    "__docId__": 87,
     "kind": "method",
     "name": "registerCommand",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1534,7 +1577,7 @@
     "return": null
   },
   {
-    "__docId__": 87,
+    "__docId__": 88,
     "kind": "method",
     "name": "printHelp",
     "memberof": "src/client/js/lib/chat-client.js~ChatClient",
@@ -1550,7 +1593,7 @@
     "return": null
   },
   {
-    "__docId__": 88,
+    "__docId__": 89,
     "kind": "file",
     "name": "src/client/js/lib/cookies.js",
     "content": "/**\n * Cookies.js was adopted from a StackOverflow answer \n * (https://stackoverflow.com/questions/14573223/set-cookie-and-get-cookie-with-javascript).\n */\n\n/**\n * Sets the value of a cookie.\n * @param {string} name Name of cookie\n * @param {string} value New value of cookie\n * @param {number} days Number of days this cookie will last for\n */\nexport function setCookie(name, value, days) {\n    let expires = \"\";\n    if (days) {\n        const date = new Date();\n        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));\n        expires = `; expires=${date.toUTCString()}`;\n    }\n    document.cookie = `${name}=${value || \"\"}${expires}; path=/`;\n}\n\n/**\n * Sets the value of a cookie.\n * @param {string} name Name of cookie\n * @return {string} The value of the cookie. Returns null if the cookie is not found.\n */\nexport function getCookie(name) {\n    const nameEQ = `${name}=`;\n    const ca = document.cookie.split(';');\n\n    for (let c of ca) {\n        while (c.charAt(0) == ' ') c = c.substring(1, c.length);\n        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);\n    }\n\n    return null;\n}\n\n/**\n * Removes the given cookie.\n * @param {string} name The name of the cookie to erase.\n */\nexport function eraseCookie(name) {\n    document.cookie = `${name}=; Max-Age=-99999999;`;\n}",
@@ -1561,7 +1604,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 89,
+    "__docId__": 90,
     "kind": "function",
     "name": "setCookie",
     "memberof": "src/client/js/lib/cookies.js",
@@ -1610,7 +1653,7 @@
     "return": null
   },
   {
-    "__docId__": 90,
+    "__docId__": 91,
     "kind": "function",
     "name": "getCookie",
     "memberof": "src/client/js/lib/cookies.js",
@@ -1646,7 +1689,7 @@
     }
   },
   {
-    "__docId__": 91,
+    "__docId__": 92,
     "kind": "function",
     "name": "eraseCookie",
     "memberof": "src/client/js/lib/cookies.js",
@@ -1675,7 +1718,7 @@
     "return": null
   },
   {
-    "__docId__": 92,
+    "__docId__": 93,
     "kind": "file",
     "name": "src/client/js/lib/keyboard.js",
     "content": "/**\n * Key listener function, adapted from https://github.com/kittykatattack/learningPixi#keyboard\n * Please refer to this link for extended documentation.\n * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js \n */\nimport { isFocused } from '../pixigame';\n\n\nexport function keyboard(keyCode) {\n  let key = {};\n  key.code = keyCode;\n  key.isDown = false;\n  key.isUp = true;\n  key.press = undefined;\n  key.release = undefined;\n  //If this is a mobile device & the joystick is being used, this will disable the handlers to stop interference.\n  key.mobile = false; \n  //The `downHandler`\n  key.downHandler = event => {\n      if (event.keyCode === key.code && !key.mobile) {\n        if (isFocused()) {\n          if (key.isUp && key.press){\n            key.press();\n          }\n          key.isDown = true;\n          key.isUp = false;\n        }\n        //If \n        else{\n          key.isDown = false;\n          key.isUp = true;\n        }\n    // event.preventDefault();\n      }\n  };\n\n  //The `upHandler`\n  key.upHandler = event => {\n      if (event.keyCode === key.code && !key.mobile) {\n        if(isFocused()){\n          if (key.isDown && key.release){\n            key.release();\n          }\n          key.isDown = false;\n          key.isUp = true;\n        }\n        else{\n          key.isDown = false;\n          key.isUp = true;\n        }\n      }\n    // event.preventDefault();\n  };\n\n  //Attach event listeners\n  window.addEventListener(\n    \"keydown\", key.downHandler.bind(key), false\n  );\n  window.addEventListener(\n    \"keyup\", key.upHandler.bind(key), false\n  );\n  return key;\n}",
@@ -1686,7 +1729,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 93,
+    "__docId__": 94,
     "kind": "function",
     "name": "keyboard",
     "memberof": "src/client/js/lib/keyboard.js",
@@ -1716,7 +1759,7 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 95,
     "kind": "file",
     "name": "src/client/js/obj/blueprints.js",
     "content": "/**\n * This constant stores all data that is used to define Blueprints, \n * which define the recipe and behaviors of Compounds.\n * \n * Fields required:\n * Name: The formatted name of the compound to display\n * Tooltip: Description of compound\n * Texture: Path to image to load\n * Type: Class of compound. Each different type has a different behavior as defined in `compound.js`.\n * Params: Optional parameters to pass to the compound class associated with the given type.\n * Atoms: How to make the compound. Format is `Element symbol: Number required`. All excluded atoms will be considered 0.\n */\nexport const BLUEPRINTS = {\n    binaryHydrogen: {\n        name: 'Hydrogen',\n        tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',\n        texture: '../assets/atom-hydrogen.png',\n        type: 'flammable',\n        params: {\n            speed: 5*3,\n            damage: 1,\n            size: 20,\n            ignitedDamage: 10,\n            splash: 50,\n            splashImage: '../assets/explosion.png'\n        },\n        atoms: {\n            h: 2\n        }\n    },\n    basicMethane: {\n        name: 'Methane',\n        tooltip: 'Okay, who passed gas?',\n        texture: '../assets/atom-hydrogen.png',\n        type: 'basic',\n        params: {\n            speed: 3*3,\n            damage: 3,\n            size: 10\n        },\n        atoms: {\n            c: 1,\n            h: 4\n        }\n    },\n    basicBenzene: {\n        name: 'Benzene',\n        tooltip: 'Carbon rings. They smell nice.',\n        texture: '../assets/atom_carbon.png',\n        type: 'basic',\n        params: {\n            speed: 1*3,\n            damage: 5,\n            size: 30\n        },\n        atoms: {\n            h: 6,\n            c: 6\n        }\n    },\n    basicWater: {\n        name: 'Water',\n        tooltip: 'Why life exists. Are you trying to drown someone?',\n        texture: '../assets/atom-hydrogen.png',\n        type: 'stream',\n        params: {\n            speed: 4*3,\n            damage: 1,\n            size: 15,\n            length: 10,\n            spacing: 50     \n        },\n        atoms: {\n            h: 2,\n            o: 1\n        }\n    },\n    binaryNitrogen: {\n        name: 'Nitrogen',\n        tooltip: '78% of your air, and also why you get the bends.',\n        texture: '../assets/atom_nitrogen.png',\n        type: 'basic',\n        params: {\n            speed: 3*3,\n            damage: 3,\n            size: 20\n        },\n        atoms: {\n            n: 2\n        }\n    },\n    binaryHelium: {\n        name: 'Helium',\n        tooltip: 'A nonreactive, inert gas. In other words, useless.',\n        texture: '../assets/atom_helium.png',\n        type: 'basic',\n        params: {\n            speed: 4 * 3,\n            damage: 2,\n            size: 14\n        },\n        atoms: {\n            he: 2\n        }\n    },\n    ionicSodiumChloride: {\n        name: 'Sodium Chloride',\n        tooltip: 'Can kill small insects, slugs, and snails. Cannot kill much else.',\n        texture: '../assets/atom_helium.png',\n        type: 'ionic',\n        params: {\n            speed: 4 * 3,\n            damage: 2,\n            size: 14\n        },\n        atoms: {\n            na: 1,\n            cl: 1\n        }\n    },\n    acidicHydrogenChloride: {\n        name: 'Hydrochloric Acid',\n        tooltip: 'In a pure form, can corrode metal.',\n        texture: '../assets/atom_helium.png',\n        type: 'acidic',\n        params: {\n            speed: 4 * 3,\n            damage: 2,\n            size: 14\n        },\n        atoms: {\n            h: 1,\n            cl: 1\n        }\n    },\n    nuclearLithiumHydrogen: {\n        name: 'Lithium Deuteride',\n        tooltip: 'Used as the primary fuel in thermonuclear weapons.',\n        texture: '../assets/atom_lithium.png',\n        type: 'nuclear',\n        params: {\n            speed: 1 * 3,\n            damage: 2,\n            size: 14\n        },\n        atoms: {\n            h: 1,\n            li: 1\n        }\n    },\n    glucose: {\n        name: 'Glucose',\n        tooltip: 'S U G A R R U S H !!!!',\n        texture: '../assets/atom-hydrogen.png',\n        type: 'speed',\n        params: {\n            speedFactor: 0.5\n        },\n        atoms: {\n            c: 6,\n            h: 12,\n            o: 6\n        }\n    },\n    protonPack: {\n        name: 'Proton Pack',\n        tooltip: 'Easy health!',\n        texture: '../assets/atom-hydrogen.png',\n        type: 'health',\n        params: {\n            healthModifier: 10\n        },\n        atoms: {\n            h: 10\n        }\n    }\n};\n\n",
@@ -1727,7 +1770,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 95,
+    "__docId__": 96,
     "kind": "variable",
     "name": "BLUEPRINTS",
     "memberof": "src/client/js/obj/blueprints.js",
@@ -1746,7 +1789,7 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 97,
     "kind": "file",
     "name": "src/client/js/obj/create.js",
     "content": "/**\n * Responsible for all gameObject creation and creation request scripts \n * for the client (atoms, compounds, players)\n */\nimport * as PIXI from 'pixi.js';\nimport { Player } from './player.js';\nimport { GLOBAL } from '../global.js';\nimport { GameObject } from './gameobject.js';\nimport { distanceBetween } from '../global.js';\nimport { screenCenterX, screenCenterY, player } from '../pixigame.js';\nimport { socket } from '../socket.js';\nimport { updateAtomList, updateCompoundButtons } from '../app.js';\n\n/**\n * Renders a new atom.\n * @param {*} data The server object reference to spawn on the clientside. Must contain:\n *  - typeID {string} See GLOBAL.ATOM_IDS\n *  - id {number} Unique ID\n *  - posX {number}\n *  - posY {number}\n *  - vx {number}\n *  - vy {number}\n */\nexport function createRenderAtom(data) {\n\n    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;\n\n    if (data.typeID === '')\n        throw new Error('The Atom object cannot be created without specifying behavior.');\n\n    if (texture === undefined)\n        throw new Error('Atom of type ' + data.typeID + ' could not be found!');\n\n    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);\n    result.typeID = data.typeID;\n    result.height = GLOBAL.ATOM_RADIUS * 2;\n    result.width = GLOBAL.ATOM_RADIUS * 2;\n\n    return result;\n}\n\nexport function createPlayer(data) {\n\n}\n\n/**\n * Recreates an already spawned compound on the clientside based on server data.\n * @param {*} data Data sent from server:\n *  - id {number} Unique ID\n *  - posX {number}\n *  - posY {number}\n *  - vx {number}\n *  - vy {number}\n *  - blueprint {*}\n *  - sendingTeam {string}\n *  - sender {number - socket ID}\n */\nexport function createRenderCompound(data) {\n    let texture = PIXI.loader.resources[data.blueprint.texture].texture;\n    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);\n    result.blueprint = data.blueprint;\n    result.sendingTeam = data.sendingTeam;\n    result.sender = data.sender;\n\n    // Parse params\n    for (let param in data.blueprint.params) {\n        result[param] = data.blueprint.params[param];\n    }\n\n    // Use params\n    result.width = result.size;\n    result.height = result.size;\n\n    return result;\n}\n\n/**\n * Creates a Compound by sending a request to the server.\n * @param {*} blueprint Then blueprint to create the compound from\n * @param {number} xIn x-coords\n * @param {number} yIn y-coords\n * @returns true if successful, false if the compound was not requested.\n */\nexport function requestCreateCompound(blueprint, xIn, yIn) {\n\n\n    updateCompoundButtons();\n\n    // if (blueprint.type === 'speed') {\n    //     // this.hide();\n    //     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);\n    //     console.log('New speed is ' + player.speedMult);\n    // } else if (blueprint.type === 'health') {\n    //     socket.emit('damage', {\n    //         damage: -blueprint.params.healthModifier,\n    //         sender: socket.id\n    //     });\n    //     if (player.health > GLOBAL.MAX_HEALTH) {\n    //         player.health = GLOBAL.MAX_HEALTH;\n    //     }\n    // } else {\n    // let cursor = app.renderer.plugins.interaction.mouse.global;\n\n    let centerX = window.innerWidth / 2;\n    let centerY = window.innerHeight / 2;\n    // console.log(centerX - cursor.x, cursor.y - centerY)\n    socket.emit('requestCreateCompound', {\n        blueprint: blueprint,\n        sendingTeam: player.team,\n        sender: socket.id,\n        mousePos: {\n            x: xIn - centerX,\n            y: centerY - yIn\n        }\n    });\n\n    // TODO: Add proper spray directional change based on mouse position when spraying is implemented\n    if (blueprint.type === 'stream')\n        for (let i = 0; i < blueprint.params.length - 1; i++)\n            setTimeout(() => {\n                socket.emit('requestCreateCompound', {\n                    blueprint: blueprint,\n                    sendingTeam: player.team,\n                    sender: socket.id,\n\n                    mousePos: {\n                        x: xIn - centerX,\n                        y: centerY - yIn\n                    },\n                    streamNumber: i\n                });\n            }, blueprint.params.spacing * i);\n    // }\n\n    //Emits the crafting event to update experience TODO\n    // socket.emit('experienceEvent', {\n    //     event: 'CRAFT'\n    // });\n}",
@@ -1757,7 +1800,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 97,
+    "__docId__": 98,
     "kind": "function",
     "name": "createRenderAtom",
     "memberof": "src/client/js/obj/create.js",
@@ -1790,7 +1833,7 @@
     }
   },
   {
-    "__docId__": 98,
+    "__docId__": 99,
     "kind": "function",
     "name": "createPlayer",
     "memberof": "src/client/js/obj/create.js",
@@ -1816,7 +1859,7 @@
     "return": null
   },
   {
-    "__docId__": 99,
+    "__docId__": 100,
     "kind": "function",
     "name": "createRenderCompound",
     "memberof": "src/client/js/obj/create.js",
@@ -1849,7 +1892,7 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 101,
     "kind": "function",
     "name": "requestCreateCompound",
     "memberof": "src/client/js/obj/create.js",
@@ -1911,7 +1954,7 @@
     }
   },
   {
-    "__docId__": 101,
+    "__docId__": 102,
     "kind": "file",
     "name": "src/client/js/obj/gameobject.js",
     "content": "import * as PIXI from 'pixi.js';\nimport { app, screenCenterX, screenCenterY, player } from '../pixigame';\nimport { GLOBAL } from '../global';\nimport { MAP_LAYOUT } from './tiles';\n\n/**\n * GameObject class that all objects in the game space should inherit.\n * Provides standard field variables such as posX and posY, as well as \n * standard methods to manipulate them.\n * \n * A GameObject cannot be added directly; it must be inherited.\n * setup() and tick() must be overridden.\n */\nexport class GameObject extends PIXI.Sprite {\n\n    /**\n     * Creates a new GameObject.\n     * @param {PIXI.Texture} texture The texture associated with this sprite\n     * @param {string} id Unique identifier- for example, socket ID for players, numerical ID for atoms\n     * @param {number} x Global x-coordinate\n     * @param {number} y Global y-coordinate\n     * @param {number} vx Horizontal velocity\n     * @param {number} vy Vertical velocity\n     */\n    constructor(texture, id, x, y, vx, vy) {\n        super(texture);\n        this.id = id;\n        this.posX = x;\n        this.posY = y;\n        this.vx = vx;\n        this.vy = vy;\n        this.destroyed = false;\n        \n        app.stage.addChild(this);\n    }\n\n    /**\n     * Sets global coordinates of this player\n     * @param {number} newX New x-coordinate to move to\n     * @param {number} newY New y-coordinate to move to\n     */\n    setCoordinates(newX, newY) {\n        this.posX = newX;\n        this.posY = newY;\n    }\n\n    /**\n     * Sets global coordinates and speeds of this player\n     * @param {number} newX New x-coordinate to move to\n     * @param {number} newY New y-coordinate to move to\n     * @param {number} vx New x velocity\n     * @param {number} vy New y velocity\n     */\n    setData(newX, newY, vx, vy) {\n        this.setCoordinates(newX, newY);\n        this.vx = vx;\n        this.vy = vy;\n    }\n\n    /**\n     * Call during tick() if necessary. \n     * Draws object in the correct position on the player screen.\n     */\n    draw() {\n        if(player !== undefined && !this.destroyed) {\n            this.x = screenCenterX + this.posX - player.posX;\n            this.y = screenCenterY + player.posY - this.posY;\n        }\n    }\n\n    /** TEMP\n     * Moves this object to (9999, 9999) on local screen space, effectively\n     * hiding it from view.\n     */\n    hide() {\n        this.x = 9999;\n        this.y = 9999;\n    }\n\n    /**\n     * Override optional. Called once, during game setup phase.\n     */\n    setup() {\n    }\n\n    /**\n     * Override optional. Default behavior: handles movement. Call super.tick() from child class if movable.\n     * @param {boolean} noDraw - true if tick() should only process movement, not drawing.\n     */\n    tick(noDraw) {\n        // Prevent drifting due to minimal negative values\n       \n        if(this.destroyed)\n            return;\n\n        if (Math.abs(this.vx) < GLOBAL.DEADZONE)\n            this.vx = 0;\n        if (Math.abs(this.vy) < GLOBAL.DEADZONE)\n            this.vy = 0;\n\n        // Change position based on speed and direction. Don't allow objects to go out of bounds\n        if ((this.vx > 0 && this.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx < 0 && this.posX > 0))\n            this.posX += this.vx;\n        if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING))\n            this.posY += this.vy;\n\n        if(!noDraw) {\n            this.draw();\n        }\n    }\n\n    /**\n     * Destroyes the Sprite\n     */\n    destroy() {\n        this.destroyed = true;\n        super.destroy();\n    }\n\n}",
@@ -1922,7 +1965,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 102,
+    "__docId__": 103,
     "kind": "class",
     "name": "GameObject",
     "memberof": "src/client/js/obj/gameobject.js",
@@ -1940,7 +1983,7 @@
     ]
   },
   {
-    "__docId__": 103,
+    "__docId__": 104,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2015,7 +2058,7 @@
     ]
   },
   {
-    "__docId__": 104,
+    "__docId__": 105,
     "kind": "member",
     "name": "id",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2032,7 +2075,7 @@
     }
   },
   {
-    "__docId__": 105,
+    "__docId__": 106,
     "kind": "member",
     "name": "posX",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2049,7 +2092,7 @@
     }
   },
   {
-    "__docId__": 106,
+    "__docId__": 107,
     "kind": "member",
     "name": "posY",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2066,7 +2109,7 @@
     }
   },
   {
-    "__docId__": 107,
+    "__docId__": 108,
     "kind": "member",
     "name": "vx",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2083,7 +2126,7 @@
     }
   },
   {
-    "__docId__": 108,
+    "__docId__": 109,
     "kind": "member",
     "name": "vy",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2100,7 +2143,7 @@
     }
   },
   {
-    "__docId__": 109,
+    "__docId__": 110,
     "kind": "member",
     "name": "destroyed",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2117,7 +2160,7 @@
     }
   },
   {
-    "__docId__": 110,
+    "__docId__": 111,
     "kind": "method",
     "name": "setCoordinates",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2153,7 +2196,7 @@
     "return": null
   },
   {
-    "__docId__": 113,
+    "__docId__": 114,
     "kind": "method",
     "name": "setData",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2209,7 +2252,7 @@
     "return": null
   },
   {
-    "__docId__": 116,
+    "__docId__": 117,
     "kind": "method",
     "name": "draw",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2224,7 +2267,7 @@
     "return": null
   },
   {
-    "__docId__": 117,
+    "__docId__": 118,
     "kind": "member",
     "name": "x",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2241,7 +2284,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 119,
     "kind": "member",
     "name": "y",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2258,7 +2301,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 120,
     "kind": "method",
     "name": "hide",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2273,7 +2316,7 @@
     "return": null
   },
   {
-    "__docId__": 122,
+    "__docId__": 123,
     "kind": "method",
     "name": "setup",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2288,7 +2331,7 @@
     "return": null
   },
   {
-    "__docId__": 123,
+    "__docId__": 124,
     "kind": "method",
     "name": "tick",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2314,7 +2357,7 @@
     "return": null
   },
   {
-    "__docId__": 128,
+    "__docId__": 129,
     "kind": "method",
     "name": "destroy",
     "memberof": "src/client/js/obj/gameobject.js~GameObject",
@@ -2329,7 +2372,7 @@
     "return": null
   },
   {
-    "__docId__": 130,
+    "__docId__": 131,
     "kind": "file",
     "name": "src/client/js/obj/maptile.js",
     "content": "import * as PIXI from 'pixi.js';\nimport { TILES } from './tiles';\nimport { GLOBAL } from '../global';\nimport { app, player, screenCenterX, screenCenterY } from '../pixigame';\n/**\n * One Tile component of the map. \n */\nexport class MapTile extends PIXI.Sprite {\n\n    /**\n     * Constructs one Tile to add to the map.\n     * @param {string} name Name of the tile to place. Takes this name from `tiles.js` and loads its resources\n     * @param {number} gridX X-coordinate on the grid. Every 1 gridX = 400 posX \n     * @param {number} gridY Y-coordinate on the grid.\n     */\n    constructor(name, gridX, gridY) {\n        super(PIXI.loader.resources[GLOBAL.TILE_TEXTURE_DIR + TILES[name].texture].texture);\n        this.tile = TILES[name];\n        this.posX = gridX * GLOBAL.GRID_SPACING * 2;\n        this.posY = gridY * GLOBAL.GRID_SPACING * 2;\n        this.height = GLOBAL.GRID_SPACING * 2;\n        this.width = GLOBAL.GRID_SPACING * 2;\n        app.stage.addChild(this);\n    }\n\n    /**\n     * Draws object in the correct position on the player screen.\n     */\n    tick() {\n        if (player !== undefined) {\n            this.x = screenCenterX + this.posX - player.posX;\n            this.y = screenCenterY + player.posY - this.posY;\n        }\n    }\n\n    /** TEMP\n     * Moves this tile to (9999, 9999) on local screen space, effectively\n     * hiding it from view.\n     */\n    // hide() {\n    //     this.x = 9999;\n    //     this.y = 9999;\n    // }\n\n}",
@@ -2340,7 +2383,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 131,
+    "__docId__": 132,
     "kind": "class",
     "name": "MapTile",
     "memberof": "src/client/js/obj/maptile.js",
@@ -2358,7 +2401,7 @@
     ]
   },
   {
-    "__docId__": 132,
+    "__docId__": 133,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2403,7 +2446,7 @@
     ]
   },
   {
-    "__docId__": 133,
+    "__docId__": 134,
     "kind": "member",
     "name": "tile",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2420,7 +2463,7 @@
     }
   },
   {
-    "__docId__": 134,
+    "__docId__": 135,
     "kind": "member",
     "name": "posX",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2437,7 +2480,7 @@
     }
   },
   {
-    "__docId__": 135,
+    "__docId__": 136,
     "kind": "member",
     "name": "posY",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2454,7 +2497,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 137,
     "kind": "member",
     "name": "height",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2471,7 +2514,7 @@
     }
   },
   {
-    "__docId__": 137,
+    "__docId__": 138,
     "kind": "member",
     "name": "width",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2488,7 +2531,7 @@
     }
   },
   {
-    "__docId__": 138,
+    "__docId__": 139,
     "kind": "method",
     "name": "tick",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2503,7 +2546,7 @@
     "return": null
   },
   {
-    "__docId__": 139,
+    "__docId__": 140,
     "kind": "member",
     "name": "x",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2520,7 +2563,7 @@
     }
   },
   {
-    "__docId__": 140,
+    "__docId__": 141,
     "kind": "member",
     "name": "y",
     "memberof": "src/client/js/obj/maptile.js~MapTile",
@@ -2537,7 +2580,7 @@
     }
   },
   {
-    "__docId__": 141,
+    "__docId__": 142,
     "kind": "file",
     "name": "src/client/js/obj/player.js",
     "content": "import {GLOBAL} from '../global.js';\nimport * as PIXI from 'pixi.js';\nimport { player, screenCenterX, screenCenterY } from '../pixigame.js';\nimport { socket } from '../socket.js';\nimport { GameObject } from './gameobject.js';\nimport { cookieInputs } from '../app.js';\n\nexport class Player extends GameObject {\n\n    /**\n     * Constructor for creating a new Player in the server side.\n     * Player is a Sprite instance that can be added to the stage.\n     * Each Player should only be created once, and updated subsequently with\n     * setData().\n     * @param {PIXI.Texture} texture The texture associated with this sprite\n     * @param {string} id Socket ID of the player\n     * @param {string} name Name of the player\n     * @param {string} room Room that the player belongs to\n     * @param {string} team Team that the player belongs to\n     * @param {number} health Health of the player\n     * @param {number} x Global x-coordinate\n     * @param {number} y Global y-coordinate\n     * @param {number} vx Horizontal velocity\n     * @param {number} vy Vertical velocity\n     */\n    constructor(texture, id, name, room, team, health, x, y, vx, vy, experience) {\n\n        // Call GameObject\n        super(texture, id, x, y, vx, vy);\n\n        // Pixi Values\n        this.width = GLOBAL.PLAYER_RADIUS * 2;\n        this.height = GLOBAL.PLAYER_RADIUS * 2;\n\n        if(id === socket.id) {\n            // console.log('this player');\n            this.x = screenCenterX;\n            this.y = screenCenterY;\n        }\n        else { // take this player off screen until it can be processed\n            this.hide();\n        }\n\n        // Custom fields\n        this.name = name;\n        this.room = room;\n        this.team = team;\n        this.health = health; //Set the health of the player\n        this.isMoving = false;\n        this.experience = experience; //Sets the experience of the player(Passed in)\n        this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds\n        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.\n            \n        this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)\n\n        this.setup();\n    }\n\n    /**\n     * First-time setup for this player. All of the functions in this method will only be called once.\n     */\n    setup() {\n        // Create text objects\n        this.textObjects.nametext = new PIXI.Text('name: ');\n        this.textObjects.idtext = new PIXI.Text('id: ');\n        this.textObjects.postext = new PIXI.Text('placeholderpos');\n        this.textObjects.teamtext = new PIXI.Text('team: ');\n        this.textObjects.healthtext = new PIXI.Text('health: ');\n\n        // Assign values and positions\n        this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9);\n        this.textObjects.idtext.text += this.id;\n        this.textObjects.nametext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 100);\n        this.textObjects.nametext.text += this.name;\n        this.textObjects.postext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200);\n        this.textObjects.teamtext.text += this.team;\n        this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300);\n\n        // create text and assign color\n        for (let item in this.textObjects) {\n            // Add text\n            this.textObjects[item].style = new PIXI.TextStyle({\n                fill: (cookieInputs[2].value === this.team) ? GLOBAL.FRIENDLY_COLOUR : GLOBAL.ENEMY_COLOUR,\n                fontSize: 120\n            });  \n            this.addChild(this.textObjects[item]);\n        }\n    }\n    /**\n      * Draws all components of a given player.\n      * This method should be included in the ticker and called once a frame.\n    * Therefore, all setup tasks\n     * should be called in setup().\n    */\n    tick() {\n        \n        // Movement\n        super.tick(true);\n        \n        // Update text\n        this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';\n        this.textObjects.healthtext.text = 'health: ' + this.health;\n\n        // Draw other player\n        if(this.id !== socket.id) {\n            this.draw();\n        }\n    }\n\n}",
@@ -2548,7 +2591,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 142,
+    "__docId__": 143,
     "kind": "class",
     "name": "Player",
     "memberof": "src/client/js/obj/player.js",
@@ -2567,7 +2610,7 @@
     ]
   },
   {
-    "__docId__": 143,
+    "__docId__": 144,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2682,7 +2725,7 @@
     ]
   },
   {
-    "__docId__": 144,
+    "__docId__": 145,
     "kind": "member",
     "name": "width",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2699,7 +2742,7 @@
     }
   },
   {
-    "__docId__": 145,
+    "__docId__": 146,
     "kind": "member",
     "name": "height",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2716,7 +2759,7 @@
     }
   },
   {
-    "__docId__": 146,
+    "__docId__": 147,
     "kind": "member",
     "name": "x",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2733,7 +2776,7 @@
     }
   },
   {
-    "__docId__": 147,
+    "__docId__": 148,
     "kind": "member",
     "name": "y",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2750,7 +2793,7 @@
     }
   },
   {
-    "__docId__": 148,
+    "__docId__": 149,
     "kind": "member",
     "name": "name",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2767,7 +2810,7 @@
     }
   },
   {
-    "__docId__": 149,
+    "__docId__": 150,
     "kind": "member",
     "name": "room",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2784,7 +2827,7 @@
     }
   },
   {
-    "__docId__": 150,
+    "__docId__": 151,
     "kind": "member",
     "name": "team",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2801,7 +2844,7 @@
     }
   },
   {
-    "__docId__": 151,
+    "__docId__": 152,
     "kind": "member",
     "name": "health",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2818,7 +2861,7 @@
     }
   },
   {
-    "__docId__": 152,
+    "__docId__": 153,
     "kind": "member",
     "name": "isMoving",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2835,7 +2878,7 @@
     }
   },
   {
-    "__docId__": 153,
+    "__docId__": 154,
     "kind": "member",
     "name": "experience",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2852,7 +2895,7 @@
     }
   },
   {
-    "__docId__": 154,
+    "__docId__": 155,
     "kind": "member",
     "name": "speedMult",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2869,7 +2912,7 @@
     }
   },
   {
-    "__docId__": 155,
+    "__docId__": 156,
     "kind": "member",
     "name": "damagedBy",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2886,7 +2929,7 @@
     }
   },
   {
-    "__docId__": 156,
+    "__docId__": 157,
     "kind": "member",
     "name": "textObjects",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2903,7 +2946,7 @@
     }
   },
   {
-    "__docId__": 157,
+    "__docId__": 158,
     "kind": "method",
     "name": "setup",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2918,7 +2961,7 @@
     "return": null
   },
   {
-    "__docId__": 158,
+    "__docId__": 159,
     "kind": "method",
     "name": "tick",
     "memberof": "src/client/js/obj/player.js~Player",
@@ -2933,7 +2976,7 @@
     "return": null
   },
   {
-    "__docId__": 159,
+    "__docId__": 160,
     "kind": "file",
     "name": "src/client/js/obj/tiles.js",
     "content": "/**\n * This constant contains all data on how to draw and manage tiles. \n * \n * Fields required:\n * type: Choose one: spawner, teamBase, wall\n * params: Different for each type. For example, spawner will require the `atomToSpawn` param, and teamBase will require the `teamName` param.\n * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. 'foo.png' corresponds to '../../assets/map/Tiles/foo.png') \n */\nexport const TILES = {\n    empty: {\n        texture: 'SolidTile.png',\n        type: 'none'\n    },\n    flame: {\n        texture: 'FlameTile.png',\n        type: 'flame'\n    },\n    topLeft: {\n        texture: 'InteriorCorner BR.png',\n        type: 'wall',\n        params: {\n            border: ['bottom', 'right']\n        }\n    },\n    topRight: {\n        texture: 'InteriorCorner BL.png',\n        type: 'wall',\n        params: {\n            border: ['bottom', 'left']\n        }\n    },\n    bottomLeft: {\n        texture: 'InteriorCorner TR.png',\n        type: 'wall',\n        params: {\n            border: ['top', 'right']\n        }\n    },\n    bottomRight: {\n        texture: 'InteriorCorner TL.png',\n        type: 'wall',\n        params: {\n            border: ['top', 'left']\n        }\n    },\n    edgeTop: {\n        texture: 'EdgeTile B.png',\n        type: 'wall',\n        params: {\n            border: ['bottom']\n        }\n    },\n    edgeBottom: {\n        texture: 'EdgeTile T.png',\n        type: 'wall',\n        params: {\n            border: ['top']\n        }\n    },\n    edgeLeft: {\n        texture: 'EdgeTile R.png',\n        type: 'wall',\n        params: {\n            border: ['right']\n        }\n    },\n    edgeRight: {\n        texture: 'EdgeTile L.png',\n        type: 'wall',\n        params: {\n            border: ['left']\n        }\n    },\n    hydrogenVent: {\n        texture: 'HydrogenVent.png',\n        type: 'spawner',\n        params: {\n            atomsToSpawn: ['h']\n        }\n    },\n    oxygenVent: {\n        texture: 'OxygenVent.png',\n        type: 'spawner',\n        params: {\n            atomsToSpawn: ['o']\n        }\n    },\n    nitrogenVent: {\n        texture: 'NitrogenVent.png',\n        type: 'spawner',\n        params: {\n            atomsToSpawn: ['n']\n        }\n    },\n    carbonVent: {\n        texture: 'CarbonSource.png',\n        type: 'spawner',\n        params: {\n            atomsToSpawn: ['c']\n        }\n    },\n};\n\n/**\n * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).\n * Shortcuts:\n * E = Empty\n * O = Oxygen\n * N = Nitrogen\n * C = Carbon\n */\nexport const MAP_LAYOUT = [\n    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],\n    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],\n    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],\n    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],\n    ['E', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],\n    ['F', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],\n    ['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],\n    ['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],\n    ['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],\n    ['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],\n];\n\nexport const TILE_NAMES = {\n    E: 'empty',\n    O: 'oxygenVent',\n    N: 'nitrogenVent',\n    C: 'carbonVent',\n    H: 'hydrogenVent',\n    F: 'flame',\n    q: 'topLeft',\n    w: 'edgeTop',\n    e: 'topRight',\n    a: 'edgeLeft',\n    d: 'edgeRight',\n    z: 'bottomLeft',\n    x: 'edgeBottom',\n    c: 'bottomRight'\n};",
@@ -2944,7 +2987,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 160,
+    "__docId__": 161,
     "kind": "variable",
     "name": "TILES",
     "memberof": "src/client/js/obj/tiles.js",
@@ -2963,7 +3006,7 @@
     }
   },
   {
-    "__docId__": 161,
+    "__docId__": 162,
     "kind": "variable",
     "name": "MAP_LAYOUT",
     "memberof": "src/client/js/obj/tiles.js",
@@ -2982,7 +3025,7 @@
     }
   },
   {
-    "__docId__": 162,
+    "__docId__": 163,
     "kind": "variable",
     "name": "TILE_NAMES",
     "memberof": "src/client/js/obj/tiles.js",
@@ -3002,7 +3045,7 @@
     }
   },
   {
-    "__docId__": 163,
+    "__docId__": 164,
     "kind": "file",
     "name": "src/client/js/pixigame.js",
     "content": "import * as PIXI from 'pixi.js';\nimport { keyboard } from './lib/keyboard';\nimport { GLOBAL } from './global';\nimport { Player } from './obj/player';\nimport { hideElement, showElement, selectedBlueprints, updateAtomList, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app';\nimport { socket, objects } from './socket';\nimport { BLUEPRINTS } from './obj/blueprints';\nimport { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles';\nimport { requestCreateCompound } from './obj/create';\nimport { MapTile } from './obj/maptile';\n\nexport var isSetup; // True after the stage is fully set up\nexport var player; // The player being controlled by this client\nexport var screenCenterX; // X-coordinate of the center of the screen\nexport var screenCenterY; // Y-coordinate of the center of the screen\nexport var app; // Pixi app\n\n\nlet inGame = false; // True after game has begun\n\n// let sprites = []; // Sprites on the stage\n\nlet esc, space, blueprintKeys, moveKeys; // Key handlers\nlet vertLines = [];\nlet horizLines = [];\n\nexport function loadTextures() {\n    if (!isSetup) {\n        //Initialization\n        let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';\n        PIXI.utils.sayHello(type);\n\n        //Create a Pixi Application\n        app = new PIXI.Application(0, 0, {\n            view: document.getElementById('gameView')\n        });\n        //Add the canvas that Pixi automatically created for you to the HTML document\n        // document.body.appendChild(app.view);\n\n        // Renderer settings\n        app.renderer.autoResize = true;\n        app.renderer.resize(window.innerWidth, window.innerHeight);\n        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;\n        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;\n\n        // Load resources if not already loaded\n        let TEXTURES = [];\n        TEXTURES.push(GLOBAL.IGNITE_SPRITE);\n        for (let bp in BLUEPRINTS) {\n            // Prevent duplicate textures from being loaded\n            if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)\n                TEXTURES.push(BLUEPRINTS[bp].texture);\n            if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0)\n                TEXTURES.push(BLUEPRINTS[bp].params.splashImage);\n        }\n        for (let atom of GLOBAL.ATOM_SPRITES)\n            if (TEXTURES.indexOf(atom) < 0)\n                TEXTURES.push(atom);\n        for(let tile in TILES)\n            if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0)\n                TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture);\n        console.log(TEXTURES);\n\n\n        if (Object.keys(PIXI.loader.resources).length < 1) {\n            PIXI.loader\n                .add(GLOBAL.PLAYER_SPRITES)\n                .add(TEXTURES)\n                .load(registerCallbacks);\n        }\n    }\n\n    // If already initialized, use existing app variable\n    if (isSetup) {\n        console.info('Stage already initialized!');\n        clearStage();\n        registerCallbacks();\n    }\n}\n\n/**\n * Sets up the stage. Call after init(), and begins the draw() loop once complete.\n */\nfunction registerCallbacks() {\n    if (!isSetup) {\n        // Set up key listeners\n        esc = keyboard(GLOBAL.KEY_ESC);\n        space = keyboard(GLOBAL.KEY_SPACE);\n\n        //All the movement keys for easy access\n        moveKeys = [\n            keyboard(GLOBAL.KEY_A), // Left           \n            keyboard(GLOBAL.KEY_D), // Right                 \n            keyboard(GLOBAL.KEY_W), // Up               \n            keyboard(GLOBAL.KEY_S), // Down              \n        ];\n        //Set up the blueprint key listeners\n        blueprintKeys = [\n            keyboard(GLOBAL.KEY_1),\n            keyboard(GLOBAL.KEY_2),\n            keyboard(GLOBAL.KEY_3),\n            keyboard(GLOBAL.KEY_4)\n        ];\n\n        esc.press = () => {\n            if (isFocused()) {\n                if (document.activeElement !== document.getElementById('chatInput'))\n                    toggleMenu();\n                else\n                    document.getElementById('chatInput').blur();\n            }\n        };\n\n\n        // var mousePosition = renderer.interaction.mouse.global;\n\n        // Chat box styling on select\n        document.getElementById('chatInput').onfocus = () => {\n            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';\n        };\n\n        document.getElementById('chatInput').onblur = () => {\n            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';\n        };\n\n        //Bind each blueprint key\n        for (let key in blueprintKeys) {\n            blueprintKeys[key].press = () => {\n                if (isFocused() && inGame) {\n                    updateCompoundButtons(key);\n                }\n            };\n        }\n\n        // Background\n        app.renderer.backgroundColor = 0xFFFFFF;\n\n        // Resize\n        document.getElementsByTagName('body')[0].onresize = () => {\n            app.renderer.resize(window.innerWidth, window.innerHeight);\n            screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;\n            screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;\n            player.x = screenCenterX;\n            player.y = screenCenterY;\n        };\n\n        // Begin game loop\n        app.ticker.add(delta => draw(delta));\n    }\n\n    isSetup = true;\n\n    // Draw map\n    for (let row = 0; row < MAP_LAYOUT.length; row++) {\n        for (let col = 0; col < MAP_LAYOUT[0].length; col++) {\n            let tileName = 'tile_' + col + '_' + row;\n            if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {\n                if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined)\n                    objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1);\n                else\n                    throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.');\n            }\n        }\n    }\n\n    // Draw grid\n    // Grid\n    let line;\n    for (let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {\n        line = new PIXI.Graphics();\n        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);\n        line.oX = x * GLOBAL.GRID_SPACING;\n        line.moveTo(line.oX, 0);\n        line.lineTo(line.oX, window.innerHeight);\n        vertLines.push(line);\n        app.stage.addChild(line);\n    }\n    for (let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {\n        line = new PIXI.Graphics();\n        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);\n        line.oY = y * GLOBAL.GRID_SPACING;\n        line.moveTo(0, line.oY);\n        line.lineTo(window.innerWidth, line.oY);\n        horizLines.push(line);\n        app.stage.addChild(line);\n    }\n\n\n    showGameUI();\n}\n\n/**\n * Called once per frame. Updates all moving sprites on the stage.\n * @param {number} delta Time value from Pixi\n */\nfunction draw(delta) {\n    // Handle this player and movement\n    if (player !== undefined) {\n\n        // Make sure player is not in chat before checking move\n        if (isFocused() && inGame) {\n            if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) // Left\n                player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult;\n            if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) // Right\n                player.vx += GLOBAL.VELOCITY_STEP * player.speedMult;\n            if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) // Up\n                player.vy += GLOBAL.VELOCITY_STEP * player.speedMult;\n            if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) // Down\n                player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult;\n\n            player.isMoving = false;\n            for(let key of moveKeys)\n                if(key.isDown)\n                    player.isMoving = true;\n        } else {\n            player.isMoving = false;\n\n            //Because the document is not focused disable all keys(Stops moving!)\n            for (let key in moveKeys) {\n                moveKeys[key].isDown = false;\n                moveKeys[key].isUp = true;\n            }\n        }\n\n        // Slow down gradually - unaffected by chat input\n        if (!moveKeys[2].isDown && !moveKeys[3].isDown)\n            player.vy *= GLOBAL.VELOCITY_STEP;\n        if (!moveKeys[0].isDown && !moveKeys[1].isDown)\n            player.vx *= GLOBAL.VELOCITY_STEP;\n\n        // Shooting\n        space.press = () => {\n            if(isFocused() && inGame) {\n                requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);\n            }\n        };\n\n        // Move player\n        player.tick();\n\n        // Send coordinates\n        socket.emit('move', {\n            type: 'players',\n            id: player.id,\n            posX: player.posX,\n            posY: player.posY,\n            vx: player.vx,\n            vy: player.vy\n        });\n\n        // Move grid\n        for (let line of vertLines)\n            line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2);\n\n        for (let line of horizLines)\n            line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);\n    }\n\n    // Handle objects except for this player\n    for (let objType in objects) {\n        for (let obj in objects[objType])\n            if (objType !== 'players' || player !== objects[objType][obj]) {\n                objects[objType][obj].tick();\n            }\n    }\n\n}\n\n/**\n * Shows or hides the in-game menu box\n */\nfunction toggleMenu() {\n    if (document.getElementById('menubox').offsetParent === null)\n        showElement('menubox');\n    else\n        hideElement('menubox');\n}\n\n/**\n * Remove all elements pre-rendered on stage.\n */\nfunction clearStage() {\n    for (var i = app.stage.children.length - 1; i >= 0; i--) {\n        app.stage.removeChild(app.stage.children[i]);\n    }\n}\n\n/**\n * Destroy everything in PIXI. DANGEROUS avoid!\n */\nexport function destroyPIXI() {\n    app.destroy(true, {\n        children: true,\n        texture: true,\n        baseTexture: true\n    });\n    PIXI.loader.reset();\n    isSetup = false;\n    app = undefined;\n}\n\n/**\n * Call this function to hide loading div and show UI\n */\nexport function showGameUI() {\n    // Hide loading screen\n    hideElement('loading');\n    if(!inGame)\n        showElement('lobby');\n}\n\n/**\n * Creates a Player instance once the stage is fully set up and ready.\n * @param {*} data Starting values to assign to the player. Generated from server\n * @returns {Player} The Player object that was created\n */\nexport function createPlayer(data) {\n    if (isSetup) {\n        console.log('create player ' + data.id);\n        console.log(data);\n        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);\n        if (data.id === socket.id)\n            player = newPlayer;\n\n        return newPlayer;\n    }\n}\n\n/**\n * If the document is Focused return true otherwise false\n **/\nexport function isFocused() {\n    return document.hasFocus() && document.activeElement !== document.getElementById('chatInput');\n}\n\n/**\n * Returns true if the player has the materials necessary to create a particular blueprint.\n * @param {string} blueprint The name of the blueprint to check.\n */\nexport function canCraft(blueprint) {\n    if (blueprint === undefined)\n        return false;\n    for (let atom in blueprint.atoms) {\n        if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom])\n            return false;\n    }\n\n    return true;\n}\n/**\n * Starts the game after lobby closes.\n * @param {boolean} emit True if this client should emit the event to the server.\n * @param {*} teams Array of teams on the scoreboard.\n */\nexport function startGame(emit, teams) {\n    setIngame(true);\n    hideElement('lobby');\n    showElement('hud');\n    if (emit)\n        socket.emit('startGame', {\n            start: true\n        });\n    \n    // Init scoreboard\n    if(teams !== undefined) {\n        // Reset scoreboard from previous rounds\n        document.getElementById('score').innerHTML = '';\n        \n        for(let i = 0; i < teams.length; i++) {\n            document.getElementById('score').innerHTML += '-<span id=\"team-score-' + i + '\">0</span>';\n            document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);\n        }\n        document.getElementById('score').style.fontSize = '3vw';\n        document.getElementById('score').innerHTML += '-';\n    }\n}\n\n/**\n * Sets the value of inGame\n * @param {boolean} newValue Value to set inGame to \n */\nexport function setIngame(newValue) {\n    inGame = newValue;\n}\n\n/**\n * @returns {boolean} Returns inGame variable\n */\nexport function getIngame() {\n    return inGame;\n}\n\n/**\n * Called on mouse click from app.js\n * @param {*} e Click event\n */\nexport function mouseClickHandler(e) {\n    if (!inGame || !isFocused()) {\n        return false;\n    }\n    // console.log(e);\n    // console.info(\"Selected Compound: \" + selectedCompound);\n\n    requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);\n}",
@@ -3013,7 +3056,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 164,
+    "__docId__": 165,
     "kind": "variable",
     "name": "inGame",
     "memberof": "src/client/js/pixigame.js",
@@ -3034,7 +3077,7 @@
     "ignore": true
   },
   {
-    "__docId__": 165,
+    "__docId__": 166,
     "kind": "variable",
     "name": "vertLines",
     "memberof": "src/client/js/pixigame.js",
@@ -3055,7 +3098,7 @@
     "ignore": true
   },
   {
-    "__docId__": 166,
+    "__docId__": 167,
     "kind": "variable",
     "name": "horizLines",
     "memberof": "src/client/js/pixigame.js",
@@ -3076,7 +3119,7 @@
     "ignore": true
   },
   {
-    "__docId__": 167,
+    "__docId__": 168,
     "kind": "function",
     "name": "loadTextures",
     "memberof": "src/client/js/pixigame.js",
@@ -3095,7 +3138,7 @@
     "return": null
   },
   {
-    "__docId__": 168,
+    "__docId__": 169,
     "kind": "function",
     "name": "registerCallbacks",
     "memberof": "src/client/js/pixigame.js",
@@ -3114,7 +3157,7 @@
     "ignore": true
   },
   {
-    "__docId__": 169,
+    "__docId__": 170,
     "kind": "function",
     "name": "draw",
     "memberof": "src/client/js/pixigame.js",
@@ -3144,7 +3187,7 @@
     "ignore": true
   },
   {
-    "__docId__": 170,
+    "__docId__": 171,
     "kind": "function",
     "name": "toggleMenu",
     "memberof": "src/client/js/pixigame.js",
@@ -3163,7 +3206,7 @@
     "ignore": true
   },
   {
-    "__docId__": 171,
+    "__docId__": 172,
     "kind": "function",
     "name": "clearStage",
     "memberof": "src/client/js/pixigame.js",
@@ -3182,7 +3225,7 @@
     "ignore": true
   },
   {
-    "__docId__": 172,
+    "__docId__": 173,
     "kind": "function",
     "name": "destroyPIXI",
     "memberof": "src/client/js/pixigame.js",
@@ -3200,7 +3243,7 @@
     "return": null
   },
   {
-    "__docId__": 173,
+    "__docId__": 174,
     "kind": "function",
     "name": "showGameUI",
     "memberof": "src/client/js/pixigame.js",
@@ -3218,7 +3261,7 @@
     "return": null
   },
   {
-    "__docId__": 174,
+    "__docId__": 175,
     "kind": "function",
     "name": "createPlayer",
     "memberof": "src/client/js/pixigame.js",
@@ -3260,7 +3303,7 @@
     }
   },
   {
-    "__docId__": 175,
+    "__docId__": 176,
     "kind": "function",
     "name": "isFocused",
     "memberof": "src/client/js/pixigame.js",
@@ -3282,7 +3325,7 @@
     }
   },
   {
-    "__docId__": 176,
+    "__docId__": 177,
     "kind": "function",
     "name": "canCraft",
     "memberof": "src/client/js/pixigame.js",
@@ -3315,7 +3358,7 @@
     }
   },
   {
-    "__docId__": 177,
+    "__docId__": 178,
     "kind": "function",
     "name": "startGame",
     "memberof": "src/client/js/pixigame.js",
@@ -3354,7 +3397,7 @@
     "return": null
   },
   {
-    "__docId__": 178,
+    "__docId__": 179,
     "kind": "function",
     "name": "setIngame",
     "memberof": "src/client/js/pixigame.js",
@@ -3383,7 +3426,7 @@
     "return": null
   },
   {
-    "__docId__": 179,
+    "__docId__": 180,
     "kind": "function",
     "name": "getIngame",
     "memberof": "src/client/js/pixigame.js",
@@ -3414,7 +3457,7 @@
     "params": []
   },
   {
-    "__docId__": 180,
+    "__docId__": 181,
     "kind": "function",
     "name": "mouseClickHandler",
     "memberof": "src/client/js/pixigame.js",
@@ -3447,7 +3490,7 @@
     }
   },
   {
-    "__docId__": 181,
+    "__docId__": 182,
     "kind": "file",
     "name": "src/client/js/socket.js",
     "content": "import { GLOBAL, distanceBetween } from './global';\nimport { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from './app';\nimport ChatClient from './lib/chat-client';\nimport { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame';\nimport { MapTile } from './obj/maptile';\nimport { MAP_LAYOUT } from './obj/tiles';\nimport { createRenderAtom, createRenderCompound } from './obj/create';\n\n/**\n * Socket.js contains all of the clientside networking interface.\n * It contains all variables which are synced between client and server.\n */\n\n// Socket.io instance\nexport var socket;\n\n/* Object containing all synced objects. Contains nested objects, which correspond to different types\n * (for example, objects[atoms], objects[players], objects[compounds])\n */\nexport var objects = {\n    players: {},\n    atoms: {},\n    compounds: {},\n    tiles: {}\n};\n\n/**\n * Attempts to connect to the server. Run on 'start game' press.\n *  - Manages connecting to main server vs. devserver\n *  - Sets up socket listeners\n *  - Loads textures\n *  - Loads pixi\n */\nexport function beginConnection() {\n    //Joins debug server if conditions are met\n    let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER);\n    if (cookieInputs[1].value === 'test') {\n        console.info('Connecting to: ' + GLOBAL.TEST_IP);\n        // DEVELOPMENT server - auto deploy from pixi branch\n        socket = io.connect(GLOBAL.TEST_IP, {\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\n            reconnectionAttempts: 3\n        });\n    }\n    else if (cookieInputs[1].value === 'jurassicexp') {\n        console.log('Dev Backdoor Initiated! Connecting to devserver');\n        // Local server\n        socket = io.connect(GLOBAL.LOCAL_HOST, {\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\n            reconnectionAttempts: 3\n        });\n    }\n    else {\n        // Production server\n        console.log('connecting to main server');\n        socket = io.connect(GLOBAL.SERVER_IP, {\n            query: `room=${room}&name=${cookieInputs[0].value}&team=${cookieInputs[2].value}&roomType=${cookieInputs[7].value}`,\n            reconnectionAttempts: 3\n        });\n    }\n\n    socket.on('connect', () => {\n        setupSocket();\n        // Init pixi\n        loadTextures();\n        if (typeof app !== undefined) {\n            app.start();\n        }\n    });\n}\n\n/**\n * Run on disconnect to reset all server-based variables and connections\n */\nexport function disconnect() {\n    app.stop();\n    socket.disconnect();\n\n    // Wipe objects list\n    for(let objType in objects)\n        objects[objType] = {};\n\n}\n\n/** \n * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.\n */\nfunction setupSocket() {\n\n    //Debug\n    console.log('Socket:', socket);\n\n    //Instantiate Chat System\n    let chat = new ChatClient({ player: cookieInputs[0].value, room: cookieInputs[1].value, team: cookieInputs[2].value });\n    chat.addLoginMessage(cookieInputs[0].value, true);\n    chat.registerFunctions();\n\n    // Setup listeners\n    setupSocketConnection();\n    setupSocketInfo(chat);\n    setupSocketObjectRetrieval();\n\n    //Emit join message,\n    socket.emit('playerJoin', { sender: chat.player, team: chat.team });\n}\n\n\n/**\n * Sets up socket object syncing.\n * Run in setupSocket().\n */\nfunction setupSocketObjectRetrieval() {\n    // Syncs all objects from server once a frame\n    socket.on('objectSync', (data) => {\n        for (let objType in data) {\n            if (objType !== 'tiles') {\n                for (let obj in data[objType]) {\n                    if (data[objType][obj] !== null) {\n                        let objRef = data[objType][obj];\n                        let clientObj = objects[objType][obj];\n                        // Already exists in database\n                        if (clientObj !== undefined && clientObj !== null) {\n                            if (objRef.id !== socket.id)\n                                objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);\n                            if (objType === 'players') {\n                                objects[objType][obj].health = objRef.health;\n                                objects[objType][obj].damagedBy = objRef.damagedBy;\n                                objects[objType][obj].atomList = objRef.atomList;\n                                objects[objType][obj].speedMult = objRef.speedMult;\n                                for(let atom in objRef.atomList)\n                                    updateAtomList(atom);\n                            }\n                        }\n                        // Does not exist - need to clone to clientside\n                        else if (isSetup) {\n                            switch (objType) {\n                            case 'players':\n                                objects[objType][obj] = createPlayer(objRef);\n                                break;\n                            case 'atoms':\n                                objects[objType][obj] = createRenderAtom(objRef);\n                                break;\n                            case 'compounds':\n                                objects[objType][obj] = createRenderCompound(objRef);\n                                break;\n                            }\n                        }\n                    }\n                }\n            }\n            // else { //Tile drawing\n            //     for (let tile of data.tiles) {\n\n            //         let tileName = 'tile_' + tile.col + '_' + tile.row;\n            //         if (objects.tiles[tileName] === undefined) {\n            //             // console.log(tileName);\n            //             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);\n            //         }\n\n            //     }\n            // }\n\n        }\n\n    });\n\n    // Sync objects when they are deleted or move out of view\n    socket.on('serverSendObjectRemoval', (data) => {\n        //An object was removed\n        removeObject(data);\n\n        // Must keep checking if the object was not created at time of destruction.\n        // One example of this needing to be run is when a player instantly collects an atom on spawn.\n        if (objects[data.type][data.id] === undefined) {\n            let thisInterval = setTimeout(() => { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval); }, 200);\n        }\n    });\n\n}\n\n/**\n * Sets up socket connection listeners.\n * Run in setupSocket().\n */\nfunction setupSocketConnection() {\n    // On Connection Failure\n    socket.on('reconnect_failed', () => {\n        alert('You have lost connection to the server!');\n    });\n\n    socket.on('reconnecting', (attempt) => {\n        console.log('Lost connection. Reconnecting on attempt: ' + attempt);\n        quitGame('Lost connection to server');\n    });\n\n    socket.on('reconnect_error', (err) => {\n        console.log('CRITICAL: Reconnect failed! ' + err);\n    });\n\n    socket.on('pong', (ping) => {\n        console.log('Your Ping Is: ' + ping);\n    });\n\n    socket.on('disconnectedPlayer', (data) => {\n        console.log('Player ' + data.id + ' has disconnected');\n        chat.addSystemLine('Player ' + objects.players[data.id].name + ' has disconnected');\n        if (objects.players[data.id] !== undefined) {\n            objects.players[data.id].hide();\n            delete objects.players[data.id];\n        }\n    });\n\n    socket.on('serverSendDisconnect', () => {\n        quitGame('The game has ended.', false);\n        hideElement('winner-panel');\n    });\n\n    // Errors on join\n    socket.on('connectionError', (data) => {\n        socket.disconnect();\n        quitGame(data.msg, true);\n    });\n}\n\n/**\n * Sets up socket information transfer listeners.\n * Run in setupSocket().\n * @param {*} chat The chat client instance to be used for notifications\n */\nfunction setupSocketInfo(chat) {\n    //Chat system receiver\n    socket.on('serverMSG', data => {\n        chat.addSystemLine(data);\n    });\n\n    socket.on('serverSendPlayerChat', data => {\n        chat.addChatLine(data.sender, data.message, false);\n    });\n\n    socket.on('serverSendLoginMessage', data => {\n        chat.addLoginMessage(data.sender, false);\n    });\n\n    // Receive information about room players\n    socket.on('roomInfo', (data) => {\n        // Update lobby info. Pass to app.js\n        updateLobby(data);\n\n        // if(GLOBAL.DEBUG) {\n        //     console.log(\"rcvd: \",data);\n        // }\n    });\n\n    socket.on('serverSendStartGame', (data) => {\n        console.log('game has started');\n        startGame(false, data.teams);\n    });\n\n    socket.on('levelUp', (data) => {\n        console.log('You LEVELED UP! Level: ' + data.newLevel);\n    });\n\n    // Respawn\n    socket.on('serverSendPlayerDeath', (data) => {\n        console.log('You Died!');\n\n        // TODO move trigger to server\n        // Releases atoms and deletes the entire atoms array in player\n        socket.emit('playerDeathAtoms', { atoms: player.atoms, x: player.posX, y: player.posY });\n        for (let at in player.atoms) {\n            player.atoms[at] = 0;\n            updateAtomList(at);\n        }\n\n        // Reset position to spawnpoint\n        player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2;\n        player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2;\n        socket.emit('move', {\n            id: socket.id,\n            posX: player.posX,\n            posY: player.posY,\n            vx: 0,\n            vy: 0,\n            type: 'players'\n        });\n\n    });\n\n    // Another player died\n    socket.on('serverSendNotifyPlayerDeath', (data) => { \n        // c\n    });\n\n    // Update timer\n    socket.on('time', (data) => {\n        document.getElementById('timer').innerHTML = '<p>' + data.time + '</p>';\n    });\n\n    // Update scores\n    socket.on('serverSendScoreUpdate', (data) => {\n        updateScores(data.teamSlot, data.increment);\n    });\n\n    // A player has won\n    socket.on('serverSendWinner', (data) => {\n        setIngame(false); // Disable keyboard controls and rendering\n        displayWinner(data);\n    });\n\n}\n\n/*\n ********************\n * Helper Functions *\n ********************\n */\n\n// Linear Interpolation function. Adapted from p5.lerp\nfunction lerp(v0, v1, t) {\n    return v0 * (1 - t) + v1 * t;\n}\n\n// Helper function for serverSendObjectRemoval\nfunction removeObject(data) {\n    if (objects[data.type][data.id] !== undefined) {\n        objects[data.type][data.id].hide();\n        objects[data.type][data.id].destroy();\n        // delete objects[data.type][data.id];\n    }\n}",
@@ -3458,7 +3501,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 182,
+    "__docId__": 183,
     "kind": "variable",
     "name": "objects",
     "memberof": "src/client/js/socket.js",
@@ -3478,7 +3521,7 @@
     }
   },
   {
-    "__docId__": 183,
+    "__docId__": 184,
     "kind": "function",
     "name": "beginConnection",
     "memberof": "src/client/js/socket.js",
@@ -3496,7 +3539,7 @@
     "return": null
   },
   {
-    "__docId__": 184,
+    "__docId__": 185,
     "kind": "function",
     "name": "disconnect",
     "memberof": "src/client/js/socket.js",
@@ -3514,7 +3557,7 @@
     "return": null
   },
   {
-    "__docId__": 185,
+    "__docId__": 186,
     "kind": "function",
     "name": "setupSocket",
     "memberof": "src/client/js/socket.js",
@@ -3533,7 +3576,7 @@
     "ignore": true
   },
   {
-    "__docId__": 186,
+    "__docId__": 187,
     "kind": "function",
     "name": "setupSocketObjectRetrieval",
     "memberof": "src/client/js/socket.js",
@@ -3552,7 +3595,7 @@
     "ignore": true
   },
   {
-    "__docId__": 187,
+    "__docId__": 188,
     "kind": "function",
     "name": "setupSocketConnection",
     "memberof": "src/client/js/socket.js",
@@ -3571,7 +3614,7 @@
     "ignore": true
   },
   {
-    "__docId__": 188,
+    "__docId__": 189,
     "kind": "function",
     "name": "setupSocketInfo",
     "memberof": "src/client/js/socket.js",
@@ -3601,7 +3644,7 @@
     "ignore": true
   },
   {
-    "__docId__": 189,
+    "__docId__": 190,
     "kind": "function",
     "name": "lerp",
     "memberof": "src/client/js/socket.js",
@@ -3644,7 +3687,7 @@
     "ignore": true
   },
   {
-    "__docId__": 190,
+    "__docId__": 191,
     "kind": "function",
     "name": "removeObject",
     "memberof": "src/client/js/socket.js",
@@ -3671,7 +3714,7 @@
     "ignore": true
   },
   {
-    "__docId__": 191,
+    "__docId__": 192,
     "kind": "file",
     "name": "src/server/entry.js",
     "content": "/**\n * ENTRY POINT for server.js.\n * Uses babel to compile es6 into \n */\nrequire('babel-register')({\n    presets: ['env']\n});\n\nmodule.exports = require('./server.js');",
@@ -3682,7 +3725,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 192,
+    "__docId__": 193,
     "kind": "file",
     "name": "src/server/server.js",
     "content": "const express = require('express');\nconst app = express();\nconst http = require('http').Server(app);\nconst io = require('socket.io')(http);\nimport colors from 'colors'; // Console colors :D\nimport {GLOBAL, distanceBetween, isInBounds} from '../client/js/global';\nimport { MAP_LAYOUT, TILES, TILE_NAMES } from '../client/js/obj/tiles';\nimport { roomMatchmaker } from './utils/matchmaker';\nimport { generateID, getTeamNumber } from './utils/serverutils';\nimport { initGlobal, initPlayer } from './utils/serverinit';\nimport { frameSync } from './utils/framesync';\nimport { damage } from './utils/ondamage';\nimport { createCompound } from './utils/compound';\nimport { spawnAtomAtVent, spawnAtom } from './utils/atoms';\nvar config = require('./config.json');\n\nconst DEBUG = true;\nconst COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection\n\napp.use(express.static(`${__dirname}/../client`));\n\n/* Contains all game data, including which rooms and players are active.\n * \n * Structure of Rooms object:\n * \n// rooms = {\n//     roomName: {\n//         joinable: true,\n//         type: '4v4',\n//         teams: [\n//             name: 'teamname',\n//             players: [...]\n//         ],\n//         players: {...},\n//         atoms: {...},\n//         compounds: {...},\n//         time: {\n//             minutes: 0,\n//             seconds: 0,\n//             formattedTime: '0:00'\n//         }\n//     }\n// }\n*/\nlet rooms = {};\n\n/**\n * Teams object containing all the currently playing teams.\n * Structure:\n * teamName: {\n *    room: 'roomName',\n *    players: ['playerSocketId', 'player2SocketId', ...],\n *    joinable: false/true\n * }\n * \n * -> Create a Team when the first player joins any lobby. Populate room when this occurs.\n * -> Change joinable to false when a Team is either full or the game has begun.\n * -> Delete the room from the database when the last player leaves.\n * -> There cannot be two teams with the same name. Throw an error if this occurs.\n */\nlet teams = {};\n\n// Initializize Server. Includes atom spawning and timer mechanics\ninitGlobal();\n\n\n// Initialize all socket listeners when a request is established\nio.on('connection', socket => {\n\n    // Local variable declaration\n    let room = socket.handshake.query.room;\n    let roomType = socket.handshake.query.roomType;\n    let team = socket.handshake.query.team;\n\n    // Run matchmaker\n    room = roomMatchmaker(socket, room, teams[team]);\n\n    // Init player\n    initPlayer(socket, room);\n    let thisPlayer = rooms[room].players[socket.id];\n    thisPlayer.team = team;\n    thisPlayer.atomList = {};\n    thisPlayer.speedMult = 1;\n    for(let atom of GLOBAL.ATOM_IDS)\n        thisPlayer.atomList[atom] = 0;\n \n    // Setup player array sync- once a frame\n    setInterval(() => {\n        frameSync(socket, room, thisPlayer);\n    }, 1000/60);\n\n    // Receives a chat from a player, then broadcasts it to other players\n    socket.to(room).on('playerChat', data => {\n    // console.log('sender: ' + data.sender);\n        const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');\n        const _message = data.message.replace(/(<([^>]+)>)/ig, '');\n\n        console.log('[CHAT] '.bold.blue + `${(new Date()).getHours()}:${(new Date()).getMinutes()} ${_sender}: ${_message}`.magenta);\n\n        socket.to(room).broadcast.emit('serverSendPlayerChat', { sender: _sender, message: _message.substring(0, 35) });\n    });\n\n    // Other player joins the socket.to(room)\n    socket.to(room).on('playerJoin', data => {\n    // console.log('sender: ' + data.sender);\n        const _sender = data.sender.replace(/(<([^>]+)>)/ig, '');\n        socket.to(room).broadcast.emit('serverSendLoginMessage', { sender: _sender, team: data.team });\n        if(DEBUG) {\n            socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');\n        }\n\n    });\n\n    // Broadcasts player join message\n   \n    socket.to(room).broadcast.emit('serverSendLoginMessage', {\n        sender: socket.id\n    });\n    if(DEBUG) {\n        socket.to(room).broadcast.emit('serverMSG', 'You are connected to a DEBUG enabled server. ');\n    }\n\n    // Hides the lobby screen if the game has already started\n    if(rooms[room].started) {\n        socket.emit('serverSendStartGame', {teams: rooms[room].teams});\n    }\n\n    /**\n   * On player movement:\n   * data is in format\n   *  - id: index of player that moved\n   *  - type: atoms, players, or compounds\n   *  - posX: new x position\n   *  - posY: new y position\n   *  - vx: x-velocity\n   *  - vy: y-velocity\n   */\n    socket.to(room).on('move', data => {\n    // Player exists in database already because it was created serverside - no need for extra checking\n        if(rooms[room][data.type][data.id] !== undefined) {\n            rooms[room][data.type][data.id].posX = data.posX;\n            rooms[room][data.type][data.id].posY = data.posY;\n            rooms[room][data.type][data.id].vx = data.vx;\n            rooms[room][data.type][data.id].vy = data.vy;\n        }\n\n    }); \n\n    // An atom was collected or changed\n    // socket.to(room).on('atomCollision', data => {\n    //     if (COLLISIONVERBOSE) {\n    //         console.log('atomCollision');\n    //     }\n    //     socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});\n    //     delete rooms[room].atoms[data.id];\n    // });\n    \n    // have field collect who did what damage to the player\n    // when the player dies, compare all players who shot at him\n    // whoever did most damage gets 2 pts, everyone else gets 1 pt\n    // push a global notification that says the player died, and who killed the player - Muaaz\n\n    // in client, create a display on the HUD of how many points, kills, and assists that you have\n    // store the number of points every player has within rooms[room].players[player].score to read later\n\n    // MOVED to collision.js\n    // socket.to(room).on('compoundCollision', data => {\n    // });\n\n    socket.to(room).on('damage', data => {\n        damage(data, room, socket);\n    });\n\n    // A player spawned a Compound\n    socket.to(room).on('requestCreateCompound', data => {\n        let newCompound = createCompound(data, room, thisPlayer);\n        if(newCompound)\n            rooms[room].compounds[newCompound.id] = newCompound;\n    });\n\n    //A Player has performed an action and gained experience\n    socket.to(room).on('experienceEvent', data => {\n    //data.event is the event that occured\n\n    //Add a specific amount to the players experience\n    //Get the index of the Event and then pass it into the values array to get the actual value\n        thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];\n\n        // Determine the player's level based on experience\n        let oldLevel = thisPlayer.level;\n        for(let level of GLOBAL.EXPERIENCE_LEVELS){\n            if(thisPlayer.experience >= level)\n                thisPlayer.level = GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1;\n        }\n\n        // Check to see if the player leveled up\n        if(thisPlayer.level > oldLevel) {\n            socket.emit('levelUp', {newLevel: thisPlayer.level});\n        }\n    });\n\n    socket.on('startGame', data => {\n        console.log('Game has started in room ' + room);\n        // Make the room and teams unjoinable\n        for(let tm of rooms[room].teams) {\n            teams[tm.name].joinable = false;\n        }\n        rooms[room].joinable = false;\n\n        socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});\n        socket.emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});\n        rooms[room].started = true;\n    });\n\n    socket.on('spawnAtom', (data) => {\n        spawnAtomAtVent(data.row, data.col, room, true);\n    });\n\n    // Atom information sent on player death. Spreads atoms randomly in a circle around the death area.\n    socket.on('playerDeathAtoms', (data) => {\n        for(let at in data.atoms) {\n            for(let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++)\n                spawnAtom(data.x, data.y, at, room, false);\n        }\n    });\n\n    socket.on('disconnect', data => {\n        console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);\n\n        socket.to(room).broadcast.emit('disconnectedPlayer', { id: socket.id }); //Broadcast to everyone in the room to delete the player\n\n        delete rooms[room].players[socket.id]; //Remove the server side player\n\n        // Delete room if there is nobody inside\n        if (Object.keys(rooms[room].players).length === 0) {\n            console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);\n            delete io.sockets.adapter.rooms[socket.id];\n            delete rooms[room];\n\n            if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {\n                // Remove from teams array\n                teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);\n                // rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);\n\n                // Delete team if all players have left\n                if (teams[team].players.length === 0)\n                    delete teams[team];\n\n            }\n        }\n    });\n});\n\n// Notify on console when server has started\nconst serverPort = process.env.PORT || config.port;\nhttp.listen(serverPort, () => {\n    rooms = {};\n    console.log('[Server] '.bold.blue + `started on port: ${serverPort}`.blue);\n});\n\n/**\n * Sets a new value for a protected server field.\n * Adopted from https://stackoverflow.com/questions/18936915/dynamically-set-property-of-nested-object\n * @param {*} value The value to set\n * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level. \n *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']\n */\nexport function setField(value, path) {\n\n    if(path === undefined || path.length === 0)\n        throw new Error('Error in setField: path cannot be empty');\n    \n    let schema = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;\n    if (schema === undefined)\n        throw new Error('Base object ' + path[0] + ' does not exist!');\n\n    let len = path.length;\n    for (let i = 1; i < len - 1; i++) {\n        let elem = path[i];\n        if (!schema[elem]) schema[elem] = {};\n        schema = schema[elem];\n    }\n\n    schema[path[len - 1]] = value;\n\n}\n\n/**\n * Shorthand to add or concatenate an amount to a field.\n * Best used with numbers or strings.\n * @param {*} amount Amount to increment the field by.\n * @param {*} path Path to the field.\n */\nexport function incrementField(amount, path) {\n    setField(getField(path) + amount, path);\n}\n\n/**\n * Returns the value given a path to that value.\n * Adopted from https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-with-string-key\n * @param {*} path Array containing all of the subobject identifiers, with the 0th index being the lowest level.\n *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']\n * @returns The value for the given field.\n */\nexport function getField(path) {\n    if (path === undefined || path.length === 0)\n        throw new Error('Error in setField: path cannot be empty');\n    if (path.length === undefined)\n        throw new Error('Error in setField: path must be an array');\n    \n    let obj = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined;\n    if(obj === undefined)\n        throw new Error('Error in setField: Base object ' + path[0] + ' does not exist!');\n\n    for(let i = 1; i < path.length; i++)\n        obj = obj[path[i]];\n    // console.log(path, obj);\n    return obj;\n}\n\n/**\n * Deletes one of the three types of gameObjects synced to the server\n * @param {string} type Either player, atom, compound \n * @param {*} id ID of the object to delete\n * @param {string} room Room name to delete in\n */\nexport function deleteObject(type, id, room) {\n    delete rooms[room][type][id];\n}",
@@ -3693,7 +3736,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 193,
+    "__docId__": 194,
     "kind": "variable",
     "name": "express",
     "memberof": "src/server/server.js",
@@ -3714,7 +3757,7 @@
     "ignore": true
   },
   {
-    "__docId__": 194,
+    "__docId__": 195,
     "kind": "variable",
     "name": "app",
     "memberof": "src/server/server.js",
@@ -3735,7 +3778,7 @@
     "ignore": true
   },
   {
-    "__docId__": 195,
+    "__docId__": 196,
     "kind": "variable",
     "name": "http",
     "memberof": "src/server/server.js",
@@ -3756,7 +3799,7 @@
     "ignore": true
   },
   {
-    "__docId__": 196,
+    "__docId__": 197,
     "kind": "variable",
     "name": "io",
     "memberof": "src/server/server.js",
@@ -3777,7 +3820,7 @@
     "ignore": true
   },
   {
-    "__docId__": 197,
+    "__docId__": 198,
     "kind": "variable",
     "name": "config",
     "memberof": "src/server/server.js",
@@ -3798,7 +3841,7 @@
     "ignore": true
   },
   {
-    "__docId__": 198,
+    "__docId__": 199,
     "kind": "variable",
     "name": "DEBUG",
     "memberof": "src/server/server.js",
@@ -3819,7 +3862,7 @@
     "ignore": true
   },
   {
-    "__docId__": 199,
+    "__docId__": 200,
     "kind": "variable",
     "name": "COLLISIONVERBOSE",
     "memberof": "src/server/server.js",
@@ -3840,7 +3883,7 @@
     "ignore": true
   },
   {
-    "__docId__": 200,
+    "__docId__": 201,
     "kind": "variable",
     "name": "rooms",
     "memberof": "src/server/server.js",
@@ -3861,7 +3904,7 @@
     "ignore": true
   },
   {
-    "__docId__": 201,
+    "__docId__": 202,
     "kind": "variable",
     "name": "teams",
     "memberof": "src/server/server.js",
@@ -3881,7 +3924,7 @@
     "ignore": true
   },
   {
-    "__docId__": 202,
+    "__docId__": 203,
     "kind": "variable",
     "name": "serverPort",
     "memberof": "src/server/server.js",
@@ -3902,7 +3945,7 @@
     "ignore": true
   },
   {
-    "__docId__": 203,
+    "__docId__": 204,
     "kind": "function",
     "name": "setField",
     "memberof": "src/server/server.js",
@@ -3941,7 +3984,7 @@
     "return": null
   },
   {
-    "__docId__": 204,
+    "__docId__": 205,
     "kind": "function",
     "name": "incrementField",
     "memberof": "src/server/server.js",
@@ -3980,7 +4023,7 @@
     "return": null
   },
   {
-    "__docId__": 205,
+    "__docId__": 206,
     "kind": "function",
     "name": "getField",
     "memberof": "src/server/server.js",
@@ -4022,7 +4065,7 @@
     }
   },
   {
-    "__docId__": 206,
+    "__docId__": 207,
     "kind": "function",
     "name": "deleteObject",
     "memberof": "src/server/server.js",
@@ -4071,7 +4114,7 @@
     "return": null
   },
   {
-    "__docId__": 207,
+    "__docId__": 208,
     "kind": "file",
     "name": "src/server/utils/atoms.js",
     "content": "/**\n * Manages the atom list and atom usage for players.\n */\nimport {incrementField, getField, setField } from '../server';\nimport { generateID } from './serverutils';\nimport { GLOBAL } from '../../client/js/global';\nimport { TILES, TILE_NAMES, MAP_LAYOUT } from '../../client/js/obj/tiles';\n\nexport function incrementAtom(player, room, atomType, quantity) {\n    // console.log(atomType);\n    incrementField(quantity, ['rooms', room, 'players', player, 'atomList', atomType]);\n}\n\n\nexport function canCraft(player, room, blueprint) {\n    // console.log(player);\n    if (blueprint === undefined)\n        return false;\n    for (let atom in blueprint.atoms) {\n        let numAtoms = getField(['rooms', room, 'players', player.id, 'atomList', atom]);\n        if (numAtoms === undefined || numAtoms < blueprint.atoms[atom])\n            return false;\n    }\n\n    return true;\n}\n\n/**\n * Spawns an atom at the vent at the given row and column.\n * @param {number} row The row of the vent \n * @param {number} col The column of the vent to spawn at\n * @param {string} room The room to spawn in\n * @param {boolean} verbose True if this method should output to the console\n */\nexport function spawnAtomAtVent(row, col, room, verbose) {\n    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`\n    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];\n\n    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;\n    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;\n\n    spawnAtom(x, y, atomToSpawn, room, verbose);\n\n}\n\n/**\n * \n * @param {number} x X-position of center\n * @param {number} y Y-position of center\n * @param {string} type Type of atom to spawn\n * @param {string} room The room to spawn in\n * @param {boolean} verbose True if this method should output to the console\n */\nexport function spawnAtom(x, y, type, room, verbose) {\n\n    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned\n\n    let atom = {\n        typeID: type,\n        id: generateID(),\n        posX: x,\n        posY: y,\n        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,\n        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED\n    };\n    if (getField(['rooms', room]) !== undefined)\n        setField(atom, ['rooms', room, 'atoms', atom.id]);\n\n    // Log to console\n    if (verbose)\n        console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);\n}",
@@ -4082,7 +4125,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 208,
+    "__docId__": 209,
     "kind": "function",
     "name": "incrementAtom",
     "memberof": "src/server/utils/atoms.js",
@@ -4126,7 +4169,7 @@
     "return": null
   },
   {
-    "__docId__": 209,
+    "__docId__": 210,
     "kind": "function",
     "name": "canCraft",
     "memberof": "src/server/utils/atoms.js",
@@ -4168,7 +4211,7 @@
     }
   },
   {
-    "__docId__": 210,
+    "__docId__": 211,
     "kind": "function",
     "name": "spawnAtomAtVent",
     "memberof": "src/server/utils/atoms.js",
@@ -4227,7 +4270,7 @@
     "return": null
   },
   {
-    "__docId__": 211,
+    "__docId__": 212,
     "kind": "function",
     "name": "spawnAtom",
     "memberof": "src/server/utils/atoms.js",
@@ -4296,7 +4339,7 @@
     "return": null
   },
   {
-    "__docId__": 212,
+    "__docId__": 213,
     "kind": "file",
     "name": "src/server/utils/collision.js",
     "content": "import { distanceBetween, GLOBAL } from '../../client/js/global';\nimport { setField, deleteObject } from '../server';\nimport { damage } from './ondamage';\nimport { incrementAtom } from './atoms';\n\n/**\n * Runs once a frame, checks for collisions between objects and handles them accordingly.\n * Run using \n * @param {*} socket The socket.io instance\n * @param {string} room The name of the room\n * @param {*} thisPlayer The player object\n * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer. Contains compounds, atoms, players\n */\nexport function collisionDetect(socket, room, thisPlayer, tempObjects) {\n    \n    // Check for collected atoms\n    for(let atom in tempObjects.atoms) {\n        let distance = distanceBetween(\n            { posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },\n            { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });\n        \n        if(distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {\n            \n            // console.log(atom);\n            incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1);\n            socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' });\n            socket.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' });\n            deleteObject('atoms', atom, room);\n\n        }\n    }\n\n    // Check for compound collisions\n    for(let compound in tempObjects.compounds) {\n\n        let cmp = tempObjects.compounds[compound];\n\n        if(cmp.sendingTeam !== thisPlayer.team) {\n            let distance = distanceBetween(\n                { posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },\n                { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });\n\n            // Hit player\n            if (distance < cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {\n                damage({\n                    damage: (cmp.ignited) ? cmp.blueprints.params.ignitedDamage : cmp.blueprint.params.damage,\n                    player: socket.id,\n                    sentBy: cmp.sender,\n                    id: compound\n                }, room, socket);\n\n                deleteObject('compounds', compound, room);\n                socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\n                socket.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\n\n            }\n        }\n       \n//am currently migrating collision processing from client to server\n        // socket.to(room).on('compoundCollision', data => \n        //     if (COLLISIONVERBOSE) {\n        //         console.log('compoundCollision');\n        //     }\n        //     if(rooms[room].compounds[data.id] !== undefined) {\n        //         damage(data, room, socket);   \n        //         delete rooms[room].compounds[data.id];\n        //         socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});\n        //         socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});\n\n        //     }\n        // });\n        \n    }\n\n}",
@@ -4307,7 +4350,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 213,
+    "__docId__": 214,
     "kind": "function",
     "name": "collisionDetect",
     "memberof": "src/server/utils/collision.js",
@@ -4366,7 +4409,7 @@
     "return": null
   },
   {
-    "__docId__": 214,
+    "__docId__": 215,
     "kind": "file",
     "name": "src/server/utils/compound.js",
     "content": "/**\n * Manages compound creation and behavior.\n * Moved from clientside compound.js\n */\nimport { GLOBAL } from '../../client/js/global';\nimport { canCraft } from './atoms';\nimport { generateID } from './serverutils';\nimport { incrementField, setField } from '../server';\nimport { damage } from './ondamage';\n\n/**\n  * Checks if a compound can be created, deducts craft material, and returns the new compound.\n  * Does NOT add the new compound to the objects array.\n  * @param data - Data sent from the client.\n  *  - blueprint: The blueprint of the compound to create\n  *  - sendingTeam: Team of the player who sent this\n  *  - mousePos: Mouse position of the player who sent this. Contains x and y components\n  *  - sender: Player who sent this\n  * @param room - The name of the room\n  */\nexport function createCompound(data, room, thisPlayer) {\n\n\n    if (!canCraft(thisPlayer, room, data.blueprint))\n        return false;\n\n    // Calculate velocities based on cursor position\n    let theta = Math.atan2(data.mousePos.y, data.mousePos.x);\n    let newCompound = {\n        id: generateID(),\n        posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS,\n        posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,\n        vx: data.blueprint.params.speed * Math.cos(theta),\n        vy: data.blueprint.params.speed * Math.sin(theta),\n        blueprint: data.blueprint,\n        sendingTeam: data.sendingTeam,\n        sender: data.sender\n    };\n\n    // Add functionality for specific blueprint types\n    if (data.blueprint.type === 'speed') {\n        incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), ['rooms', room, 'players', thisPlayer.id, 'speedMult']);\n        damage({\n            damage: -blueprint.params.healthModifier,\n            sender: socket.id\n        }, room, socket);\n        if (thisPlayer.health > GLOBAL.MAX_HEALTH) {\n            setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health']);\n        }\n    } \n\n    //Emits the crafting event to update experience TODO\n    // socket.emit('experienceEvent', {\n    //     event: 'CRAFT'\n    // });\n\n\n    // Remove atoms from inventory\n    if(!data.streamNumber || data.streamNumber === 1) {\n        for (let atom in data.blueprint.atoms) {\n            incrementField(-data.blueprint.atoms[atom], ['rooms', room, 'players', thisPlayer.id, 'atomList', atom]);\n        }\n    }\n\n    return newCompound;\n}\n\n\n/**\n * Checks compound behavior based on compound type. Runs once a frame.\n * @param {number} compound ID of compound\n * @param {string} room Name of room\n */\nexport function tickCompound(compound, room) {\n    //TODO\n    // switch (compound.blueprint.type) {\n    //     case 'flammable':\n    //         let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));\n    //         let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));\n    //         if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined && MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === 'F' && !this.ignited) {\n    //             console.log('IGNITE');\n    //             this.ignited = true;\n    //             this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;\n    //         }\n    //         break;  \n    // }\n}",
@@ -4377,7 +4420,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 215,
+    "__docId__": 216,
     "kind": "function",
     "name": "createCompound",
     "memberof": "src/server/utils/compound.js",
@@ -4420,7 +4463,7 @@
     }
   },
   {
-    "__docId__": 216,
+    "__docId__": 217,
     "kind": "function",
     "name": "tickCompound",
     "memberof": "src/server/utils/compound.js",
@@ -4459,7 +4502,7 @@
     "return": null
   },
   {
-    "__docId__": 217,
+    "__docId__": 218,
     "kind": "file",
     "name": "src/server/utils/framesync.js",
     "content": "import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global';\nimport { deleteObject, getField, setField } from '../server';\nimport { collisionDetect } from './collision';\nimport { tickCompound } from './compound';\n\n/**\n * Runs once a frame, per player.\n * @param {*} socket The socket.io instance\n * @param {string} room The name of the room\n * @param {*} thisPlayer The player object\n */\nexport function frameSync(socket, room, thisPlayer) {\n    if(socket.connected) {\n\n        let thisRoom = getField(['rooms', room]);\n    \n        if (thisRoom !== undefined) {\n            // Distance checking for all objects\n            let tempObjects = {\n                players: {},\n                atoms: {},\n                compounds: {}\n            };\n    \n            // Move compounds\n            for (let compound in thisRoom.compounds) {\n                let compoundRef = thisRoom.compounds[compound];\n                if (isInBounds(compoundRef)) {\n                    setField(compoundRef.posX + compoundRef.vx, ['rooms', room, 'compounds', compound, 'posX']);\n                    setField(compoundRef.posY + compoundRef.vy, ['rooms', room, 'compounds', compound, 'posY']);\n                    tickCompound(compound, room);\n                    // compoundRef.posX += compoundRef.vx;\n                    // compoundRef.posY += compoundRef.vy;\n                }\n                else { // delete\n                    socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\n                    socket.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });\n                    deleteObject('compounds', compound, room);\n                }\n            }\n            // Move atoms\n            for (let atom in thisRoom.atoms) {\n                let distance = distanceBetween(\n                    { posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },\n                    { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });\n                // Attractive force\n                if (distance < GLOBAL.ATTRACTION_RADIUS) {\n                    let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX));\n    \n                    // Attraction is based on logarithmic algorithm\n    \n                    setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, ['rooms', room, 'atoms', atom, 'vx']);\n                    setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, ['rooms', room, 'atoms', atom, 'vy']);\n                    // thisRoom.atoms[atom].vx = 1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;\n                    // thisRoom.atoms[atom].vy = 1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;\n                    // console.log(this.vx, this.vy, this.posX, this.posY);\n                }\n                // Atom slowing down\n                else if (Math.abs(thisRoom.atoms[atom].vx) > GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) > GLOBAL.DEADZONE) {\n                    setField(thisRoom.atoms[atom].vx * GLOBAL.VELOCITY_STEP, ['rooms', room, 'atoms', atom, 'vx']);\n                    setField(thisRoom.atoms[atom].vy * GLOBAL.VELOCITY_STEP, ['rooms', room, 'atoms', atom, 'vy']);\n                    // thisRoom.atoms[atom].vx *= GLOBAL.VELOCITY_STEP;\n                    // thisRoom.atoms[atom].vy *= GLOBAL.VELOCITY_STEP;\n                }\n    \n                if (Math.abs(thisRoom.atoms[atom].vx) <= GLOBAL.DEADZONE)\n                    setField(0, ['rooms', room, 'atoms', atom, 'vx']);\n                if (Math.abs(thisRoom.atoms[atom].vy) <= GLOBAL.DEADZONE)\n                    setField(0, ['rooms', room, 'atoms', atom, 'vy']);\n    \n                // Move atom\n                setField(thisRoom.atoms[atom].posX + thisRoom.atoms[atom].vx, ['rooms', room, 'atoms', atom, 'posX']);\n                setField(thisRoom.atoms[atom].posY + thisRoom.atoms[atom].vy, ['rooms', room, 'atoms', atom, 'posY']);\n                // thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;\n                // thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;\n            }\n            \n            // Populate tempObjects\n            for (let objType in tempObjects) {\n                for (let obj in thisRoom[objType]) {\n                    if (distanceBetween(thisRoom[objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS)\n                        tempObjects[objType][obj] = thisRoom[objType][obj];\n                    else if (objType === 'players') // Player left view\n                        socket.emit('serverSendObjectRemoval', { id: obj, type: objType });\n                }\n            }\n\n            // Run collision detection script\n            collisionDetect(socket, room, thisPlayer, tempObjects);\n    \n            socket.emit('objectSync', tempObjects);\n    \n            if (thisRoom.started)\n                socket.emit('time', { time: thisRoom.time.formattedTime });\n    \n            if (thisRoom !== undefined && !thisRoom.started) {\n                // Send over the room player information\n                // socket.to(room).broadcast.emit('roomInfo', thisRoom.players);\n                socket.emit('roomInfo', thisRoom.players);\n            }\n        }\n    }\n}",
@@ -4470,7 +4513,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 218,
+    "__docId__": 219,
     "kind": "function",
     "name": "frameSync",
     "memberof": "src/server/utils/framesync.js",
@@ -4519,7 +4562,7 @@
     "return": null
   },
   {
-    "__docId__": 219,
+    "__docId__": 220,
     "kind": "file",
     "name": "src/server/utils/matchmaker.js",
     "content": "import { GLOBAL } from '../../client/js/global';\nimport { getField, setField } from '../server';\nimport { generateID } from './serverutils';\n\n/**\n * Matchmaking system for public matches. Runs after initial socket.io server connection, but before connecting to a server.\n * @param {*} socket Socket.io instance\n * @param {string} room Name of room\n * @param {string} team Name of team\n * @returns The new room that has been assigned\n */\nexport function roomMatchmaker(socket, room, team) {\n\n    let validJoin = false; // This join attempt was valid.\n    let roomType = socket.handshake.query.roomType;\n\n    // Make sure the room you are trying to join is valid\n    // console.log(getField(['rooms', room]));\n    if (room !== GLOBAL.NO_ROOM_IDENTIFIER && getField(['rooms', room]) !== undefined && !getField(['rooms', room]).joinable && getField(['rooms', room]) !== undefined) // Room full\n        socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' });\n\n    if (team !== undefined && team.room !== undefined) {\n        // Make sure everything is compatible\n        if (getField(['rooms', team.room]) !== undefined && getField(['rooms', team.room]).type !== roomType) // Wrong room type\n            socket.emit('connectionError', { msg: 'Your team is playing in a ' + getField('rooms', team.room).type + ' room, but you are trying to join a ' + roomType + ' room!' });\n        else if (!team.joinable) // Team full\n            socket.emit('connectionError', { msg: 'Your team is already in game or full!' });\n        else {// is joinable\n            validJoin = true;\n            room = team.room;\n\n            // Equivalent to teams[socket.handshake.query.team].players.push(socket.id);\n            setField(socket.id, ['teams', socket.handshake.query.team, 'players', getField(['teams', socket.handshake.query.team, 'players']).length ]);\n\n            if ((roomType === '2v2v2v2' && team.players.length === 2) || team.players.length === 4)\n                setField(false, ['teams', socket.handshake.query.team, 'joinable']);\n        }\n    }\n    // Team not found \n    else {\n        // Try joining a room\n        for (let roomName in getField(['rooms'])) {\n            if (roomName.indexOf(roomType) > -1)\n                if ((roomType === '4v4' && getField(['rooms', roomName, 'teams']).length < 2) || getField(['rooms', roomName, 'teams']).length < 4) {\n                    room = roomName;\n                }\n        }\n\n        // No matching rooms - must create a new room\n        if (room === GLOBAL.NO_ROOM_IDENTIFIER)\n            room = 'NA_' + roomType + '_' + generateID();\n\n        // Make team\n        setField({\n            room: room,\n            players: [socket.id],\n            joinable: true\n        }, ['teams', socket.handshake.query.team]);\n\n        validJoin = true;\n    }\n\n    // Join custom room\n    if (validJoin)\n        socket.join(room, () => {\n            console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow);\n        });\n\n    return room;\n}",
@@ -4530,7 +4573,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 220,
+    "__docId__": 221,
     "kind": "function",
     "name": "roomMatchmaker",
     "memberof": "src/server/utils/matchmaker.js",
@@ -4592,7 +4635,7 @@
     }
   },
   {
-    "__docId__": 221,
+    "__docId__": 222,
     "kind": "file",
     "name": "src/server/utils/ondamage.js",
     "content": "import { GLOBAL } from '../../client/js/global';\nimport { getField, setField } from '../server';\nimport { getTeamNumber } from './serverutils';\n\n/**\n * ondamage.js\n * Contains functions:\n *  - damage() Runs when a player gets damaged. Updates scores and checks if a player has been killed.\n *  - splash() Runs when a collision needs to cause splash damage. Creates explosion effect and deals extra damage.\n */\n\n\n/**\n * Changes the health of the player by the amount given.\n * @param {*} data The data sent by the client. Contains:\n *  - damage (number)\n *  - player (id string of player that was hit)\n *  - id (id string of compound)\n *  - sentBy (id string of player that sent compound)\n * @param {string} room This room.\n * @param {*} socket This socket.\n * Must include the player id and amount to damage.\n * Amount may be negative (for health boost).\n */\nexport function damage(data, room, socket) {\n\n    let thisRoom = getField(['rooms', room]);\n    let thisPlayer = thisRoom.players[data.player];\n\n    if (thisPlayer !== undefined) {\n\n        // thisPlayer.health -= data.damage;\n        setField(thisPlayer.health - data.damage, ['rooms', room, 'players', data.player, 'health']);\n\n        // Add damage to database\n        if (thisPlayer.damagedBy[data.sentBy] === undefined)\n            setField(0, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]);\n        // thisPlayer.damagedBy[data.sentBy] += data.damage;\n        setField(thisPlayer.damagedBy[data.sentBy] + data.damage, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]);\n\n        // Check if the player has died.\n        if (thisPlayer.health <= 0) {\n            // console.log(thisRoom.teams.indexOf(socket.handshake.query.team));\n            socket.emit('serverSendPlayerDeath', { teamNumber: getTeamNumber(room, socket.handshake.query.team) });\n            setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', data.player, 'health']);\n\n            if(data.id !== undefined) {\n                // Read damagedBy to award points, clear in the process\n                let max = null;\n                let dataToSend;\n                for (let pl in thisPlayer.damagedBy) {\n                    dataToSend = {\n                        player: pl,\n                        teamSlot: getTeamNumber(room, thisRoom.compounds[data.id].sendingTeam),\n                        increment: GLOBAL.ASSIST_SCORE,\n                        kill: false\n                    };\n\n                    // Add to team score, checking if team score is initialized\n                    setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score']);\n\n\n                    socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);\n                    socket.emit('serverSendScoreUpdate', dataToSend);\n                    if (max === null || thisPlayer.damagedBy[pl] > thisPlayer.damagedBy[max])\n                        max = pl;\n                }\n\n                // Add to score of person who dealt the most damage\n                dataToSend.player = max;\n                dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE;\n                dataToSend.kill = true;\n                socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend);\n                socket.emit('serverSendScoreUpdate', dataToSend);\n\n                // Add to team score\n                setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score']);\n\n                // Clear damagedBy values\n                for (let pl in thisPlayer.damagedBy)\n                    setField(0, ['rooms', room, 'players', data.player, 'damagedBy', pl]);\n\n                // Check if a team won\n                for (let tm of thisRoom.teams) {\n                    if (tm.score >= GLOBAL.WINNING_SCORE) {\n\n                        let dataToSend = {\n                            winner: tm\n                            // teamScore: thisRoom.teams[dataToSend.teamSlot].score             \n                            //other data here TODO post ranking\n                        };\n                        socket.to(room).broadcast.emit('serverSendWinner', dataToSend);\n                        socket.emit('serverSendWinner', dataToSend);\n\n                        // Close room after delay (kick all players)\n                        setTimeout(() => {\n                            socket.emit('serverSendDisconnect', {});\n                            socket.to(room).broadcast.emit('serverSendDisconnect', {});\n                        }, GLOBAL.ROOM_DELETE_DELAY);\n                    }\n                }\n            }\n        }\n    }\n    else\n        console.warn('Player of ID ' + data.player + ' couldn\\'t be damaged because they don\\'t exist!');\n}\n\n/**\n * TODO\n */\nexport function splash() {\n\n}",
@@ -4603,7 +4646,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 222,
+    "__docId__": 223,
     "kind": "function",
     "name": "damage",
     "memberof": "src/server/utils/ondamage.js",
@@ -4652,7 +4695,7 @@
     "return": null
   },
   {
-    "__docId__": 223,
+    "__docId__": 224,
     "kind": "function",
     "name": "splash",
     "memberof": "src/server/utils/ondamage.js",
@@ -4670,7 +4713,7 @@
     "return": null
   },
   {
-    "__docId__": 224,
+    "__docId__": 225,
     "kind": "file",
     "name": "src/server/utils/serverinit.js",
     "content": "import { getField, setField } from '../server';\nimport { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles';\nimport { GLOBAL } from '../../client/js/global';\nimport { spawnAtomAtVent } from './atoms';\nimport colors from 'colors'; // Console colors :D\n\n/**\n * Methods to run on server initialization and player connect initialization.\n */\n\n/**\n * Global initialiation. Run once on server start.\n */\nexport function initGlobal() {\n    // Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.\n    setInterval(() => {\n        for (let room in getField(['rooms'])) {\n            for (let row = 0; row < MAP_LAYOUT.length; row++)\n                for (let col = 0; col < MAP_LAYOUT[0].length; col++) {\n                    if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {\n                        spawnAtomAtVent(row, col, room, false);\n                    }\n\n                }\n        }\n    }, GLOBAL.ATOM_SPAWN_DELAY);\n\n    // Timer\n    setInterval(() => {\n        for (let room in getField(['rooms'])) {\n            if (getField(['rooms', room, 'started'])) {\n                let seconds = getField(['rooms', room, 'time', 'seconds']), \n                    minutes = getField(['rooms', room, 'time', 'minutes']);\n                    \n                // Equivalent to rooms[room].time.seconds++;\n                setField(seconds + 1, ['rooms', room, 'time', 'seconds']);\n\n                if (seconds >= 60) {\n                    setField(0, ['rooms', room, 'time', 'seconds']);\n                    setField(minutes + 1, ['rooms', room, 'time', 'minutes']);\n                }\n\n                // Set formatted Time\n                setField(minutes + ':' + ((seconds < 10) ? '0' : '') + seconds, ['rooms', room, 'time', 'formattedTime']);\n            }\n        }\n    }, 1000);\n}\n\n/**\n * Run on every player join.\n * @param {*} socket The socket.io instance\n * @param {string} room The name of the room that the player belongs to\n */\nexport function initPlayer(socket, room) {\n    // Initialize room array and spawn atoms on first player join\n    let thisRoom = getField(['rooms', room]);\n    if (thisRoom === undefined || thisRoom === null) {\n        console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType);\n        setField({\n            joinable: true,\n            teams: [],\n            atoms: {},\n            compounds: {},\n            type: socket.handshake.query.roomType,\n            time: {\n                minutes: 0,\n                seconds: 0,\n                formattedTime: '0:00'\n            }\n        }, ['rooms', room]);\n    }\n    thisRoom = getField(['rooms', room]);\n\n    // Add team to database\n\n    // Equivalent to rooms[room].teams.push({ name: team });\n    setField({name: socket.handshake.query.team}, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length]);\n\n    // Check if room is full\n    if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4)\n        setField(false, ['rooms', room, 'joinable']);\n\n    // Create new player in rooms object\n    setField({\n        id: socket.id,\n        name: socket.handshake.query.name,\n        room: socket.handshake.query.room,\n        team: socket.handshake.query.team,\n        health: GLOBAL.MAX_HEALTH,\n        posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,\n        posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,\n        vx: 0,\n        vy: 0,\n        experience: 0,\n        damagedBy: {}\n    }, ['rooms', room, 'players', socket.id]);\n}",
@@ -4681,7 +4724,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 225,
+    "__docId__": 226,
     "kind": "function",
     "name": "initGlobal",
     "memberof": "src/server/utils/serverinit.js",
@@ -4699,7 +4742,7 @@
     "return": null
   },
   {
-    "__docId__": 226,
+    "__docId__": 227,
     "kind": "function",
     "name": "initPlayer",
     "memberof": "src/server/utils/serverinit.js",
@@ -4738,7 +4781,7 @@
     "return": null
   },
   {
-    "__docId__": 227,
+    "__docId__": 228,
     "kind": "file",
     "name": "src/server/utils/serverutils.js",
     "content": "import { getField, setField } from '../server';\nimport { GLOBAL } from '../../client/js/global';\n\n/**\n * Misc. standalone utilities for the server.\n */\n\n/**\n* Returns a random number between between 10000000 and 99999999, inclusive.\n* TODO Make every ID guaranteed unique\n* @returns random id between 10000000 and 99999999\n*/\nexport function generateID() {\n    return Math.floor(Math.random() * 90000000) + 10000000;\n}\n\n/**\n * Returns the index of the given team within the team array of the given room.\n * @param {string} room The room name to check\n * @param {string} teamName The team name to return the number of\n */\nexport function getTeamNumber(room, teamName) {\n    for (let i = 0; i < getField(['rooms', room, 'teams']).length; i++)\n        if (getField(['rooms', room, 'teams'])[i].name === teamName)\n            return i;\n\n    return -1; //Team not found\n}",
@@ -4749,7 +4792,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 228,
+    "__docId__": 229,
     "kind": "function",
     "name": "generateID",
     "memberof": "src/server/utils/serverutils.js",
@@ -4780,7 +4823,7 @@
     "params": []
   },
   {
-    "__docId__": 229,
+    "__docId__": 230,
     "kind": "function",
     "name": "getTeamNumber",
     "memberof": "src/server/utils/serverutils.js",
@@ -4832,7 +4875,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n    \"name\": \"atomblast.io\",\n    \"version\": \"1.0.0\",\n    \"description\": \"First attempt at multiplayer online io game\",\n    \"main\": \"index.js\",\n    \"scripts\": {\n        \"test\": \"(jest && echo \\\" \\\\033[1;40;32m Unit testing passed.\\\\033[m \\\") || (echo \\\" \\\\033[1;41;33m Unit testing failed.\\\\033[m \\\" && exit 1)\",\n        \"watch\": \"watchify src/client/js/app.js -o src/client/js/public/build.js -v\",\n        \"server\": \"nodemon src/server/entry.js\",\n        \"start\": \"npm-run-all --parallel watch server\",\n        \"build\": \"browserify src/client/js/app.js -o  src/client/js/public/build.js\",\n        \"lint\": \"echo 'Working directory: ' && pwd && echo '\\nPlease wait. Lint Checking...\\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \\\" \\\\033[1;40;32m Linting Passed. \\\\033[m \\\" ) || ( (echo \\\"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix \\\\033[m \\\" && exit 1)))\",\n        \"lint-compatibility-mode\": \"./node_modules/.bin/eslint ./src/\",\n        \"fix-lint\": \"npm run -s env-test; (echo 'Please wait. Linting...\\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \\\" \\\\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\\\033[m \\\" && exit 1)\",\n        \"env-test\": \"if [ -d './src/' ]; then echo \\\" \\\\033[1;40;32m src directory detected! \\\\033[m \\\"; else echo \\\" \\\\033[1;41;33m \\n\\nCRITICAL: src directory NOT DETECTED\\nABORTING!!!\\n\\n \\\\033[m \\\" && exit 1; fi\",\n        \"precommitold\": \"npm run -s lint && echo \\\"Running unit testing..\\\" && npm test\",\n        \"precommit\": \"npm run -s lint && echo \\\"Generating Documentation...\\\" && npm run docs\",\n        \"prepush\": \"chmod +x ./prepush.sh && sh -c \\\"./prepush.sh\\\" \",\n        \"docs\": \"esdoc\"\n    },\n    \"repository\": {\n        \"type\": \"git\",\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io.git\"\n    },\n    \"keywords\": [\n        \"io\",\n        \"game\"\n    ],\n    \"author\": \"Bananium Labs\",\n    \"license\": \"MIT\",\n    \"contributors\": [\n        \"Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)\",\n        \"Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)\",\n        \"Eric Qian <eric@enumc.com> (https://github.com/EnumC)\"\n    ],\n    \"bugs\": {\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io/issues\"\n    },\n    \"homepage\": \"https://github.com/BananiumLabs/AtomBlast.io#readme\",\n    \"dependencies\": {\n        \"babel-preset-env\": \"^1.7.0\",\n        \"babel-register\": \"^6.26.0\",\n        \"colors\": \"^1.2.4\",\n        \"express\": \"^4.13.0\",\n        \"pixi.js\": \"^4.8.1\",\n        \"socket.io\": \"^2.1.1\",\n        \"sweetalert\": \"^2.1.0\"\n    },\n    \"devDependencies\": {\n        \"babel-core\": \"^6.26.3\",\n        \"babel-preset-es2015\": \"^6.24.1\",\n        \"babelify\": \"^8.0.0\",\n        \"browserify\": \"^16.2.0\",\n        \"esdoc\": \"^1.1.0\",\n        \"esdoc-standard-plugin\": \"^1.0.0\",\n        \"eslint\": \"^5.1.0\",\n        \"husky\": \"^0.14.3\",\n        \"jest\": \"^23.4.1\",\n        \"nodemon\": \"^1.18.4\",\n        \"npm-run-all\": \"^4.1.2\",\n        \"npm-run-parallel\": \"^0.6.0\",\n        \"watchify\": \"^3.11.0\"\n    },\n    \"browserify\": {\n        \"transform\": [\n            [\n                \"babelify\",\n                {\n                    \"presets\": [\n                        \"es2015\"\n                    ]\n                }\n            ]\n        ]\n    }\n}\n",
+    "content": "{\n    \"name\": \"atomblast.io\",\n    \"version\": \"1.0.0\",\n    \"description\": \"First attempt at multiplayer online io game\",\n    \"main\": \"index.js\",\n    \"scripts\": {\n        \"test\": \"(jest && echo \\\" \\\\033[1;40;32m Unit testing passed.\\\\033[m \\\") || (echo \\\" \\\\033[1;41;33m Unit testing failed.\\\\033[m \\\" && exit 1)\",\n        \"watch\": \"watchify src/client/js/app.js -o src/client/js/public/build.js -v\",\n        \"server\": \"nodemon src/server/entry.js\",\n        \"start\": \"npm-run-all --parallel watch server\",\n        \"build\": \"browserify src/client/js/app.js -o  src/client/js/public/build.js\",\n        \"lint\": \"echo 'Working directory: ' && pwd && echo '\\nPlease wait. Lint Checking...\\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \\\" \\\\033[1;40;32m Linting Passed. \\\\033[m \\\" ) || ( (echo \\\"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix \\\\033[m \\\" && exit 1)))\",\n        \"lint-compatibility-mode\": \"./node_modules/.bin/eslint ./src/\",\n        \"fix-lint\": \"npm run -s env-test; (echo 'Please wait. Linting...\\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \\\" \\\\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\\\033[m \\\" && exit 1)\",\n        \"env-test\": \"if [ -d './src/' ]; then echo \\\" \\\\033[1;40;32m src directory detected! \\\\033[m \\\"; else echo \\\" \\\\033[1;41;33m \\n\\nCRITICAL: src directory NOT DETECTED\\nABORTING!!!\\n\\n \\\\033[m \\\" && exit 1; fi\",\n        \"precommitold\": \"npm run -s lint && echo \\\"Running unit testing..\\\" && npm test\",\n        \"precommit\": \"npm run -s lint && echo \\\"Generating Documentation...\\\" && npm run docs\",\n        \"prepush\": \"chmod +x ./prepush.sh && sh -c \\\"./prepush.sh\\\" \",\n        \"docs\": \"esdoc\"\n    },\n    \"repository\": {\n        \"type\": \"git\",\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io.git\"\n    },\n    \"keywords\": [\n        \"io\",\n        \"game\"\n    ],\n    \"author\": \"Bananium Labs\",\n    \"license\": \"MIT\",\n    \"contributors\": [\n        \"Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)\",\n        \"Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)\",\n        \"Eric Qian <eric@enumc.com> (https://github.com/EnumC)\"\n    ],\n    \"bugs\": {\n        \"url\": \"https://github.com/BananiumLabs/AtomBlast.io/issues\"\n    },\n    \"homepage\": \"https://github.com/BananiumLabs/AtomBlast.io#readme\",\n    \"dependencies\": {\n        \"babel-preset-env\": \"^1.7.0\",\n        \"babel-register\": \"^6.26.0\",\n        \"colors\": \"^1.2.4\",\n        \"express\": \"^4.13.0\",\n        \"pixi.js\": \"^4.8.1\",\n        \"socket.io\": \"^2.1.1\",\n        \"sweetalert\": \"^2.1.0\"\n    },\n    \"devDependencies\": {\n        \"babel-core\": \"^6.26.3\",\n        \"babel-preset-es2015\": \"^6.24.1\",\n        \"babelify\": \"^8.0.0\",\n        \"browserify\": \"^16.2.3\",\n        \"esdoc\": \"^1.1.0\",\n        \"esdoc-standard-plugin\": \"^1.0.0\",\n        \"eslint\": \"^5.1.0\",\n        \"husky\": \"^0.14.3\",\n        \"jest\": \"^23.4.1\",\n        \"nodemon\": \"^1.18.4\",\n        \"npm-run-all\": \"^4.1.2\",\n        \"npm-run-parallel\": \"^0.6.0\",\n        \"watchify\": \"^3.11.0\"\n    },\n    \"browserify\": {\n        \"transform\": [\n            [\n                \"babelify\",\n                {\n                    \"presets\": [\n                        \"es2015\"\n                    ]\n                }\n            ]\n        ]\n    }\n}\n",
     "longname": "/home/dbqeo/Documents/AtomBlast.io/package.json",
     "name": "package.json",
     "static": true,

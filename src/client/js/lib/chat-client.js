@@ -5,7 +5,7 @@
 
 import {GLOBAL} from '../global.js';
 import { socket } from '../socket.js';
-import {devTest} from '../app.js';
+import { updateCompoundButtons } from '../app.js';
 
 let player, room, team;
 export default class ChatClient {
@@ -44,7 +44,8 @@ export default class ChatClient {
 
         this.registerCommand('test', 'Gives 5000 of every element', () => {
             if(GLOBAL.DEBUG) {
-                devTest();
+                socket.emit('testCommand', {player: socket.id});
+                updateCompoundButtons();
                 self.addSystemLine("Developer Configurations Applied!");
             }
             else {

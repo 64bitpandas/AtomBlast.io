@@ -146,7 +146,7 @@ function joinGame() {
             selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
 
             // Check whether blueprint is selected!                     
-            document.getElementById(&apos;bp-ingame-&apos; + i).innerHTML = selectedBlueprints[i-1].name;                                                                      
+            document.getElementById(&apos;bp-ingame-&apos; + i).innerHTML = selectedBlueprints[i-1].name + &apos; (&apos; + getCompoundFormula(selectedBlueprints[i-1]) + &apos;)&apos;;                                                                      
         }
 
         // Show game window
@@ -286,24 +286,18 @@ window.onload = () =&gt; {
     // Set up blueprint selection buttons
     for(let blueprint in BLUEPRINTS) {
         let bp = BLUEPRINTS[blueprint];
-        let formula = &apos;&apos;;
-        for(let atom in bp.atoms) {
-            formula += atom.toUpperCase() + ((bp.atoms[atom] &gt; 1) ? bp.atoms[atom] : &apos;&apos;);
-        }
 
         document.getElementById(&apos;blueprint-wrapper&apos;).innerHTML +=
             `
             &lt;button onmouseenter=&quot;tooltipFollow(this)&quot; class=&quot;button width-override col-6 col-12-sm btn-secondary btn-blueprint&quot; id=&quot;btn-blueprint-` + blueprint + `&quot;&gt;
                 &lt;p&gt;` + bp.name + `&lt;/p&gt;
-                &lt;h6&gt;-` + formula + `-&lt;/h6&gt;
+                &lt;h6&gt;-` + getCompoundFormula(bp) + `-&lt;/h6&gt;
                 &lt;img src=&quot;` + bp.texture + `&quot;&gt;
                 &lt;span class=&quot;tooltip&quot;&gt;` + bp.tooltip + `&lt;/span&gt;
             &lt;/button&gt;
 
             `;
-        
     }
-
     // Blueprint Slots
     for(let btn of document.getElementsByClassName(&apos;btn-blueprint&apos;))
         btn.onclick = () =&gt;  {
@@ -344,11 +338,6 @@ window.onload = () =&gt; {
         cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
     };
 };
-
-// function onClick(e) {
-//     swal(&apos;&apos;, &apos;oooooo!!!&apos;, &apos;info&apos;);
-//     console.log(&quot;ONCLICK!&quot;);
-// }
 
 /**
  * Sets mouse positions for tooltip
@@ -531,6 +520,20 @@ export function devTest() {
         }
         updateCompoundButtons();
     }
+}
+
+/**
+ * Gets the formatted formula of a compound (e.g. C6H12O6).
+ * @param {*} blueprint The blueprint object as defined in blueprints.js
+ * @returns {string} The formula of the compound
+ */
+function getCompoundFormula(blueprint) {
+    let formula = &apos;&apos;;
+    for (let atom in blueprint.atoms) {
+        formula += atom.toUpperCase() + ((blueprint.atoms[atom] &gt; 1) ? blueprint.atoms[atom] : &apos;&apos;);
+    }
+
+    return formula;
 }</code></pre>
 
 </div>

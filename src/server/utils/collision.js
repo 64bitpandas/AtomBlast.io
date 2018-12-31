@@ -12,15 +12,15 @@ import { incrementAtom } from './atoms';
  * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer. Contains compounds, atoms, players
  */
 export function collisionDetect(socket, room, thisPlayer, tempObjects) {
-    
+
     // Check for collected atoms
-    for(let atom in tempObjects.atoms) {
+    for (let atom in tempObjects.atoms) {
         let distance = distanceBetween(
             { posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
             { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
-        
-        if(distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
-            
+
+        if (distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
+
             // console.log(atom);
             incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1);
             socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' });
@@ -31,11 +31,11 @@ export function collisionDetect(socket, room, thisPlayer, tempObjects) {
     }
 
     // Check for compound collisions
-    for(let compound in tempObjects.compounds) {
+    for (let compound in tempObjects.compounds) {
 
         let cmp = tempObjects.compounds[compound];
 
-        if(cmp.sendingTeam !== thisPlayer.team) {
+        if (cmp.sendingTeam !== thisPlayer.team) {
             let distance = distanceBetween(
                 { posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
                 { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
@@ -52,24 +52,7 @@ export function collisionDetect(socket, room, thisPlayer, tempObjects) {
                 deleteObject('compounds', compound, room);
                 socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });
                 socket.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });
-
             }
         }
-       
-//am currently migrating collision processing from client to server
-        // socket.to(room).on('compoundCollision', data => 
-        //     if (COLLISIONVERBOSE) {
-        //         console.log('compoundCollision');
-        //     }
-        //     if(rooms[room].compounds[data.id] !== undefined) {
-        //         damage(data, room, socket);   
-        //         delete rooms[room].compounds[data.id];
-        //         socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
-        //         socket.emit('serverSendObjectRemoval', {id: data.id, type: 'compounds'});
-
-        //     }
-        // });
-        
     }
-
 }

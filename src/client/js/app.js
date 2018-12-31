@@ -409,20 +409,6 @@ export function displayWinner(data) {
 }
 
 /**
- * Sets all player owned atoms to 9999 only if method is called on a DEBUG
- * enabled server.
- */
-export function devTest() {
-    if (GLOBAL.DEBUG) {
-        console.warn(JSON.stringify(player.atoms));
-        for (let i in player.atoms) {
-            player.atoms[i] = 9999;
-        }
-        updateCompoundButtons();
-    }
-}
-
-/**
  * Gets the formatted formula of a compound (e.g. C6H12O6).
  * @param {*} blueprint The blueprint object as defined in blueprints.js
  * @returns {string} The formula of the compound
