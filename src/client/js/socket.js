@@ -130,6 +130,8 @@ function setupSocketObjectRetrieval() {
                                 for (let atom in objRef.atomList)
                                     updateAtomList(atom);
                             }
+                            if (objType === 'compounds' && objRef.ignited) 
+                                objects[objType][obj].ignited = objRef.ignited;
                         }
                         // Does not exist - need to clone to clientside
                         else if (isSetup) {

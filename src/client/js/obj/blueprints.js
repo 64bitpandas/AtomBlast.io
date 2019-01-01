@@ -32,7 +32,7 @@ export const BLUEPRINTS = {
         name: 'Methane',
         tooltip: 'Okay, who passed gas?',
         texture: '../assets/atom-hydrogen.png',
-        type: 'basic',
+        type: 'flammable',
         params: {
             speed: 3*3,
             damage: 3,

@@ -1,6 +1,7 @@
 import { GLOBAL } from '../../client/js/global';
 import { getField, setField } from '../server';
 import { getTeamNumber } from './serverutils';
+import { tmpdir } from 'os';
 
 /**
  * ondamage.js
@@ -81,11 +82,19 @@ export function damage(data, room, socket) {
                     setField(0, ['rooms', room, 'players', data.player, 'damagedBy', pl]);
 
                 // Check if a team won
+                let highScores = []; // Possible winning teams
+                let maxScore = 0;
                 for (let tm of thisRoom.teams) {
                     if (tm.score >= GLOBAL.WINNING_SCORE) {
-
+                        highScores.push(tm);
+                        if(maxScore < tm.score)
+                            maxScore = tm.score;
+                    }
+                }
+                for(let winningTm of highScores) {
+                    if(winningTm.score === maxScore) {
                         let dataToSend = {
-                            winner: tm
+                            winner: winningTm
                             // teamScore: thisRoom.teams[dataToSend.teamSlot].score             
                             //other data here TODO post ranking
                         };

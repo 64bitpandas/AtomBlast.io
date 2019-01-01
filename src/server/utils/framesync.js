@@ -28,7 +28,7 @@ export function frameSync(socket, room, thisPlayer) {
                 if (isInBounds(compoundRef)) {
                     setField(compoundRef.posX + compoundRef.vx, ['rooms', room, 'compounds', compound, 'posX']);
                     setField(compoundRef.posY + compoundRef.vy, ['rooms', room, 'compounds', compound, 'posY']);
-                    tickCompound(compound, room);
+                    tickCompound(getField(['rooms', room, 'compounds', compound]), room);
                     // compoundRef.posX += compoundRef.vx;
                     // compoundRef.posY += compoundRef.vy;
                 }

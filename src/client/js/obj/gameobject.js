@@ -104,6 +104,9 @@ export class GameObject extends PIXI.Sprite {
         if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING))
             this.posY += this.vy;
 
+        if (this.ignited)
+            this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+
         if(!noDraw) {
             this.draw();
         }

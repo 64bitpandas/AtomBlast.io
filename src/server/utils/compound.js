@@ -2,7 +2,7 @@
  * Manages compound creation and behavior.
  * Moved from clientside compound.js
  */
-import { GLOBAL } from '../../client/js/global';
+import { GLOBAL, getCurrTile } from '../../client/js/global';
 import { canCraft } from './atoms';
 import { generateID } from './serverutils';
 import { incrementField, setField } from '../server';
@@ -69,20 +69,18 @@ export function createCompound(data, room, thisPlayer) {
 
 /**
  * Checks compound behavior based on compound type. Runs once a frame.
- * @param {number} compound ID of compound
+ * @param {number} compound compound object
  * @param {string} room Name of room
  */
 export function tickCompound(compound, room) {
     //TODO
-    // switch (compound.blueprint.type) {
-    //     case 'flammable':
-    //         let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));
-    //         let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));
-    //         if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined && MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === 'F' && !this.ignited) {
-    //             console.log('IGNITE');
-    //             this.ignited = true;
-    //             this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
-    //         }
-    //         break;  
-    // }
+    switch (compound.blueprint.type) {
+        case 'flammable':
+            if (getCurrTile(compound) === 'F' && !compound.ignited) {
+                setField(true, ['rooms', room, 'compounds', compound.id, 'ignited']);
+                // compound.ignited = true;
+                // compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+            }
+            break;  
+    }
 }
