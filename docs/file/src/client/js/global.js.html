@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
@@ -254,6 +255,22 @@ export function distanceBetween(obj1, obj2) {
  */
 export function isInBounds(obj) {
     return obj.posX &gt; 0 &amp;&amp; obj.posY &gt; -GLOBAL.GRID_SPACING * 2 &amp;&amp; obj.posX &lt; MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 &amp;&amp; obj.posY &lt; (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2;
+}
+
+/**
+ * Gets the tile directly underneath any object.
+ * @param {*} compound Compound object.
+ * @returns {string} one-letter ID of current tile.
+ */
+export function getCurrTile(obj) {
+    let tileCol = Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2));
+    let tileRow = Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2));
+
+    try {
+        return MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol];
+    } catch(error) {
+        return &apos;E&apos;;
+    }
 }</code></pre>
 
 </div>

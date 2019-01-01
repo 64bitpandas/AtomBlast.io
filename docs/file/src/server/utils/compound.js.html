@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
@@ -101,7 +102,7 @@
  * Manages compound creation and behavior.
  * Moved from clientside compound.js
  */
-import { GLOBAL } from &apos;../../client/js/global&apos;;
+import { GLOBAL, getCurrTile } from &apos;../../client/js/global&apos;;
 import { canCraft } from &apos;./atoms&apos;;
 import { generateID } from &apos;./serverutils&apos;;
 import { incrementField, setField } from &apos;../server&apos;;
@@ -168,22 +169,20 @@ export function createCompound(data, room, thisPlayer) {
 
 /**
  * Checks compound behavior based on compound type. Runs once a frame.
- * @param {number} compound ID of compound
+ * @param {number} compound compound object
  * @param {string} room Name of room
  */
 export function tickCompound(compound, room) {
     //TODO
-    // switch (compound.blueprint.type) {
-    //     case &apos;flammable&apos;:
-    //         let tileCol = Math.floor(this.posX / (GLOBAL.GRID_SPACING * 2));
-    //         let tileRow = Math.floor(this.posY / (GLOBAL.GRID_SPACING * 2));
-    //         if (MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2] !== undefined &amp;&amp; MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol] === &apos;F&apos; &amp;&amp; !this.ignited) {
-    //             console.log(&apos;IGNITE&apos;);
-    //             this.ignited = true;
-    //             this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
-    //         }
-    //         break;  
-    // }
+    switch (compound.blueprint.type) {
+        case &apos;flammable&apos;:
+            if (getCurrTile(compound) === &apos;F&apos; &amp;&amp; !compound.ignited) {
+                setField(true, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound.id, &apos;ignited&apos;]);
+                // compound.ignited = true;
+                // compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+            }
+            break;  
+    }
 }</code></pre>
 
 </div>

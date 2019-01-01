@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
@@ -202,6 +203,9 @@ export class GameObject extends PIXI.Sprite {
             this.posX += this.vx;
         if ((this.vy &gt; 0 &amp;&amp; this.posY &lt; (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy &lt; 0 &amp;&amp; this.posY &gt; -GLOBAL.GRID_SPACING))
             this.posY += this.vy;
+
+        if (this.ignited)
+            this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
 
         if(!noDraw) {
             this.draw();

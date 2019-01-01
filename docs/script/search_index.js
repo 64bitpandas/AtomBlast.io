@@ -180,6 +180,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/global.js~getcurrtile",
+    "function/index.html#static-function-getCurrTile",
+    "<span>getCurrTile</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/server.js~getfield",
     "function/index.html#static-function-getField",
     "<span>getField</span> <span class=\"search-result-import-path\">atomblast.io/src/server/server.js</span>",
@@ -862,6 +868,12 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/gameobject.js~GameObject.html#instance-method-setup",
     "src/client/js/obj/gameobject.js~GameObject#setup",
     "method"
+  ],
+  [
+    "src/client/js/obj/gameobject.js~gameobject#texture",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-member-texture",
+    "src/client/js/obj/gameobject.js~GameObject#texture",
+    "member"
   ],
   [
     "src/client/js/obj/gameobject.js~gameobject#tick",
