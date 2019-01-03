@@ -243,7 +243,7 @@ function draw(delta) {
         // Reset stream count when space key is released
         space.release = () => {
             streamID = 0;
-        }
+        };
 
         // Move player
         player.tick();

@@ -41,13 +41,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
@@ -152,35 +152,6 @@
         
         
         <div data-ice="description"><p>Binds handlerMethod to onclick event for element id.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span><span class="code" data-ice="signature">(blueprint: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Returns true if the player has the materials necessary to create a particular blueprint.</p>
 </div>
       </div>
     </td>
@@ -1067,13 +1038,42 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span><span class="code" data-ice="signature">(e: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span><span class="code" data-ice="signature">(e: <span>*</span>)</span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Called on mouse click from app.js</p>
+        <div data-ice="description"><p>Called on mouse down from app.js</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span><span class="code" data-ice="signature">(e: <span>*</span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Called on mouse up from app.js</p>
 </div>
       </div>
     </td>
@@ -1125,7 +1125,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span><span class="code" data-ice="signature">(blueprint: <span>*</span>, xIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, yIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span><span class="code" data-ice="signature">(blueprint: <span>*</span>, xIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, yIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, streamID: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -1702,79 +1702,6 @@
     
     
     
-    <span class="code" data-ice="name">canCraft</span><span class="code" data-ice="signature">(blueprint: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber340">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {canCraft} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber340">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
-  
-  
-  <div data-ice="description"><p>Returns true if the player has the materials necessary to create a particular blueprint.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">blueprint</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The name of the blueprint to check.</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-canCraft">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
     <span class="code" data-ice="name">canCraft</span><span class="code" data-ice="signature">(player: <span>*</span>, room: <span>*</span>, blueprint: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
@@ -1945,11 +1872,11 @@ Run using </p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber23">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber21">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber23">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks if a compound can be created, deducts craft material, and returns the new compound.
@@ -1976,6 +1903,7 @@ Does NOT add the new compound to the objects array.</p>
 <li>sendingTeam: Team of the player who sent this</li>
 <li>mousePos: Mouse position of the player who sent this. Contains x and y components</li>
 <li>sender: Player who sent this</li>
+<li>streamID: number indicating the consecutive compounds requested on this current mouse hold.</li>
 </ul>
 </td>
     </tr>
@@ -2091,11 +2019,11 @@ Does NOT add the new compound to the objects array.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber317">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber327">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber317">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber327">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Creates a Player instance once the stage is fully set up and ready.</p>
@@ -2487,11 +2415,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber291">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber301">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber291">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber301">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Destroy everything in PIXI. DANGEROUS avoid!</p>
@@ -3135,11 +3063,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber389">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber385">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber389">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber385">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3590,11 +3518,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber332">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber342">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber332">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber342">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>If the document is Focused return true otherwise false</p>
@@ -3791,11 +3719,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber27">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber29">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {loadTextures} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber27">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {loadTextures} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber29">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3823,25 +3751,25 @@ Best used with numbers or strings.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-mouseClickHandler">
+  <h3 data-ice="anchor" id="static-function-mouseDownHandler">
     <span class="access" data-ice="access">public</span>
     
     
     
     
     
-    <span class="code" data-ice="name">mouseClickHandler</span><span class="code" data-ice="signature">(e: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="code" data-ice="name">mouseDownHandler</span><span class="code" data-ice="signature">(e: <span>*</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber397">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber402">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseClickHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber397">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseDownHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber402">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
-  <div data-ice="description"><p>Called on mouse click from app.js</p>
+  <div data-ice="description"><p>Called on mouse down from app.js</p>
 </div>
 
   
@@ -3866,19 +3794,68 @@ Best used with numbers or strings.</p>
 </div>
 </div>
 
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
 </div>
-  </div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-mouseUpHandler">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">mouseUpHandler</span><span class="code" data-ice="signature">(e: <span>*</span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber393">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseUpHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber393">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Called on mouse up from app.js</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">e</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Click event</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
 
   
 
@@ -3971,15 +3948,15 @@ Best used with numbers or strings.</p>
     
     
     
-    <span class="code" data-ice="name">requestCreateCompound</span><span class="code" data-ice="signature">(blueprint: <span>*</span>, xIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, yIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span>*</span></span>
+    <span class="code" data-ice="name">requestCreateCompound</span><span class="code" data-ice="signature">(blueprint: <span>*</span>, xIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, yIn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>, streamID: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/obj/create.js.html#lineNumber84">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/obj/create.js.html#lineNumber85">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {requestCreateCompound} from &apos;<span><a href="file/src/client/js/obj/create.js.html#lineNumber84">atomblast.io/src/client/js/obj/create.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {requestCreateCompound} from &apos;<span><a href="file/src/client/js/obj/create.js.html#lineNumber85">atomblast.io/src/client/js/obj/create.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Creates a Compound by sending a request to the server.</p>
@@ -4014,6 +3991,13 @@ Best used with numbers or strings.</p>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>y-coords</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">streamID</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The current stream number.</p>
 </td>
     </tr>
 </tbody>
@@ -4296,11 +4280,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber382">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber378">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber382">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber378">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets the value of inGame</p>
@@ -4418,11 +4402,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber305">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber315">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber305">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber315">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Call this function to hide loading div and show UI</p>
@@ -4676,11 +4660,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber355">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber351">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber355">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber351">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Starts the game after lobby closes.</p>
@@ -4744,11 +4728,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber75">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber77">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber75">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber77">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks compound behavior based on compound type. Runs once a frame.</p>

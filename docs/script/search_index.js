@@ -66,12 +66,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~cancraft",
-    "function/index.html#static-function-canCraft",
-    "<span>canCraft</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/server/utils/atoms.js~cancraft",
     "function/index.html#static-function-canCraft",
     "<span>canCraft</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
@@ -258,9 +252,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~mouseclickhandler",
-    "function/index.html#static-function-mouseClickHandler",
-    "<span>mouseClickHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "atomblast.io/src/client/js/pixigame.js~mousedownhandler",
+    "function/index.html#static-function-mouseDownHandler",
+    "<span>mouseDownHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/pixigame.js~mouseuphandler",
+    "function/index.html#static-function-mouseUpHandler",
+    "<span>mouseUpHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
   ],
   [

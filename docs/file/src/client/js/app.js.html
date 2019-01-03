@@ -41,13 +41,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseClickHandler">mouseClickHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
@@ -109,7 +109,7 @@ import { Player } from &apos;./obj/player.js&apos;;
 import { GameObject } from &apos;./obj/gameobject.js&apos;;
 import { BLUEPRINTS } from &apos;./obj/blueprints.js&apos;;
 import { beginConnection, disconnect } from &apos;./socket.js&apos;;
-import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from &apos;./pixigame.js&apos;;
+import { player, deductCraftMaterial, setIngame, getIngame, startGame, mouseUpHandler, mouseDownHandler } from &apos;./pixigame.js&apos;;
 import swal from &apos;sweetalert&apos;;
 
 // Array containing all inputs which require cookies, and their values
@@ -222,8 +222,8 @@ window.onload = () =&gt; {
 
     // Add listeners to start game to enter key and button click
 
-    // Eric - Test method do not remove pls
-    document.addEventListener(&apos;pointerdown&apos;, mouseClickHandler);
+    document.addEventListener(&apos;pointerdown&apos;, mouseUpHandler);
+    document.addEventListener(&apos;pointerup&apos;, mouseDownHandler);
 
     bindHandler(&apos;startButton&apos;, function () {
         joinGame();
@@ -520,6 +520,22 @@ function getCompoundFormula(blueprint) {
     }
 
     return formula;
+}
+
+/**
+ * Returns true if the player has the materials necessary to create a particular blueprint.
+ * ONLY USE FOR BUTTON GRAPHICS!!! True checking is done serverside.
+ * @param {string} blueprint The name of the blueprint to check.
+ */
+function canCraft(blueprint) {
+    if (blueprint === undefined)
+        return false;
+    for (let atom in blueprint.atoms) {
+        if (player.atomList[atom] === undefined || player.atomList[atom] &lt; blueprint.atoms[atom])
+            return false;
+    }
+
+    return true;
 }</code></pre>
 
 </div>

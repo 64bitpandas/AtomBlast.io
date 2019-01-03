@@ -123,7 +123,7 @@ window.onload = () => {
     // Add listeners to start game to enter key and button click
 
     document.addEventListener('pointerdown', mouseUpHandler);
-    document.addEventListener('pointerup', mouseDownHandler)
+    document.addEventListener('pointerup', mouseDownHandler);
 
     bindHandler('startButton', function () {
         joinGame();
