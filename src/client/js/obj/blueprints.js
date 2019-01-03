@@ -59,7 +59,7 @@ export const BLUEPRINTS = {
         }
     },
     basicWater: {
-        name: 'Water',
+        name: 'Dihydrogen Monoxide',
         tooltip: 'Why life exists. Are you trying to drown someone?',
         texture: '../assets/atom-hydrogen.png',
         type: 'stream',

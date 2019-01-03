@@ -1,7 +1,7 @@
 {
   "type": "File",
   "start": 0,
-  "end": 50,
+  "end": 52,
   "loc": {
     "start": {
       "line": 1,
@@ -15,7 +15,7 @@
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 50,
+    "end": 52,
     "loc": {
       "start": {
         "line": 1,
@@ -31,7 +31,7 @@
       {
         "type": "ExpressionStatement",
         "start": 0,
-        "end": 50,
+        "end": 52,
         "loc": {
           "start": {
             "line": 1,
@@ -45,7 +45,7 @@
         "expression": {
           "type": "CallExpression",
           "start": 0,
-          "end": 49,
+          "end": 51,
           "loc": {
             "start": {
               "line": 1,
@@ -97,7 +97,7 @@
             {
               "type": "ArrowFunctionExpression",
               "start": 25,
-              "end": 48,
+              "end": 50,
               "loc": {
                 "start": {
                   "line": 1,
@@ -116,7 +116,7 @@
               "body": {
                 "type": "BlockStatement",
                 "start": 31,
-                "end": 48,
+                "end": 50,
                 "loc": {
                   "start": {
                     "line": 1,
@@ -130,8 +130,8 @@
                 "body": [
                   {
                     "type": "ExpressionStatement",
-                    "start": 37,
-                    "end": 46,
+                    "start": 38,
+                    "end": 47,
                     "loc": {
                       "start": {
                         "line": 2,
@@ -144,8 +144,8 @@
                     },
                     "expression": {
                       "type": "CallExpression",
-                      "start": 37,
-                      "end": 45,
+                      "start": 38,
+                      "end": 46,
                       "loc": {
                         "start": {
                           "line": 2,
@@ -158,8 +158,8 @@
                       },
                       "callee": {
                         "type": "Identifier",
-                        "start": 37,
-                        "end": 43,
+                        "start": 38,
+                        "end": 44,
                         "loc": {
                           "start": {
                             "line": 2,
@@ -406,8 +406,8 @@
         "binop": null
       },
       "value": "expect",
-      "start": 37,
-      "end": 43,
+      "start": 38,
+      "end": 44,
       "loc": {
         "start": {
           "line": 2,
@@ -431,8 +431,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 43,
-      "end": 44,
+      "start": 44,
+      "end": 45,
       "loc": {
         "start": {
           "line": 2,
@@ -456,8 +456,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 44,
-      "end": 45,
+      "start": 45,
+      "end": 46,
       "loc": {
         "start": {
           "line": 2,
@@ -482,8 +482,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 45,
-      "end": 46,
+      "start": 46,
+      "end": 47,
       "loc": {
         "start": {
           "line": 2,
@@ -507,8 +507,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 47,
-      "end": 48,
+      "start": 49,
+      "end": 50,
       "loc": {
         "start": {
           "line": 3,
@@ -532,8 +532,8 @@
         "postfix": false,
         "binop": null
       },
-      "start": 48,
-      "end": 49,
+      "start": 50,
+      "end": 51,
       "loc": {
         "start": {
           "line": 3,
@@ -558,8 +558,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 49,
-      "end": 50,
+      "start": 51,
+      "end": 52,
       "loc": {
         "start": {
           "line": 3,
@@ -584,8 +584,8 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 50,
-      "end": 50,
+      "start": 52,
+      "end": 52,
       "loc": {
         "start": {
           "line": 3,

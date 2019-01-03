@@ -73,6 +73,12 @@ export class GameObject extends PIXI.Sprite {
      * hiding it from view.
      */
     hide() {
+        // console.warn('hide() is called');
+        if (this.transform === null || this.transform === undefined) {
+            console.warn("hide() function exception. THIS IS ABNORMAL. The following object contains invalid transform object:");
+            console.warn(this);
+            return 1;
+        }
         this.x = 9999;
         this.y = 9999;
     }

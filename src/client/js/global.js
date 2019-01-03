@@ -4,6 +4,7 @@ import { MAP_LAYOUT } from './obj/tiles';
 export const GLOBAL = {
     
     DEBUG: true,
+    VERBOSE_SOCKET: false,  // true = log if any socket method has been called
     // Keys and other mathematical constants
     KEY_ESC: 27,
     KEY_ENTER: 13,

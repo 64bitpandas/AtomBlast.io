@@ -5,27 +5,27 @@
     "lines": [
       {
         "lineNumber": 159,
-        "line": "/**"
+        "line": "/**\r"
       },
       {
         "lineNumber": 160,
-        "line": " * Gets the tile directly underneath any object."
+        "line": " * Gets the tile directly underneath any object.\r"
       },
       {
         "lineNumber": 161,
-        "line": " * @param {*} compound Compound object."
+        "line": " * @param {*} compound Compound object.\r"
       },
       {
         "lineNumber": 162,
-        "line": " * @returns {string} one-letter ID of current tile."
+        "line": " * @returns {string} one-letter ID of current tile.\r"
       },
       {
         "lineNumber": 163,
-        "line": " */"
+        "line": " */\r"
       },
       {
         "lineNumber": 164,
-        "line": "export function getCurrTile(obj) {"
+        "line": "export function getCurrTile(obj) {\r"
       }
     ],
     "codeParams": [
@@ -41,51 +41,51 @@
     "lines": [
       {
         "lineNumber": 11,
-        "line": "/**"
+        "line": "/**\r"
       },
       {
         "lineNumber": 12,
-        "line": "  * Checks if a compound can be created, deducts craft material, and returns the new compound."
+        "line": "  * Checks if a compound can be created, deducts craft material, and returns the new compound.\r"
       },
       {
         "lineNumber": 13,
-        "line": "  * Does NOT add the new compound to the objects array."
+        "line": "  * Does NOT add the new compound to the objects array.\r"
       },
       {
         "lineNumber": 14,
-        "line": "  * @param data - Data sent from the client."
+        "line": "  * @param data - Data sent from the client.\r"
       },
       {
         "lineNumber": 15,
-        "line": "  *  - blueprint: The blueprint of the compound to create"
+        "line": "  *  - blueprint: The blueprint of the compound to create\r"
       },
       {
         "lineNumber": 16,
-        "line": "  *  - sendingTeam: Team of the player who sent this"
+        "line": "  *  - sendingTeam: Team of the player who sent this\r"
       },
       {
         "lineNumber": 17,
-        "line": "  *  - mousePos: Mouse position of the player who sent this. Contains x and y components"
+        "line": "  *  - mousePos: Mouse position of the player who sent this. Contains x and y components\r"
       },
       {
         "lineNumber": 18,
-        "line": "  *  - sender: Player who sent this"
+        "line": "  *  - sender: Player who sent this\r"
       },
       {
         "lineNumber": 19,
-        "line": "  *  - streamID: number indicating the consecutive compounds requested on this current mouse hold."
+        "line": "  *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.\r"
       },
       {
         "lineNumber": 20,
-        "line": "  * @param room - The name of the room"
+        "line": "  * @param room - The name of the room\r"
       },
       {
         "lineNumber": 21,
-        "line": "  */"
+        "line": "  */\r"
       },
       {
         "lineNumber": 22,
-        "line": "export function createCompound(data, room, thisPlayer) {"
+        "line": "export function createCompound(data, room, thisPlayer) {\r"
       }
     ],
     "codeParams": [
@@ -104,27 +104,27 @@
     "lines": [
       {
         "lineNumber": 73,
-        "line": "/**"
+        "line": "/**\r"
       },
       {
         "lineNumber": 74,
-        "line": " * Checks compound behavior based on compound type. Runs once a frame."
+        "line": " * Checks compound behavior based on compound type. Runs once a frame.\r"
       },
       {
         "lineNumber": 75,
-        "line": " * @param {number} compound compound object"
+        "line": " * @param {number} compound compound object\r"
       },
       {
         "lineNumber": 76,
-        "line": " * @param {string} room Name of room"
+        "line": " * @param {string} room Name of room\r"
       },
       {
         "lineNumber": 77,
-        "line": " */"
+        "line": " */\r"
       },
       {
         "lineNumber": 78,
-        "line": "export function tickCompound(compound, room, socket) {"
+        "line": "export function tickCompound(compound, room, socket) {\r"
       }
     ],
     "codeParams": [

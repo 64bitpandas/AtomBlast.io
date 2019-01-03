@@ -168,13 +168,35 @@ function setupSocketObjectRetrieval() {
 
     // Sync objects when they are deleted or move out of view
     socket.on('serverSendObjectRemoval', (data) => {
+        if (GLOBAL.VERBOSE_SOCKET) {
+            console.info("serverSendObjectRemoval() called");
+        }
+        if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
+            console.warn("serverSendObjectRemoval() called on invalid object.");
+            return 1;
+        }
+        // console.log(objects[data.type][data.id].destroyed);
         //An object was removed
-        removeObject(data);
+        if (!objects[data.type][data.id].destroyed) {   //Only remove if not already
+            removeObject(data);
+        } 
+        else {
+            console.warn("serverSendObjectRemoval() called despite object has already been destroyed.");  // Sanity check
+            return 1;
+        }
+        
 
         // Must keep checking if the object was not created at time of destruction.
         // One example of this needing to be run is when a player instantly collects an atom on spawn.
         if (objects[data.type][data.id] === undefined) {
-            let thisInterval = setTimeout(() => { removeObject(data); if (objects[data.type][data.id].destroyed) clearInterval(thisInterval); }, 200);
+            let thisInterval = setTimeout(() => {
+                if (objects[data.type][data.id].destroyed) {
+                    clearInterval(thisInterval);
+                } 
+                else {
+                    removeObject(data); 
+                }
+            }, 200);
         }
     });
 
@@ -323,7 +345,7 @@ function lerp(v0, v1, t) {
 
 // Helper function for serverSendObjectRemoval
 function removeObject(data) {
-    if (objects[data.type][data.id] !== undefined) {
+    if (objects[data.type][data.id] !== undefined && objects[data.type][data.id] !== null) {
         objects[data.type][data.id].hide();
         objects[data.type][data.id].destroy();
         // delete objects[data.type][data.id];
