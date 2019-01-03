@@ -31,9 +31,8 @@ export default class ChatClient {
         });
     }
 
-    // TODO: Break out many of these GameControls into separate classes.
     /** 
-    * MISSING COMMENT
+    * Defines all commands and their behaviors.
     */
     registerFunctions() {
         const self = this;

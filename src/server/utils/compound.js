@@ -8,6 +8,7 @@ import { generateID } from './serverutils';
 import { incrementField, setField, deleteObject, getField } from '../server';
 import { damage } from './ondamage';
 import { BLUEPRINTS } from '../../client/js/obj/blueprints';
+import { addExperience } from './experience';
 
 /**
   * Checks if a compound can be created, deducts craft material, and returns the new compound.
@@ -18,9 +19,10 @@ import { BLUEPRINTS } from '../../client/js/obj/blueprints';
   *  - mousePos: Mouse position of the player who sent this. Contains x and y components
   *  - sender: Player who sent this
   *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
-  * @param room - The name of the room
+  * @param {string} room - The name of the room
+  * @param socket - Socket.io instance
   */
-export function createCompound(data, room, thisPlayer) {
+export function createCompound(data, room, thisPlayer, socket) {
 
 
     if (!canCraft(thisPlayer, room, data.blueprint))
@@ -54,11 +56,8 @@ export function createCompound(data, room, thisPlayer) {
         }
     }
 
-    //Emits the crafting event to update experience TODO
-    // socket.emit('experienceEvent', {
-    //     event: 'CRAFT'
-    // });
-
+    //Emits the crafting event to update experience
+    addExperience('CRAFT', socket, room, thisPlayer.id);
 
     // Remove atoms from inventory
     if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
@@ -92,6 +91,5 @@ export function tickCompound(compound, room, socket) {
         if(getCurrTile(compound) === 'F') {
             deleteObject('compounds', compound.id, room, socket);
         }
-
     }
 }

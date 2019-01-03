@@ -17,6 +17,7 @@ var config = require('./config.json');
 const DEBUG = true;
 const COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection
 
+
 app.use(express.static(`${__dirname}/../client`));
 
 /* Contains all game data, including which rooms and players are active.
@@ -66,7 +67,6 @@ initGlobal();
 
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
-
     // Local variable declaration
     let room = socket.handshake.query.room;
     let roomType = socket.handshake.query.roomType;
@@ -146,57 +146,15 @@ io.on('connection', socket => {
 
     }); 
 
-    // An atom was collected or changed
-    // socket.to(room).on('atomCollision', data => {
-    //     if (COLLISIONVERBOSE) {
-    //         console.log('atomCollision');
-    //     }
-    //     socket.to(room).broadcast.emit('serverSendObjectRemoval', {id: data.id, type: 'atoms'});
-    //     delete rooms[room].atoms[data.id];
-    // });
-    
-    // have field collect who did what damage to the player
-    // when the player dies, compare all players who shot at him
-    // whoever did most damage gets 2 pts, everyone else gets 1 pt
-    // push a global notification that says the player died, and who killed the player - Muaaz
-
-    // in client, create a display on the HUD of how many points, kills, and assists that you have
-    // store the number of points every player has within rooms[room].players[player].score to read later
-
-    // MOVED to collision.js
-    // socket.to(room).on('compoundCollision', data => {
-    // });
-
     socket.to(room).on('damage', data => {
         damage(data, room, socket);
     });
 
     // A player spawned a Compound
     socket.to(room).on('requestCreateCompound', data => {
-        let newCompound = createCompound(data, room, thisPlayer);
+        let newCompound = createCompound(data, room, thisPlayer, socket);
         if(newCompound)
             rooms[room].compounds[newCompound.id] = newCompound;
-    });
-
-    //A Player has performed an action and gained experience
-    socket.to(room).on('experienceEvent', data => {
-    //data.event is the event that occured
-
-    //Add a specific amount to the players experience
-    //Get the index of the Event and then pass it into the values array to get the actual value
-        thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
-
-        // Determine the player's level based on experience
-        let oldLevel = thisPlayer.level;
-        for(let level of GLOBAL.EXPERIENCE_LEVELS){
-            if(thisPlayer.experience >= level)
-                thisPlayer.level = GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1;
-        }
-
-        // Check to see if the player leveled up
-        if(thisPlayer.level > oldLevel) {
-            socket.emit('levelUp', {newLevel: thisPlayer.level});
-        }
     });
 
     socket.on('startGame', data => {
@@ -339,5 +297,5 @@ export function deleteObject(type, id, room, socket) {
     delete rooms[room][type][id];
     //Send clientside message
     socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: id, type: type });
-    socket.emit('serverSendObjectRemoval', { id: id, type: type });
+    // socket.emit('serverSendObjectRemoval', { id: id, type: type });
 }
