@@ -28,14 +28,12 @@ export function frameSync(socket, room, thisPlayer) {
                 if (isInBounds(compoundRef)) {
                     setField(compoundRef.posX + compoundRef.vx, ['rooms', room, 'compounds', compound, 'posX']);
                     setField(compoundRef.posY + compoundRef.vy, ['rooms', room, 'compounds', compound, 'posY']);
-                    tickCompound(getField(['rooms', room, 'compounds', compound]), room);
+                    tickCompound(getField(['rooms', room, 'compounds', compound]), room, socket);
                     // compoundRef.posX += compoundRef.vx;
                     // compoundRef.posY += compoundRef.vy;
                 }
                 else { // delete
-                    socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });
-                    socket.emit('serverSendObjectRemoval', { id: compound, type: 'compounds' });
-                    deleteObject('compounds', compound, room);
+                    deleteObject('compounds', compound, room, socket);
                 }
             }
             // Move atoms

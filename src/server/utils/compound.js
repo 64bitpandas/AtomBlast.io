@@ -5,7 +5,7 @@
 import { GLOBAL, getCurrTile } from '../../client/js/global';
 import { canCraft } from './atoms';
 import { generateID } from './serverutils';
-import { incrementField, setField } from '../server';
+import { incrementField, setField, deleteObject, getField } from '../server';
 import { damage } from './ondamage';
 import { BLUEPRINTS } from '../../client/js/obj/blueprints';
 
@@ -43,6 +43,8 @@ export function createCompound(data, room, thisPlayer) {
     // Add functionality for specific blueprint types
     if (data.blueprint.type === 'speed') {
         incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), ['rooms', room, 'players', thisPlayer.id, 'speedMult']);
+    }
+    else if(data.blueprint.type === 'health') {
         damage({
             damage: -blueprint.params.healthModifier,
             sender: socket.id
@@ -59,7 +61,7 @@ export function createCompound(data, room, thisPlayer) {
 
 
     // Remove atoms from inventory
-    if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0) {
+    if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
         for (let atom in data.blueprint.atoms) {
             incrementField(-data.blueprint.atoms[atom], ['rooms', room, 'players', thisPlayer.id, 'atomList', atom]);
         }
@@ -74,7 +76,7 @@ export function createCompound(data, room, thisPlayer) {
  * @param {number} compound compound object
  * @param {string} room Name of room
  */
-export function tickCompound(compound, room) {
+export function tickCompound(compound, room, socket) {
     //TODO
     switch (compound.blueprint.type) {
         case 'flammable':
@@ -84,5 +86,12 @@ export function tickCompound(compound, room) {
                 // compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
             }
             break;
+    }
+
+    if(compound.blueprint.params.evaporate) {
+        if(getCurrTile(compound) === 'F') {
+            deleteObject('compounds', compound.id, room, socket);
+        }
+
     }
 }

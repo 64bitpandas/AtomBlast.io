@@ -232,6 +232,8 @@ canvas {
 #logo img {
 	max-height: 20vh;
 	padding-top: 5vh;
+	display: block;
+	margin: auto;
 }
 
 #logo-firefox {

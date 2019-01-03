@@ -83,7 +83,7 @@ export function createRenderCompound(data) {
  * @returns true if successful, false if the compound was not requested.
  */
 export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
-    
+
     updateCompoundButtons();
 
     // if (blueprint.type === 'speed') {
@@ -114,24 +114,6 @@ export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
         },
         streamID: streamID
     });
-
-    // TODO: Add proper spray directional change based on mouse position when spraying is implemented
-    // if (blueprint.type === 'stream')
-    //     for (let i = 0; i < blueprint.params.length - 1; i++)
-    //         setTimeout(() => {
-    //             socket.emit('requestCreateCompound', {
-    //                 blueprint: blueprint,
-    //                 sendingTeam: player.team,
-    //                 sender: socket.id,
-
-    //                 mousePos: {
-    //                     x: xIn - centerX,
-    //                     y: centerY - yIn
-    //                 },
-    //                 streamNumber: i
-    //             });
-    //         }, blueprint.params.spacing * i);
-    // // }
 
     //Emits the crafting event to update experience TODO
     // socket.emit('experienceEvent', {
