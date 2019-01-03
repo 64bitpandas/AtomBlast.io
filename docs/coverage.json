@@ -74,7 +74,7 @@
         32,
         66,
         67,
-        108
+        114
       ]
     },
     "src/client/js/obj/maptile.js": {
@@ -134,8 +134,8 @@
       "actualCount": 6,
       "undocumentLines": [
         20,
-        320,
-        325
+        342,
+        347
       ]
     },
     "src/server/server.js": {
