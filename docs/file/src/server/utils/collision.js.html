@@ -125,7 +125,7 @@ export function collisionDetect(socket, room, thisPlayer, tempObjects) {
             incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1);
             socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; });
             socket.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; });
-            deleteObject(&apos;atoms&apos;, atom, room);
+            deleteObject(&apos;atoms&apos;, atom, room, socket);
 
         }
     }
@@ -149,9 +149,7 @@ export function collisionDetect(socket, room, thisPlayer, tempObjects) {
                     id: compound
                 }, room, socket);
 
-                deleteObject(&apos;compounds&apos;, compound, room);
-                socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: compound, type: &apos;compounds&apos; });
-                socket.emit(&apos;serverSendObjectRemoval&apos;, { id: compound, type: &apos;compounds&apos; });
+                deleteObject(&apos;compounds&apos;, compound, room, socket);
             }
         }
     }

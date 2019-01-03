@@ -97,5 +97,44 @@
       "data",
       "room"
     ]
+  },
+  {
+    "name": "tickCompound",
+    "filePath": "src/server/utils/compound.js",
+    "lines": [
+      {
+        "lineNumber": 73,
+        "line": "/**"
+      },
+      {
+        "lineNumber": 74,
+        "line": " * Checks compound behavior based on compound type. Runs once a frame."
+      },
+      {
+        "lineNumber": 75,
+        "line": " * @param {number} compound compound object"
+      },
+      {
+        "lineNumber": 76,
+        "line": " * @param {string} room Name of room"
+      },
+      {
+        "lineNumber": 77,
+        "line": " */"
+      },
+      {
+        "lineNumber": 78,
+        "line": "export function tickCompound(compound, room, socket) {"
+      }
+    ],
+    "codeParams": [
+      "compound",
+      "room",
+      "socket"
+    ],
+    "docParams": [
+      "compound",
+      "room"
+    ]
   }
 ]

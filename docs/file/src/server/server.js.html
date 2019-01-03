@@ -430,12 +430,16 @@ export function getField(path) {
 
 /**
  * Deletes one of the three types of gameObjects synced to the server
- * @param {string} type Either player, atom, compound 
+ * @param {string} type Either players, atoms, compounds
  * @param {*} id ID of the object to delete
  * @param {string} room Room name to delete in
+ * @param {*} socket socket.io instance
  */
-export function deleteObject(type, id, room) {
+export function deleteObject(type, id, room, socket) {
     delete rooms[room][type][id];
+    //Send clientside message
+    socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: id, type: type });
+    socket.emit(&apos;serverSendObjectRemoval&apos;, { id: id, type: type });
 }</code></pre>
 
 </div>
