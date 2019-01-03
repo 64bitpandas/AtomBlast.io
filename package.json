@@ -15,7 +15,8 @@
     "env-test": "if [ -d './src/' ]; then echo \" \\033[1;40;32m src directory detected! \\033[m \"; else echo \" \\033[1;41;33m \n\nCRITICAL: src directory NOT DETECTED\nABORTING!!!\n\n \\033[m \" && exit 1; fi",
     "precommitold": "npm run -s lint && echo \"Running unit testing..\" && npm test",
     "docs": "esdoc",
-    "update": "node node_modules/npm-check/bin/cli.js -u"
+    "update": "node node_modules/npm-check/bin/cli.js -u",
+    "disableannoyinglineendingwarning": "git config --global core.safecrlf false"
   },
   "repository": {
     "type": "git",
