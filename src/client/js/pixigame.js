@@ -17,12 +17,14 @@ export var app; // Pixi app
 
 
 let inGame = false; // True after game has begun
+let mouseDown = false; // True if mouse is pressed down
 
 // let sprites = []; // Sprites on the stage
 
 let esc, space, blueprintKeys, moveKeys; // Key handlers
 let vertLines = [];
 let horizLines = [];
+let streamID = 0; // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
 export function loadTextures() {
     if (!isSetup) {
@@ -111,9 +113,6 @@ function registerCallbacks() {
             }
         };
 
-
-        // var mousePosition = renderer.interaction.mouse.global;
-
         // Chat box styling on select
         document.getElementById('chatInput').onfocus = () => {
             document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
@@ -191,6 +190,7 @@ function registerCallbacks() {
 
 /**
  * Called once per frame. Updates all moving sprites on the stage.
+ * Also checks key inputs.
  * @param {number} delta Time value from Pixi
  */
 function draw(delta) {
@@ -230,10 +230,20 @@ function draw(delta) {
 
         // Shooting
         space.press = () => {
-            if(isFocused() && inGame) {
-                requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
+            if(selectedBlueprints[selectedCompound].type !== 'stream') {
+                shootHandler({clientX: mouseX, clientY: mouseY}, false);
             }
         };
+
+        // Streams
+        if ((space.isDown || mouseDown) && selectedBlueprints[selectedCompound].type === 'stream') {
+            shootHandler({ clientX: mouseX, clientY: mouseY }, true);
+        }
+
+        // Reset stream count when space key is released
+        space.release = () => {
+            streamID = 0;
+        }
 
         // Move player
         player.tick();
@@ -334,20 +344,6 @@ export function isFocused() {
 }
 
 /**
- * Returns true if the player has the materials necessary to create a particular blueprint.
- * @param {string} blueprint The name of the blueprint to check.
- */
-export function canCraft(blueprint) {
-    if (blueprint === undefined)
-        return false;
-    for (let atom in blueprint.atoms) {
-        if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom])
-            return false;
-    }
-
-    return true;
-}
-/**
  * Starts the game after lobby closes.
  * @param {boolean} emit True if this client should emit the event to the server.
  * @param {*} teams Array of teams on the scoreboard.
@@ -391,15 +387,32 @@ export function getIngame() {
 }
 
 /**
- * Called on mouse click from app.js
+ * Called on mouse up from app.js
  * @param {*} e Click event
  */
-export function mouseClickHandler(e) {
-    if (!inGame || !isFocused()) {
-        return false;
-    }
-    // console.log(e);
-    // console.info("Selected Compound: " + selectedCompound);
+export function mouseUpHandler(e) {
+    mouseDown = true;
+    if(selectedBlueprints[selectedCompound] && selectedBlueprints[selectedCompound].type !== 'stream')
+        shootHandler(e, false);
+}
+/**
+ * Called on mouse down from app.js
+ * @param {*} e Click event
+ */
+export function mouseDownHandler(e) {
+    mouseDown = false;
+    streamID = 0;
+}
 
-    requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY);
+/**
+ * Handles shooting mechanics on mouse/spacebar click/hold.
+ * @param {*} e Click event
+ * @param {boolean} stream True if sending a stream (such as water); false otherwise.
+ */
+function shootHandler(e, stream) {
+    if (isFocused() && inGame) {
+        if (stream)
+            streamID++;
+        requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID);
+    }
 }

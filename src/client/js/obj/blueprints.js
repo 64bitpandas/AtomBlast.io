@@ -68,7 +68,8 @@ export const BLUEPRINTS = {
             damage: 1,
             size: 15,
             length: 10,
-            spacing: 50     
+            spacing: 50,
+            compoundsPerCraft: 10     
         },
         atoms: {
             h: 2,

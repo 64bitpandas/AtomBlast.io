@@ -7,6 +7,7 @@ import { canCraft } from './atoms';
 import { generateID } from './serverutils';
 import { incrementField, setField } from '../server';
 import { damage } from './ondamage';
+import { BLUEPRINTS } from '../../client/js/obj/blueprints';
 
 /**
   * Checks if a compound can be created, deducts craft material, and returns the new compound.
@@ -16,6 +17,7 @@ import { damage } from './ondamage';
   *  - sendingTeam: Team of the player who sent this
   *  - mousePos: Mouse position of the player who sent this. Contains x and y components
   *  - sender: Player who sent this
+  *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
   * @param room - The name of the room
   */
 export function createCompound(data, room, thisPlayer) {
@@ -48,7 +50,7 @@ export function createCompound(data, room, thisPlayer) {
         if (thisPlayer.health > GLOBAL.MAX_HEALTH) {
             setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health']);
         }
-    } 
+    }
 
     //Emits the crafting event to update experience TODO
     // socket.emit('experienceEvent', {
@@ -57,7 +59,7 @@ export function createCompound(data, room, thisPlayer) {
 
 
     // Remove atoms from inventory
-    if(!data.streamNumber || data.streamNumber === 1) {
+    if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0) {
         for (let atom in data.blueprint.atoms) {
             incrementField(-data.blueprint.atoms[atom], ['rooms', room, 'players', thisPlayer.id, 'atomList', atom]);
         }
@@ -81,6 +83,6 @@ export function tickCompound(compound, room) {
                 // compound.ignited = true;
                 // compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
             }
-            break;  
+            break;
     }
 }

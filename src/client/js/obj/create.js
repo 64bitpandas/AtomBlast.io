@@ -79,11 +79,11 @@ export function createRenderCompound(data) {
  * @param {*} blueprint Then blueprint to create the compound from
  * @param {number} xIn x-coords
  * @param {number} yIn y-coords
+ * @param {number} streamID The current stream number.
  * @returns true if successful, false if the compound was not requested.
  */
-export function requestCreateCompound(blueprint, xIn, yIn) {
-
-
+export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
+    
     updateCompoundButtons();
 
     // if (blueprint.type === 'speed') {
@@ -111,26 +111,27 @@ export function requestCreateCompound(blueprint, xIn, yIn) {
         mousePos: {
             x: xIn - centerX,
             y: centerY - yIn
-        }
+        },
+        streamID: streamID
     });
 
     // TODO: Add proper spray directional change based on mouse position when spraying is implemented
-    if (blueprint.type === 'stream')
-        for (let i = 0; i < blueprint.params.length - 1; i++)
-            setTimeout(() => {
-                socket.emit('requestCreateCompound', {
-                    blueprint: blueprint,
-                    sendingTeam: player.team,
-                    sender: socket.id,
+    // if (blueprint.type === 'stream')
+    //     for (let i = 0; i < blueprint.params.length - 1; i++)
+    //         setTimeout(() => {
+    //             socket.emit('requestCreateCompound', {
+    //                 blueprint: blueprint,
+    //                 sendingTeam: player.team,
+    //                 sender: socket.id,
 
-                    mousePos: {
-                        x: xIn - centerX,
-                        y: centerY - yIn
-                    },
-                    streamNumber: i
-                });
-            }, blueprint.params.spacing * i);
-    // }
+    //                 mousePos: {
+    //                     x: xIn - centerX,
+    //                     y: centerY - yIn
+    //                 },
+    //                 streamNumber: i
+    //             });
+    //         }, blueprint.params.spacing * i);
+    // // }
 
     //Emits the crafting event to update experience TODO
     // socket.emit('experienceEvent', {

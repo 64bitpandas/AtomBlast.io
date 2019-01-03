@@ -9,7 +9,7 @@ import { Player } from './obj/player.js';
 import { GameObject } from './obj/gameobject.js';
 import { BLUEPRINTS } from './obj/blueprints.js';
 import { beginConnection, disconnect } from './socket.js';
-import { player, canCraft, deductCraftMaterial, setIngame, getIngame, startGame, mouseClickHandler } from './pixigame.js';
+import { player, deductCraftMaterial, setIngame, getIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js';
 import swal from 'sweetalert';
 
 // Array containing all inputs which require cookies, and their values
@@ -122,8 +122,8 @@ window.onload = () => {
 
     // Add listeners to start game to enter key and button click
 
-    // Eric - Test method do not remove pls
-    document.addEventListener('pointerdown', mouseClickHandler);
+    document.addEventListener('pointerdown', mouseUpHandler);
+    document.addEventListener('pointerup', mouseDownHandler)
 
     bindHandler('startButton', function () {
         joinGame();
@@ -420,4 +420,20 @@ function getCompoundFormula(blueprint) {
     }
 
     return formula;
+}
+
+/**
+ * Returns true if the player has the materials necessary to create a particular blueprint.
+ * ONLY USE FOR BUTTON GRAPHICS!!! True checking is done serverside.
+ * @param {string} blueprint The name of the blueprint to check.
+ */
+function canCraft(blueprint) {
+    if (blueprint === undefined)
+        return false;
+    for (let atom in blueprint.atoms) {
+        if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom])
+            return false;
+    }
+
+    return true;
 }
