@@ -41,6 +41,7 @@ export class Player extends GameObject {
 			this.hide();
 		}
 
+<<<<<<< HEAD
 		// Custom fields
 		this.name = name;
 		this.room = room;
@@ -52,6 +53,20 @@ export class Player extends GameObject {
 		this.damagedBy = {}; // Object containing the values of damage that each player has dealt.
             
 		this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
+=======
+        // Custom fields
+        this.name = name;
+        this.room = room;
+        this.team = team;
+        this.health = health; //Set the health of the player
+        this.isMoving = false;
+        this.experience = experience; //Sets the experience of the player(Passed in)
+        this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds
+        this.hasShield = false;
+
+        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.            
+        this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
+>>>>>>> 6464e66330582b2c78b87d9120ddbc6e94471c00
 
 		this.setup();
 	}
@@ -97,9 +112,18 @@ export class Player extends GameObject {
 		// Movement
 		super.tick(true);
         
+<<<<<<< HEAD
 		// Update text
 		this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
 		this.textObjects.healthtext.text = 'health: ' + this.health;
+=======
+        // Update text
+        this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
+        this.textObjects.healthtext.text = 'health: ' + this.health;
+        
+
+        
+>>>>>>> 6464e66330582b2c78b87d9120ddbc6e94471c00
 
 		// Draw other player
 		if(this.id !== socket.id) {

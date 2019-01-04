@@ -40,62 +40,68 @@
     "filePath": "src/server/utils/compound.js",
     "lines": [
       {
-        "lineNumber": 11,
+        "lineNumber": 12,
         "line": "/**\r"
       },
       {
-        "lineNumber": 12,
+        "lineNumber": 13,
         "line": "  * Checks if a compound can be created, deducts craft material, and returns the new compound.\r"
       },
       {
-        "lineNumber": 13,
+        "lineNumber": 14,
         "line": "  * Does NOT add the new compound to the objects array.\r"
       },
       {
-        "lineNumber": 14,
+        "lineNumber": 15,
         "line": "  * @param data - Data sent from the client.\r"
       },
       {
-        "lineNumber": 15,
+        "lineNumber": 16,
         "line": "  *  - blueprint: The blueprint of the compound to create\r"
       },
       {
-        "lineNumber": 16,
+        "lineNumber": 17,
         "line": "  *  - sendingTeam: Team of the player who sent this\r"
       },
       {
-        "lineNumber": 17,
+        "lineNumber": 18,
         "line": "  *  - mousePos: Mouse position of the player who sent this. Contains x and y components\r"
       },
       {
-        "lineNumber": 18,
+        "lineNumber": 19,
         "line": "  *  - sender: Player who sent this\r"
       },
       {
-        "lineNumber": 19,
+        "lineNumber": 20,
         "line": "  *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.\r"
       },
       {
-        "lineNumber": 20,
-        "line": "  * @param room - The name of the room\r"
-      },
-      {
         "lineNumber": 21,
-        "line": "  */\r"
+        "line": "  * @param {string} room - The name of the room\r"
       },
       {
         "lineNumber": 22,
-        "line": "export function createCompound(data, room, thisPlayer) {\r"
+        "line": "  * @param socket - Socket.io instance\r"
+      },
+      {
+        "lineNumber": 23,
+        "line": "  */\r"
+      },
+      {
+        "lineNumber": 24,
+        "line": "export function createCompound(data, room, thisPlayer, socket) {\r"
       }
     ],
     "codeParams": [
       "data",
       "room",
-      "thisPlayer"
+      "thisPlayer",
+      "socket"
     ],
     "docParams": [
       "data",
-      "room"
+      "room",
+      "socket"
     ]
   },
   {
@@ -103,27 +109,27 @@
     "filePath": "src/server/utils/compound.js",
     "lines": [
       {
-        "lineNumber": 73,
+        "lineNumber": 75,
         "line": "/**\r"
       },
       {
-        "lineNumber": 74,
+        "lineNumber": 76,
         "line": " * Checks compound behavior based on compound type. Runs once a frame.\r"
       },
       {
-        "lineNumber": 75,
+        "lineNumber": 77,
         "line": " * @param {number} compound compound object\r"
       },
       {
-        "lineNumber": 76,
+        "lineNumber": 78,
         "line": " * @param {string} room Name of room\r"
       },
       {
-        "lineNumber": 77,
+        "lineNumber": 79,
         "line": " */\r"
       },
       {
-        "lineNumber": 78,
+        "lineNumber": 80,
         "line": "export function tickCompound(compound, room, socket) {\r"
       }
     ],

@@ -17,6 +17,7 @@ var config = require('./config.json');
 const DEBUG = true;
 const COLLISIONVERBOSE = false; // Turn on for debug messages with collision detection
 
+
 app.use(express.static(`${__dirname}/../client`));
 
 /* Contains all game data, including which rooms and players are active.
@@ -66,6 +67,7 @@ initGlobal();
 
 // Initialize all socket listeners when a request is established
 io.on('connection', socket => {
+<<<<<<< HEAD
 
 	// Local variable declaration
 	let room = socket.handshake.query.room;
@@ -83,6 +85,24 @@ io.on('connection', socket => {
 	thisPlayer.speedMult = 1;
 	for(let atom of GLOBAL.ATOM_IDS)
 		thisPlayer.atomList[atom] = 0;
+=======
+    // Local variable declaration
+    let room = socket.handshake.query.room;
+    let roomType = socket.handshake.query.roomType;
+    let team = socket.handshake.query.team;
+
+    // Run matchmaker
+    room = roomMatchmaker(socket, room, teams[team]);
+
+    // Init player
+    initPlayer(socket, room);
+    let thisPlayer = rooms[room].players[socket.id];
+    thisPlayer.team = team;
+    thisPlayer.atomList = {};
+    thisPlayer.speedMult = 1;
+    for(let atom of GLOBAL.ATOM_IDS)
+        thisPlayer.atomList[atom] = 0;
+>>>>>>> 6464e66330582b2c78b87d9120ddbc6e94471c00
  
 	// Setup player array sync- once a frame
 	setInterval(() => {
@@ -135,6 +155,7 @@ io.on('connection', socket => {
    *  - vx: x-velocity
    *  - vy: y-velocity
    */
+<<<<<<< HEAD
 	socket.to(room).on('move', data => {
 		// Player exists in database already because it was created serverside - no need for extra checking
 		if(rooms[room][data.type][data.id] !== undefined) {
@@ -259,6 +280,90 @@ io.on('connection', socket => {
 			}
 		}
 	});
+=======
+    socket.to(room).on('move', data => {
+    // Player exists in database already because it was created serverside - no need for extra checking
+        if(rooms[room][data.type][data.id] !== undefined) {
+            rooms[room][data.type][data.id].posX = data.posX;
+            rooms[room][data.type][data.id].posY = data.posY;
+            rooms[room][data.type][data.id].vx = data.vx;
+            rooms[room][data.type][data.id].vy = data.vy;
+        }
+
+    }); 
+
+    socket.to(room).on('damage', data => {
+        damage(data, room, socket);
+    });
+
+    // A player spawned a Compound
+    socket.to(room).on('requestCreateCompound', data => {
+        let newCompound = createCompound(data, room, thisPlayer, socket);
+        if(newCompound)
+            rooms[room].compounds[newCompound.id] = newCompound;
+    });
+
+    socket.on('startGame', data => {
+        console.log('Game has started in room ' + room);
+        // Make the room and teams unjoinable
+        for(let tm of rooms[room].teams) {
+            teams[tm.name].joinable = false;
+        }
+        rooms[room].joinable = false;
+
+        socket.broadcast.to(room).emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
+        socket.emit('serverSendStartGame', {start: data.start, teams: rooms[room].teams});
+        rooms[room].started = true;
+    });
+
+    socket.on('spawnAtom', (data) => {
+        spawnAtomAtVent(data.row, data.col, room, true);
+    });
+
+    // Atom information sent on player death. Spreads atoms randomly in a circle around the death area.
+    socket.on('playerDeathAtoms', (data) => {
+        for(let at in data.atoms) {
+            for(let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++)
+                spawnAtom(data.x, data.y, at, room, false);
+        }
+    });
+
+    // Testing purposes- give yourself 5000 of each atom
+    socket.on('testCommand', (data) => {
+        if (GLOBAL.DEBUG) {
+            console.log(rooms[room].players[data.player].atomList);
+            for (let i in rooms[room].players[data.player].atomList) {
+                rooms[room].players[data.player].atomList[i] += 5000;
+            }
+        }
+    });
+
+    socket.on('disconnect', data => {
+        console.log('[Server]'.bold.blue + ' Disconnect Received: '.red + ('' + socket.id).yellow + ('' + rooms[room].players[socket.id]).green + ': ' + data);
+
+        socket.to(room).broadcast.emit('disconnectedPlayer', { id: socket.id }); //Broadcast to everyone in the room to delete the player
+
+        delete rooms[room].players[socket.id]; //Remove the server side player
+
+        // Delete room if there is nobody inside
+        if (Object.keys(rooms[room].players).length === 0) {
+            console.log('[Server] '.bold.blue + 'Closing room '.red + (room + '').bold.red);
+            delete io.sockets.adapter.rooms[socket.id];
+            delete rooms[room];
+
+            if (room !== GLOBAL.NO_ROOM_IDENTIFIER) {
+                // Remove from teams array
+                teams[team].players.splice(teams[team].players.indexOf(socket.id), 1);
+                // rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);
+
+                // Delete team if all players have left
+                if (teams[team].players.length === 0)
+                    delete teams[team];
+
+            }
+        }
+    });
+>>>>>>> 6464e66330582b2c78b87d9120ddbc6e94471c00
 });
 
 // Notify on console when server has started
@@ -336,8 +441,15 @@ export function getField(path) {
  * @param {*} socket socket.io instance
  */
 export function deleteObject(type, id, room, socket) {
+<<<<<<< HEAD
 	delete rooms[room][type][id];
 	//Send clientside message
 	socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: id, type: type });
 	socket.emit('serverSendObjectRemoval', { id: id, type: type });
+=======
+    delete rooms[room][type][id];
+    //Send clientside message
+    socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: id, type: type });
+    // socket.emit('serverSendObjectRemoval', { id: id, type: type });
+>>>>>>> 6464e66330582b2c78b87d9120ddbc6e94471c00
 }

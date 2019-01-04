@@ -54,6 +54,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "atomblast.io/src/server/utils/experience.js~addexperience",
+    "function/index.html#static-function-addExperience",
+    "<span>addExperience</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/experience.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/socket.js~beginconnection",
     "function/index.html#static-function-beginConnection",
     "<span>beginConnection</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/socket.js</span>",
@@ -990,6 +996,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/client/js/obj/player.js~player#hasshield",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-hasShield",
+    "src/client/js/obj/player.js~Player#hasShield",
+    "member"
+  ],
+  [
     "src/client/js/obj/player.js~player#health",
     "class/src/client/js/obj/player.js~Player.html#instance-member-health",
     "src/client/js/obj/player.js~Player#health",
@@ -1113,6 +1125,12 @@ window.esdocSearchIndex = [
     "src/server/utils/compound.js",
     "file/src/server/utils/compound.js.html",
     "src/server/utils/compound.js",
+    "file"
+  ],
+  [
+    "src/server/utils/experience.js",
+    "file/src/server/utils/experience.js.html",
+    "src/server/utils/experience.js",
     "file"
   ],
   [

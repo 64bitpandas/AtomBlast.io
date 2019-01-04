@@ -85,6 +85,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-tickCompound">tickCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addExperience">addExperience</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
@@ -103,6 +104,35 @@
   <tbody>
   
   <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-addExperience">addExperience</a></span></span><span class="code" data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, player: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Adds experience to a given player.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
       
@@ -231,7 +261,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -1579,6 +1609,88 @@
 <div data-ice="details"><h2 data-ice="title">Static Public </h2>
 
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-addExperience">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">addExperience</span><span class="code" data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, player: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/server/utils/experience.js.html#lineNumber17">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {addExperience} from &apos;<span><a href="file/src/server/utils/experience.js.html#lineNumber17">atomblast.io/src/server/utils/experience.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Adds experience to a given player.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">event</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The name of the event as specified in GLOBAL.EXPERIENCE_VALUES</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">socket</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The socket instance</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">room</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The ID of the room</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">player</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>ID of the player</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-beginConnection">
     <span class="access" data-ice="access">public</span>
     
@@ -1868,15 +1980,15 @@ Run using </p>
     
     
     
-    <span class="code" data-ice="name">createCompound</span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span>*</span>): <span>*</span></span>
+    <span class="code" data-ice="name">createCompound</span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>): <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber23">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber25">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber23">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber25">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks if a compound can be created, deducts craft material, and returns the new compound.
@@ -1909,9 +2021,16 @@ Does NOT add the new compound to the objects array.</p>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">room</td>
-      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The name of the room</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">socket</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Socket.io instance</p>
 </td>
     </tr>
 </tbody>
@@ -2340,11 +2459,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber338">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber296">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {deleteObject} from &apos;<span><a href="file/src/server/server.js.html#lineNumber338">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {deleteObject} from &apos;<span><a href="file/src/server/server.js.html#lineNumber296">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Deletes one of the three types of gameObjects synced to the server</p>
@@ -2994,11 +3113,11 @@ TODO Make every ID guaranteed unique</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber315">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber273">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber315">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber273">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the value given a path to that value.
@@ -3344,11 +3463,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber304">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber262">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber304">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber262">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Shorthand to add or concatenate an amount to a field.
@@ -4217,11 +4336,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber278">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber236">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber278">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber236">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets a new value for a protected server field.
@@ -4735,11 +4854,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber79">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber81">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber79">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber81">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks compound behavior based on compound type. Runs once a frame.</p>

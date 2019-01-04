@@ -1,7 +1,7 @@
 {
-  "coverage": "54.24%",
-  "expectCount": 153,
-  "actualCount": 83,
+  "coverage": "54.19%",
+  "expectCount": 155,
+  "actualCount": 84,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 19,
@@ -31,11 +31,11 @@
         18,
         20,
         21,
-        141,
-        151,
-        171,
-        207,
-        215
+        140,
+        150,
+        170,
+        206,
+        214
       ]
     },
     "src/client/js/lib/cookies.js": {
@@ -91,7 +91,7 @@
       ]
     },
     "src/client/js/obj/player.js": {
-      "expectCount": 17,
+      "expectCount": 18,
       "actualCount": 3,
       "undocumentLines": [
         8,
@@ -107,7 +107,8 @@
         50,
         51,
         52,
-        54
+        54,
+        55
       ]
     },
     "src/client/js/obj/tiles.js": {
@@ -134,8 +135,8 @@
       "actualCount": 6,
       "undocumentLines": [
         20,
-        342,
-        347
+        343,
+        348
       ]
     },
     "src/server/server.js": {
@@ -149,8 +150,8 @@
         15,
         17,
         18,
-        45,
-        265
+        46,
+        223
       ]
     },
     "src/server/utils/atoms.js": {
@@ -169,6 +170,11 @@
     "src/server/utils/compound.js": {
       "expectCount": 2,
       "actualCount": 2,
+      "undocumentLines": []
+    },
+    "src/server/utils/experience.js": {
+      "expectCount": 1,
+      "actualCount": 1,
       "undocumentLines": []
     },
     "src/server/utils/framesync.js": {

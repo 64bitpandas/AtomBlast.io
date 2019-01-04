@@ -85,6 +85,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-tickCompound">tickCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addExperience">addExperience</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
@@ -1319,7 +1320,7 @@
           <span data-ice="kind-icon" class="kind-variable">V</span>
           
           
-          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span><span class="code" data-ice="signature">: {&quot;binaryHydrogen&quot;: <span>*</span>, &quot;basicMethane&quot;: <span>*</span>, &quot;basicBenzene&quot;: <span>*</span>, &quot;basicWater&quot;: <span>*</span>, &quot;binaryNitrogen&quot;: <span>*</span>, &quot;binaryHelium&quot;: <span>*</span>, &quot;ionicSodiumChloride&quot;: <span>*</span>, &quot;acidicHydrogenChloride&quot;: <span>*</span>, &quot;nuclearLithiumHydrogen&quot;: <span>*</span>, &quot;glucose&quot;: <span>*</span>, &quot;protonPack&quot;: <span>*</span>}</span>
+          <span class="code" data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span><span class="code" data-ice="signature">: {&quot;binaryHydrogen&quot;: <span>*</span>, &quot;basicMethane&quot;: <span>*</span>, &quot;basicBenzene&quot;: <span>*</span>, &quot;basicWater&quot;: <span>*</span>, &quot;binaryNitrogen&quot;: <span>*</span>, &quot;binaryHelium&quot;: <span>*</span>, &quot;ionicSodiumChloride&quot;: <span>*</span>, &quot;acidicHydrogenChloride&quot;: <span>*</span>, &quot;nuclearLithiumHydrogen&quot;: <span>*</span>, &quot;glucose&quot;: <span>*</span>, &quot;protonPack&quot;: <span>*</span>, &quot;ozone&quot;: <span>*</span>}</span>
         </p>
       </div>
       <div>
@@ -1713,7 +1714,7 @@ which define the recipe and behaviors of Compounds.</p>
           <span data-ice="kind-icon" class="kind-function">F</span>
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span>*</span>): <span>*</span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span><span class="code" data-ice="signature">(data: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -1749,6 +1750,35 @@ which define the recipe and behaviors of Compounds.</p>
         
         
         <div data-ice="description"><p>Checks compound behavior based on compound type.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          <span data-ice="kind-icon" class="kind-function">F</span>
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-addExperience">addExperience</a></span></span><span class="code" data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, socket: <span>*</span>, room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, player: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Adds experience to a given player.</p>
 </div>
       </div>
     </td>

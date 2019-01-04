@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">src/server/utils/serverutils.js | atomblast.io</title>
+  <title data-ice="title">src/server/utils/experience.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -98,34 +98,40 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/serverutils.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/experience.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { incrementField, getField, setField } from &apos;../server&apos;;
 import { GLOBAL } from &apos;../../client/js/global&apos;;
 
 /**
- * Misc. standalone utilities for the server.
+ * Manages experience levels, levelling up, and level tiers.
+ * TODO LOTS to do here!!!!!
  */
 
-/**
-* Returns a random number between between 10000000 and 99999999, inclusive.
-* TODO Make every ID guaranteed unique
-* @returns random id between 10000000 and 99999999
-*/
-export function generateID() {
-	return Math.floor(Math.random() * 90000000) + 10000000;
-}
 
 /**
- * Returns the index of the given team within the team array of the given room.
- * @param {string} room The room name to check
- * @param {string} teamName The team name to return the number of
+ * Adds experience to a given player.
+ * @param {string} event The name of the event as specified in GLOBAL.EXPERIENCE_VALUES
+ * @param {*} socket The socket instance
+ * @param {string} room The ID of the room
+ * @param {string} player ID of the player
  */
-export function getTeamNumber(room, teamName) {
-	for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++)
-		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName)
-			return i;
+export function addExperience(event, socket, room, player) {
+	//Add a specific amount to the players experience
+	//Get the index of the Event and then pass it into the values array to get the actual value
+	incrementField(GLOBAL.EXPERIENCE_VALUES[event], [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;experience&apos;]);
+	//  thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
 
-	return -1; //Team not found
+	// Determine the player&apos;s level based on experience
+	let oldLevel = getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]);
+	for (let level of GLOBAL.EXPERIENCE_LEVELS) {
+		if (getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) &gt;= level)
+			setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]);
+	}
+
+	// Check to see if the player leveled up
+	if (getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) &gt; oldLevel) {
+		socket.emit(&apos;levelUp&apos;, { newLevel: thisPlayer.level });
+	}
 }</code></pre>
 
 </div>
