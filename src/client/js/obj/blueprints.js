@@ -175,6 +175,18 @@ export const BLUEPRINTS = {
         atoms: {
             h: 10
         }
+    },
+    ozone: {
+        name: 'Ozone',
+        tooltip: 'Shield em up!',
+        texture: '../assets/atom-hydrogen.png',
+        type: 'defense',
+        params: {
+            defenseModifier: 10
+        },
+        atoms: {
+            o: 3
+        }
     }
 };
 

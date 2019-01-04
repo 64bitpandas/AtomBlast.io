@@ -127,6 +127,7 @@ function setupSocketObjectRetrieval() {
                                 objects[objType][obj].damagedBy = objRef.damagedBy;
                                 objects[objType][obj].atomList = objRef.atomList;
                                 objects[objType][obj].speedMult = objRef.speedMult;
+                                objects[objType][obj].hasShield = objRef.hasShield;
                                 for (let atom in objRef.atomList)
                                     updateAtomList(atom);
                             }

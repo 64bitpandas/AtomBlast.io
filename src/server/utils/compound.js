@@ -55,6 +55,9 @@ export function createCompound(data, room, thisPlayer, socket) {
             setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health']);
         }
     }
+    else if(data.blueprint.type === 'defense'){
+        setField(true, ['rooms', room, 'players', thisPlayer.id, 'hasShield']);
+    }
 
     //Emits the crafting event to update experience
     addExperience('CRAFT', socket, room, thisPlayer.id);

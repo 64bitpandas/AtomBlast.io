@@ -49,8 +49,9 @@ export class Player extends GameObject {
         this.isMoving = false;
         this.experience = experience; //Sets the experience of the player(Passed in)
         this.speedMult = 1; // Speed multiplier. Increased/decreased by different compounds
-        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.
-            
+        this.hasShield = false;
+
+        this.damagedBy = {}; // Object containing the values of damage that each player has dealt.            
         this.textObjects = {}; // Contains Text to be drawn under the player (name, id, etc)
 
         this.setup();
@@ -100,6 +101,9 @@ export class Player extends GameObject {
         // Update text
         this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')';
         this.textObjects.healthtext.text = 'health: ' + this.health;
+        
+
+        
 
         // Draw other player
         if(this.id !== socket.id) {
