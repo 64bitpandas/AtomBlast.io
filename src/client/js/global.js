@@ -131,6 +131,18 @@ export const GLOBAL = {
 		140,
 		160
 	],
+	MAINMENU_MUSICLIST: [
+		'assets/sfx/mainmenu/placeholder1.mp3',
+		'assets/sfx/mainmenu/placeholder2.mp3',
+		'assets/sfx/mainmenu/placeholder3.mp3',
+		'assets/sfx/mainmenu/placeholder4.mp3'
+	],
+	LOBBY_MUSICLIST: [
+
+	],
+	INGAME_MUSICLIST: [
+
+	],
 
 	// Deaths
 	KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player

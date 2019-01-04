@@ -129,6 +129,12 @@ export let selectedCompound = 0
 
 let selectedSlot
 
+export let music
+
+export let sfx
+
+let errorSound = new Sound(&apos;assets/sfx/error.mp3&apos;)
+
 // Starts the game if the name is valid.
 function joinGame () {
 	if (!allBlueprintsSelected()) {
@@ -246,10 +252,12 @@ window.onload = () =&gt; {
 	})
 
 	bindHandler(&apos;optionsButton&apos;, function () {
+		errorSound.play()
 		swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;)
 	})
 
 	bindHandler(&apos;controlsButton&apos;, function () {
+		errorSound.play()
 		swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;)
 	})
 
@@ -348,6 +356,7 @@ window.onload = () =&gt; {
 	cookieInputs[8].onchange = () =&gt; {
 		cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS)
 	}
+	playMusic()
 }
 
 /**
@@ -368,6 +377,68 @@ window.onmousemove = (e) =&gt; {
 //     document.addEventListener(&apos;touchcancel&apos;, this._onTouchCancel.bind(this));
 //     document.addEventListener(&apos;pointerdown&apos;, this._onPointerDown.bind(this));
 // };
+
+/**
+ * Loop main menu music
+ */
+function playMusic () {
+	music = document.createElement(&apos;audio&apos;)
+	HTMLElement.prototype.randomSelectMM = function () {
+		music.src = GLOBAL.MAINMENU_MUSICLIST[Math.floor(Math.random() * GLOBAL.MAINMENU_MUSICLIST.length)]
+	}
+	music.randomSelectMM()
+	music.style.display = &apos;none&apos;	// fix ios device
+	// music.autoplay = true
+	music.type = &apos;audio/mpeg&apos;
+	music.id = &apos;mainmenu&apos;
+
+	music.onended = function () {
+		music.randomSelectMM()
+		music.play()
+	}
+	// music.loop = true
+	// audio.onended = function() {
+	// 	audio.remove()
+	// };
+	document.body.appendChild(music)
+	let audioPlay = document.getElementById(&apos;mainmenu&apos;).play()
+
+	if (audioPlay !== undefined) {
+		audioPlay.then(_ =&gt; {
+			console.log(&apos;Music started&apos;)
+		}).catch(error =&gt; {
+			console.warn(error)
+			console.log(&apos;Music start prevented. Starting Bypass method.&apos;)
+			// How this works is that the iframe with audio
+			let bypassElement = document.createElement(&apos;iframe&apos;)
+			bypassElement.src = &apos;assets/sfx/silence.mp3&apos;
+			bypassElement.allow = &apos;autoplay&apos;
+			bypassElement.type = &apos;audio/mpeg&apos;
+			bypassElement.id = &apos;bypassaudio&apos;
+			document.body.appendChild(bypassElement)
+			document.getElementById(&apos;bypassaudio&apos;).addEventListener(&apos;load&apos;, function () {
+				document.getElementById(&apos;mainmenu&apos;).play()
+				document.getElementById(&apos;bypassaudio&apos;).remove()
+			})
+		})
+	}
+}
+
+function Sound (src) {
+	this.sound = document.createElement(&apos;audio&apos;)
+	this.sound.src = src
+	this.sound.setAttribute(&apos;preload&apos;, &apos;auto&apos;)
+	this.sound.setAttribute(&apos;controls&apos;, &apos;none&apos;)
+	this.sound.style.display = &apos;none&apos;
+	document.body.appendChild(this.sound)
+	this.play = function () {
+		this.sound.currentTime = 0
+		this.sound.play()
+	}
+	this.stop = function () {
+		this.sound.pause()
+	}
+}
 
 /**
  * Transitions from in-game displays to the main menu.
@@ -405,6 +476,19 @@ export function bindHandler (id, handlerMethod) {
  */
 export function showElement (el) {
 	document.getElementById(el).style.display = &apos;block&apos;
+	if (el === &apos;startMenuWrapper&apos;) {
+		music.randomSelectMM()
+		music.currentTime = 0
+		music.play()
+	}
+	else if (el === &apos;lobby&apos;) {	// In lobby
+		music.pause()	// Pause main menu music
+		// music.currentTime = 9999
+	}
+	else if (el === &apos;gameAreaWrapper&apos;) {	// In game
+		music.pause()	// Pause main menu music
+		// music.currentTime = 9999
+	}
 }
 
 /**

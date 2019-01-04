@@ -1,17 +1,19 @@
 {
-  "coverage": "52.25%",
-  "expectCount": 155,
-  "actualCount": 81,
+  "coverage": "51.89%",
+  "expectCount": 158,
+  "actualCount": 82,
   "files": {
     "src/client/js/app.js": {
-      "expectCount": 19,
-      "actualCount": 14,
+      "expectCount": 22,
+      "actualCount": 15,
       "undocumentLines": [
         16,
         19,
         21,
         27,
-        32
+        35,
+        38,
+        326
       ]
     },
     "src/client/js/global.js": {
@@ -19,7 +21,7 @@
       "actualCount": 2,
       "undocumentLines": [
         4,
-        148
+        160
       ]
     },
     "src/client/js/lib/chat-client.js": {

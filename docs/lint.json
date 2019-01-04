@@ -4,27 +4,27 @@
     "filePath": "src/client/js/global.js",
     "lines": [
       {
-        "lineNumber": 160,
+        "lineNumber": 172,
         "line": "/**\r"
       },
       {
-        "lineNumber": 161,
+        "lineNumber": 173,
         "line": " * Gets the tile directly underneath any object.\r"
       },
       {
-        "lineNumber": 162,
+        "lineNumber": 174,
         "line": " * @param {*} compound Compound object.\r"
       },
       {
-        "lineNumber": 163,
+        "lineNumber": 175,
         "line": " * @returns {string} one-letter ID of current tile.\r"
       },
       {
-        "lineNumber": 164,
+        "lineNumber": 176,
         "line": " */\r"
       },
       {
-        "lineNumber": 165,
+        "lineNumber": 177,
         "line": "export function getCurrTile (obj) {\r"
       }
     ],

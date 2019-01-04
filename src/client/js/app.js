@@ -28,6 +28,12 @@ export let selectedCompound = 0
 
 let selectedSlot
 
+export let music
+
+export let sfx
+
+let errorSound = new Sound('assets/sfx/error.mp3')
+
 // Starts the game if the name is valid.
 function joinGame () {
 	if (!allBlueprintsSelected()) {
@@ -145,10 +151,12 @@ window.onload = () => {
 	})
 
 	bindHandler('optionsButton', function () {
+		errorSound.play()
 		swal('', 'This feature is not implemented.', 'info')
 	})
 
 	bindHandler('controlsButton', function () {
+		errorSound.play()
 		swal('', 'This feature is not implemented.', 'info')
 	})
 
@@ -247,6 +255,7 @@ window.onload = () => {
 	cookieInputs[8].onchange = () => {
 		cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS)
 	}
+	playMusic()
 }
 
 /**
@@ -267,6 +276,68 @@ window.onmousemove = (e) => {
 //     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
 //     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
 // };
+
+/**
+ * Loop main menu music
+ */
+function playMusic () {
+	music = document.createElement('audio')
+	HTMLElement.prototype.randomSelectMM = function () {
+		music.src = GLOBAL.MAINMENU_MUSICLIST[Math.floor(Math.random() * GLOBAL.MAINMENU_MUSICLIST.length)]
+	}
+	music.randomSelectMM()
+	music.style.display = 'none'	// fix ios device
+	// music.autoplay = true
+	music.type = 'audio/mpeg'
+	music.id = 'mainmenu'
+
+	music.onended = function () {
+		music.randomSelectMM()
+		music.play()
+	}
+	// music.loop = true
+	// audio.onended = function() {
+	// 	audio.remove()
+	// };
+	document.body.appendChild(music)
+	let audioPlay = document.getElementById('mainmenu').play()
+
+	if (audioPlay !== undefined) {
+		audioPlay.then(_ => {
+			console.log('Music started')
+		}).catch(error => {
+			console.warn(error)
+			console.log('Music start prevented. Starting Bypass method.')
+			// How this works is that the iframe with audio
+			let bypassElement = document.createElement('iframe')
+			bypassElement.src = 'assets/sfx/silence.mp3'
+			bypassElement.allow = 'autoplay'
+			bypassElement.type = 'audio/mpeg'
+			bypassElement.id = 'bypassaudio'
+			document.body.appendChild(bypassElement)
+			document.getElementById('bypassaudio').addEventListener('load', function () {
+				document.getElementById('mainmenu').play()
+				document.getElementById('bypassaudio').remove()
+			})
+		})
+	}
+}
+
+function Sound (src) {
+	this.sound = document.createElement('audio')
+	this.sound.src = src
+	this.sound.setAttribute('preload', 'auto')
+	this.sound.setAttribute('controls', 'none')
+	this.sound.style.display = 'none'
+	document.body.appendChild(this.sound)
+	this.play = function () {
+		this.sound.currentTime = 0
+		this.sound.play()
+	}
+	this.stop = function () {
+		this.sound.pause()
+	}
+}
 
 /**
  * Transitions from in-game displays to the main menu.
@@ -304,6 +375,19 @@ export function bindHandler (id, handlerMethod) {
  */
 export function showElement (el) {
 	document.getElementById(el).style.display = 'block'
+	if (el === 'startMenuWrapper') {
+		music.randomSelectMM()
+		music.currentTime = 0
+		music.play()
+	}
+	else if (el === 'lobby') {	// In lobby
+		music.pause()	// Pause main menu music
+		// music.currentTime = 9999
+	}
+	else if (el === 'gameAreaWrapper') {	// In game
+		music.pause()	// Pause main menu music
+		// music.currentTime = 9999
+	}
 }
 
 /**
