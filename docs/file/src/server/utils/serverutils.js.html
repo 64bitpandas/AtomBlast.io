@@ -99,8 +99,8 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/serverutils.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;;
-import { GLOBAL } from &apos;../../client/js/global&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;
+import { GLOBAL } from &apos;../../client/js/global&apos;
 
 /**
  * Misc. standalone utilities for the server.
@@ -111,8 +111,8 @@ import { GLOBAL } from &apos;../../client/js/global&apos;;
 * TODO Make every ID guaranteed unique
 * @returns random id between 10000000 and 99999999
 */
-export function generateID() {
-	return Math.floor(Math.random() * 90000000) + 10000000;
+export function generateID () {
+	return Math.floor(Math.random() * 90000000) + 10000000
 }
 
 /**
@@ -120,13 +120,14 @@ export function generateID() {
  * @param {string} room The room name to check
  * @param {string} teamName The team name to return the number of
  */
-export function getTeamNumber(room, teamName) {
-	for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++)
-		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName)
-			return i;
+export function getTeamNumber (room, teamName) {
+	for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++) {
+		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName) { return i }
+	}
 
-	return -1; //Team not found
-}</code></pre>
+	return -1 // Team not found
+}
+</code></pre>
 
 </div>
 

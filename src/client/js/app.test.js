@@ -1,3 +1,3 @@
 test('Placeholder test', () => {
-	expect();
-});
+	expect()
+})

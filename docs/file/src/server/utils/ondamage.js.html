@@ -99,10 +99,10 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/ondamage.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../../client/js/global&apos;;
-import { getField, setField } from &apos;../server&apos;;
-import { getTeamNumber } from &apos;./serverutils&apos;;
-import { tmpdir } from &apos;os&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../../client/js/global&apos;
+import { getField, setField } from &apos;../server&apos;
+import { getTeamNumber } from &apos;./serverutils&apos;
+import { tmpdir } from &apos;os&apos;
 
 /**
  * ondamage.js
@@ -110,7 +110,6 @@ import { tmpdir } from &apos;os&apos;;
  *  - damage() Runs when a player gets damaged. Updates scores and checks if a player has been killed.
  *  - splash() Runs when a collision needs to cause splash damage. Creates explosion effect and deals extra damage.
  */
-
 
 /**
  * Changes the health of the player by the amount given.
@@ -124,104 +123,97 @@ import { tmpdir } from &apos;os&apos;;
  * Must include the player id and amount to damage.
  * Amount may be negative (for health boost).
  */
-export function damage(data, room, socket) {
-
-	let thisRoom = getField([&apos;rooms&apos;, room]);
-	let thisPlayer = thisRoom.players[data.player];
+export function damage (data, room, socket) {
+	let thisRoom = getField([&apos;rooms&apos;, room])
+	let thisPlayer = thisRoom.players[data.player]
 
 	if (thisPlayer !== undefined) {
-
 		// thisPlayer.health -= data.damage;
-		setField(thisPlayer.health - data.damage, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;]);
+		setField(thisPlayer.health - data.damage, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
 
 		// Add damage to database
-		if (thisPlayer.damagedBy[data.sentBy] === undefined)
-			setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, data.sentBy]);
+		if (thisPlayer.damagedBy[data.sentBy] === undefined) { setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, data.sentBy]) }
 		// thisPlayer.damagedBy[data.sentBy] += data.damage;
-		setField(thisPlayer.damagedBy[data.sentBy] + data.damage, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, data.sentBy]);
+		setField(thisPlayer.damagedBy[data.sentBy] + data.damage, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, data.sentBy])
 
 		// Check if the player has died.
 		if (thisPlayer.health &lt;= 0) {
 			// console.log(thisRoom.teams.indexOf(socket.handshake.query.team));
-			socket.emit(&apos;serverSendPlayerDeath&apos;, { teamNumber: getTeamNumber(room, socket.handshake.query.team) });
-			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;]);
+			socket.emit(&apos;serverSendPlayerDeath&apos;, { teamNumber: getTeamNumber(room, socket.handshake.query.team) })
+			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
 
-			if(data.id !== undefined) {
+			if (data.id !== undefined) {
 				// Read damagedBy to award points, clear in the process
-				let max = null;
-				let dataToSend;
+				let max = null
+				let dataToSend
 				for (let pl in thisPlayer.damagedBy) {
 					dataToSend = {
 						player: pl,
 						teamSlot: getTeamNumber(room, thisRoom.compounds[data.id].sendingTeam),
 						increment: GLOBAL.ASSIST_SCORE,
 						kill: false
-					};
+					}
 
 					// Add to team score, checking if team score is initialized
-					setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;]);
+					setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
 
-
-					socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend);
-					socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend);
-					if (max === null || thisPlayer.damagedBy[pl] &gt; thisPlayer.damagedBy[max])
-						max = pl;
+					socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+					socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+					if (max === null || thisPlayer.damagedBy[pl] &gt; thisPlayer.damagedBy[max]) { max = pl }
 				}
 
 				// Add to score of person who dealt the most damage
-				dataToSend.player = max;
-				dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE;
-				dataToSend.kill = true;
-				socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend);
-				socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend);
+				dataToSend.player = max
+				dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE
+				dataToSend.kill = true
+				socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+				socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
 
 				// Add to team score
-				setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;]);
+				setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
 
 				// Clear damagedBy values
-				for (let pl in thisPlayer.damagedBy)
-					setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, pl]);
+				for (let pl in thisPlayer.damagedBy) { setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, pl]) }
 
 				// Check if a team won
-				let highScores = []; // Possible winning teams
-				let maxScore = 0;
+				let highScores = [] // Possible winning teams
+				let maxScore = 0
 				for (let tm of thisRoom.teams) {
 					if (tm.score &gt;= GLOBAL.WINNING_SCORE) {
-						highScores.push(tm);
-						if(maxScore &lt; tm.score)
-							maxScore = tm.score;
+						highScores.push(tm)
+						if (maxScore &lt; tm.score) { maxScore = tm.score }
 					}
 				}
-				for(let winningTm of highScores) {
-					if(winningTm.score === maxScore) {
+				for (let winningTm of highScores) {
+					if (winningTm.score === maxScore) {
 						let dataToSend = {
 							winner: winningTm
-							// teamScore: thisRoom.teams[dataToSend.teamSlot].score             
-							//other data here TODO post ranking
-						};
-						socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend);
-						socket.emit(&apos;serverSendWinner&apos;, dataToSend);
+							// teamScore: thisRoom.teams[dataToSend.teamSlot].score
+							// other data here TODO post ranking
+						}
+						socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend)
+						socket.emit(&apos;serverSendWinner&apos;, dataToSend)
 
 						// Close room after delay (kick all players)
 						setTimeout(() =&gt; {
-							socket.emit(&apos;serverSendDisconnect&apos;, {});
-							socket.to(room).broadcast.emit(&apos;serverSendDisconnect&apos;, {});
-						}, GLOBAL.ROOM_DELETE_DELAY);
+							socket.emit(&apos;serverSendDisconnect&apos;, {})
+							socket.to(room).broadcast.emit(&apos;serverSendDisconnect&apos;, {})
+						}, GLOBAL.ROOM_DELETE_DELAY)
 					}
 				}
 			}
 		}
 	}
-	else
-		console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;);
+	else { console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;) }
 }
 
 /**
  * TODO
  */
-export function splash() {
+export function splash () {
 
-}</code></pre>
+}
+</code></pre>
 
 </div>
 

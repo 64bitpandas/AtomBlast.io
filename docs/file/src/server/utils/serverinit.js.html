@@ -99,11 +99,11 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/serverinit.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;;
-import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../../client/js/obj/tiles&apos;;
-import { GLOBAL } from &apos;../../client/js/global&apos;;
-import { spawnAtomAtVent } from &apos;./atoms&apos;;
-import colors from &apos;colors&apos;; // Console colors :D
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;
+import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../../client/js/obj/tiles&apos;
+import { GLOBAL } from &apos;../../client/js/global&apos;
+import { spawnAtomAtVent } from &apos;./atoms&apos;
+import colors from &apos;colors&apos; // Console colors :D
 
 /**
  * Methods to run on server initialization and player connect initialization.
@@ -112,40 +112,41 @@ import colors from &apos;colors&apos;; // Console colors :D
 /**
  * Global initialiation. Run once on server start.
  */
-export function initGlobal() {
+export function initGlobal () {
 	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
 	setInterval(() =&gt; {
 		for (let room in getField([&apos;rooms&apos;])) {
-			for (let row = 0; row &lt; MAP_LAYOUT.length; row++)
+			for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
 				for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
 					if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
-						spawnAtomAtVent(row, col, room, false);
+						spawnAtomAtVent(row, col, room, false)
 					}
-
 				}
+			}
 		}
-	}, GLOBAL.ATOM_SPAWN_DELAY);
+	}, GLOBAL.ATOM_SPAWN_DELAY)
 
 	// Timer
 	setInterval(() =&gt; {
 		for (let room in getField([&apos;rooms&apos;])) {
 			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
-				let seconds = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]), 
-					minutes = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
-                    
+				let seconds = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
+
+				let minutes = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;])
+
 				// Equivalent to rooms[room].time.seconds++;
-				setField(seconds + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
+				setField(seconds + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
 
 				if (seconds &gt;= 60) {
-					setField(0, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
-					setField(minutes + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
+					setField(0, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
+					setField(minutes + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;])
 				}
 
 				// Set formatted Time
-				setField(minutes + &apos;:&apos; + ((seconds &lt; 10) ? &apos;0&apos; : &apos;&apos;) + seconds, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;formattedTime&apos;]);
+				setField(minutes + &apos;:&apos; + ((seconds &lt; 10) ? &apos;0&apos; : &apos;&apos;) + seconds, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;formattedTime&apos;])
 			}
 		}
-	}, 1000);
+	}, 1000)
 }
 
 /**
@@ -153,11 +154,11 @@ export function initGlobal() {
  * @param {*} socket The socket.io instance
  * @param {string} room The name of the room that the player belongs to
  */
-export function initPlayer(socket, room) {
+export function initPlayer (socket, room) {
 	// Initialize room array and spawn atoms on first player join
-	let thisRoom = getField([&apos;rooms&apos;, room]);
+	let thisRoom = getField([&apos;rooms&apos;, room])
 	if (thisRoom === undefined || thisRoom === null) {
-		console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType);
+		console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType)
 		setField({
 			joinable: true,
 			teams: [],
@@ -169,18 +170,17 @@ export function initPlayer(socket, room) {
 				seconds: 0,
 				formattedTime: &apos;0:00&apos;
 			}
-		}, [&apos;rooms&apos;, room]);
+		}, [&apos;rooms&apos;, room])
 	}
-	thisRoom = getField([&apos;rooms&apos;, room]);
+	thisRoom = getField([&apos;rooms&apos;, room])
 
 	// Add team to database
 
 	// Equivalent to rooms[room].teams.push({ name: team });
-	setField({name: socket.handshake.query.team}, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length]);
+	setField({ name: socket.handshake.query.team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
 
 	// Check if room is full
-	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4)
-		setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;]);
+	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) { setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;]) }
 
 	// Create new player in rooms object
 	setField({
@@ -195,8 +195,9 @@ export function initPlayer(socket, room) {
 		vy: 0,
 		experience: 0,
 		damagedBy: {}
-	}, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id]);
-}</code></pre>
+	}, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id])
+}
+</code></pre>
 
 </div>
 

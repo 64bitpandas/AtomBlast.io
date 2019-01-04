@@ -1,7 +1,7 @@
 /**
- * This constant stores all data that is used to define Blueprints, 
+ * This constant stores all data that is used to define Blueprints,
  * which define the recipe and behaviors of Compounds.
- * 
+ *
  * Fields required:
  * Name: The formatted name of the compound to display
  * Tooltip: Description of compound
@@ -17,7 +17,7 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom-hydrogen.png',
 		type: 'flammable',
 		params: {
-			speed: 5*3,
+			speed: 5 * 3,
 			damage: 1,
 			size: 20,
 			ignitedDamage: 10,
@@ -34,7 +34,7 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom-hydrogen.png',
 		type: 'flammable',
 		params: {
-			speed: 3*3,
+			speed: 3 * 3,
 			damage: 3,
 			size: 10
 		},
@@ -49,7 +49,7 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom_carbon.png',
 		type: 'basic',
 		params: {
-			speed: 1*3,
+			speed: 1 * 3,
 			damage: 5,
 			size: 30
 		},
@@ -64,13 +64,13 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom-hydrogen.png',
 		type: 'stream',
 		params: {
-			speed: 4*3,
+			speed: 4 * 3,
 			damage: 1,
 			size: 15,
 			length: 10,
 			spacing: 50,
 			compoundsPerCraft: 10,
-			evaporate: true     
+			evaporate: true
 		},
 		atoms: {
 			h: 2,
@@ -83,7 +83,7 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom_nitrogen.png',
 		type: 'basic',
 		params: {
-			speed: 3*3,
+			speed: 3 * 3,
 			damage: 3,
 			size: 20
 		},
@@ -188,5 +188,4 @@ export const BLUEPRINTS = {
 			o: 3
 		}
 	}
-};
-
+}

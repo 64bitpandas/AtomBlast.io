@@ -1,15 +1,15 @@
-import { MAP_LAYOUT } from './obj/tiles';
+import { MAP_LAYOUT } from './obj/tiles'
 
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
-    
+
 	DEBUG: true,
-	VERBOSE_SOCKET: false,  // true = log if any socket method has been called
+	VERBOSE_SOCKET: false, // true = log if any socket method has been called
 	// Keys and other mathematical constants
 	KEY_ESC: 27,
 	KEY_ENTER: 13,
 	KEY_W: 87,
-	KEY_A: 65,  
+	KEY_A: 65,
 	KEY_S: 83,
 	KEY_D: 68,
 	KEY_1: 49,
@@ -18,7 +18,7 @@ export const GLOBAL = {
 	KEY_4: 52,
 	KEY_SPACE: 32,
 
-	//Blueprints
+	// Blueprints
 	BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
 	BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time
 
@@ -38,15 +38,15 @@ export const GLOBAL = {
 
 	// Cookies
 	COOKIES: [
-		'name', //0
-		'room', //1
-		'team', //2
-		'bp-slot-1', //3
-		'bp-slot-2', //4
-		'bp-slot-3', //5 
-		'bp-slot-4', //6
-		'room-type', //7
-		'server', //8
+		'name', // 0
+		'room', // 1
+		'team', // 2
+		'bp-slot-1', // 3
+		'bp-slot-2', // 4
+		'bp-slot-3', // 5
+		'bp-slot-4', // 6
+		'room-type', // 7
+		'server' // 8
 	],
 	COOKIE_DAYS: 14, // Cookie lifetime
 
@@ -72,11 +72,11 @@ export const GLOBAL = {
 	TILE_TEXTURE_DIR: '../assets/map/Tiles/',
 	MAP_SIZE: 2000,
 	SPAWN_POINTS: [
-		{x: 0, y: 0},
-		{x: 9, y: 9},
-		{x: 0, y: 9},
-		{x: 9, y: 0}
-	],  // Spawn points for different teams
+		{ x: 0, y: 0 },
+		{ x: 9, y: 9 },
+		{ x: 0, y: 9 },
+		{ x: 9, y: 0 }
+	], // Spawn points for different teams
 
 	// Drawing
 	DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
@@ -93,8 +93,8 @@ export const GLOBAL = {
 
 	// Sprites and textures
 	PLAYER_SPRITES: [
-		'../assets/testplayer.png',
-        
+		'../assets/testplayer.png'
+
 	],
 	IGNITE_SPRITE: '../assets/placeholder_ignited.png',
 
@@ -113,15 +113,15 @@ export const GLOBAL = {
 		'../assets/atom_carbon.png',
 		'../assets/testplayer2.png',
 		'../assets/atom_nitrogen.png',
-		'../assets/atom_oxygen.png',
+		'../assets/atom_oxygen.png'
 	],
-	//Each Value corresponds with the above event
+	// Each Value corresponds with the above event
 	EXPERIENCE_VALUES: {
 		CRAFT: 10,
 		KILL: 124
 	},
 
-	//The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc
+	// The cutoffs for each level. Index 0 = level 1, 1 = level 2, etc
 	EXPERIENCE_LEVELS: [
 		0,
 		10,
@@ -136,17 +136,17 @@ export const GLOBAL = {
 	KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player
 	ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player
 	WINNING_SCORE: 20, // How many points are required to win the game per team. TODO increase
-	MAX_DEATH_ATOMS: 100, // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.
-};
+	MAX_DEATH_ATOMS: 100 // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.
+}
 
 /**
  * Returns the distance between two objects.
  * Both objects must be GameObjects
- * @param {GameObject} obj1 First object 
+ * @param {GameObject} obj1 First object
  * @param {GameObject} obj2 Second object
  */
-export function distanceBetween(obj1, obj2) {
-	return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2));
+export function distanceBetween (obj1, obj2) {
+	return Math.sqrt(Math.pow(obj1.posX - obj2.posX, 2) + Math.pow(obj1.posY - obj2.posY, 2))
 }
 
 /**
@@ -154,8 +154,8 @@ export function distanceBetween(obj1, obj2) {
  * @param {GameObject} obj The object to test
  * @return true if the object parameter is within the map boundaries
  */
-export function isInBounds(obj) {
-	return obj.posX > 0 && obj.posY > -GLOBAL.GRID_SPACING * 2 && obj.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 && obj.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2;
+export function isInBounds (obj) {
+	return obj.posX > 0 && obj.posY > -GLOBAL.GRID_SPACING * 2 && obj.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 && obj.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2
 }
 
 /**
@@ -163,13 +163,14 @@ export function isInBounds(obj) {
  * @param {*} compound Compound object.
  * @returns {string} one-letter ID of current tile.
  */
-export function getCurrTile(obj) {
-	let tileCol = Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2));
-	let tileRow = Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2));
+export function getCurrTile (obj) {
+	let tileCol = Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2))
+	let tileRow = Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2))
 
 	try {
-		return MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol];
-	} catch(error) {
-		return 'E';
+		return MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol]
+	}
+	catch (error) {
+		return 'E'
 	}
 }

@@ -99,14 +99,13 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/experience.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { incrementField, getField, setField } from &apos;../server&apos;;
-import { GLOBAL } from &apos;../../client/js/global&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { incrementField, getField, setField } from &apos;../server&apos;
+import { GLOBAL } from &apos;../../client/js/global&apos;
 
 /**
  * Manages experience levels, levelling up, and level tiers.
  * TODO LOTS to do here!!!!!
  */
-
 
 /**
  * Adds experience to a given player.
@@ -115,24 +114,24 @@ import { GLOBAL } from &apos;../../client/js/global&apos;;
  * @param {string} room The ID of the room
  * @param {string} player ID of the player
  */
-export function addExperience(event, socket, room, player) {
-	//Add a specific amount to the players experience
-	//Get the index of the Event and then pass it into the values array to get the actual value
-	incrementField(GLOBAL.EXPERIENCE_VALUES[event], [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;experience&apos;]);
+export function addExperience (event, socket, room, player) {
+	// Add a specific amount to the players experience
+	// Get the index of the Event and then pass it into the values array to get the actual value
+	incrementField(GLOBAL.EXPERIENCE_VALUES[event], [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;experience&apos;])
 	//  thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
 
 	// Determine the player&apos;s level based on experience
-	let oldLevel = getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]);
+	let oldLevel = getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;])
 	for (let level of GLOBAL.EXPERIENCE_LEVELS) {
-		if (getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) &gt;= level)
-			setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]);
+		if (getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) &gt;= level) { setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, [&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) }
 	}
 
 	// Check to see if the player leveled up
 	if (getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;level&apos;]) &gt; oldLevel) {
-		socket.emit(&apos;levelUp&apos;, { newLevel: thisPlayer.level });
+		socket.emit(&apos;levelUp&apos;, { newLevel: thisPlayer.level })
 	}
-}</code></pre>
+}
+</code></pre>
 
 </div>
 

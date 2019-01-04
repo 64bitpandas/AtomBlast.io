@@ -101,13 +101,14 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/entry.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
  * ENTRY POINT for server.js.
- * Uses babel to compile es6 into 
+ * Uses babel to compile es6 into
  */
 require(&apos;babel-register&apos;)({
 	presets: [&apos;env&apos;]
-});
+})
 
-module.exports = require(&apos;./server.js&apos;);</code></pre>
+module.exports = require(&apos;./server.js&apos;)
+</code></pre>
 
 </div>
 

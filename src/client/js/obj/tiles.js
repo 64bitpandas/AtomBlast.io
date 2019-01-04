@@ -1,10 +1,10 @@
 /**
- * This constant contains all data on how to draw and manage tiles. 
- * 
+ * This constant contains all data on how to draw and manage tiles.
+ *
  * Fields required:
  * type: Choose one: spawner, teamBase, wall
  * params: Different for each type. For example, spawner will require the `atomToSpawn` param, and teamBase will require the `teamName` param.
- * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. 'foo.png' corresponds to '../../assets/map/Tiles/foo.png') 
+ * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. 'foo.png' corresponds to '../../assets/map/Tiles/foo.png')
  */
 export const TILES = {
 	empty: {
@@ -98,8 +98,8 @@ export const TILES = {
 		params: {
 			atomsToSpawn: ['c']
 		}
-	},
-};
+	}
+}
 
 /**
  * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).
@@ -119,8 +119,8 @@ export const MAP_LAYOUT = [
 	['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],
 	['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
 	['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
-	['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
-];
+	['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H']
+]
 
 export const TILE_NAMES = {
 	E: 'empty',
@@ -137,4 +137,4 @@ export const TILE_NAMES = {
 	z: 'bottomLeft',
 	x: 'edgeBottom',
 	c: 'bottomRight'
-};
+}

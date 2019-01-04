@@ -25,7 +25,7 @@
       },
       {
         "lineNumber": 165,
-        "line": "export function getCurrTile(obj) {\r"
+        "line": "export function getCurrTile (obj) {\r"
       }
     ],
     "codeParams": [
@@ -89,7 +89,7 @@
       },
       {
         "lineNumber": 24,
-        "line": "export function createCompound(data, room, thisPlayer, socket) {\r"
+        "line": "export function createCompound (data, room, thisPlayer, socket) {"
       }
     ],
     "codeParams": [
@@ -109,28 +109,28 @@
     "filePath": "src/server/utils/compound.js",
     "lines": [
       {
-        "lineNumber": 75,
+        "lineNumber": 71,
         "line": "/**\r"
       },
       {
-        "lineNumber": 76,
+        "lineNumber": 72,
         "line": " * Checks compound behavior based on compound type. Runs once a frame.\r"
       },
       {
-        "lineNumber": 77,
+        "lineNumber": 73,
         "line": " * @param {number} compound compound object\r"
       },
       {
-        "lineNumber": 78,
+        "lineNumber": 74,
         "line": " * @param {string} room Name of room\r"
       },
       {
-        "lineNumber": 79,
+        "lineNumber": 75,
         "line": " */\r"
       },
       {
-        "lineNumber": 80,
-        "line": "export function tickCompound(compound, room, socket) {\r"
+        "lineNumber": 76,
+        "line": "export function tickCompound (compound, room, socket) {\r"
       }
     ],
     "codeParams": [

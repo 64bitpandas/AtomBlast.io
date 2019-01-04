@@ -99,21 +99,20 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/gameobject.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PIXI from &apos;pixi.js&apos;;
-import { app, screenCenterX, screenCenterY, player } from &apos;../pixigame&apos;;
-import { GLOBAL } from &apos;../global&apos;;
-import { MAP_LAYOUT } from &apos;./tiles&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PIXI from &apos;pixi.js&apos;
+import { app, screenCenterX, screenCenterY, player } from &apos;../pixigame&apos;
+import { GLOBAL } from &apos;../global&apos;
+import { MAP_LAYOUT } from &apos;./tiles&apos;
 
 /**
  * GameObject class that all objects in the game space should inherit.
- * Provides standard field variables such as posX and posY, as well as 
+ * Provides standard field variables such as posX and posY, as well as
  * standard methods to manipulate them.
- * 
+ *
  * A GameObject cannot be added directly; it must be inherited.
  * setup() and tick() must be overridden.
  */
 export class GameObject extends PIXI.Sprite {
-
 	/**
      * Creates a new GameObject.
      * @param {PIXI.Texture} texture The texture associated with this sprite
@@ -123,16 +122,16 @@ export class GameObject extends PIXI.Sprite {
      * @param {number} vx Horizontal velocity
      * @param {number} vy Vertical velocity
      */
-	constructor(texture, id, x, y, vx, vy) {
-		super(texture);
-		this.id = id;
-		this.posX = x;
-		this.posY = y;
-		this.vx = vx;
-		this.vy = vy;
-		this.destroyed = false;
-        
-		app.stage.addChild(this);
+	constructor (texture, id, x, y, vx, vy) {
+		super(texture)
+		this.id = id
+		this.posX = x
+		this.posY = y
+		this.vx = vx
+		this.vy = vy
+		this.destroyed = false
+
+		app.stage.addChild(this)
 	}
 
 	/**
@@ -140,9 +139,9 @@ export class GameObject extends PIXI.Sprite {
      * @param {number} newX New x-coordinate to move to
      * @param {number} newY New y-coordinate to move to
      */
-	setCoordinates(newX, newY) {
-		this.posX = newX;
-		this.posY = newY;
+	setCoordinates (newX, newY) {
+		this.posX = newX
+		this.posY = newY
 	}
 
 	/**
@@ -152,20 +151,20 @@ export class GameObject extends PIXI.Sprite {
      * @param {number} vx New x velocity
      * @param {number} vy New y velocity
      */
-	setData(newX, newY, vx, vy) {
-		this.setCoordinates(newX, newY);
-		this.vx = vx;
-		this.vy = vy;
+	setData (newX, newY, vx, vy) {
+		this.setCoordinates(newX, newY)
+		this.vx = vx
+		this.vy = vy
 	}
 
 	/**
-     * Call during tick() if necessary. 
+     * Call during tick() if necessary.
      * Draws object in the correct position on the player screen.
      */
-	draw() {
-		if(player !== undefined &amp;&amp; !this.destroyed) {
-			this.x = screenCenterX + this.posX - player.posX;
-			this.y = screenCenterY + player.posY - this.posY;
+	draw () {
+		if (player !== undefined &amp;&amp; !this.destroyed) {
+			this.x = screenCenterX + this.posX - player.posX
+			this.y = screenCenterY + player.posY - this.posY
 		}
 	}
 
@@ -173,61 +172,55 @@ export class GameObject extends PIXI.Sprite {
      * Moves this object to (9999, 9999) on local screen space, effectively
      * hiding it from view.
      */
-	hide() {
+	hide () {
 		// console.warn(&apos;hide() is called&apos;);
 		if (this.transform === null || this.transform === undefined) {
-			console.warn(&apos;hide() function exception. THIS IS ABNORMAL. The following object contains invalid transform object:&apos;);
-			console.warn(this);
-			return 1;
+			console.warn(&apos;hide() function exception. THIS IS ABNORMAL. The following object contains invalid transform object:&apos;)
+			console.warn(this)
+			return 1
 		}
-		this.x = 9999;
-		this.y = 9999;
+		this.x = 9999
+		this.y = 9999
 	}
 
 	/**
      * Override optional. Called once, during game setup phase.
      */
-	setup() {
+	setup () {
 	}
 
 	/**
      * Override optional. Default behavior: handles movement. Call super.tick() from child class if movable.
      * @param {boolean} noDraw - true if tick() should only process movement, not drawing.
      */
-	tick(noDraw) {
+	tick (noDraw) {
 		// Prevent drifting due to minimal negative values
-       
-		if(this.destroyed)
-			return;
 
-		if (Math.abs(this.vx) &lt; GLOBAL.DEADZONE)
-			this.vx = 0;
-		if (Math.abs(this.vy) &lt; GLOBAL.DEADZONE)
-			this.vy = 0;
+		if (this.destroyed) { return }
+
+		if (Math.abs(this.vx) &lt; GLOBAL.DEADZONE) { this.vx = 0 }
+		if (Math.abs(this.vy) &lt; GLOBAL.DEADZONE) { this.vy = 0 }
 
 		// Change position based on speed and direction. Don&apos;t allow objects to go out of bounds
-		if ((this.vx &gt; 0 &amp;&amp; this.posX &lt; MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx &lt; 0 &amp;&amp; this.posX &gt; 0))
-			this.posX += this.vx;
-		if ((this.vy &gt; 0 &amp;&amp; this.posY &lt; (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy &lt; 0 &amp;&amp; this.posY &gt; -GLOBAL.GRID_SPACING))
-			this.posY += this.vy;
+		if ((this.vx &gt; 0 &amp;&amp; this.posX &lt; MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx &lt; 0 &amp;&amp; this.posX &gt; 0)) { this.posX += this.vx }
+		if ((this.vy &gt; 0 &amp;&amp; this.posY &lt; (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy &lt; 0 &amp;&amp; this.posY &gt; -GLOBAL.GRID_SPACING)) { this.posY += this.vy }
 
-		if (this.ignited)
-			this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+		if (this.ignited) { this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture }
 
-		if(!noDraw) {
-			this.draw();
+		if (!noDraw) {
+			this.draw()
 		}
 	}
 
 	/**
      * Destroyes the Sprite
      */
-	destroy() {
-		this.destroyed = true;
-		super.destroy();
+	destroy () {
+		this.destroyed = true
+		super.destroy()
 	}
-
-}</code></pre>
+}
+</code></pre>
 
 </div>
 

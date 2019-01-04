@@ -100,12 +100,12 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/tiles.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * This constant contains all data on how to draw and manage tiles. 
- * 
+ * This constant contains all data on how to draw and manage tiles.
+ *
  * Fields required:
  * type: Choose one: spawner, teamBase, wall
  * params: Different for each type. For example, spawner will require the `atomToSpawn` param, and teamBase will require the `teamName` param.
- * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. &apos;foo.png&apos; corresponds to &apos;../../assets/map/Tiles/foo.png&apos;) 
+ * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. &apos;foo.png&apos; corresponds to &apos;../../assets/map/Tiles/foo.png&apos;)
  */
 export const TILES = {
 	empty: {
@@ -199,8 +199,8 @@ export const TILES = {
 		params: {
 			atomsToSpawn: [&apos;c&apos;]
 		}
-	},
-};
+	}
+}
 
 /**
  * 2D array containing the entire map tile layout. Top left is (0,0), furthest right is (n, 0) and furthest bottom is (0, n).
@@ -220,8 +220,8 @@ export const MAP_LAYOUT = [
 	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
 	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
 	[&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
-];
+	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;]
+]
 
 export const TILE_NAMES = {
 	E: &apos;empty&apos;,
@@ -238,7 +238,8 @@ export const TILE_NAMES = {
 	z: &apos;bottomLeft&apos;,
 	x: &apos;edgeBottom&apos;,
 	c: &apos;bottomRight&apos;
-};</code></pre>
+}
+</code></pre>
 
 </div>
 

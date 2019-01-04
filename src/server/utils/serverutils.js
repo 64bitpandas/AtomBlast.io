@@ -1,5 +1,5 @@
-import { getField, setField } from '../server';
-import { GLOBAL } from '../../client/js/global';
+import { getField, setField } from '../server'
+import { GLOBAL } from '../../client/js/global'
 
 /**
  * Misc. standalone utilities for the server.
@@ -10,8 +10,8 @@ import { GLOBAL } from '../../client/js/global';
 * TODO Make every ID guaranteed unique
 * @returns random id between 10000000 and 99999999
 */
-export function generateID() {
-	return Math.floor(Math.random() * 90000000) + 10000000;
+export function generateID () {
+	return Math.floor(Math.random() * 90000000) + 10000000
 }
 
 /**
@@ -19,10 +19,10 @@ export function generateID() {
  * @param {string} room The room name to check
  * @param {string} teamName The team name to return the number of
  */
-export function getTeamNumber(room, teamName) {
-	for (let i = 0; i < getField(['rooms', room, 'teams']).length; i++)
-		if (getField(['rooms', room, 'teams'])[i].name === teamName)
-			return i;
+export function getTeamNumber (room, teamName) {
+	for (let i = 0; i < getField(['rooms', room, 'teams']).length; i++) {
+		if (getField(['rooms', room, 'teams'])[i].name === teamName) { return i }
+	}
 
-	return -1; //Team not found
+	return -1 // Team not found
 }

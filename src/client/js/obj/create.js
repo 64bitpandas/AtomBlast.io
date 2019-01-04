@@ -1,15 +1,15 @@
 /**
- * Responsible for all gameObject creation and creation request scripts 
+ * Responsible for all gameObject creation and creation request scripts
  * for the client (atoms, compounds, players)
  */
-import * as PIXI from 'pixi.js';
-import { Player } from './player.js';
-import { GLOBAL } from '../global.js';
-import { GameObject } from './gameobject.js';
-import { distanceBetween } from '../global.js';
-import { screenCenterX, screenCenterY, player } from '../pixigame.js';
-import { socket } from '../socket.js';
-import { updateAtomList, updateCompoundButtons } from '../app.js';
+import * as PIXI from 'pixi.js'
+import { Player } from './player.js'
+import { GLOBAL } from '../global.js'
+import { GameObject } from './gameobject.js'
+import { distanceBetween } from '../global.js'
+import { screenCenterX, screenCenterY, player } from '../pixigame.js'
+import { socket } from '../socket.js'
+import { updateAtomList, updateCompoundButtons } from '../app.js'
 
 /**
  * Renders a new atom.
@@ -21,25 +21,22 @@ import { updateAtomList, updateCompoundButtons } from '../app.js';
  *  - vx {number}
  *  - vy {number}
  */
-export function createRenderAtom(data) {
+export function createRenderAtom (data) {
+	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture
 
-	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
+	if (data.typeID === '') { throw new Error('The Atom object cannot be created without specifying behavior.') }
 
-	if (data.typeID === '')
-		throw new Error('The Atom object cannot be created without specifying behavior.');
+	if (texture === undefined) { throw new Error('Atom of type ' + data.typeID + ' could not be found!') }
 
-	if (texture === undefined)
-		throw new Error('Atom of type ' + data.typeID + ' could not be found!');
+	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
+	result.typeID = data.typeID
+	result.height = GLOBAL.ATOM_RADIUS * 2
+	result.width = GLOBAL.ATOM_RADIUS * 2
 
-	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
-	result.typeID = data.typeID;
-	result.height = GLOBAL.ATOM_RADIUS * 2;
-	result.width = GLOBAL.ATOM_RADIUS * 2;
-
-	return result;
+	return result
 }
 
-export function createPlayer(data) {
+export function createPlayer (data) {
 
 }
 
@@ -55,23 +52,23 @@ export function createPlayer(data) {
  *  - sendingTeam {string}
  *  - sender {number - socket ID}
  */
-export function createRenderCompound(data) {
-	let texture = PIXI.loader.resources[data.blueprint.texture].texture;
-	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
-	result.blueprint = data.blueprint;
-	result.sendingTeam = data.sendingTeam;
-	result.sender = data.sender;
+export function createRenderCompound (data) {
+	let texture = PIXI.loader.resources[data.blueprint.texture].texture
+	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
+	result.blueprint = data.blueprint
+	result.sendingTeam = data.sendingTeam
+	result.sender = data.sender
 
 	// Parse params
 	for (let param in data.blueprint.params) {
-		result[param] = data.blueprint.params[param];
+		result[param] = data.blueprint.params[param]
 	}
 
 	// Use params
-	result.width = result.size;
-	result.height = result.size;
+	result.width = result.size
+	result.height = result.size
 
-	return result;
+	return result
 }
 
 /**
@@ -82,9 +79,8 @@ export function createRenderCompound(data) {
  * @param {number} streamID The current stream number.
  * @returns true if successful, false if the compound was not requested.
  */
-export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
-
-	updateCompoundButtons();
+export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
+	updateCompoundButtons()
 
 	// if (blueprint.type === 'speed') {
 	//     // this.hide();
@@ -101,8 +97,8 @@ export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
 	// } else {
 	// let cursor = app.renderer.plugins.interaction.mouse.global;
 
-	let centerX = window.innerWidth / 2;
-	let centerY = window.innerHeight / 2;
+	let centerX = window.innerWidth / 2
+	let centerY = window.innerHeight / 2
 	// console.log(centerX - cursor.x, cursor.y - centerY)
 	socket.emit('requestCreateCompound', {
 		blueprint: blueprint,
@@ -113,9 +109,9 @@ export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
 			y: centerY - yIn
 		},
 		streamID: streamID
-	});
+	})
 
-	//Emits the crafting event to update experience TODO
+	// Emits the crafting event to update experience TODO
 	// socket.emit('experienceEvent', {
 	//     event: 'CRAFT'
 	// });
