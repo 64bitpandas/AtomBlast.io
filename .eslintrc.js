@@ -17,7 +17,7 @@ module.exports = {
         "accessor-pairs": "error",
         "arrow-spacing": ["error", { "before": true, "after": true }],
         "block-spacing": ["error", "always"],
-        "brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
+        "brace-style": ["error", "stroustrup", { "allowSingleLine": false }],
         "camelcase": ["error", { "properties": "never" }],
         "comma-dangle": ["error", {
           "arrays": "never",

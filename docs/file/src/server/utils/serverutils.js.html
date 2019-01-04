@@ -122,7 +122,9 @@ export function generateID () {
  */
 export function getTeamNumber (room, teamName) {
 	for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++) {
-		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName) { return i }
+		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName) {
+			return i
+		}
 	}
 
 	return -1 // Team not found

@@ -131,7 +131,9 @@ let selectedSlot
 
 // Starts the game if the name is valid.
 function joinGame () {
-	if (!allBlueprintsSelected()) { swal(&apos;Blueprint(s) not selected&apos;, &apos;Make sure all your blueprint slots are filled before joining a game!&apos;, &apos;error&apos;) }
+	if (!allBlueprintsSelected()) {
+		swal(&apos;Blueprint(s) not selected&apos;, &apos;Make sure all your blueprint slots are filled before joining a game!&apos;, &apos;error&apos;)
+	}
 	// check if the nick is valid
 	else if (validNick()) {
 		// Set cookies for inputs
@@ -170,7 +172,9 @@ function joinGame () {
 function validNick () {
 	const regex = /^(\w|_|-| |!|\.|\?){2,16}$/
 	for (let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
-		if (regex.exec(cookieInputs[i].value) === null &amp;&amp; !(i === 1 &amp;&amp; cookieInputs[7].value !== &apos;private&apos;)) { return false }
+		if (regex.exec(cookieInputs[i].value) === null &amp;&amp; !(i === 1 &amp;&amp; cookieInputs[7].value !== &apos;private&apos;)) {
+			return false
+		}
 	}
 
 	return true
@@ -181,7 +185,9 @@ function validNick () {
  */
 function allBlueprintsSelected () {
 	for (let i = GLOBAL.INPUT_COUNT - 1; i &lt; GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
-		if (cookieInputs[i].innerHTML.substring(0, 1) === &apos;-&apos;) { return false }
+		if (cookieInputs[i].innerHTML.substring(0, 1) === &apos;-&apos;) {
+			return false
+		}
 	}
 	return true
 }
@@ -207,8 +213,12 @@ window.onload = () =&gt; {
 	let i = 0
 	for (let cookie of cookieValues) {
 		if (cookie !== null &amp;&amp; cookie.length &gt; 0) {
-			if (cookieInputs[i].tagName === &apos;INPUT&apos; || cookieInputs[i].tagName === &apos;SELECT&apos;) { cookieInputs[i].value = cookie }
-			else if (cookieInputs[i].tagName === &apos;BUTTON&apos; &amp;&amp; BLUEPRINTS[cookie] !== undefined) { cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name }
+			if (cookieInputs[i].tagName === &apos;INPUT&apos; || cookieInputs[i].tagName === &apos;SELECT&apos;) {
+				cookieInputs[i].value = cookie
+			}
+			else if (cookieInputs[i].tagName === &apos;BUTTON&apos; &amp;&amp; BLUEPRINTS[cookie] !== undefined) {
+				cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name
+			}
 		}
 		i++
 	}
@@ -274,7 +284,9 @@ window.onload = () =&gt; {
 		}
 	}
 
-	document.getElementById(&apos;btn-close&apos;).onclick = () =&gt; { hideElement(&apos;bp-select&apos;) }
+	document.getElementById(&apos;btn-close&apos;).onclick = () =&gt; {
+		hideElement(&apos;bp-select&apos;)
+	}
 
 	// Set up blueprint selection buttons
 	for (let blueprint in BLUEPRINTS) {
@@ -307,17 +319,27 @@ window.onload = () =&gt; {
 		cookieInputs[i].addEventListener(&apos;keypress&apos;, e =&gt; {
 			const key = e.which || e.keyCode
 
-			if (key === GLOBAL.KEY_ENTER) { joinGame() }
+			if (key === GLOBAL.KEY_ENTER) {
+				joinGame()
+			}
 		})
 	}
 
 	// Behavior when room type is changed
-	if (cookieInputs[7].value !== &apos;private&apos;) { hideElement(&apos;room&apos;) }
-	else { showElement(&apos;room&apos;) }
+	if (cookieInputs[7].value !== &apos;private&apos;) {
+		hideElement(&apos;room&apos;)
+	}
+	else {
+		showElement(&apos;room&apos;)
+	}
 
 	cookieInputs[7].onchange = () =&gt; {
-		if (cookieInputs[7].value === &apos;private&apos;) { showElement(&apos;room&apos;) }
-		else { hideElement(&apos;room&apos;) }
+		if (cookieInputs[7].value === &apos;private&apos;) {
+			showElement(&apos;room&apos;)
+		}
+		else {
+			hideElement(&apos;room&apos;)
+		}
 
 		cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS)
 	}
@@ -427,8 +449,12 @@ export function updateAtomList (atomID) {
  * @param {number} selectedSlot The index of the selected slot. 0-3
  */
 export function updateCompoundButtons (selectedSlot) {
-	if (selectedSlot === undefined) { selectedSlot = selectedCompound }
-	else { selectedCompound = selectedSlot }
+	if (selectedSlot === undefined) {
+		selectedSlot = selectedCompound
+	}
+	else {
+		selectedCompound = selectedSlot
+	}
 
 	for (let i = 0; i &lt; selectedBlueprints.length; i++) {
 		if (selectedSlot !== i) {
@@ -512,9 +538,13 @@ function getCompoundFormula (blueprint) {
  * @param {string} blueprint The name of the blueprint to check.
  */
 function canCraft (blueprint) {
-	if (blueprint === undefined) { return false }
+	if (blueprint === undefined) {
+		return false
+	}
 	for (let atom in blueprint.atoms) {
-		if (player.atomList[atom] === undefined || player.atomList[atom] &lt; blueprint.atoms[atom]) { return false }
+		if (player.atomList[atom] === undefined || player.atomList[atom] &lt; blueprint.atoms[atom]) {
+			return false
+		}
 	}
 
 	return true

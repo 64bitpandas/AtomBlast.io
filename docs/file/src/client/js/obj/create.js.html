@@ -125,9 +125,13 @@ import { updateAtomList, updateCompoundButtons } from &apos;../app.js&apos;
 export function createRenderAtom (data) {
 	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture
 
-	if (data.typeID === &apos;&apos;) { throw new Error(&apos;The Atom object cannot be created without specifying behavior.&apos;) }
+	if (data.typeID === &apos;&apos;) {
+		throw new Error(&apos;The Atom object cannot be created without specifying behavior.&apos;)
+	}
 
-	if (texture === undefined) { throw new Error(&apos;Atom of type &apos; + data.typeID + &apos; could not be found!&apos;) }
+	if (texture === undefined) {
+		throw new Error(&apos;Atom of type &apos; + data.typeID + &apos; could not be found!&apos;)
+	}
 
 	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
 	result.typeID = data.typeID

@@ -22,7 +22,9 @@ export function addExperience (event, socket, room, player) {
 	// Determine the player's level based on experience
 	let oldLevel = getField(['rooms', room, 'players', player, 'level'])
 	for (let level of GLOBAL.EXPERIENCE_LEVELS) {
-		if (getField(['rooms', room, 'players', player, 'level']) >= level) { setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, ['rooms', room, 'players', player, 'level']) }
+		if (getField(['rooms', room, 'players', player, 'level']) >= level) {
+			setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, ['rooms', room, 'players', player, 'level'])
+		}
 	}
 
 	// Check to see if the player leveled up

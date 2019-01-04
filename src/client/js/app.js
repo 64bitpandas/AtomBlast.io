@@ -30,7 +30,9 @@ let selectedSlot
 
 // Starts the game if the name is valid.
 function joinGame () {
-	if (!allBlueprintsSelected()) { swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error') }
+	if (!allBlueprintsSelected()) {
+		swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error')
+	}
 	// check if the nick is valid
 	else if (validNick()) {
 		// Set cookies for inputs
@@ -69,7 +71,9 @@ function joinGame () {
 function validNick () {
 	const regex = /^(\w|_|-| |!|\.|\?){2,16}$/
 	for (let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
-		if (regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private')) { return false }
+		if (regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private')) {
+			return false
+		}
 	}
 
 	return true
@@ -80,7 +84,9 @@ function validNick () {
  */
 function allBlueprintsSelected () {
 	for (let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
-		if (cookieInputs[i].innerHTML.substring(0, 1) === '-') { return false }
+		if (cookieInputs[i].innerHTML.substring(0, 1) === '-') {
+			return false
+		}
 	}
 	return true
 }
@@ -106,8 +112,12 @@ window.onload = () => {
 	let i = 0
 	for (let cookie of cookieValues) {
 		if (cookie !== null && cookie.length > 0) {
-			if (cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT') { cookieInputs[i].value = cookie }
-			else if (cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined) { cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name }
+			if (cookieInputs[i].tagName === 'INPUT' || cookieInputs[i].tagName === 'SELECT') {
+				cookieInputs[i].value = cookie
+			}
+			else if (cookieInputs[i].tagName === 'BUTTON' && BLUEPRINTS[cookie] !== undefined) {
+				cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name
+			}
 		}
 		i++
 	}
@@ -173,7 +183,9 @@ window.onload = () => {
 		}
 	}
 
-	document.getElementById('btn-close').onclick = () => { hideElement('bp-select') }
+	document.getElementById('btn-close').onclick = () => {
+		hideElement('bp-select')
+	}
 
 	// Set up blueprint selection buttons
 	for (let blueprint in BLUEPRINTS) {
@@ -206,17 +218,27 @@ window.onload = () => {
 		cookieInputs[i].addEventListener('keypress', e => {
 			const key = e.which || e.keyCode
 
-			if (key === GLOBAL.KEY_ENTER) { joinGame() }
+			if (key === GLOBAL.KEY_ENTER) {
+				joinGame()
+			}
 		})
 	}
 
 	// Behavior when room type is changed
-	if (cookieInputs[7].value !== 'private') { hideElement('room') }
-	else { showElement('room') }
+	if (cookieInputs[7].value !== 'private') {
+		hideElement('room')
+	}
+	else {
+		showElement('room')
+	}
 
 	cookieInputs[7].onchange = () => {
-		if (cookieInputs[7].value === 'private') { showElement('room') }
-		else { hideElement('room') }
+		if (cookieInputs[7].value === 'private') {
+			showElement('room')
+		}
+		else {
+			hideElement('room')
+		}
 
 		cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS)
 	}
@@ -326,8 +348,12 @@ export function updateAtomList (atomID) {
  * @param {number} selectedSlot The index of the selected slot. 0-3
  */
 export function updateCompoundButtons (selectedSlot) {
-	if (selectedSlot === undefined) { selectedSlot = selectedCompound }
-	else { selectedCompound = selectedSlot }
+	if (selectedSlot === undefined) {
+		selectedSlot = selectedCompound
+	}
+	else {
+		selectedCompound = selectedSlot
+	}
 
 	for (let i = 0; i < selectedBlueprints.length; i++) {
 		if (selectedSlot !== i) {
@@ -411,9 +437,13 @@ function getCompoundFormula (blueprint) {
  * @param {string} blueprint The name of the blueprint to check.
  */
 function canCraft (blueprint) {
-	if (blueprint === undefined) { return false }
+	if (blueprint === undefined) {
+		return false
+	}
 	for (let atom in blueprint.atoms) {
-		if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom]) { return false }
+		if (player.atomList[atom] === undefined || player.atomList[atom] < blueprint.atoms[atom]) {
+			return false
+		}
 	}
 
 	return true

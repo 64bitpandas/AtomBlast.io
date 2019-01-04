@@ -49,14 +49,22 @@ export function loadTextures () {
 		TEXTURES.push(GLOBAL.IGNITE_SPRITE)
 		for (let bp in BLUEPRINTS) {
 			// Prevent duplicate textures from being loaded
-			if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0) { TEXTURES.push(BLUEPRINTS[bp].texture) }
-			if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0) { TEXTURES.push(BLUEPRINTS[bp].params.splashImage) }
+			if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0) {
+				TEXTURES.push(BLUEPRINTS[bp].texture)
+			}
+			if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0) {
+				TEXTURES.push(BLUEPRINTS[bp].params.splashImage)
+			}
 		}
 		for (let atom of GLOBAL.ATOM_SPRITES) {
-			if (TEXTURES.indexOf(atom) < 0) { TEXTURES.push(atom) }
+			if (TEXTURES.indexOf(atom) < 0) {
+				TEXTURES.push(atom)
+			}
 		}
 		for (let tile in TILES) {
-			if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0) { TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) }
+			if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0) {
+				TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture)
+			}
 		}
 		console.log(TEXTURES)
 
@@ -102,8 +110,12 @@ function registerCallbacks () {
 
 		esc.press = () => {
 			if (isFocused()) {
-				if (document.activeElement !== document.getElementById('chatInput')) { toggleMenu() }
-				else { document.getElementById('chatInput').blur() }
+				if (document.activeElement !== document.getElementById('chatInput')) {
+					toggleMenu()
+				}
+				else {
+					document.getElementById('chatInput').blur()
+				}
 			}
 		}
 
@@ -148,8 +160,12 @@ function registerCallbacks () {
 		for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
 			let tileName = 'tile_' + col + '_' + row
 			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
-				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) { objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1) }
-				else { throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.') }
+				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
+					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)
+				}
+				else {
+					throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.')
+				}
 			}
 		}
 	}
@@ -204,7 +220,9 @@ function draw (delta) {
 
 			player.isMoving = false
 			for (let key of moveKeys) {
-				if (key.isDown) { player.isMoving = true }
+				if (key.isDown) {
+					player.isMoving = true
+				}
 			}
 		}
 		else {
@@ -218,8 +236,12 @@ function draw (delta) {
 		}
 
 		// Slow down gradually - unaffected by chat input
-		if (!moveKeys[2].isDown && !moveKeys[3].isDown) { player.vy *= GLOBAL.VELOCITY_STEP }
-		if (!moveKeys[0].isDown && !moveKeys[1].isDown) { player.vx *= GLOBAL.VELOCITY_STEP }
+		if (!moveKeys[2].isDown && !moveKeys[3].isDown) {
+			player.vy *= GLOBAL.VELOCITY_STEP
+		}
+		if (!moveKeys[0].isDown && !moveKeys[1].isDown) {
+			player.vx *= GLOBAL.VELOCITY_STEP
+		}
 
 		// Shooting
 		space.press = () => {
@@ -252,9 +274,13 @@ function draw (delta) {
 		})
 
 		// Move grid
-		for (let line of vertLines) { line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2) }
+		for (let line of vertLines) {
+			line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2)
+		}
 
-		for (let line of horizLines) { line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2) }
+		for (let line of horizLines) {
+			line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2)
+		}
 	}
 
 	// Handle objects except for this player
@@ -271,8 +297,12 @@ function draw (delta) {
  * Shows or hides the in-game menu box
  */
 function toggleMenu () {
-	if (document.getElementById('menubox').offsetParent === null) { showElement('menubox') }
-	else { hideElement('menubox') }
+	if (document.getElementById('menubox').offsetParent === null) {
+		showElement('menubox')
+	}
+	else {
+		hideElement('menubox')
+	}
 }
 
 /**
@@ -304,7 +334,9 @@ export function destroyPIXI () {
 export function showGameUI () {
 	// Hide loading screen
 	hideElement('loading')
-	if (!inGame) { showElement('lobby') }
+	if (!inGame) {
+		showElement('lobby')
+	}
 }
 
 /**
@@ -317,7 +349,9 @@ export function createPlayer (data) {
 		console.log('create player ' + data.id)
 		console.log(data)
 		let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
-		if (data.id === socket.id) { player = newPlayer }
+		if (data.id === socket.id) {
+			player = newPlayer
+		}
 
 		return newPlayer
 	}
@@ -380,7 +414,9 @@ export function getIngame () {
  */
 export function mouseUpHandler (e) {
 	mouseDown = true
-	if (selectedBlueprints[selectedCompound] && selectedBlueprints[selectedCompound].type !== 'stream') { shootHandler(e, false) }
+	if (selectedBlueprints[selectedCompound] && selectedBlueprints[selectedCompound].type !== 'stream') {
+		shootHandler(e, false)
+	}
 }
 /**
  * Called on mouse down from app.js
@@ -398,7 +434,9 @@ export function mouseDownHandler (e) {
  */
 function shootHandler (e, stream) {
 	if (isFocused() && inGame) {
-		if (stream) { streamID++ }
+		if (stream) {
+			streamID++
+		}
 		requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID)
 	}
 }

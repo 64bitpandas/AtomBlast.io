@@ -23,7 +23,9 @@ import { addExperience } from './experience'
   * @param socket - Socket.io instance
   */
 export function createCompound (data, room, thisPlayer, socket) {
-	if (!canCraft(thisPlayer, room, data.blueprint)) { return false }
+	if (!canCraft(thisPlayer, room, data.blueprint)) {
+		return false
+	}
 
 	// Calculate velocities based on cursor position
 	let theta = Math.atan2(data.mousePos.y, data.mousePos.x)

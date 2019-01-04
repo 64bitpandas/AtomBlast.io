@@ -77,7 +77,9 @@ export function disconnect () {
 	socket.disconnect()
 
 	// Wipe objects list
-	for (let objType in objects) { objects[objType] = {} }
+	for (let objType in objects) {
+		objects[objType] = {}
+	}
 }
 
 /**
@@ -116,16 +118,22 @@ function setupSocketObjectRetrieval () {
 						let clientObj = objects[objType][obj]
 						// Already exists in database
 						if (clientObj !== undefined && clientObj !== null) {
-							if (objRef.id !== socket.id) { objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy) }
+							if (objRef.id !== socket.id) {
+								objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy)
+							}
 							if (objType === 'players') {
 								objects[objType][obj].health = objRef.health
 								objects[objType][obj].damagedBy = objRef.damagedBy
 								objects[objType][obj].atomList = objRef.atomList
 								objects[objType][obj].speedMult = objRef.speedMult
 								objects[objType][obj].hasShield = objRef.hasShield
-								for (let atom in objRef.atomList) { updateAtomList(atom) }
+								for (let atom in objRef.atomList) {
+									updateAtomList(atom)
+								}
 							}
-							if (objType === 'compounds' && objRef.ignited) { objects[objType][obj].ignited = objRef.ignited }
+							if (objType === 'compounds' && objRef.ignited) {
+								objects[objType][obj].ignited = objRef.ignited
+							}
 						}
 						// Does not exist - need to clone to clientside
 						else if (isSetup) {

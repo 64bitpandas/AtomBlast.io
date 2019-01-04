@@ -95,16 +95,28 @@ export class GameObject extends PIXI.Sprite {
 	tick (noDraw) {
 		// Prevent drifting due to minimal negative values
 
-		if (this.destroyed) { return }
+		if (this.destroyed) {
+			return
+		}
 
-		if (Math.abs(this.vx) < GLOBAL.DEADZONE) { this.vx = 0 }
-		if (Math.abs(this.vy) < GLOBAL.DEADZONE) { this.vy = 0 }
+		if (Math.abs(this.vx) < GLOBAL.DEADZONE) {
+			this.vx = 0
+		}
+		if (Math.abs(this.vy) < GLOBAL.DEADZONE) {
+			this.vy = 0
+		}
 
 		// Change position based on speed and direction. Don't allow objects to go out of bounds
-		if ((this.vx > 0 && this.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx < 0 && this.posX > 0)) { this.posX += this.vx }
-		if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING)) { this.posY += this.vy }
+		if ((this.vx > 0 && this.posX < MAP_LAYOUT[0].length * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING) || (this.vx < 0 && this.posX > 0)) {
+			this.posX += this.vx
+		}
+		if ((this.vy > 0 && this.posY < (MAP_LAYOUT.length - 1) * GLOBAL.GRID_SPACING * 2) || (this.vy < 0 && this.posY > -GLOBAL.GRID_SPACING)) {
+			this.posY += this.vy
+		}
 
-		if (this.ignited) { this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture }
+		if (this.ignited) {
+			this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture
+		}
 
 		if (!noDraw) {
 			this.draw()

@@ -34,7 +34,9 @@ export function roomMatchmaker (socket, room, team) {
 			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
 			setField(socket.id, ['teams', socket.handshake.query.team, 'players', getField(['teams', socket.handshake.query.team, 'players']).length ])
 
-			if ((roomType === '2v2v2v2' && team.players.length === 2) || team.players.length === 4) { setField(false, ['teams', socket.handshake.query.team, 'joinable']) }
+			if ((roomType === '2v2v2v2' && team.players.length === 2) || team.players.length === 4) {
+				setField(false, ['teams', socket.handshake.query.team, 'joinable'])
+			}
 		}
 	}
 	// Team not found
@@ -49,7 +51,9 @@ export function roomMatchmaker (socket, room, team) {
 		}
 
 		// No matching rooms - must create a new room
-		if (room === GLOBAL.NO_ROOM_IDENTIFIER) { room = 'NA_' + roomType + '_' + generateID() }
+		if (room === GLOBAL.NO_ROOM_IDENTIFIER) {
+			room = 'NA_' + roomType + '_' + generateID()
+		}
 
 		// Make team
 		setField({

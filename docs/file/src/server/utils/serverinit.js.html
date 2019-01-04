@@ -180,7 +180,9 @@ export function initPlayer (socket, room) {
 	setField({ name: socket.handshake.query.team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
 
 	// Check if room is full
-	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) { setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;]) }
+	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
+		setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;])
+	}
 
 	// Create new player in rooms object
 	setField({

@@ -13,10 +13,14 @@ export function incrementAtom (player, room, atomType, quantity) {
 
 export function canCraft (player, room, blueprint) {
 	// console.log(player);
-	if (blueprint === undefined) { return false }
+	if (blueprint === undefined) {
+		return false
+	}
 	for (let atom in blueprint.atoms) {
 		let numAtoms = getField(['rooms', room, 'players', player.id, 'atomList', atom])
-		if (numAtoms === undefined || numAtoms < blueprint.atoms[atom]) { return false }
+		if (numAtoms === undefined || numAtoms < blueprint.atoms[atom]) {
+			return false
+		}
 	}
 
 	return true
@@ -58,8 +62,12 @@ export function spawnAtom (x, y, type, room, verbose) {
 		vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
 		vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
 	}
-	if (getField(['rooms', room]) !== undefined) { setField(atom, ['rooms', room, 'atoms', atom.id]) }
+	if (getField(['rooms', room]) !== undefined) {
+		setField(atom, ['rooms', room, 'atoms', atom.id])
+	}
 
 	// Log to console
-	if (verbose) { console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy) }
+	if (verbose) {
+		console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy)
+	}
 }

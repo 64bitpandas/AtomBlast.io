@@ -161,8 +161,12 @@ export function frameSync (socket, room, thisPlayer) {
 					// thisRoom.atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
 				}
 
-				if (Math.abs(thisRoom.atoms[atom].vx) &lt;= GLOBAL.DEADZONE) { setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]) }
-				if (Math.abs(thisRoom.atoms[atom].vy) &lt;= GLOBAL.DEADZONE) { setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]) }
+				if (Math.abs(thisRoom.atoms[atom].vx) &lt;= GLOBAL.DEADZONE) {
+					setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;])
+				}
+				if (Math.abs(thisRoom.atoms[atom].vy) &lt;= GLOBAL.DEADZONE) {
+					setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;])
+				}
 
 				// Move atom
 				setField(thisRoom.atoms[atom].posX + thisRoom.atoms[atom].vx, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;posX&apos;])
@@ -174,7 +178,9 @@ export function frameSync (socket, room, thisPlayer) {
 			// Populate tempObjects
 			for (let objType in tempObjects) {
 				for (let obj in thisRoom[objType]) {
-					if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) { tempObjects[objType][obj] = thisRoom[objType][obj] }
+					if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) {
+						tempObjects[objType][obj] = thisRoom[objType][obj]
+					}
 					else if (objType === &apos;players&apos;) { // Player left view
 						socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
 					}
@@ -186,7 +192,9 @@ export function frameSync (socket, room, thisPlayer) {
 
 			socket.emit(&apos;objectSync&apos;, tempObjects)
 
-			if (thisRoom.started) { socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime }) }
+			if (thisRoom.started) {
+				socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime })
+			}
 
 			if (thisRoom !== undefined &amp;&amp; !thisRoom.started) {
 				// Send over the room player information

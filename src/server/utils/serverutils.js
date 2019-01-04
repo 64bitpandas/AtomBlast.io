@@ -21,7 +21,9 @@ export function generateID () {
  */
 export function getTeamNumber (room, teamName) {
 	for (let i = 0; i < getField(['rooms', room, 'teams']).length; i++) {
-		if (getField(['rooms', room, 'teams'])[i].name === teamName) { return i }
+		if (getField(['rooms', room, 'teams'])[i].name === teamName) {
+			return i
+		}
 	}
 
 	return -1 // Team not found

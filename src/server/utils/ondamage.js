@@ -31,7 +31,9 @@ export function damage (data, room, socket) {
 		setField(thisPlayer.health - data.damage, ['rooms', room, 'players', data.player, 'health'])
 
 		// Add damage to database
-		if (thisPlayer.damagedBy[data.sentBy] === undefined) { setField(0, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy]) }
+		if (thisPlayer.damagedBy[data.sentBy] === undefined) {
+			setField(0, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy])
+		}
 		// thisPlayer.damagedBy[data.sentBy] += data.damage;
 		setField(thisPlayer.damagedBy[data.sentBy] + data.damage, ['rooms', room, 'players', data.player, 'damagedBy', data.sentBy])
 
@@ -58,7 +60,9 @@ export function damage (data, room, socket) {
 
 					socket.to(room).broadcast.emit('serverSendScoreUpdate', dataToSend)
 					socket.emit('serverSendScoreUpdate', dataToSend)
-					if (max === null || thisPlayer.damagedBy[pl] > thisPlayer.damagedBy[max]) { max = pl }
+					if (max === null || thisPlayer.damagedBy[pl] > thisPlayer.damagedBy[max]) {
+						max = pl
+					}
 				}
 
 				// Add to score of person who dealt the most damage
@@ -72,7 +76,9 @@ export function damage (data, room, socket) {
 				setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score'])
 
 				// Clear damagedBy values
-				for (let pl in thisPlayer.damagedBy) { setField(0, ['rooms', room, 'players', data.player, 'damagedBy', pl]) }
+				for (let pl in thisPlayer.damagedBy) {
+					setField(0, ['rooms', room, 'players', data.player, 'damagedBy', pl])
+				}
 
 				// Check if a team won
 				let highScores = [] // Possible winning teams
@@ -80,7 +86,9 @@ export function damage (data, room, socket) {
 				for (let tm of thisRoom.teams) {
 					if (tm.score >= GLOBAL.WINNING_SCORE) {
 						highScores.push(tm)
-						if (maxScore < tm.score) { maxScore = tm.score }
+						if (maxScore < tm.score) {
+							maxScore = tm.score
+						}
 					}
 				}
 				for (let winningTm of highScores) {
@@ -103,7 +111,9 @@ export function damage (data, room, socket) {
 			}
 		}
 	}
-	else { console.warn('Player of ID ' + data.player + ' couldn\'t be damaged because they don\'t exist!') }
+	else {
+		console.warn('Player of ID ' + data.player + ' couldn\'t be damaged because they don\'t exist!')
+	}
 }
 
 /**

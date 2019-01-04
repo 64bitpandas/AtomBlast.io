@@ -79,7 +79,9 @@ io.on('connection', socket => {
 	thisPlayer.team = team
 	thisPlayer.atomList = {}
 	thisPlayer.speedMult = 1
-	for (let atom of GLOBAL.ATOM_IDS) { thisPlayer.atomList[atom] = 0 }
+	for (let atom of GLOBAL.ATOM_IDS) {
+		thisPlayer.atomList[atom] = 0
+	}
 
 	// Setup player array sync- once a frame
 	setInterval(() => {
@@ -148,7 +150,9 @@ io.on('connection', socket => {
 	// A player spawned a Compound
 	socket.to(room).on('requestCreateCompound', data => {
 		let newCompound = createCompound(data, room, thisPlayer, socket)
-		if (newCompound) { rooms[room].compounds[newCompound.id] = newCompound }
+		if (newCompound) {
+			rooms[room].compounds[newCompound.id] = newCompound
+		}
 	})
 
 	socket.on('startGame', data => {
@@ -171,7 +175,9 @@ io.on('connection', socket => {
 	// Atom information sent on player death. Spreads atoms randomly in a circle around the death area.
 	socket.on('playerDeathAtoms', (data) => {
 		for (let at in data.atoms) {
-			for (let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++) { spawnAtom(data.x, data.y, at, room, false) }
+			for (let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++) {
+				spawnAtom(data.x, data.y, at, room, false)
+			}
 		}
 	})
 
@@ -204,7 +210,9 @@ io.on('connection', socket => {
 				// rooms[room].teams[team].players.splice(rooms[room].teams[team].players.indexOf(socket.id), 1);
 
 				// Delete team if all players have left
-				if (teams[team].players.length === 0) { delete teams[team] }
+				if (teams[team].players.length === 0) {
+					delete teams[team]
+				}
 			}
 		}
 	})
@@ -225,10 +233,14 @@ http.listen(serverPort, () => {
  *                 Example: rooms.myRoom.players could be accessed through a path value of ['rooms', 'myRoom', 'players']
  */
 export function setField (value, path) {
-	if (path === undefined || path.length === 0) { throw new Error('Error in setField: path cannot be empty') }
+	if (path === undefined || path.length === 0) {
+		throw new Error('Error in setField: path cannot be empty')
+	}
 
 	let schema = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined
-	if (schema === undefined) { throw new Error('Base object ' + path[0] + ' does not exist!') }
+	if (schema === undefined) {
+		throw new Error('Base object ' + path[0] + ' does not exist!')
+	}
 
 	let len = path.length
 	for (let i = 1; i < len - 1; i++) {
@@ -258,13 +270,21 @@ export function incrementField (amount, path) {
  * @returns The value for the given field.
  */
 export function getField (path) {
-	if (path === undefined || path.length === 0) { throw new Error('Error in setField: path cannot be empty') }
-	if (path.length === undefined) { throw new Error('Error in setField: path must be an array') }
+	if (path === undefined || path.length === 0) {
+		throw new Error('Error in setField: path cannot be empty')
+	}
+	if (path.length === undefined) {
+		throw new Error('Error in setField: path must be an array')
+	}
 
 	let obj = (path[0] === 'rooms') ? rooms : (path[0] === 'teams') ? teams : undefined
-	if (obj === undefined) { throw new Error('Error in setField: Base object ' + path[0] + ' does not exist!') }
+	if (obj === undefined) {
+		throw new Error('Error in setField: Base object ' + path[0] + ' does not exist!')
+	}
 
-	for (let i = 1; i < path.length; i++) { obj = obj[path[i]] }
+	for (let i = 1; i < path.length; i++) {
+		obj = obj[path[i]]
+	}
 	// console.log(path, obj);
 	return obj
 }

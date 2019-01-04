@@ -60,7 +60,7 @@
       "expectCount": 4,
       "actualCount": 3,
       "undocumentLines": [
-        39
+        43
       ]
     },
     "src/client/js/obj/gameobject.js": {
@@ -75,7 +75,7 @@
         31,
         65,
         66,
-        107
+        118
       ]
     },
     "src/client/js/obj/maptile.js": {
@@ -138,8 +138,8 @@
       "undocumentLines": [
         20,
         34,
-        331,
-        336
+        339,
+        344
       ]
     },
     "src/server/server.js": {
@@ -154,7 +154,7 @@
         17,
         18,
         45,
-        214
+        222
       ]
     },
     "src/server/utils/atoms.js": {
