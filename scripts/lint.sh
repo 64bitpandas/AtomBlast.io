@@ -17,6 +17,7 @@ printf 'Please wait. Lint Checking...'
 if ./node_modules/.bin/eslint ./src/; then
     printf 'Linting Passed.'
 else
-    printf 'linting check failed. Run npm -s run fix-lint.'
-    yes_or_no "Attempt autofix above issues? [y/n]: " && npm run fix-lint
+    printf 'linting check failed. Run "npm -s run fix-lint."\n'
+    # yes_or_no "Attempt autofix above issues? [y/n]: " && npm run fix-lint
+    exit 1
 fi

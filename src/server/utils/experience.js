@@ -14,21 +14,21 @@ import { GLOBAL } from '../../client/js/global';
  * @param {string} room The ID of the room
  * @param {string} player ID of the player
  */
- export function addExperience(event, socket, room, player) {
-     //Add a specific amount to the players experience
-     //Get the index of the Event and then pass it into the values array to get the actual value
-     incrementField(GLOBAL.EXPERIENCE_VALUES[event], ['rooms', room, 'players', player, 'experience'])
-    //  thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
+export function addExperience(event, socket, room, player) {
+	//Add a specific amount to the players experience
+	//Get the index of the Event and then pass it into the values array to get the actual value
+	incrementField(GLOBAL.EXPERIENCE_VALUES[event], ['rooms', room, 'players', player, 'experience']);
+	//  thisPlayer.experience += GLOBAL.EXPERIENCE_VALUES[data.event];
 
-     // Determine the player's level based on experience
-     let oldLevel = getField(['rooms', room, 'players', player, 'level']);
-     for (let level of GLOBAL.EXPERIENCE_LEVELS) {
-         if (getField(['rooms', room, 'players', player, 'level']) >= level)
-             setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, ['rooms', room, 'players', player, 'level']);
-     }
+	// Determine the player's level based on experience
+	let oldLevel = getField(['rooms', room, 'players', player, 'level']);
+	for (let level of GLOBAL.EXPERIENCE_LEVELS) {
+		if (getField(['rooms', room, 'players', player, 'level']) >= level)
+			setField(GLOBAL.EXPERIENCE_LEVELS.indexOf(level) + 1, ['rooms', room, 'players', player, 'level']);
+	}
 
-     // Check to see if the player leveled up
-     if (getField(['rooms', room, 'players', player, 'level']) > oldLevel) {
-         socket.emit('levelUp', { newLevel: thisPlayer.level });
-     }
- }
+	// Check to see if the player leveled up
+	if (getField(['rooms', room, 'players', player, 'level']) > oldLevel) {
+		socket.emit('levelUp', { newLevel: thisPlayer.level });
+	}
+}

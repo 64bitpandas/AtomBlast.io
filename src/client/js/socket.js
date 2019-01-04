@@ -110,81 +110,81 @@ function setupSocket() {
  * Run in setupSocket().
  */
 function setupSocketObjectRetrieval() {
-    // Syncs all objects from server once a frame
-    socket.on('objectSync', (data) => {
-        for (let objType in data) {
-            if (objType !== 'tiles') {
-                for (let obj in data[objType]) {
-                    if (data[objType][obj] !== null) {
-                        let objRef = data[objType][obj];
-                        let clientObj = objects[objType][obj];
-                        // Already exists in database
-                        if (clientObj !== undefined && clientObj !== null) {
-                            if (objRef.id !== socket.id)
-                                objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
-                            if (objType === 'players') {
-                                objects[objType][obj].health = objRef.health;
-                                objects[objType][obj].damagedBy = objRef.damagedBy;
-                                objects[objType][obj].atomList = objRef.atomList;
-                                objects[objType][obj].speedMult = objRef.speedMult;
-                                objects[objType][obj].hasShield = objRef.hasShield;
-                                for (let atom in objRef.atomList)
-                                    updateAtomList(atom);
-                            }
-                            if (objType === 'compounds' && objRef.ignited) 
-                                objects[objType][obj].ignited = objRef.ignited;
-                        }
-                        // Does not exist - need to clone to clientside
-                        else if (isSetup) {
-                            switch (objType) {
-                                case 'players':
-                                    objects[objType][obj] = createPlayer(objRef);
-                                    break;
-                                case 'atoms':
-                                    objects[objType][obj] = createRenderAtom(objRef);
-                                    break;
-                                case 'compounds':
-                                    objects[objType][obj] = createRenderCompound(objRef);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-            // else { //Tile drawing
-            //     for (let tile of data.tiles) {
+	// Syncs all objects from server once a frame
+	socket.on('objectSync', (data) => {
+		for (let objType in data) {
+			if (objType !== 'tiles') {
+				for (let obj in data[objType]) {
+					if (data[objType][obj] !== null) {
+						let objRef = data[objType][obj];
+						let clientObj = objects[objType][obj];
+						// Already exists in database
+						if (clientObj !== undefined && clientObj !== null) {
+							if (objRef.id !== socket.id)
+								objects[objType][obj].setData(objRef.posX, objRef.posY, objRef.vx, objRef.vy);
+							if (objType === 'players') {
+								objects[objType][obj].health = objRef.health;
+								objects[objType][obj].damagedBy = objRef.damagedBy;
+								objects[objType][obj].atomList = objRef.atomList;
+								objects[objType][obj].speedMult = objRef.speedMult;
+								objects[objType][obj].hasShield = objRef.hasShield;
+								for (let atom in objRef.atomList)
+									updateAtomList(atom);
+							}
+							if (objType === 'compounds' && objRef.ignited) 
+								objects[objType][obj].ignited = objRef.ignited;
+						}
+						// Does not exist - need to clone to clientside
+						else if (isSetup) {
+							switch (objType) {
+							case 'players':
+								objects[objType][obj] = createPlayer(objRef);
+								break;
+							case 'atoms':
+								objects[objType][obj] = createRenderAtom(objRef);
+								break;
+							case 'compounds':
+								objects[objType][obj] = createRenderCompound(objRef);
+								break;
+							}
+						}
+					}
+				}
+			}
+			// else { //Tile drawing
+			//     for (let tile of data.tiles) {
 
-            //         let tileName = 'tile_' + tile.col + '_' + tile.row;
-            //         if (objects.tiles[tileName] === undefined) {
-            //             // console.log(tileName);
-            //             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);
-            //         }
+			//         let tileName = 'tile_' + tile.col + '_' + tile.row;
+			//         if (objects.tiles[tileName] === undefined) {
+			//             // console.log(tileName);
+			//             objects.tiles[tileName] = new MapTile(MAP_LAYOUT[tile.row][tile.col], tile.col, tile.row);
+			//         }
 
-            //     }
-            // }
+			//     }
+			// }
 
-        }
+		}
 
-    });
+	});
 
-    // Sync objects when they are deleted or move out of view
-    socket.on('serverSendObjectRemoval', (data) => {
-        if (GLOBAL.VERBOSE_SOCKET) {
-            console.info("serverSendObjectRemoval() called");
-        }
-        if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
-            console.warn("serverSendObjectRemoval() called on invalid object.");
-            return 1;
-        }
-        // console.log(objects[data.type][data.id].destroyed);
-        //An object was removed
-        if (!objects[data.type][data.id].destroyed) {   //Only remove if not already
-            removeObject(data);
-        } 
-        else {
-            console.warn("serverSendObjectRemoval() called despite object has already been destroyed.");  // Sanity check
-            return 1;
-        }
+	// Sync objects when they are deleted or move out of view
+	socket.on('serverSendObjectRemoval', (data) => {
+		if (GLOBAL.VERBOSE_SOCKET) {
+			console.info('serverSendObjectRemoval() called');
+		}
+		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
+			console.warn('serverSendObjectRemoval() called on invalid object.');
+			return 1;
+		}
+		// console.log(objects[data.type][data.id].destroyed);
+		//An object was removed
+		if (!objects[data.type][data.id].destroyed) {   //Only remove if not already
+			removeObject(data);
+		} 
+		else {
+			console.warn('serverSendObjectRemoval() called despite object has already been destroyed.');  // Sanity check
+			return 1;
+		}
         
 
 		// Must keep checking if the object was not created at time of destruction.
