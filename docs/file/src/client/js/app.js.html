@@ -633,6 +633,31 @@ function canCraft (blueprint) {
 
 	return true
 }
+// Anti debugger on non-debug builds
+if (!GLOBAL.DEBUG) {
+	console.log = function () {
+		console.info(&apos;Log disabled. Non-Debug build.&apos;)
+	}
+	// while (true) {
+	// 	setTimeout(function () {
+	// 		eval(&apos;debugger&apos;)
+	// 	}, 200)
+	// }
+	setInterval(function () {
+		var startTime = performance.now(); var check; var diff
+		for (check = 0; check &lt; 1000; check++) {
+			console.log(check)
+			console.clear()
+		}
+		diff = performance.now() - startTime
+		if (diff &gt; 200) {
+			// window.close()
+			//   alert(&apos;Debugger detected!&apos;)
+			document.body.innerHTML = &apos;&lt;h1 style=&quot;color:red&quot;&gt;A critical error has been detected. Please contact the developer with the following information.&lt;br&gt;Error: Production build sec violation.&lt;/b&gt;&lt;/h1&gt;&apos;
+			document.body.style.cssText = null
+		}
+	}, 500)
+}
 </code></pre>
 
 </div>

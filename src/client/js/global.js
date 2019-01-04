@@ -3,7 +3,7 @@ import { MAP_LAYOUT } from './obj/tiles'
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
 
-	DEBUG: true,
+	DEBUG: false,
 	VERBOSE_SOCKET: false, // true = log if any socket method has been called
 	// Keys and other mathematical constants
 	KEY_ESC: 27,
