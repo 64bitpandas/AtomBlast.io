@@ -16,7 +16,8 @@
     "precommitold": "npm run -s lint && printf \"Running unit testing..\" && npm test",
     "docs": "esdoc",
     "update": "node node_modules/npm-check/bin/cli.js -u",
-    "disableannoyinglineendingwarning": "git config --global core.safecrlf false"
+    "disableannoyinglineendingwarning": "git config --global core.safecrlf false && printf \"Annoying line ending warnings has been disabled.\"",
+    "install": "npm -s run disableannoyinglineendingwarning"
   },
   "repository": {
     "type": "git",
