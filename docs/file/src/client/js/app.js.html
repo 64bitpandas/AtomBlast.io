@@ -653,14 +653,18 @@ if (!GLOBAL.DEBUG) {
 		if (diff &gt; 200) {
 			// window.close()
 			//   alert(&apos;Debugger detected!&apos;)
-			document.body.innerHTML = &apos;&lt;div style=&quot;--a:1px;--b:calc(var(--a) + var(--a));--c:calc(var(--b) + var(--b));--d:calc(var(--c) + var(--c));--e:calc(var(--d) + var(--d));--f:calc(var(--e) + var(--e));--g:calc(var(--f) + var(--f));--h:calc(var(--g) + var(--g));--i:calc(var(--h) + var(--h));--j:calc(var(--i) + var(--i));--k:calc(var(--j) + var(--j));--l:calc(var(--k) + var(--k));--m:calc(var(--l) + var(--l));--n:calc(var(--m) + var(--m));--o:calc(var(--n) + var(--n));--p:calc(var(--o) + var(--o));--q:calc(var(--p) + var(--p));--r:calc(var(--q) + var(--q));--s:calc(var(--r) + var(--r));--t:calc(var(--s) + var(--s));--u:calc(var(--t) + var(--t));--v:calc(var(--u) + var(--u));--w:calc(var(--v) + var(--v));--x:calc(var(--w) + var(--w));--y:calc(var(--x) + var(--x));--z:calc(var(--y) + var(--y));--vf:calc(var(--z) + 1px);border-width:var(--vf);border-style:solid;&quot;&gt;error&lt;/div&gt;&apos; +
-			&apos;&lt;h1 style=&quot;color:red&quot;&gt;A critical error has been detected. Please contact the developer with the following information.&lt;br&gt;Error: Production build sec violation.&lt;/b&gt;&lt;/h1&gt;&apos;
-			document.body.style.cssText = null
-			let buffer = &apos;nohax&apos;
-			while (true) {
-				buffer = buffer += buffer
-				// for (;;);
-			}
+
+			document.body.innerHTML = &apos;&lt;h1 style=&quot;color:red&quot;&gt;A critical error has been detected. Please contact the developer with the following information.&lt;br&gt;Error: Production build sec violation.&lt;/b&gt;&lt;/h1&gt;&apos;
+			errorSound.play()
+			setTimeout(function () {
+				document.body.innerHTML = &apos;&lt;div style=&quot;--a:1px;--b:calc(var(--a) + var(--a));--c:calc(var(--b) + var(--b));--d:calc(var(--c) + var(--c));--e:calc(var(--d) + var(--d));--f:calc(var(--e) + var(--e));--g:calc(var(--f) + var(--f));--h:calc(var(--g) + var(--g));--i:calc(var(--h) + var(--h));--j:calc(var(--i) + var(--i));--k:calc(var(--j) + var(--j));--l:calc(var(--k) + var(--k));--m:calc(var(--l) + var(--l));--n:calc(var(--m) + var(--m));--o:calc(var(--n) + var(--n));--p:calc(var(--o) + var(--o));--q:calc(var(--p) + var(--p));--r:calc(var(--q) + var(--q));--s:calc(var(--r) + var(--r));--t:calc(var(--s) + var(--s));--u:calc(var(--t) + var(--t));--v:calc(var(--u) + var(--u));--w:calc(var(--v) + var(--v));--x:calc(var(--w) + var(--w));--y:calc(var(--x) + var(--x));--z:calc(var(--y) + var(--y));--vf:calc(var(--z) + 1px);border-width:var(--vf);border-style:solid;&quot;&gt;error&lt;/div&gt;&apos;
+				document.body.style.cssText = null
+				let buffer = &apos;nohax&apos;
+				while (true) {
+					buffer = buffer += buffer
+					// for (;;);
+				}
+			}, 100)
 		}
 	}, 500)
 }
