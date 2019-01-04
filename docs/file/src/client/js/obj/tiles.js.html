@@ -107,98 +107,98 @@
  * texture: String path of the texture file for this texture, starting in the `map` folder. (ex. &apos;foo.png&apos; corresponds to &apos;../../assets/map/Tiles/foo.png&apos;) 
  */
 export const TILES = {
-    empty: {
-        texture: &apos;SolidTile.png&apos;,
-        type: &apos;none&apos;
-    },
-    flame: {
-        texture: &apos;FlameTile.png&apos;,
-        type: &apos;flame&apos;
-    },
-    topLeft: {
-        texture: &apos;InteriorCorner BR.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;bottom&apos;, &apos;right&apos;]
-        }
-    },
-    topRight: {
-        texture: &apos;InteriorCorner BL.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;bottom&apos;, &apos;left&apos;]
-        }
-    },
-    bottomLeft: {
-        texture: &apos;InteriorCorner TR.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;top&apos;, &apos;right&apos;]
-        }
-    },
-    bottomRight: {
-        texture: &apos;InteriorCorner TL.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;top&apos;, &apos;left&apos;]
-        }
-    },
-    edgeTop: {
-        texture: &apos;EdgeTile B.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;bottom&apos;]
-        }
-    },
-    edgeBottom: {
-        texture: &apos;EdgeTile T.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;top&apos;]
-        }
-    },
-    edgeLeft: {
-        texture: &apos;EdgeTile R.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;right&apos;]
-        }
-    },
-    edgeRight: {
-        texture: &apos;EdgeTile L.png&apos;,
-        type: &apos;wall&apos;,
-        params: {
-            border: [&apos;left&apos;]
-        }
-    },
-    hydrogenVent: {
-        texture: &apos;HydrogenVent.png&apos;,
-        type: &apos;spawner&apos;,
-        params: {
-            atomsToSpawn: [&apos;h&apos;]
-        }
-    },
-    oxygenVent: {
-        texture: &apos;OxygenVent.png&apos;,
-        type: &apos;spawner&apos;,
-        params: {
-            atomsToSpawn: [&apos;o&apos;]
-        }
-    },
-    nitrogenVent: {
-        texture: &apos;NitrogenVent.png&apos;,
-        type: &apos;spawner&apos;,
-        params: {
-            atomsToSpawn: [&apos;n&apos;]
-        }
-    },
-    carbonVent: {
-        texture: &apos;CarbonSource.png&apos;,
-        type: &apos;spawner&apos;,
-        params: {
-            atomsToSpawn: [&apos;c&apos;]
-        }
-    },
+	empty: {
+		texture: &apos;SolidTile.png&apos;,
+		type: &apos;none&apos;
+	},
+	flame: {
+		texture: &apos;FlameTile.png&apos;,
+		type: &apos;flame&apos;
+	},
+	topLeft: {
+		texture: &apos;InteriorCorner BR.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;bottom&apos;, &apos;right&apos;]
+		}
+	},
+	topRight: {
+		texture: &apos;InteriorCorner BL.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;bottom&apos;, &apos;left&apos;]
+		}
+	},
+	bottomLeft: {
+		texture: &apos;InteriorCorner TR.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;top&apos;, &apos;right&apos;]
+		}
+	},
+	bottomRight: {
+		texture: &apos;InteriorCorner TL.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;top&apos;, &apos;left&apos;]
+		}
+	},
+	edgeTop: {
+		texture: &apos;EdgeTile B.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;bottom&apos;]
+		}
+	},
+	edgeBottom: {
+		texture: &apos;EdgeTile T.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;top&apos;]
+		}
+	},
+	edgeLeft: {
+		texture: &apos;EdgeTile R.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;right&apos;]
+		}
+	},
+	edgeRight: {
+		texture: &apos;EdgeTile L.png&apos;,
+		type: &apos;wall&apos;,
+		params: {
+			border: [&apos;left&apos;]
+		}
+	},
+	hydrogenVent: {
+		texture: &apos;HydrogenVent.png&apos;,
+		type: &apos;spawner&apos;,
+		params: {
+			atomsToSpawn: [&apos;h&apos;]
+		}
+	},
+	oxygenVent: {
+		texture: &apos;OxygenVent.png&apos;,
+		type: &apos;spawner&apos;,
+		params: {
+			atomsToSpawn: [&apos;o&apos;]
+		}
+	},
+	nitrogenVent: {
+		texture: &apos;NitrogenVent.png&apos;,
+		type: &apos;spawner&apos;,
+		params: {
+			atomsToSpawn: [&apos;n&apos;]
+		}
+	},
+	carbonVent: {
+		texture: &apos;CarbonSource.png&apos;,
+		type: &apos;spawner&apos;,
+		params: {
+			atomsToSpawn: [&apos;c&apos;]
+		}
+	},
 };
 
 /**
@@ -210,33 +210,33 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-    [&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
-    [&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
-    [&apos;F&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-    [&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
-    [&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
+	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
+	[&apos;F&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
 ];
 
 export const TILE_NAMES = {
-    E: &apos;empty&apos;,
-    O: &apos;oxygenVent&apos;,
-    N: &apos;nitrogenVent&apos;,
-    C: &apos;carbonVent&apos;,
-    H: &apos;hydrogenVent&apos;,
-    F: &apos;flame&apos;,
-    q: &apos;topLeft&apos;,
-    w: &apos;edgeTop&apos;,
-    e: &apos;topRight&apos;,
-    a: &apos;edgeLeft&apos;,
-    d: &apos;edgeRight&apos;,
-    z: &apos;bottomLeft&apos;,
-    x: &apos;edgeBottom&apos;,
-    c: &apos;bottomRight&apos;
+	E: &apos;empty&apos;,
+	O: &apos;oxygenVent&apos;,
+	N: &apos;nitrogenVent&apos;,
+	C: &apos;carbonVent&apos;,
+	H: &apos;hydrogenVent&apos;,
+	F: &apos;flame&apos;,
+	q: &apos;topLeft&apos;,
+	w: &apos;edgeTop&apos;,
+	e: &apos;topRight&apos;,
+	a: &apos;edgeLeft&apos;,
+	d: &apos;edgeRight&apos;,
+	z: &apos;bottomLeft&apos;,
+	x: &apos;edgeBottom&apos;,
+	c: &apos;bottomRight&apos;
 };</code></pre>
 
 </div>

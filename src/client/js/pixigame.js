@@ -27,165 +27,165 @@ let horizLines = [];
 let streamID = 0; // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
 export function loadTextures() {
-    if (!isSetup) {
-        //Initialization
-        let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
-        PIXI.utils.sayHello(type);
+	if (!isSetup) {
+		//Initialization
+		let type = (PIXI.utils.isWebGLSupported()) ? 'WebGL' : 'canvas';
+		PIXI.utils.sayHello(type);
 
-        //Create a Pixi Application
-        app = new PIXI.Application(0, 0, {
-            view: document.getElementById('gameView')
-        });
-        //Add the canvas that Pixi automatically created for you to the HTML document
-        // document.body.appendChild(app.view);
+		//Create a Pixi Application
+		app = new PIXI.Application(0, 0, {
+			view: document.getElementById('gameView')
+		});
+		//Add the canvas that Pixi automatically created for you to the HTML document
+		// document.body.appendChild(app.view);
 
-        // Renderer settings
-        app.renderer.autoResize = true;
-        app.renderer.resize(window.innerWidth, window.innerHeight);
-        screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-        screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+		// Renderer settings
+		app.renderer.autoResize = true;
+		app.renderer.resize(window.innerWidth, window.innerHeight);
+		screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+		screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
 
-        // Load resources if not already loaded
-        let TEXTURES = [];
-        TEXTURES.push(GLOBAL.IGNITE_SPRITE);
-        for (let bp in BLUEPRINTS) {
-            // Prevent duplicate textures from being loaded
-            if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
-                TEXTURES.push(BLUEPRINTS[bp].texture);
-            if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0)
-                TEXTURES.push(BLUEPRINTS[bp].params.splashImage);
-        }
-        for (let atom of GLOBAL.ATOM_SPRITES)
-            if (TEXTURES.indexOf(atom) < 0)
-                TEXTURES.push(atom);
-        for(let tile in TILES)
-            if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0)
-                TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture);
-        console.log(TEXTURES);
+		// Load resources if not already loaded
+		let TEXTURES = [];
+		TEXTURES.push(GLOBAL.IGNITE_SPRITE);
+		for (let bp in BLUEPRINTS) {
+			// Prevent duplicate textures from being loaded
+			if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0)
+				TEXTURES.push(BLUEPRINTS[bp].texture);
+			if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0)
+				TEXTURES.push(BLUEPRINTS[bp].params.splashImage);
+		}
+		for (let atom of GLOBAL.ATOM_SPRITES)
+			if (TEXTURES.indexOf(atom) < 0)
+				TEXTURES.push(atom);
+		for(let tile in TILES)
+			if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0)
+				TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture);
+		console.log(TEXTURES);
 
 
-        if (Object.keys(PIXI.loader.resources).length < 1) {
-            PIXI.loader
-                .add(GLOBAL.PLAYER_SPRITES)
-                .add(TEXTURES)
-                .load(registerCallbacks);
-        }
-    }
+		if (Object.keys(PIXI.loader.resources).length < 1) {
+			PIXI.loader
+				.add(GLOBAL.PLAYER_SPRITES)
+				.add(TEXTURES)
+				.load(registerCallbacks);
+		}
+	}
 
-    // If already initialized, use existing app variable
-    if (isSetup) {
-        console.info('Stage already initialized!');
-        clearStage();
-        registerCallbacks();
-    }
+	// If already initialized, use existing app variable
+	if (isSetup) {
+		console.info('Stage already initialized!');
+		clearStage();
+		registerCallbacks();
+	}
 }
 
 /**
  * Sets up the stage. Call after init(), and begins the draw() loop once complete.
  */
 function registerCallbacks() {
-    if (!isSetup) {
-        // Set up key listeners
-        esc = keyboard(GLOBAL.KEY_ESC);
-        space = keyboard(GLOBAL.KEY_SPACE);
+	if (!isSetup) {
+		// Set up key listeners
+		esc = keyboard(GLOBAL.KEY_ESC);
+		space = keyboard(GLOBAL.KEY_SPACE);
 
-        //All the movement keys for easy access
-        moveKeys = [
-            keyboard(GLOBAL.KEY_A), // Left           
-            keyboard(GLOBAL.KEY_D), // Right                 
-            keyboard(GLOBAL.KEY_W), // Up               
-            keyboard(GLOBAL.KEY_S), // Down              
-        ];
-        //Set up the blueprint key listeners
-        blueprintKeys = [
-            keyboard(GLOBAL.KEY_1),
-            keyboard(GLOBAL.KEY_2),
-            keyboard(GLOBAL.KEY_3),
-            keyboard(GLOBAL.KEY_4)
-        ];
+		//All the movement keys for easy access
+		moveKeys = [
+			keyboard(GLOBAL.KEY_A), // Left           
+			keyboard(GLOBAL.KEY_D), // Right                 
+			keyboard(GLOBAL.KEY_W), // Up               
+			keyboard(GLOBAL.KEY_S), // Down              
+		];
+		//Set up the blueprint key listeners
+		blueprintKeys = [
+			keyboard(GLOBAL.KEY_1),
+			keyboard(GLOBAL.KEY_2),
+			keyboard(GLOBAL.KEY_3),
+			keyboard(GLOBAL.KEY_4)
+		];
 
-        esc.press = () => {
-            if (isFocused()) {
-                if (document.activeElement !== document.getElementById('chatInput'))
-                    toggleMenu();
-                else
-                    document.getElementById('chatInput').blur();
-            }
-        };
+		esc.press = () => {
+			if (isFocused()) {
+				if (document.activeElement !== document.getElementById('chatInput'))
+					toggleMenu();
+				else
+					document.getElementById('chatInput').blur();
+			}
+		};
 
-        // Chat box styling on select
-        document.getElementById('chatInput').onfocus = () => {
-            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
-        };
+		// Chat box styling on select
+		document.getElementById('chatInput').onfocus = () => {
+			document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px #311B92';
+		};
 
-        document.getElementById('chatInput').onblur = () => {
-            document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
-        };
+		document.getElementById('chatInput').onblur = () => {
+			document.getElementById('chatbox').style.boxShadow = '0px 0px 1rem 0px rgba(180,180,180)';
+		};
 
-        //Bind each blueprint key
-        for (let key in blueprintKeys) {
-            blueprintKeys[key].press = () => {
-                if (isFocused() && inGame) {
-                    updateCompoundButtons(key);
-                }
-            };
-        }
+		//Bind each blueprint key
+		for (let key in blueprintKeys) {
+			blueprintKeys[key].press = () => {
+				if (isFocused() && inGame) {
+					updateCompoundButtons(key);
+				}
+			};
+		}
 
-        // Background
-        app.renderer.backgroundColor = 0xFFFFFF;
+		// Background
+		app.renderer.backgroundColor = 0xFFFFFF;
 
-        // Resize
-        document.getElementsByTagName('body')[0].onresize = () => {
-            app.renderer.resize(window.innerWidth, window.innerHeight);
-            screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
-            screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
-            player.x = screenCenterX;
-            player.y = screenCenterY;
-        };
+		// Resize
+		document.getElementsByTagName('body')[0].onresize = () => {
+			app.renderer.resize(window.innerWidth, window.innerHeight);
+			screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS;
+			screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS;
+			player.x = screenCenterX;
+			player.y = screenCenterY;
+		};
 
-        // Begin game loop
-        app.ticker.add(delta => draw(delta));
-    }
+		// Begin game loop
+		app.ticker.add(delta => draw(delta));
+	}
 
-    isSetup = true;
+	isSetup = true;
 
-    // Draw map
-    for (let row = 0; row < MAP_LAYOUT.length; row++) {
-        for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
-            let tileName = 'tile_' + col + '_' + row;
-            if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
-                if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined)
-                    objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1);
-                else
-                    throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.');
-            }
-        }
-    }
+	// Draw map
+	for (let row = 0; row < MAP_LAYOUT.length; row++) {
+		for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
+			let tileName = 'tile_' + col + '_' + row;
+			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
+				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined)
+					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1);
+				else
+					throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.');
+			}
+		}
+	}
 
-    // Draw grid
-    // Grid
-    let line;
-    for (let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {
-        line = new PIXI.Graphics();
-        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
-        line.oX = x * GLOBAL.GRID_SPACING;
-        line.moveTo(line.oX, 0);
-        line.lineTo(line.oX, window.innerHeight);
-        vertLines.push(line);
-        app.stage.addChild(line);
-    }
-    for (let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {
-        line = new PIXI.Graphics();
-        line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
-        line.oY = y * GLOBAL.GRID_SPACING;
-        line.moveTo(0, line.oY);
-        line.lineTo(window.innerWidth, line.oY);
-        horizLines.push(line);
-        app.stage.addChild(line);
-    }
+	// Draw grid
+	// Grid
+	let line;
+	for (let x = 0; x < window.innerWidth / GLOBAL.GRID_SPACING; x++) {
+		line = new PIXI.Graphics();
+		line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+		line.oX = x * GLOBAL.GRID_SPACING;
+		line.moveTo(line.oX, 0);
+		line.lineTo(line.oX, window.innerHeight);
+		vertLines.push(line);
+		app.stage.addChild(line);
+	}
+	for (let y = 0; y < window.innerHeight / GLOBAL.GRID_SPACING; y++) {
+		line = new PIXI.Graphics();
+		line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1);
+		line.oY = y * GLOBAL.GRID_SPACING;
+		line.moveTo(0, line.oY);
+		line.lineTo(window.innerWidth, line.oY);
+		horizLines.push(line);
+		app.stage.addChild(line);
+	}
 
 
-    showGameUI();
+	showGameUI();
 }
 
 /**
@@ -194,85 +194,85 @@ function registerCallbacks() {
  * @param {number} delta Time value from Pixi
  */
 function draw(delta) {
-    // Handle this player and movement
-    if (player !== undefined) {
+	// Handle this player and movement
+	if (player !== undefined) {
 
-        // Make sure player is not in chat before checking move
-        if (isFocused() && inGame) {
-            if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) // Left
-                player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult;
-            if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) // Right
-                player.vx += GLOBAL.VELOCITY_STEP * player.speedMult;
-            if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) // Up
-                player.vy += GLOBAL.VELOCITY_STEP * player.speedMult;
-            if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) // Down
-                player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult;
+		// Make sure player is not in chat before checking move
+		if (isFocused() && inGame) {
+			if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) // Left
+				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult;
+			if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) // Right
+				player.vx += GLOBAL.VELOCITY_STEP * player.speedMult;
+			if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) // Up
+				player.vy += GLOBAL.VELOCITY_STEP * player.speedMult;
+			if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) // Down
+				player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult;
 
-            player.isMoving = false;
-            for(let key of moveKeys)
-                if(key.isDown)
-                    player.isMoving = true;
-        } else {
-            player.isMoving = false;
+			player.isMoving = false;
+			for(let key of moveKeys)
+				if(key.isDown)
+					player.isMoving = true;
+		} else {
+			player.isMoving = false;
 
-            //Because the document is not focused disable all keys(Stops moving!)
-            for (let key in moveKeys) {
-                moveKeys[key].isDown = false;
-                moveKeys[key].isUp = true;
-            }
-        }
+			//Because the document is not focused disable all keys(Stops moving!)
+			for (let key in moveKeys) {
+				moveKeys[key].isDown = false;
+				moveKeys[key].isUp = true;
+			}
+		}
 
-        // Slow down gradually - unaffected by chat input
-        if (!moveKeys[2].isDown && !moveKeys[3].isDown)
-            player.vy *= GLOBAL.VELOCITY_STEP;
-        if (!moveKeys[0].isDown && !moveKeys[1].isDown)
-            player.vx *= GLOBAL.VELOCITY_STEP;
+		// Slow down gradually - unaffected by chat input
+		if (!moveKeys[2].isDown && !moveKeys[3].isDown)
+			player.vy *= GLOBAL.VELOCITY_STEP;
+		if (!moveKeys[0].isDown && !moveKeys[1].isDown)
+			player.vx *= GLOBAL.VELOCITY_STEP;
 
-        // Shooting
-        space.press = () => {
-            if(selectedBlueprints[selectedCompound].type !== 'stream') {
-                shootHandler({clientX: mouseX, clientY: mouseY}, false);
-            }
-        };
+		// Shooting
+		space.press = () => {
+			if(selectedBlueprints[selectedCompound].type !== 'stream') {
+				shootHandler({clientX: mouseX, clientY: mouseY}, false);
+			}
+		};
 
-        // Streams
-        if ((space.isDown || mouseDown) && selectedBlueprints[selectedCompound].type === 'stream') {
-            shootHandler({ clientX: mouseX, clientY: mouseY }, true);
-        }
+		// Streams
+		if ((space.isDown || mouseDown) && selectedBlueprints[selectedCompound].type === 'stream') {
+			shootHandler({ clientX: mouseX, clientY: mouseY }, true);
+		}
 
-        // Reset stream count when space key is released
-        space.release = () => {
-            streamID = 0;
-        };
+		// Reset stream count when space key is released
+		space.release = () => {
+			streamID = 0;
+		};
 
-        // Move player
-        player.tick();
+		// Move player
+		player.tick();
 
-        // Send coordinates
-        socket.emit('move', {
-            type: 'players',
-            id: player.id,
-            posX: player.posX,
-            posY: player.posY,
-            vx: player.vx,
-            vy: player.vy
-        });
+		// Send coordinates
+		socket.emit('move', {
+			type: 'players',
+			id: player.id,
+			posX: player.posX,
+			posY: player.posY,
+			vx: player.vx,
+			vy: player.vy
+		});
 
-        // Move grid
-        for (let line of vertLines)
-            line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2);
+		// Move grid
+		for (let line of vertLines)
+			line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2);
 
-        for (let line of horizLines)
-            line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);
-    }
+		for (let line of horizLines)
+			line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2);
+	}
 
-    // Handle objects except for this player
-    for (let objType in objects) {
-        for (let obj in objects[objType])
-            if (objType !== 'players' || player !== objects[objType][obj]) {
-                objects[objType][obj].tick();
-            }
-    }
+	// Handle objects except for this player
+	for (let objType in objects) {
+		for (let obj in objects[objType])
+			if (objType !== 'players' || player !== objects[objType][obj]) {
+				objects[objType][obj].tick();
+			}
+	}
 
 }
 
@@ -280,43 +280,43 @@ function draw(delta) {
  * Shows or hides the in-game menu box
  */
 function toggleMenu() {
-    if (document.getElementById('menubox').offsetParent === null)
-        showElement('menubox');
-    else
-        hideElement('menubox');
+	if (document.getElementById('menubox').offsetParent === null)
+		showElement('menubox');
+	else
+		hideElement('menubox');
 }
 
 /**
  * Remove all elements pre-rendered on stage.
  */
 function clearStage() {
-    for (var i = app.stage.children.length - 1; i >= 0; i--) {
-        app.stage.removeChild(app.stage.children[i]);
-    }
+	for (var i = app.stage.children.length - 1; i >= 0; i--) {
+		app.stage.removeChild(app.stage.children[i]);
+	}
 }
 
 /**
  * Destroy everything in PIXI. DANGEROUS avoid!
  */
 export function destroyPIXI() {
-    app.destroy(true, {
-        children: true,
-        texture: true,
-        baseTexture: true
-    });
-    PIXI.loader.reset();
-    isSetup = false;
-    app = undefined;
+	app.destroy(true, {
+		children: true,
+		texture: true,
+		baseTexture: true
+	});
+	PIXI.loader.reset();
+	isSetup = false;
+	app = undefined;
 }
 
 /**
  * Call this function to hide loading div and show UI
  */
 export function showGameUI() {
-    // Hide loading screen
-    hideElement('loading');
-    if(!inGame)
-        showElement('lobby');
+	// Hide loading screen
+	hideElement('loading');
+	if(!inGame)
+		showElement('lobby');
 }
 
 /**
@@ -325,22 +325,22 @@ export function showGameUI() {
  * @returns {Player} The Player object that was created
  */
 export function createPlayer(data) {
-    if (isSetup) {
-        console.log('create player ' + data.id);
-        console.log(data);
-        let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
-        if (data.id === socket.id)
-            player = newPlayer;
+	if (isSetup) {
+		console.log('create player ' + data.id);
+		console.log(data);
+		let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy);
+		if (data.id === socket.id)
+			player = newPlayer;
 
-        return newPlayer;
-    }
+		return newPlayer;
+	}
 }
 
 /**
  * If the document is Focused return true otherwise false
  **/
 export function isFocused() {
-    return document.hasFocus() && document.activeElement !== document.getElementById('chatInput');
+	return document.hasFocus() && document.activeElement !== document.getElementById('chatInput');
 }
 
 /**
@@ -349,26 +349,26 @@ export function isFocused() {
  * @param {*} teams Array of teams on the scoreboard.
  */
 export function startGame(emit, teams) {
-    setIngame(true);
-    hideElement('lobby');
-    showElement('hud');
-    if (emit)
-        socket.emit('startGame', {
-            start: true
-        });
+	setIngame(true);
+	hideElement('lobby');
+	showElement('hud');
+	if (emit)
+		socket.emit('startGame', {
+			start: true
+		});
     
-    // Init scoreboard
-    if(teams !== undefined) {
-        // Reset scoreboard from previous rounds
-        document.getElementById('score').innerHTML = '';
+	// Init scoreboard
+	if(teams !== undefined) {
+		// Reset scoreboard from previous rounds
+		document.getElementById('score').innerHTML = '';
         
-        for(let i = 0; i < teams.length; i++) {
-            document.getElementById('score').innerHTML += '-<span id="team-score-' + i + '">0</span>';
-            document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);
-        }
-        document.getElementById('score').style.fontSize = '3vw';
-        document.getElementById('score').innerHTML += '-';
-    }
+		for(let i = 0; i < teams.length; i++) {
+			document.getElementById('score').innerHTML += '-<span id="team-score-' + i + '">0</span>';
+			document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX);
+		}
+		document.getElementById('score').style.fontSize = '3vw';
+		document.getElementById('score').innerHTML += '-';
+	}
 }
 
 /**
@@ -376,14 +376,14 @@ export function startGame(emit, teams) {
  * @param {boolean} newValue Value to set inGame to 
  */
 export function setIngame(newValue) {
-    inGame = newValue;
+	inGame = newValue;
 }
 
 /**
  * @returns {boolean} Returns inGame variable
  */
 export function getIngame() {
-    return inGame;
+	return inGame;
 }
 
 /**
@@ -391,17 +391,17 @@ export function getIngame() {
  * @param {*} e Click event
  */
 export function mouseUpHandler(e) {
-    mouseDown = true;
-    if(selectedBlueprints[selectedCompound] && selectedBlueprints[selectedCompound].type !== 'stream')
-        shootHandler(e, false);
+	mouseDown = true;
+	if(selectedBlueprints[selectedCompound] && selectedBlueprints[selectedCompound].type !== 'stream')
+		shootHandler(e, false);
 }
 /**
  * Called on mouse down from app.js
  * @param {*} e Click event
  */
 export function mouseDownHandler(e) {
-    mouseDown = false;
-    streamID = 0;
+	mouseDown = false;
+	streamID = 0;
 }
 
 /**
@@ -410,9 +410,9 @@ export function mouseDownHandler(e) {
  * @param {boolean} stream True if sending a stream (such as water); false otherwise.
  */
 function shootHandler(e, stream) {
-    if (isFocused() && inGame) {
-        if (stream)
-            streamID++;
-        requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID);
-    }
+	if (isFocused() && inGame) {
+		if (stream)
+			streamID++;
+		requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID);
+	}
 }

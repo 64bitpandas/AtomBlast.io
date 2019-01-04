@@ -4,16 +4,16 @@
   "description": "First attempt at multiplayer online io game",
   "main": "index.js",
   "scripts": {
-    "test": "(jest && echo \" \\033[1;40;32m Unit testing passed.\\033[m \") || (echo \" \\033[1;41;33m Unit testing failed.\\033[m \" && exit 1)",
+    "test": "(jest && printf \" \\033[1;40;32m Unit testing passed.\\033[m \") || (printf \" \\033[1;41;33m Unit testing failed.\\033[m \" && exit 1)",
     "watch": "watchify src/client/js/app.js -o src/client/js/public/build.js -v",
     "server": "nodemon src/server/entry.js",
     "start": "npm-run-all --parallel watch server",
     "build": "browserify src/client/js/app.js -o  src/client/js/public/build.js",
-    "lint": "echo 'Working directory: ' && pwd && echo '\nPlease wait. Lint Checking...\n' && ((npm run env-test && ./node_modules/.bin/eslint ./src/ && echo \" \\033[1;40;32m Linting Passed. \\033[m \" ) || ( (echo \"$(tput setaf 5)$(tput setab 0)linting check failed and aborted. Run 'npm run fix-lint' to attemp automatic fix \\033[m \" && exit 1)))",
+    "lint": "chmod +x ./scripts/lint.sh && bash -c \"./scripts/lint.sh\"",
     "lint-compatibility-mode": "./node_modules/.bin/eslint ./src/",
-    "fix-lint": "npm run -s env-test; (echo 'Please wait. Linting...\n' && ./node_modules/.bin/eslint ./src/ --fix) || (echo \" \\033[1;41;33m Auto Linting failed. Please manually fix the above errors. \\033[m \" && exit 1)",
-    "env-test": "if [ -d './src/' ]; then echo \" \\033[1;40;32m src directory detected! \\033[m \"; else echo \" \\033[1;41;33m \n\nCRITICAL: src directory NOT DETECTED\nABORTING!!!\n\n \\033[m \" && exit 1; fi",
-    "precommitold": "npm run -s lint && echo \"Running unit testing..\" && npm test",
+    "fix-lint": "chmod +x ./scripts/fix_lint.sh && bash -c \"./scripts/fix_lint.sh\"",
+    "test-env": "chmod +x ./scripts/test_env.sh && bash -c \"./scripts/test_env.sh\"",
+    "precommitold": "npm run -s lint && printf \"Running unit testing..\" && npm test",
     "docs": "esdoc",
     "update": "node node_modules/npm-check/bin/cli.js -u",
     "disableannoyinglineendingwarning": "git config --global core.safecrlf false"
@@ -76,8 +76,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run -s lint && echo \"Generating Documentation...\" && npm run docs",
-      "pre-push": "chmod +x ./prepush.sh && sh -c \"./prepush.sh\" "
+      "pre-commit": "npm run -s lint && printf \"Generating Documentation...\" && npm run docs && printf \"===Documentation Generation Ended===\" ",
+      "pre-push": "chmod +x ./scripts/prepush.sh && bash -c \"./scripts/prepush.sh\" "
     }
   }
 }

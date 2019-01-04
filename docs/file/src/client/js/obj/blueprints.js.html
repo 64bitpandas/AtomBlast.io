@@ -111,171 +111,171 @@
  * Atoms: How to make the compound. Format is `Element symbol: Number required`. All excluded atoms will be considered 0.
  */
 export const BLUEPRINTS = {
-    binaryHydrogen: {
-        name: &apos;Hydrogen&apos;,
-        tooltip: &apos;This is quite literally the smallest compound in the universe. Why are you using this as a weapon?&apos;,
-        texture: &apos;../assets/atom-hydrogen.png&apos;,
-        type: &apos;flammable&apos;,
-        params: {
-            speed: 5*3,
-            damage: 1,
-            size: 20,
-            ignitedDamage: 10,
-            splash: 50,
-            splashImage: &apos;../assets/explosion.png&apos;
-        },
-        atoms: {
-            h: 2
-        }
-    },
-    basicMethane: {
-        name: &apos;Methane&apos;,
-        tooltip: &apos;Okay, who passed gas?&apos;,
-        texture: &apos;../assets/atom-hydrogen.png&apos;,
-        type: &apos;flammable&apos;,
-        params: {
-            speed: 3*3,
-            damage: 3,
-            size: 10
-        },
-        atoms: {
-            c: 1,
-            h: 4
-        }
-    },
-    basicBenzene: {
-        name: &apos;Benzene&apos;,
-        tooltip: &apos;Carbon rings. They smell nice.&apos;,
-        texture: &apos;../assets/atom_carbon.png&apos;,
-        type: &apos;basic&apos;,
-        params: {
-            speed: 1*3,
-            damage: 5,
-            size: 30
-        },
-        atoms: {
-            h: 6,
-            c: 6
-        }
-    },
-    basicWater: {
-        name: &apos;Dihydrogen Monoxide&apos;,
-        tooltip: &apos;Why life exists. Are you trying to drown someone?&apos;,
-        texture: &apos;../assets/atom-hydrogen.png&apos;,
-        type: &apos;stream&apos;,
-        params: {
-            speed: 4*3,
-            damage: 1,
-            size: 15,
-            length: 10,
-            spacing: 50,
-            compoundsPerCraft: 10,
-            evaporate: true     
-        },
-        atoms: {
-            h: 2,
-            o: 1
-        }
-    },
-    binaryNitrogen: {
-        name: &apos;Nitrogen&apos;,
-        tooltip: &apos;78% of your air, and also why you get the bends.&apos;,
-        texture: &apos;../assets/atom_nitrogen.png&apos;,
-        type: &apos;basic&apos;,
-        params: {
-            speed: 3*3,
-            damage: 3,
-            size: 20
-        },
-        atoms: {
-            n: 2
-        }
-    },
-    binaryHelium: {
-        name: &apos;Helium&apos;,
-        tooltip: &apos;A nonreactive, inert gas. In other words, useless.&apos;,
-        texture: &apos;../assets/atom_helium.png&apos;,
-        type: &apos;basic&apos;,
-        params: {
-            speed: 4 * 3,
-            damage: 2,
-            size: 14
-        },
-        atoms: {
-            he: 2
-        }
-    },
-    ionicSodiumChloride: {
-        name: &apos;Sodium Chloride&apos;,
-        tooltip: &apos;Can kill small insects, slugs, and snails. Cannot kill much else.&apos;,
-        texture: &apos;../assets/atom_helium.png&apos;,
-        type: &apos;ionic&apos;,
-        params: {
-            speed: 4 * 3,
-            damage: 2,
-            size: 14
-        },
-        atoms: {
-            na: 1,
-            cl: 1
-        }
-    },
-    acidicHydrogenChloride: {
-        name: &apos;Hydrochloric Acid&apos;,
-        tooltip: &apos;In a pure form, can corrode metal.&apos;,
-        texture: &apos;../assets/atom_helium.png&apos;,
-        type: &apos;acidic&apos;,
-        params: {
-            speed: 4 * 3,
-            damage: 2,
-            size: 14
-        },
-        atoms: {
-            h: 1,
-            cl: 1
-        }
-    },
-    nuclearLithiumHydrogen: {
-        name: &apos;Lithium Deuteride&apos;,
-        tooltip: &apos;Used as the primary fuel in thermonuclear weapons.&apos;,
-        texture: &apos;../assets/atom_lithium.png&apos;,
-        type: &apos;nuclear&apos;,
-        params: {
-            speed: 1 * 3,
-            damage: 2,
-            size: 14
-        },
-        atoms: {
-            h: 1,
-            li: 1
-        }
-    },
-    glucose: {
-        name: &apos;Glucose&apos;,
-        tooltip: &apos;S U G A R R U S H !!!!&apos;,
-        texture: &apos;../assets/atom-hydrogen.png&apos;,
-        type: &apos;speed&apos;,
-        params: {
-            speedFactor: 0.5
-        },
-        atoms: {
-            c: 6,
-            h: 12,
-            o: 6
-        }
-    },
-    protonPack: {
-        name: &apos;Proton Pack&apos;,
-        tooltip: &apos;Easy health!&apos;,
-        texture: &apos;../assets/atom-hydrogen.png&apos;,
-        type: &apos;health&apos;,
-        params: {
-            healthModifier: 10
-        },
-        atoms: {
-            h: 10
-        }
-    }
+	binaryHydrogen: {
+		name: &apos;Hydrogen&apos;,
+		tooltip: &apos;This is quite literally the smallest compound in the universe. Why are you using this as a weapon?&apos;,
+		texture: &apos;../assets/atom-hydrogen.png&apos;,
+		type: &apos;flammable&apos;,
+		params: {
+			speed: 5*3,
+			damage: 1,
+			size: 20,
+			ignitedDamage: 10,
+			splash: 50,
+			splashImage: &apos;../assets/explosion.png&apos;
+		},
+		atoms: {
+			h: 2
+		}
+	},
+	basicMethane: {
+		name: &apos;Methane&apos;,
+		tooltip: &apos;Okay, who passed gas?&apos;,
+		texture: &apos;../assets/atom-hydrogen.png&apos;,
+		type: &apos;flammable&apos;,
+		params: {
+			speed: 3*3,
+			damage: 3,
+			size: 10
+		},
+		atoms: {
+			c: 1,
+			h: 4
+		}
+	},
+	basicBenzene: {
+		name: &apos;Benzene&apos;,
+		tooltip: &apos;Carbon rings. They smell nice.&apos;,
+		texture: &apos;../assets/atom_carbon.png&apos;,
+		type: &apos;basic&apos;,
+		params: {
+			speed: 1*3,
+			damage: 5,
+			size: 30
+		},
+		atoms: {
+			h: 6,
+			c: 6
+		}
+	},
+	basicWater: {
+		name: &apos;Dihydrogen Monoxide&apos;,
+		tooltip: &apos;Why life exists. Are you trying to drown someone?&apos;,
+		texture: &apos;../assets/atom-hydrogen.png&apos;,
+		type: &apos;stream&apos;,
+		params: {
+			speed: 4*3,
+			damage: 1,
+			size: 15,
+			length: 10,
+			spacing: 50,
+			compoundsPerCraft: 10,
+			evaporate: true     
+		},
+		atoms: {
+			h: 2,
+			o: 1
+		}
+	},
+	binaryNitrogen: {
+		name: &apos;Nitrogen&apos;,
+		tooltip: &apos;78% of your air, and also why you get the bends.&apos;,
+		texture: &apos;../assets/atom_nitrogen.png&apos;,
+		type: &apos;basic&apos;,
+		params: {
+			speed: 3*3,
+			damage: 3,
+			size: 20
+		},
+		atoms: {
+			n: 2
+		}
+	},
+	binaryHelium: {
+		name: &apos;Helium&apos;,
+		tooltip: &apos;A nonreactive, inert gas. In other words, useless.&apos;,
+		texture: &apos;../assets/atom_helium.png&apos;,
+		type: &apos;basic&apos;,
+		params: {
+			speed: 4 * 3,
+			damage: 2,
+			size: 14
+		},
+		atoms: {
+			he: 2
+		}
+	},
+	ionicSodiumChloride: {
+		name: &apos;Sodium Chloride&apos;,
+		tooltip: &apos;Can kill small insects, slugs, and snails. Cannot kill much else.&apos;,
+		texture: &apos;../assets/atom_helium.png&apos;,
+		type: &apos;ionic&apos;,
+		params: {
+			speed: 4 * 3,
+			damage: 2,
+			size: 14
+		},
+		atoms: {
+			na: 1,
+			cl: 1
+		}
+	},
+	acidicHydrogenChloride: {
+		name: &apos;Hydrochloric Acid&apos;,
+		tooltip: &apos;In a pure form, can corrode metal.&apos;,
+		texture: &apos;../assets/atom_helium.png&apos;,
+		type: &apos;acidic&apos;,
+		params: {
+			speed: 4 * 3,
+			damage: 2,
+			size: 14
+		},
+		atoms: {
+			h: 1,
+			cl: 1
+		}
+	},
+	nuclearLithiumHydrogen: {
+		name: &apos;Lithium Deuteride&apos;,
+		tooltip: &apos;Used as the primary fuel in thermonuclear weapons.&apos;,
+		texture: &apos;../assets/atom_lithium.png&apos;,
+		type: &apos;nuclear&apos;,
+		params: {
+			speed: 1 * 3,
+			damage: 2,
+			size: 14
+		},
+		atoms: {
+			h: 1,
+			li: 1
+		}
+	},
+	glucose: {
+		name: &apos;Glucose&apos;,
+		tooltip: &apos;S U G A R R U S H !!!!&apos;,
+		texture: &apos;../assets/atom-hydrogen.png&apos;,
+		type: &apos;speed&apos;,
+		params: {
+			speedFactor: 0.5
+		},
+		atoms: {
+			c: 6,
+			h: 12,
+			o: 6
+		}
+	},
+	protonPack: {
+		name: &apos;Proton Pack&apos;,
+		tooltip: &apos;Easy health!&apos;,
+		texture: &apos;../assets/atom-hydrogen.png&apos;,
+		type: &apos;health&apos;,
+		params: {
+			healthModifier: 10
+		},
+		atoms: {
+			h: 10
+		}
+	}
 };
 
 </code></pre>

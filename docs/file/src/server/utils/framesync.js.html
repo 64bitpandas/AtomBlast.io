@@ -110,94 +110,94 @@ import { tickCompound } from &apos;./compound&apos;;
  * @param {*} thisPlayer The player object
  */
 export function frameSync(socket, room, thisPlayer) {
-    if(socket.connected) {
+	if(socket.connected) {
 
-        let thisRoom = getField([&apos;rooms&apos;, room]);
+		let thisRoom = getField([&apos;rooms&apos;, room]);
     
-        if (thisRoom !== undefined) {
-            // Distance checking for all objects
-            let tempObjects = {
-                players: {},
-                atoms: {},
-                compounds: {}
-            };
+		if (thisRoom !== undefined) {
+			// Distance checking for all objects
+			let tempObjects = {
+				players: {},
+				atoms: {},
+				compounds: {}
+			};
     
-            // Move compounds
-            for (let compound in thisRoom.compounds) {
-                let compoundRef = thisRoom.compounds[compound];
-                if (isInBounds(compoundRef)) {
-                    setField(compoundRef.posX + compoundRef.vx, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound, &apos;posX&apos;]);
-                    setField(compoundRef.posY + compoundRef.vy, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound, &apos;posY&apos;]);
-                    tickCompound(getField([&apos;rooms&apos;, room, &apos;compounds&apos;, compound]), room, socket);
-                    // compoundRef.posX += compoundRef.vx;
-                    // compoundRef.posY += compoundRef.vy;
-                }
-                else { // delete
-                    deleteObject(&apos;compounds&apos;, compound, room, socket);
-                }
-            }
-            // Move atoms
-            for (let atom in thisRoom.atoms) {
-                let distance = distanceBetween(
-                    { posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-                    { posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
-                // Attractive force
-                if (distance &lt; GLOBAL.ATTRACTION_RADIUS) {
-                    let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX));
+			// Move compounds
+			for (let compound in thisRoom.compounds) {
+				let compoundRef = thisRoom.compounds[compound];
+				if (isInBounds(compoundRef)) {
+					setField(compoundRef.posX + compoundRef.vx, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound, &apos;posX&apos;]);
+					setField(compoundRef.posY + compoundRef.vy, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound, &apos;posY&apos;]);
+					tickCompound(getField([&apos;rooms&apos;, room, &apos;compounds&apos;, compound]), room, socket);
+					// compoundRef.posX += compoundRef.vx;
+					// compoundRef.posY += compoundRef.vy;
+				}
+				else { // delete
+					deleteObject(&apos;compounds&apos;, compound, room, socket);
+				}
+			}
+			// Move atoms
+			for (let atom in thisRoom.atoms) {
+				let distance = distanceBetween(
+					{ posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS });
+				// Attractive force
+				if (distance &lt; GLOBAL.ATTRACTION_RADIUS) {
+					let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX));
     
-                    // Attraction is based on logarithmic algorithm
+					// Attraction is based on logarithmic algorithm
     
-                    setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
-                    setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
-                    // thisRoom.atoms[atom].vx = 1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    // thisRoom.atoms[atom].vy = 1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-                    // console.log(this.vx, this.vy, this.posX, this.posY);
-                }
-                // Atom slowing down
-                else if (Math.abs(thisRoom.atoms[atom].vx) &gt; GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) &gt; GLOBAL.DEADZONE) {
-                    setField(thisRoom.atoms[atom].vx * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
-                    setField(thisRoom.atoms[atom].vy * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
-                    // thisRoom.atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
-                    // thisRoom.atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
-                }
+					setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
+					setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
+					// thisRoom.atoms[atom].vx = 1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
+					// thisRoom.atoms[atom].vy = 1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
+					// console.log(this.vx, this.vy, this.posX, this.posY);
+				}
+				// Atom slowing down
+				else if (Math.abs(thisRoom.atoms[atom].vx) &gt; GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) &gt; GLOBAL.DEADZONE) {
+					setField(thisRoom.atoms[atom].vx * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
+					setField(thisRoom.atoms[atom].vy * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
+					// thisRoom.atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
+					// thisRoom.atoms[atom].vy *= GLOBAL.VELOCITY_STEP;
+				}
     
-                if (Math.abs(thisRoom.atoms[atom].vx) &lt;= GLOBAL.DEADZONE)
-                    setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
-                if (Math.abs(thisRoom.atoms[atom].vy) &lt;= GLOBAL.DEADZONE)
-                    setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
+				if (Math.abs(thisRoom.atoms[atom].vx) &lt;= GLOBAL.DEADZONE)
+					setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;]);
+				if (Math.abs(thisRoom.atoms[atom].vy) &lt;= GLOBAL.DEADZONE)
+					setField(0, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;]);
     
-                // Move atom
-                setField(thisRoom.atoms[atom].posX + thisRoom.atoms[atom].vx, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;posX&apos;]);
-                setField(thisRoom.atoms[atom].posY + thisRoom.atoms[atom].vy, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;posY&apos;]);
-                // thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;
-                // thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;
-            }
+				// Move atom
+				setField(thisRoom.atoms[atom].posX + thisRoom.atoms[atom].vx, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;posX&apos;]);
+				setField(thisRoom.atoms[atom].posY + thisRoom.atoms[atom].vy, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;posY&apos;]);
+				// thisRoom.atoms[atom].posX += thisRoom.atoms[atom].vx;
+				// thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;
+			}
             
-            // Populate tempObjects
-            for (let objType in tempObjects) {
-                for (let obj in thisRoom[objType]) {
-                    if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS)
-                        tempObjects[objType][obj] = thisRoom[objType][obj];
-                    else if (objType === &apos;players&apos;) // Player left view
-                        socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType });
-                }
-            }
+			// Populate tempObjects
+			for (let objType in tempObjects) {
+				for (let obj in thisRoom[objType]) {
+					if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS)
+						tempObjects[objType][obj] = thisRoom[objType][obj];
+					else if (objType === &apos;players&apos;) // Player left view
+						socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType });
+				}
+			}
 
-            // Run collision detection script
-            collisionDetect(socket, room, thisPlayer, tempObjects);
+			// Run collision detection script
+			collisionDetect(socket, room, thisPlayer, tempObjects);
     
-            socket.emit(&apos;objectSync&apos;, tempObjects);
+			socket.emit(&apos;objectSync&apos;, tempObjects);
     
-            if (thisRoom.started)
-                socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime });
+			if (thisRoom.started)
+				socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime });
     
-            if (thisRoom !== undefined &amp;&amp; !thisRoom.started) {
-                // Send over the room player information
-                // socket.to(room).broadcast.emit(&apos;roomInfo&apos;, thisRoom.players);
-                socket.emit(&apos;roomInfo&apos;, thisRoom.players);
-            }
-        }
-    }
+			if (thisRoom !== undefined &amp;&amp; !thisRoom.started) {
+				// Send over the room player information
+				// socket.to(room).broadcast.emit(&apos;roomInfo&apos;, thisRoom.players);
+				socket.emit(&apos;roomInfo&apos;, thisRoom.players);
+			}
+		}
+	}
 }</code></pre>
 
 </div>

@@ -23,51 +23,51 @@ import { BLUEPRINTS } from '../../client/js/obj/blueprints';
 export function createCompound(data, room, thisPlayer) {
 
 
-    if (!canCraft(thisPlayer, room, data.blueprint))
-        return false;
+	if (!canCraft(thisPlayer, room, data.blueprint))
+		return false;
 
-    // Calculate velocities based on cursor position
-    let theta = Math.atan2(data.mousePos.y, data.mousePos.x);
-    let newCompound = {
-        id: generateID(),
-        posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS,
-        posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-        vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
-        vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
-        blueprint: data.blueprint,
-        sendingTeam: data.sendingTeam,
-        sender: data.sender
-    };
-    // console.log("This player: ");
-    // console.log(thisPlayer);
-    // Add functionality for specific blueprint types
-    if (data.blueprint.type === 'speed') {
-        incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), ['rooms', room, 'players', thisPlayer.id, 'speedMult']);
-    }
-    else if(data.blueprint.type === 'health') {
-        damage({
-            damage: -blueprint.params.healthModifier,
-            sender: socket.id
-        }, room, socket);
-        if (thisPlayer.health > GLOBAL.MAX_HEALTH) {
-            setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health']);
-        }
-    }
+	// Calculate velocities based on cursor position
+	let theta = Math.atan2(data.mousePos.y, data.mousePos.x);
+	let newCompound = {
+		id: generateID(),
+		posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS,
+		posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
+		vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
+		vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
+		blueprint: data.blueprint,
+		sendingTeam: data.sendingTeam,
+		sender: data.sender
+	};
+	// console.log("This player: ");
+	// console.log(thisPlayer);
+	// Add functionality for specific blueprint types
+	if (data.blueprint.type === 'speed') {
+		incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), ['rooms', room, 'players', thisPlayer.id, 'speedMult']);
+	}
+	else if(data.blueprint.type === 'health') {
+		damage({
+			damage: -blueprint.params.healthModifier,
+			sender: socket.id
+		}, room, socket);
+		if (thisPlayer.health > GLOBAL.MAX_HEALTH) {
+			setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health']);
+		}
+	}
 
-    //Emits the crafting event to update experience TODO
-    // socket.emit('experienceEvent', {
-    //     event: 'CRAFT'
-    // });
+	//Emits the crafting event to update experience TODO
+	// socket.emit('experienceEvent', {
+	//     event: 'CRAFT'
+	// });
 
 
-    // Remove atoms from inventory
-    if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
-        for (let atom in data.blueprint.atoms) {
-            incrementField(-data.blueprint.atoms[atom], ['rooms', room, 'players', thisPlayer.id, 'atomList', atom]);
-        }
-    }
+	// Remove atoms from inventory
+	if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
+		for (let atom in data.blueprint.atoms) {
+			incrementField(-data.blueprint.atoms[atom], ['rooms', room, 'players', thisPlayer.id, 'atomList', atom]);
+		}
+	}
 
-    return newCompound;
+	return newCompound;
 }
 
 
@@ -77,21 +77,21 @@ export function createCompound(data, room, thisPlayer) {
  * @param {string} room Name of room
  */
 export function tickCompound(compound, room, socket) {
-    //TODO
-    switch (compound.blueprint.type) {
-        case 'flammable':
-            if (getCurrTile(compound) === 'F' && !compound.ignited) {
-                setField(true, ['rooms', room, 'compounds', compound.id, 'ignited']);
-                // compound.ignited = true;
-                // compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
-            }
-            break;
-    }
+	//TODO
+	switch (compound.blueprint.type) {
+	case 'flammable':
+		if (getCurrTile(compound) === 'F' && !compound.ignited) {
+			setField(true, ['rooms', room, 'compounds', compound.id, 'ignited']);
+			// compound.ignited = true;
+			// compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+		}
+		break;
+	}
 
-    if(compound.blueprint.params.evaporate) {
-        if(getCurrTile(compound) === 'F') {
-            deleteObject('compounds', compound.id, room, socket);
-        }
+	if(compound.blueprint.params.evaporate) {
+		if(getCurrTile(compound) === 'F') {
+			deleteObject('compounds', compound.id, room, socket);
+		}
 
-    }
+	}
 }

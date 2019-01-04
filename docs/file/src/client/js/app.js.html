@@ -131,69 +131,69 @@ let selectedSlot;
 // Starts the game if the name is valid.
 function joinGame() {
 
-    if (!allBlueprintsSelected())
-        swal(&apos;Blueprint(s) not selected&apos;, &apos;Make sure all your blueprint slots are filled before joining a game!&apos;, &apos;error&apos;);
-    // check if the nick is valid
-    else if (validNick()) {
+	if (!allBlueprintsSelected())
+		swal(&apos;Blueprint(s) not selected&apos;, &apos;Make sure all your blueprint slots are filled before joining a game!&apos;, &apos;error&apos;);
+	// check if the nick is valid
+	else if (validNick()) {
 
-        // Set cookies for inputs
-        for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
-            cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
-        }
+		// Set cookies for inputs
+		for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+			cookies.setCookie(GLOBAL.COOKIES[i], cookieInputs[i].value, GLOBAL.COOKIE_DAYS);
+		}
 
-        // Use cookies to set the ingame blueprint slot values
-        for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
-            selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
+		// Use cookies to set the ingame blueprint slot values
+		for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
+			selectedBlueprints[i-1] = BLUEPRINTS[cookies.getCookie(GLOBAL.COOKIES[i - 1 + GLOBAL.INPUT_COUNT])];
 
-            // Check whether blueprint is selected!                     
-            document.getElementById(&apos;bp-ingame-&apos; + i).innerHTML = selectedBlueprints[i-1].name + &apos; (&apos; + getCompoundFormula(selectedBlueprints[i-1]) + &apos;)&apos;;                                                                      
-        }
+			// Check whether blueprint is selected!                     
+			document.getElementById(&apos;bp-ingame-&apos; + i).innerHTML = selectedBlueprints[i-1].name + &apos; (&apos; + getCompoundFormula(selectedBlueprints[i-1]) + &apos;)&apos;;                                                                      
+		}
 
-        // Show game window
-        showElement(&apos;gameAreaWrapper&apos;);
-        hideElement(&apos;startMenuWrapper&apos;);
+		// Show game window
+		showElement(&apos;gameAreaWrapper&apos;);
+		hideElement(&apos;startMenuWrapper&apos;);
 
-        // Show loading screen
-        showElement(&apos;loading&apos;);
+		// Show loading screen
+		showElement(&apos;loading&apos;);
 
-        // Cookie Inputs: 0=player, 1=room, 2=team
+		// Cookie Inputs: 0=player, 1=room, 2=team
 
-        // Connect to server
-        beginConnection();
+		// Connect to server
+		beginConnection();
             
-    } else {
-        nickErrorText.style.display = &apos;inline&apos;;
-    }
+	} else {
+		nickErrorText.style.display = &apos;inline&apos;;
+	}
 }
 
 /** check if nick is valid alphanumeric characters (and underscores)
  * @returns true if the nickname is valid, false otherwise
  */
 function validNick() {
-    const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
-    for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
-        if(regex.exec(cookieInputs[i].value) === null &amp;&amp; !(i === 1 &amp;&amp; cookieInputs[7].value !== &apos;private&apos;))
-            return false;
-    }
+	const regex = /^(\w|_|-| |!|\.|\?){2,16}$/;
+	for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+		if(regex.exec(cookieInputs[i].value) === null &amp;&amp; !(i === 1 &amp;&amp; cookieInputs[7].value !== &apos;private&apos;))
+			return false;
+	}
 
-    return true;
+	return true;
 }
 
 /**
  * Returns true if all four blueprint slots are filled.
  */
 function allBlueprintsSelected() {
-    for(let i = GLOBAL.INPUT_COUNT - 1; i &lt; GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
-        if(cookieInputs[i].innerHTML.substring(0, 1) === &apos;-&apos;)
-            return false;
-    }
-    return true;
+	for(let i = GLOBAL.INPUT_COUNT - 1; i &lt; GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
+		if(cookieInputs[i].innerHTML.substring(0, 1) === &apos;-&apos;)
+			return false;
+	}
+	return true;
 }
 /**
  * Its a method for testing stuff
  */
 function testHandler() {
-    swal(&apos;SUCCESS&apos;,&apos;The test event is invoked!&apos;,&apos;info&apos;);
+	swal(&apos;SUCCESS&apos;,&apos;The test event is invoked!&apos;,&apos;info&apos;);
 }
 
 /** 
@@ -201,93 +201,93 @@ function testHandler() {
  */
 window.onload = () =&gt; {
     
-    // Patch logo for firefox
-    if(typeof InstallTrigger !== &apos;undefined&apos;)
+	// Patch logo for firefox
+	if(typeof InstallTrigger !== &apos;undefined&apos;)
         document.getElementById(&apos;logo&apos;).innerHTML = `&lt;img src=&quot;assets/logo.svg&quot; id=&quot;logo-firefox&quot;&gt;`; // eslint-disable-line
 
-    // Cookie loading - create array of all cookie values
-    let cookieValues = GLOBAL.COOKIES.map(val =&gt; cookies.getCookie(val));
+	// Cookie loading - create array of all cookie values
+	let cookieValues = GLOBAL.COOKIES.map(val =&gt; cookies.getCookie(val));
 
-    // Continue loading cookies only if it exists
-    let i = 0;
-    for(let cookie of cookieValues) {
-        if(cookie !== null &amp;&amp; cookie.length &gt; 0) {
-            if(cookieInputs[i].tagName === &apos;INPUT&apos; || cookieInputs[i].tagName === &apos;SELECT&apos;)
-                cookieInputs[i].value = cookie;
-            else if(cookieInputs[i].tagName === &apos;BUTTON&apos; &amp;&amp; BLUEPRINTS[cookie] !== undefined)
-                cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
-        }
-        i++;
-    }
+	// Continue loading cookies only if it exists
+	let i = 0;
+	for(let cookie of cookieValues) {
+		if(cookie !== null &amp;&amp; cookie.length &gt; 0) {
+			if(cookieInputs[i].tagName === &apos;INPUT&apos; || cookieInputs[i].tagName === &apos;SELECT&apos;)
+				cookieInputs[i].value = cookie;
+			else if(cookieInputs[i].tagName === &apos;BUTTON&apos; &amp;&amp; BLUEPRINTS[cookie] !== undefined)
+				cookieInputs[i].innerHTML = BLUEPRINTS[cookie].name;
+		}
+		i++;
+	}
 
-    // Add listeners to start game to enter key and button click
+	// Add listeners to start game to enter key and button click
 
-    document.addEventListener(&apos;pointerdown&apos;, mouseUpHandler);
-    document.addEventListener(&apos;pointerup&apos;, mouseDownHandler);
+	document.addEventListener(&apos;pointerdown&apos;, mouseUpHandler);
+	document.addEventListener(&apos;pointerup&apos;, mouseDownHandler);
 
-    bindHandler(&apos;startButton&apos;, function () {
-        joinGame();
-    });
+	bindHandler(&apos;startButton&apos;, function () {
+		joinGame();
+	});
 
-    bindHandler(&apos;quitButton&apos;, function () {
-        quitGame(&apos;You have left the game.&apos;, false);
-    });
+	bindHandler(&apos;quitButton&apos;, function () {
+		quitGame(&apos;You have left the game.&apos;, false);
+	});
 
-    bindHandler(&apos;exitButton&apos;, function () {
-        quitGame(&apos;The game has ended.&apos;, false);
-        hideElement(&apos;winner-panel&apos;);
-    });
+	bindHandler(&apos;exitButton&apos;, function () {
+		quitGame(&apos;The game has ended.&apos;, false);
+		hideElement(&apos;winner-panel&apos;);
+	});
 
-    bindHandler(&apos;resumeButton&apos;, function () {
-        hideElement(&apos;menubox&apos;);
-    });
+	bindHandler(&apos;resumeButton&apos;, function () {
+		hideElement(&apos;menubox&apos;);
+	});
 
-    bindHandler(&apos;optionsButton&apos;, function () {
-        swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
-    });
+	bindHandler(&apos;optionsButton&apos;, function () {
+		swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
+	});
 
-    bindHandler(&apos;controlsButton&apos;, function () {
-        swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
-    });
+	bindHandler(&apos;controlsButton&apos;, function () {
+		swal(&apos;&apos;, &apos;This feature is not implemented.&apos;, &apos;info&apos;);
+	});
 
-    bindHandler(&apos;creditsButton&apos;, function () {
-        swal(&apos;&apos;, &apos;Created by BananiumLabs.com&apos;, &apos;info&apos;);
-    });
+	bindHandler(&apos;creditsButton&apos;, function () {
+		swal(&apos;&apos;, &apos;Created by BananiumLabs.com&apos;, &apos;info&apos;);
+	});
 
-    bindHandler(&apos;btn-start-game&apos;, function () {
-        console.log(&apos;starting game&apos;);
-        startGame(true);
-    });
+	bindHandler(&apos;btn-start-game&apos;, function () {
+		console.log(&apos;starting game&apos;);
+		startGame(true);
+	});
 
-    bindHandler(&apos;newsBox&apos;, function() {
-        swal(&apos;&apos;,&apos;hello world&apos;,&apos;info&apos;);
-    });
+	bindHandler(&apos;newsBox&apos;, function() {
+		swal(&apos;&apos;,&apos;hello world&apos;,&apos;info&apos;);
+	});
 
-    // document.getElementById(&apos;gameView&apos;, onClick, false);
+	// document.getElementById(&apos;gameView&apos;, onClick, false);
 
-    for(let i = 0; i &lt; selectedBlueprints.length; i++) {
-        bindHandler(&apos;bp-ingame-&apos; + (i + 1), function() {
-            selectedCompound = i;
-            updateCompoundButtons();
-        });
-    }
+	for(let i = 0; i &lt; selectedBlueprints.length; i++) {
+		bindHandler(&apos;bp-ingame-&apos; + (i + 1), function() {
+			selectedCompound = i;
+			updateCompoundButtons();
+		});
+	}
 
-    // Set up the blueprint slot buttons
-    for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
-        document.getElementById(&apos;bp-slot-&apos; + i).onclick = () =&gt; {
-            showElement(&apos;bp-select&apos;);
-            document.getElementById(&apos;bp-select-header&apos;).innerHTML = GLOBAL.BP_SELECT + i;
-            selectedSlot = i;
-        };
-    }
+	// Set up the blueprint slot buttons
+	for(let i = 1; i &lt;= GLOBAL.BP_MAX; i++) {
+		document.getElementById(&apos;bp-slot-&apos; + i).onclick = () =&gt; {
+			showElement(&apos;bp-select&apos;);
+			document.getElementById(&apos;bp-select-header&apos;).innerHTML = GLOBAL.BP_SELECT + i;
+			selectedSlot = i;
+		};
+	}
 
-    document.getElementById(&apos;btn-close&apos;).onclick = () =&gt; { hideElement(&apos;bp-select&apos;); };
+	document.getElementById(&apos;btn-close&apos;).onclick = () =&gt; { hideElement(&apos;bp-select&apos;); };
 
-    // Set up blueprint selection buttons
-    for(let blueprint in BLUEPRINTS) {
-        let bp = BLUEPRINTS[blueprint];
+	// Set up blueprint selection buttons
+	for(let blueprint in BLUEPRINTS) {
+		let bp = BLUEPRINTS[blueprint];
 
-        document.getElementById(&apos;blueprint-wrapper&apos;).innerHTML +=
+		document.getElementById(&apos;blueprint-wrapper&apos;).innerHTML +=
             `
             &lt;button onmouseenter=&quot;tooltipFollow(this)&quot; class=&quot;button width-override col-6 col-12-sm btn-secondary btn-blueprint&quot; id=&quot;btn-blueprint-` + blueprint + `&quot;&gt;
                 &lt;p&gt;` + bp.name + `&lt;/p&gt;
@@ -297,56 +297,55 @@ window.onload = () =&gt; {
             &lt;/button&gt;
 
             `;
-    }
-    // Blueprint Slots
-    for(let btn of document.getElementsByClassName(&apos;btn-blueprint&apos;))
-        btn.onclick = () =&gt;  {
-            let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are &apos;btn-blueprint-&apos;
-            console.log(blueprint + &apos; selected in slot &apos; + selectedSlot);
-            document.getElementById(&apos;bp-slot-&apos; + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
-            hideElement(&apos;bp-select&apos;);
-            cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
-        };
+	}
+	// Blueprint Slots
+	for(let btn of document.getElementsByClassName(&apos;btn-blueprint&apos;))
+		btn.onclick = () =&gt;  {
+			let blueprint = btn.id.substring(14); // Name of the blueprint, the first 14 characters are &apos;btn-blueprint-&apos;
+			console.log(blueprint + &apos; selected in slot &apos; + selectedSlot);
+			document.getElementById(&apos;bp-slot-&apos; + selectedSlot).innerHTML = BLUEPRINTS[blueprint].name;
+			hideElement(&apos;bp-select&apos;);
+			cookies.setCookie(GLOBAL.COOKIES[selectedSlot + GLOBAL.INPUT_COUNT - 1], blueprint, GLOBAL.COOKIE_DAYS);
+		};
 
-    // Add enter listeners for all inputs
-    for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
-        cookieInputs[i].addEventListener(&apos;keypress&apos;, e =&gt; {
-            const key = e.which || e.keyCode;
+	// Add enter listeners for all inputs
+	for(let i = 0; i &lt; GLOBAL.INPUT_COUNT; i++) {
+		cookieInputs[i].addEventListener(&apos;keypress&apos;, e =&gt; {
+			const key = e.which || e.keyCode;
     
-            if (key === GLOBAL.KEY_ENTER)
-                joinGame();
-        });
-    }
+			if (key === GLOBAL.KEY_ENTER)
+				joinGame();
+		});
+	}
 
-    // Behavior when room type is changed
-    if (cookieInputs[7].value !== &apos;private&apos;)
-        hideElement(&apos;room&apos;);
-    else
-        showElement(&apos;room&apos;);
+	// Behavior when room type is changed
+	if (cookieInputs[7].value !== &apos;private&apos;)
+		hideElement(&apos;room&apos;);
+	else
+		showElement(&apos;room&apos;);
 
-    cookieInputs[7].onchange = () =&gt; {
-        if(cookieInputs[7].value === &apos;private&apos;)
-            showElement(&apos;room&apos;);
-        else
-            hideElement(&apos;room&apos;);
+	cookieInputs[7].onchange = () =&gt; {
+		if(cookieInputs[7].value === &apos;private&apos;)
+			showElement(&apos;room&apos;);
+		else
+			hideElement(&apos;room&apos;);
 
-        cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);
-    };
+		cookies.setCookie(GLOBAL.COOKIES[7], cookieInputs[7].value, GLOBAL.COOKIE_DAYS);
+	};
 
-    // Server changed
-    cookieInputs[8].onchange = () =&gt; {
-        cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
-    };
+	// Server changed
+	cookieInputs[8].onchange = () =&gt; {
+		cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS);
+	};
 };
 
 /**
  * Sets mouse positions for tooltip
  */
 window.onmousemove = (e) =&gt; {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
+	mouseX = e.clientX;
+	mouseY = e.clientY;
 };
-
 // function setupEventHandlers() {  
 //     document.addEventListener(&apos;mousedown&apos;, this._onMouseDown.bind(this));    
 //     document.addEventListener(&apos;mousemove&apos;, this._onMouseMove.bind(this));  
@@ -366,19 +365,19 @@ window.onmousemove = (e) =&gt; {
  */
 export function quitGame(msg, isError) {
 
-    // Disconnect from server
-    disconnect();
+	// Disconnect from server
+	disconnect();
 
-    // Set status of ingame
-    setIngame(false);
+	// Set status of ingame
+	setIngame(false);
 
-    // menu
-    hideElement(&apos;gameAreaWrapper&apos;);
-    hideElement(&apos;hud&apos;);
-    hideElement(&apos;menubox&apos;);
-    showElement(&apos;startMenuWrapper&apos;);
-    hideElement(&apos;lobby&apos;);
-    swal(&apos;Disconnected from Game&apos;, msg, (isError) ? &apos;error&apos; : &apos;info&apos;);
+	// menu
+	hideElement(&apos;gameAreaWrapper&apos;);
+	hideElement(&apos;hud&apos;);
+	hideElement(&apos;menubox&apos;);
+	showElement(&apos;startMenuWrapper&apos;);
+	hideElement(&apos;lobby&apos;);
+	swal(&apos;Disconnected from Game&apos;, msg, (isError) ? &apos;error&apos; : &apos;info&apos;);
 }
 
 /**
@@ -387,7 +386,7 @@ export function quitGame(msg, isError) {
  * @param {function} handlerMethod 
  */
 export function bindHandler(id, handlerMethod) {
-    document.getElementById(id).onclick = handlerMethod;
+	document.getElementById(id).onclick = handlerMethod;
 }
 
 /**
@@ -395,7 +394,7 @@ export function bindHandler(id, handlerMethod) {
  * @param {string} el The id of the element to show
  */
 export function showElement(el) {
-    document.getElementById(el).style.display = &apos;block&apos;;
+	document.getElementById(el).style.display = &apos;block&apos;;
 }
 
 /**
@@ -403,7 +402,7 @@ export function showElement(el) {
  * @param {string} el The id of the element to hide
  */
 export function hideElement(el) {
-    document.getElementById(el).style.display = &apos;none&apos;;
+	document.getElementById(el).style.display = &apos;none&apos;;
 }
 
 /**
@@ -411,9 +410,9 @@ export function hideElement(el) {
  * @param {HTMLElement} button The element reference for the button currently being hovered.
  */
 window.tooltipFollow = (button) =&gt; {
-    let tooltip = button.getElementsByClassName(&apos;tooltip&apos;)[0];
-    tooltip.style.top = (mouseY - 150) + &apos;px&apos;;
-    tooltip.style.left = (mouseX - 150) + &apos;px&apos;;
+	let tooltip = button.getElementsByClassName(&apos;tooltip&apos;)[0];
+	tooltip.style.top = (mouseY - 150) + &apos;px&apos;;
+	tooltip.style.left = (mouseX - 150) + &apos;px&apos;;
 };
 
 /**
@@ -422,17 +421,17 @@ window.tooltipFollow = (button) =&gt; {
  * @param {string} atomID The ID of the atom to update.
  */
 export function updateAtomList(atomID) {
-    let list = document.getElementById(&apos;atom-count&apos;);
+	let list = document.getElementById(&apos;atom-count&apos;);
 
-    if(document.getElementById(&apos;atom-list-&apos; + atomID) === null) {
-        let newEntry = document.createElement(&apos;li&apos;);
-        newEntry.setAttribute(&apos;id&apos;, &apos;atom-list-&apos; + atomID);
-        list.appendChild(newEntry);
-    }
+	if(document.getElementById(&apos;atom-list-&apos; + atomID) === null) {
+		let newEntry = document.createElement(&apos;li&apos;);
+		newEntry.setAttribute(&apos;id&apos;, &apos;atom-list-&apos; + atomID);
+		list.appendChild(newEntry);
+	}
 
-    document.getElementById(&apos;atom-list-&apos; + atomID).innerHTML = &apos;&apos; + atomID.charAt(0).toUpperCase() + atomID.substr(1) + &apos;: &apos; + player.atomList[atomID];
+	document.getElementById(&apos;atom-list-&apos; + atomID).innerHTML = &apos;&apos; + atomID.charAt(0).toUpperCase() + atomID.substr(1) + &apos;: &apos; + player.atomList[atomID];
 
-    updateCompoundButtons(); //No need to update selection
+	updateCompoundButtons(); //No need to update selection
 }
 
 /**
@@ -440,37 +439,37 @@ export function updateAtomList(atomID) {
  * @param {number} selectedSlot The index of the selected slot. 0-3
  */
 export function updateCompoundButtons(selectedSlot) {
-    if(selectedSlot === undefined)
-        selectedSlot = selectedCompound;
-    else
-        selectedCompound = selectedSlot;
+	if(selectedSlot === undefined)
+		selectedSlot = selectedCompound;
+	else
+		selectedCompound = selectedSlot;
 
-    for(let i = 0; i &lt; selectedBlueprints.length; i++) {
-        if (selectedSlot != i) {
-            if(canCraft(selectedBlueprints[i])){
-                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background =&apos;#2ecc71&apos;;
-            }
-            else{
-                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#C8C8C8&apos;;
-            }
-        }
-        else { //is selected
-            if (canCraft(selectedBlueprints[i])) {
-                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#003CA8&apos;;
-            }
-            else {
-                document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#3D66D1&apos;;
-            }
-            document.getElementById(&apos;bp-select-label&apos;).innerHTML = &apos;Selected Compound: &apos; + selectedBlueprints[i].name;
-        }
-    }
+	for(let i = 0; i &lt; selectedBlueprints.length; i++) {
+		if (selectedSlot != i) {
+			if(canCraft(selectedBlueprints[i])){
+				document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background =&apos;#2ecc71&apos;;
+			}
+			else{
+				document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#C8C8C8&apos;;
+			}
+		}
+		else { //is selected
+			if (canCraft(selectedBlueprints[i])) {
+				document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#003CA8&apos;;
+			}
+			else {
+				document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#3D66D1&apos;;
+			}
+			document.getElementById(&apos;bp-select-label&apos;).innerHTML = &apos;Selected Compound: &apos; + selectedBlueprints[i].name;
+		}
+	}
 }
 
 /**
  * Updates the team scoreboard on screen.
  */
 export function updateScores(teamSlot, increment) {
-    document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML = parseInt(document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML) + increment;
+	document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML = parseInt(document.getElementById(&apos;team-score-&apos; + teamSlot).innerHTML) + increment;
 }
 
 /**
@@ -479,23 +478,23 @@ export function updateScores(teamSlot, increment) {
  */
 export function updateLobby(data) {
 
-// Wipe innerHTML first
-    let lobby = document.getElementById(&apos;team-display&apos;);
-    lobby.innerHTML = &apos;&apos;;
-    for(let player in data) {
-        if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
-            lobby.innerHTML += `
+	// Wipe innerHTML first
+	let lobby = document.getElementById(&apos;team-display&apos;);
+	lobby.innerHTML = &apos;&apos;;
+	for(let player in data) {
+		if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
+			lobby.innerHTML += `
             &lt;div class=&quot;col-3&quot;&gt;
                 &lt;h3&gt;` + data[player].team + `&lt;/h3&gt;
                 &lt;ul id=&quot;` + data[player].team + `&quot;&gt;
                 &lt;/ul&gt;
             &lt;/div&gt;
             `;
-        }
-        let listItem = document.createElement(&apos;LI&apos;);
-        listItem.appendChild(document.createTextNode(data[player].name));
-        document.getElementById(data[player].team).appendChild(listItem);
-    }
+		}
+		let listItem = document.createElement(&apos;LI&apos;);
+		listItem.appendChild(document.createTextNode(data[player].name));
+		document.getElementById(data[player].team).appendChild(listItem);
+	}
 }
 
 /**
@@ -503,9 +502,9 @@ export function updateLobby(data) {
  * @param {*} data Server sent data, including name and score of winning team.
  */
 export function displayWinner(data) {
-    // console.log(data);
-    document.getElementById(&apos;winner-name&apos;).innerHTML = data.winner.name + &apos; has won!&apos;;
-    showElement(&apos;winner-panel&apos;);
+	// console.log(data);
+	document.getElementById(&apos;winner-name&apos;).innerHTML = data.winner.name + &apos; has won!&apos;;
+	showElement(&apos;winner-panel&apos;);
 }
 
 /**
@@ -514,12 +513,12 @@ export function displayWinner(data) {
  * @returns {string} The formula of the compound
  */
 function getCompoundFormula(blueprint) {
-    let formula = &apos;&apos;;
-    for (let atom in blueprint.atoms) {
-        formula += atom.toUpperCase() + ((blueprint.atoms[atom] &gt; 1) ? blueprint.atoms[atom] : &apos;&apos;);
-    }
+	let formula = &apos;&apos;;
+	for (let atom in blueprint.atoms) {
+		formula += atom.toUpperCase() + ((blueprint.atoms[atom] &gt; 1) ? blueprint.atoms[atom] : &apos;&apos;);
+	}
 
-    return formula;
+	return formula;
 }
 
 /**
@@ -528,14 +527,14 @@ function getCompoundFormula(blueprint) {
  * @param {string} blueprint The name of the blueprint to check.
  */
 function canCraft(blueprint) {
-    if (blueprint === undefined)
-        return false;
-    for (let atom in blueprint.atoms) {
-        if (player.atomList[atom] === undefined || player.atomList[atom] &lt; blueprint.atoms[atom])
-            return false;
-    }
+	if (blueprint === undefined)
+		return false;
+	for (let atom in blueprint.atoms) {
+		if (player.atomList[atom] === undefined || player.atomList[atom] &lt; blueprint.atoms[atom])
+			return false;
+	}
 
-    return true;
+	return true;
 }</code></pre>
 
 </div>

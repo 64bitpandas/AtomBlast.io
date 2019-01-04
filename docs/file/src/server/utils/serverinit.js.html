@@ -112,39 +112,39 @@ import colors from &apos;colors&apos;; // Console colors :D
  * Global initialiation. Run once on server start.
  */
 export function initGlobal() {
-    // Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
-    setInterval(() =&gt; {
-        for (let room in getField([&apos;rooms&apos;])) {
-            for (let row = 0; row &lt; MAP_LAYOUT.length; row++)
-                for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
-                    if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
-                        spawnAtomAtVent(row, col, room, false);
-                    }
+	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
+	setInterval(() =&gt; {
+		for (let room in getField([&apos;rooms&apos;])) {
+			for (let row = 0; row &lt; MAP_LAYOUT.length; row++)
+				for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
+					if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
+						spawnAtomAtVent(row, col, room, false);
+					}
 
-                }
-        }
-    }, GLOBAL.ATOM_SPAWN_DELAY);
+				}
+		}
+	}, GLOBAL.ATOM_SPAWN_DELAY);
 
-    // Timer
-    setInterval(() =&gt; {
-        for (let room in getField([&apos;rooms&apos;])) {
-            if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
-                let seconds = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]), 
-                    minutes = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
+	// Timer
+	setInterval(() =&gt; {
+		for (let room in getField([&apos;rooms&apos;])) {
+			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
+				let seconds = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]), 
+					minutes = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
                     
-                // Equivalent to rooms[room].time.seconds++;
-                setField(seconds + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
+				// Equivalent to rooms[room].time.seconds++;
+				setField(seconds + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
 
-                if (seconds &gt;= 60) {
-                    setField(0, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
-                    setField(minutes + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
-                }
+				if (seconds &gt;= 60) {
+					setField(0, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;]);
+					setField(minutes + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;]);
+				}
 
-                // Set formatted Time
-                setField(minutes + &apos;:&apos; + ((seconds &lt; 10) ? &apos;0&apos; : &apos;&apos;) + seconds, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;formattedTime&apos;]);
-            }
-        }
-    }, 1000);
+				// Set formatted Time
+				setField(minutes + &apos;:&apos; + ((seconds &lt; 10) ? &apos;0&apos; : &apos;&apos;) + seconds, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;formattedTime&apos;]);
+			}
+		}
+	}, 1000);
 }
 
 /**
@@ -153,48 +153,48 @@ export function initGlobal() {
  * @param {string} room The name of the room that the player belongs to
  */
 export function initPlayer(socket, room) {
-    // Initialize room array and spawn atoms on first player join
-    let thisRoom = getField([&apos;rooms&apos;, room]);
-    if (thisRoom === undefined || thisRoom === null) {
-        console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType);
-        setField({
-            joinable: true,
-            teams: [],
-            atoms: {},
-            compounds: {},
-            type: socket.handshake.query.roomType,
-            time: {
-                minutes: 0,
-                seconds: 0,
-                formattedTime: &apos;0:00&apos;
-            }
-        }, [&apos;rooms&apos;, room]);
-    }
-    thisRoom = getField([&apos;rooms&apos;, room]);
+	// Initialize room array and spawn atoms on first player join
+	let thisRoom = getField([&apos;rooms&apos;, room]);
+	if (thisRoom === undefined || thisRoom === null) {
+		console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType);
+		setField({
+			joinable: true,
+			teams: [],
+			atoms: {},
+			compounds: {},
+			type: socket.handshake.query.roomType,
+			time: {
+				minutes: 0,
+				seconds: 0,
+				formattedTime: &apos;0:00&apos;
+			}
+		}, [&apos;rooms&apos;, room]);
+	}
+	thisRoom = getField([&apos;rooms&apos;, room]);
 
-    // Add team to database
+	// Add team to database
 
-    // Equivalent to rooms[room].teams.push({ name: team });
-    setField({name: socket.handshake.query.team}, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length]);
+	// Equivalent to rooms[room].teams.push({ name: team });
+	setField({name: socket.handshake.query.team}, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length]);
 
-    // Check if room is full
-    if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4)
-        setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;]);
+	// Check if room is full
+	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4)
+		setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;]);
 
-    // Create new player in rooms object
-    setField({
-        id: socket.id,
-        name: socket.handshake.query.name,
-        room: socket.handshake.query.room,
-        team: socket.handshake.query.team,
-        health: GLOBAL.MAX_HEALTH,
-        posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
-        posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
-        vx: 0,
-        vy: 0,
-        experience: 0,
-        damagedBy: {}
-    }, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id]);
+	// Create new player in rooms object
+	setField({
+		id: socket.id,
+		name: socket.handshake.query.name,
+		room: socket.handshake.query.room,
+		team: socket.handshake.query.team,
+		health: GLOBAL.MAX_HEALTH,
+		posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
+		posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
+		vx: 0,
+		vy: 0,
+		experience: 0,
+		damagedBy: {}
+	}, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id]);
 }</code></pre>
 
 </div>

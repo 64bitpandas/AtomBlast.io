@@ -111,7 +111,7 @@ import { GLOBAL } from &apos;../../client/js/global&apos;;
 * @returns random id between 10000000 and 99999999
 */
 export function generateID() {
-    return Math.floor(Math.random() * 90000000) + 10000000;
+	return Math.floor(Math.random() * 90000000) + 10000000;
 }
 
 /**
@@ -120,11 +120,11 @@ export function generateID() {
  * @param {string} teamName The team name to return the number of
  */
 export function getTeamNumber(room, teamName) {
-    for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++)
-        if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName)
-            return i;
+	for (let i = 0; i &lt; getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length; i++)
+		if (getField([&apos;rooms&apos;, room, &apos;teams&apos;])[i].name === teamName)
+			return i;
 
-    return -1; //Team not found
+	return -1; //Team not found
 }</code></pre>
 
 </div>

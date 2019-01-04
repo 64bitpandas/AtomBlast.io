@@ -3,7 +3,7 @@
  * Uses babel to compile es6 into 
  */
 require('babel-register')({
-    presets: ['env']
+	presets: ['env']
 });
 
 module.exports = require('./server.js');

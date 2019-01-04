@@ -23,20 +23,20 @@ import { updateAtomList, updateCompoundButtons } from '../app.js';
  */
 export function createRenderAtom(data) {
 
-    let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
+	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture;
 
-    if (data.typeID === '')
-        throw new Error('The Atom object cannot be created without specifying behavior.');
+	if (data.typeID === '')
+		throw new Error('The Atom object cannot be created without specifying behavior.');
 
-    if (texture === undefined)
-        throw new Error('Atom of type ' + data.typeID + ' could not be found!');
+	if (texture === undefined)
+		throw new Error('Atom of type ' + data.typeID + ' could not be found!');
 
-    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
-    result.typeID = data.typeID;
-    result.height = GLOBAL.ATOM_RADIUS * 2;
-    result.width = GLOBAL.ATOM_RADIUS * 2;
+	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
+	result.typeID = data.typeID;
+	result.height = GLOBAL.ATOM_RADIUS * 2;
+	result.width = GLOBAL.ATOM_RADIUS * 2;
 
-    return result;
+	return result;
 }
 
 export function createPlayer(data) {
@@ -56,22 +56,22 @@ export function createPlayer(data) {
  *  - sender {number - socket ID}
  */
 export function createRenderCompound(data) {
-    let texture = PIXI.loader.resources[data.blueprint.texture].texture;
-    let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
-    result.blueprint = data.blueprint;
-    result.sendingTeam = data.sendingTeam;
-    result.sender = data.sender;
+	let texture = PIXI.loader.resources[data.blueprint.texture].texture;
+	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy);
+	result.blueprint = data.blueprint;
+	result.sendingTeam = data.sendingTeam;
+	result.sender = data.sender;
 
-    // Parse params
-    for (let param in data.blueprint.params) {
-        result[param] = data.blueprint.params[param];
-    }
+	// Parse params
+	for (let param in data.blueprint.params) {
+		result[param] = data.blueprint.params[param];
+	}
 
-    // Use params
-    result.width = result.size;
-    result.height = result.size;
+	// Use params
+	result.width = result.size;
+	result.height = result.size;
 
-    return result;
+	return result;
 }
 
 /**
@@ -84,39 +84,39 @@ export function createRenderCompound(data) {
  */
 export function requestCreateCompound(blueprint, xIn, yIn, streamID) {
 
-    updateCompoundButtons();
+	updateCompoundButtons();
 
-    // if (blueprint.type === 'speed') {
-    //     // this.hide();
-    //     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);
-    //     console.log('New speed is ' + player.speedMult);
-    // } else if (blueprint.type === 'health') {
-    //     socket.emit('damage', {
-    //         damage: -blueprint.params.healthModifier,
-    //         sender: socket.id
-    //     });
-    //     if (player.health > GLOBAL.MAX_HEALTH) {
-    //         player.health = GLOBAL.MAX_HEALTH;
-    //     }
-    // } else {
-    // let cursor = app.renderer.plugins.interaction.mouse.global;
+	// if (blueprint.type === 'speed') {
+	//     // this.hide();
+	//     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);
+	//     console.log('New speed is ' + player.speedMult);
+	// } else if (blueprint.type === 'health') {
+	//     socket.emit('damage', {
+	//         damage: -blueprint.params.healthModifier,
+	//         sender: socket.id
+	//     });
+	//     if (player.health > GLOBAL.MAX_HEALTH) {
+	//         player.health = GLOBAL.MAX_HEALTH;
+	//     }
+	// } else {
+	// let cursor = app.renderer.plugins.interaction.mouse.global;
 
-    let centerX = window.innerWidth / 2;
-    let centerY = window.innerHeight / 2;
-    // console.log(centerX - cursor.x, cursor.y - centerY)
-    socket.emit('requestCreateCompound', {
-        blueprint: blueprint,
-        sendingTeam: player.team,
-        sender: socket.id,
-        mousePos: {
-            x: xIn - centerX,
-            y: centerY - yIn
-        },
-        streamID: streamID
-    });
+	let centerX = window.innerWidth / 2;
+	let centerY = window.innerHeight / 2;
+	// console.log(centerX - cursor.x, cursor.y - centerY)
+	socket.emit('requestCreateCompound', {
+		blueprint: blueprint,
+		sendingTeam: player.team,
+		sender: socket.id,
+		mousePos: {
+			x: xIn - centerX,
+			y: centerY - yIn
+		},
+		streamID: streamID
+	});
 
-    //Emits the crafting event to update experience TODO
-    // socket.emit('experienceEvent', {
-    //     event: 'CRAFT'
-    // });
+	//Emits the crafting event to update experience TODO
+	// socket.emit('experienceEvent', {
+	//     event: 'CRAFT'
+	// });
 }

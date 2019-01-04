@@ -7,22 +7,22 @@ import { GLOBAL } from '../../client/js/global';
 import { TILES, TILE_NAMES, MAP_LAYOUT } from '../../client/js/obj/tiles';
 
 export function incrementAtom(player, room, atomType, quantity) {
-    // console.log(atomType);
-    incrementField(quantity, ['rooms', room, 'players', player, 'atomList', atomType]);
+	// console.log(atomType);
+	incrementField(quantity, ['rooms', room, 'players', player, 'atomList', atomType]);
 }
 
 
 export function canCraft(player, room, blueprint) {
-    // console.log(player);
-    if (blueprint === undefined)
-        return false;
-    for (let atom in blueprint.atoms) {
-        let numAtoms = getField(['rooms', room, 'players', player.id, 'atomList', atom]);
-        if (numAtoms === undefined || numAtoms < blueprint.atoms[atom])
-            return false;
-    }
+	// console.log(player);
+	if (blueprint === undefined)
+		return false;
+	for (let atom in blueprint.atoms) {
+		let numAtoms = getField(['rooms', room, 'players', player.id, 'atomList', atom]);
+		if (numAtoms === undefined || numAtoms < blueprint.atoms[atom])
+			return false;
+	}
 
-    return true;
+	return true;
 }
 
 /**
@@ -33,13 +33,13 @@ export function canCraft(player, room, blueprint) {
  * @param {boolean} verbose True if this method should output to the console
  */
 export function spawnAtomAtVent(row, col, room, verbose) {
-    // Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
-    let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
+	// Atom to spawn. Gets a random element from the tile paramter array `atomsToSpawn`
+	let atomToSpawn = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn[Math.floor(Math.random() * TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].params.atomsToSpawn.length)];
 
-    let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
-    let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
+	let x = col * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING;
+	let y = row * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING;
 
-    spawnAtom(x, y, atomToSpawn, room, verbose);
+	spawnAtom(x, y, atomToSpawn, room, verbose);
 
 }
 
@@ -53,20 +53,20 @@ export function spawnAtomAtVent(row, col, room, verbose) {
  */
 export function spawnAtom(x, y, type, room, verbose) {
 
-    let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
+	let theta = Math.random() * Math.PI * 2; // Set random direction for atom to go in once spawned
 
-    let atom = {
-        typeID: type,
-        id: generateID(),
-        posX: x,
-        posY: y,
-        vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
-        vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
-    };
-    if (getField(['rooms', room]) !== undefined)
-        setField(atom, ['rooms', room, 'atoms', atom.id]);
+	let atom = {
+		typeID: type,
+		id: generateID(),
+		posX: x,
+		posY: y,
+		vx: Math.cos(theta) * GLOBAL.ATOM_SPAWN_SPEED,
+		vy: Math.sin(theta) * GLOBAL.ATOM_SPAWN_SPEED
+	};
+	if (getField(['rooms', room]) !== undefined)
+		setField(atom, ['rooms', room, 'atoms', atom.id]);
 
-    // Log to console
-    if (verbose)
-        console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
+	// Log to console
+	if (verbose)
+		console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy);
 }
