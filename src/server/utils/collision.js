@@ -39,7 +39,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 			// Hit player
 			if (distance < cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
 				damage({
-					damage: (cmp.ignited) ? cmp.blueprints.params.ignitedDamage : cmp.blueprint.params.damage,
+					damage: (cmp.ignited) ? cmp.blueprint.params.ignitedDamage : cmp.blueprint.params.damage,
 					player: socket.id,
 					sentBy: cmp.sender,
 					id: compound
