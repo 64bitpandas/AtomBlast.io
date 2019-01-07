@@ -297,7 +297,8 @@ export function getField (path) {
  * @param {*} socket socket.io instance
  */
 export function deleteObject (type, id, room, socket) {
-	delete rooms[room][type][id]
+	delete rooms[room][type][id];
+	
 	// Send clientside message
 	socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: id, type: type })
 	// socket.emit('serverSendObjectRemoval', { id: id, type: type });

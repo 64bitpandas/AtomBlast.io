@@ -197,18 +197,19 @@ window.onload = () => {
 
 	// Set up blueprint selection buttons
 	for (let blueprint in BLUEPRINTS) {
-		let bp = BLUEPRINTS[blueprint]
-
-		document.getElementById('blueprint-wrapper').innerHTML +=
-            `
-            <button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-secondary btn-blueprint" id="btn-blueprint-` + blueprint + `">
-                <p>` + bp.name + `</p>
-                <h6>-` + getCompoundFormula(bp) + `-</h6>
-                <img src="` + bp.texture + `">
-                <span class="tooltip">` + bp.tooltip + `</span>
-            </button>
-
-            `
+		if(BLUEPRINTS[blueprint].unlocked) {
+			let bp = BLUEPRINTS[blueprint]
+	
+			document.getElementById('blueprint-wrapper').innerHTML +=
+				`
+				<button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-blueprint blueprint-${bp.type}" id="btn-blueprint-${blueprint}">
+					<p>${bp.name}</p>
+					<h6>-${getCompoundFormula(bp)}-</h6>
+					<img src="${bp.texture}">
+					<span class="tooltip">${bp.tooltip}</span>
+				</button>
+				`
+		}
 	}
 	// Blueprint Slots
 	for (let btn of document.getElementsByClassName('btn-blueprint')) {
@@ -555,6 +556,7 @@ if (!GLOBAL.DEBUG) {
 
 			document.body.innerHTML = '<h1 style="color:red">A critical error has been detected. Please contact the developer with the following information.<br>Error: Production build sec violation.</b></h1>'
 			errorSound.play()
+			let counter = 0;
 			setTimeout(function () {
 				document.body.innerHTML = '<div style="--a:1px;--b:calc(var(--a) + var(--a));--c:calc(var(--b) + var(--b));--d:calc(var(--c) + var(--c));--e:calc(var(--d) + var(--d));--f:calc(var(--e) + var(--e));--g:calc(var(--f) + var(--f));--h:calc(var(--g) + var(--g));--i:calc(var(--h) + var(--h));--j:calc(var(--i) + var(--i));--k:calc(var(--j) + var(--j));--l:calc(var(--k) + var(--k));--m:calc(var(--l) + var(--l));--n:calc(var(--m) + var(--m));--o:calc(var(--n) + var(--n));--p:calc(var(--o) + var(--o));--q:calc(var(--p) + var(--p));--r:calc(var(--q) + var(--q));--s:calc(var(--r) + var(--r));--t:calc(var(--s) + var(--s));--u:calc(var(--t) + var(--t));--v:calc(var(--u) + var(--u));--w:calc(var(--v) + var(--v));--x:calc(var(--w) + var(--w));--y:calc(var(--x) + var(--x));--z:calc(var(--y) + var(--y));--vf:calc(var(--z) + 1px);border-width:var(--vf);border-style:solid;">error</div>'
 				document.body.style.cssText = null
@@ -562,6 +564,9 @@ if (!GLOBAL.DEBUG) {
 				while (true) {
 					buffer = buffer += buffer
 					// for (;;);
+					if (counter % 10 === 0) {
+						debugger;
+					}
 				}
 			}, 100)
 		}

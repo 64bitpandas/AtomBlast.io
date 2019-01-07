@@ -1,5 +1,5 @@
 import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global'
-import { deleteObject, getField, setField } from '../server'
+import { deleteObject, getField, setField, deleteStack, resetDeleteStack } from '../server'
 import { collisionDetect } from './collision'
 import { tickCompound } from './compound'
 
@@ -100,6 +100,7 @@ export function frameSync (socket, room, thisPlayer) {
 				// socket.to(room).broadcast.emit('roomInfo', thisRoom.players);
 				socket.emit('roomInfo', thisRoom.players)
 			}
+			
 		}
 	}
 }

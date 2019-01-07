@@ -17,7 +17,8 @@
     "docs": "esdoc",
     "update": "node node_modules/npm-check/bin/cli.js -u",
     "disableannoyinglineendingwarning": "git config --global core.safecrlf false && printf \"Annoying line ending warnings has been disabled.\"",
-    "install": "npm -s run disableannoyinglineendingwarning"
+    "install": "npm -s run disableannoyinglineendingwarning",
+    "firsttimeinstall": "printf 'doesnt do anything'"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,10 @@
   },
   "keywords": [
     "io",
-    "game"
+    "game",
+    "atomblast",
+    "atom",
+    "pixi"
   ],
   "author": "Bananium Labs",
   "license": "MIT",

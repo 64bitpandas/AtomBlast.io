@@ -166,16 +166,33 @@ function setupSocketObjectRetrieval () {
 		}
 	})
 
-	// Sync objects when they are deleted or move out of view
+	// Sync objects when they are deleted or move out of view. ONLY call after objectSync to avoid issue
 	socket.on('serverSendObjectRemoval', (data) => {
 		if (GLOBAL.VERBOSE_SOCKET) {
-			console.info('serverSendObjectRemoval() called')
+			console.info('serverSendObjectRemoval() called on: ')
+			console.info(data)
+			console.info(objects[data.type][data.id])
+			console.info(objects)
 		}
 		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
-			console.warn('serverSendObjectRemoval() called on invalid object.')
-			return 1
+			console.warn('serverSendObjectRemoval() called on invalid object. Retry.')
+			setTimeout(() => {
+					try {
+						if (removeObject(data)) {
+							console.info("Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ")
+							return 0
+						}
+					}
+					catch(err) {
+						console.err("Retry failed. Object removal failed. Abandoning request. ")
+						return 1
+                    }
+                    // removeObject(data);
+			}, 1000/60);
+			// return 1
 		}
-		// console.log(objects[data.type][data.id].destroyed);
+		else {
+			// console.log(objects[data.type][data.id].destroyed);
 		// An object was removed
 		if (!objects[data.type][data.id].destroyed) { // Only remove if not already
 			removeObject(data)
@@ -184,19 +201,22 @@ function setupSocketObjectRetrieval () {
 			console.warn('serverSendObjectRemoval() called despite object has already been destroyed.') // Sanity check
 			return 1
 		}
+		}
+
+		
 
 		// Must keep checking if the object was not created at time of destruction.
 		// One example of this needing to be run is when a player instantly collects an atom on spawn.
-		if (objects[data.type][data.id] === undefined) {
-			let thisInterval = setTimeout(() => {
-				if (objects[data.type][data.id].destroyed) {
-					clearInterval(thisInterval)
-				}
-				else {
-					removeObject(data)
-				}
-			}, 200)
-		}
+		// if (objects[data.type][data.id] === undefined) {
+		// 	let thisInterval = setTimeout(() => {
+		// 		if (objects[data.type][data.id].destroyed) {
+		// 			clearInterval(thisInterval)
+		// 		}
+		// 		else {
+		// 			removeObject(data)
+		// 		}
+		// 	}, 200)
+		// }
 	})
 }
 
@@ -346,5 +366,9 @@ function removeObject (data) {
 		objects[data.type][data.id].hide()
 		objects[data.type][data.id].destroy()
 		// delete objects[data.type][data.id];
+		return true
+	}
+	else {
+		return false
 	}
 }

@@ -3,8 +3,8 @@ import { MAP_LAYOUT } from './obj/tiles'
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
 
-	DEBUG: false,
-	VERBOSE_SOCKET: false, // true = log if any socket method has been called
+	DEBUG: true, // REMEMBER to toggle this lmao if you dont want your entire pc crashing
+	VERBOSE_SOCKET: true, // true = debug clientside socket -> log if any socket method has been called
 	// Keys and other mathematical constants
 	KEY_ESC: 27,
 	KEY_ENTER: 13,
