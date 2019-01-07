@@ -177,33 +177,31 @@ function setupSocketObjectRetrieval () {
 		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
 			console.warn('serverSendObjectRemoval() called on invalid object. Retry.')
 			setTimeout(() => {
-					try {
-						if (removeObject(data)) {
-							console.info("Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ")
-							return 0
-						}
+				try {
+					if (removeObject(data)) {
+						console.info('Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ')
+						return 0
 					}
-					catch(err) {
-						console.err("Retry failed. Object removal failed. Abandoning request. ")
-						return 1
-                    }
-                    // removeObject(data);
-			}, 1000/60);
+				}
+				catch (err) {
+					console.err('Retry failed. Object removal failed. Abandoning request. ')
+					return 1
+				}
+				// removeObject(data);
+			}, 1000 / 60)
 			// return 1
 		}
 		else {
 			// console.log(objects[data.type][data.id].destroyed);
 		// An object was removed
-		if (!objects[data.type][data.id].destroyed) { // Only remove if not already
-			removeObject(data)
+			if (!objects[data.type][data.id].destroyed) { // Only remove if not already
+				removeObject(data)
+			}
+			else {
+				console.warn('serverSendObjectRemoval() called despite object has already been destroyed.') // Sanity check
+				return 1
+			}
 		}
-		else {
-			console.warn('serverSendObjectRemoval() called despite object has already been destroyed.') // Sanity check
-			return 1
-		}
-		}
-
-		
 
 		// Must keep checking if the object was not created at time of destruction.
 		// One example of this needing to be run is when a player instantly collects an atom on spawn.

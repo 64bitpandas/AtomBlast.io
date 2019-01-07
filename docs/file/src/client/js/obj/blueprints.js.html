@@ -105,6 +105,7 @@
  *
  * Fields required:
  * Name: The formatted name of the compound to display
+ * Unlocked: TEMPORARY. True if it should show up on initial load, false if it needs to be unlocked from playing.
  * Tooltip: Description of compound
  * Texture: Path to image to load
  * Type: Class of compound. Each different type has a different behavior as defined in `compound.js`.
@@ -114,6 +115,7 @@
 export const BLUEPRINTS = {
 	binaryHydrogen: {
 		name: &apos;Hydrogen&apos;,
+		unlocked: true,
 		tooltip: &apos;This is quite literally the smallest compound in the universe. Why are you using this as a weapon?&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;flammable&apos;,
@@ -131,6 +133,7 @@ export const BLUEPRINTS = {
 	},
 	basicMethane: {
 		name: &apos;Methane&apos;,
+		unlocked: true,
 		tooltip: &apos;Okay, who passed gas?&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;flammable&apos;,
@@ -146,6 +149,7 @@ export const BLUEPRINTS = {
 	},
 	basicBenzene: {
 		name: &apos;Benzene&apos;,
+		unlocked: false,
 		tooltip: &apos;Carbon rings. They smell nice.&apos;,
 		texture: &apos;../assets/atom_carbon.png&apos;,
 		type: &apos;basic&apos;,
@@ -160,7 +164,8 @@ export const BLUEPRINTS = {
 		}
 	},
 	basicWater: {
-		name: &apos;Dihydrogen Monoxide&apos;,
+		name: &apos;Water&apos;,
+		unlocked: true,
 		tooltip: &apos;Why life exists. Are you trying to drown someone?&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;stream&apos;,
@@ -180,6 +185,7 @@ export const BLUEPRINTS = {
 	},
 	binaryNitrogen: {
 		name: &apos;Nitrogen&apos;,
+		unlocked: true,
 		tooltip: &apos;78% of your air, and also why you get the bends.&apos;,
 		texture: &apos;../assets/atom_nitrogen.png&apos;,
 		type: &apos;basic&apos;,
@@ -194,6 +200,7 @@ export const BLUEPRINTS = {
 	},
 	binaryHelium: {
 		name: &apos;Helium&apos;,
+		unlocked: false,
 		tooltip: &apos;A nonreactive, inert gas. In other words, useless.&apos;,
 		texture: &apos;../assets/atom_helium.png&apos;,
 		type: &apos;basic&apos;,
@@ -208,6 +215,7 @@ export const BLUEPRINTS = {
 	},
 	ionicSodiumChloride: {
 		name: &apos;Sodium Chloride&apos;,
+		unlocked: false,
 		tooltip: &apos;Can kill small insects, slugs, and snails. Cannot kill much else.&apos;,
 		texture: &apos;../assets/atom_helium.png&apos;,
 		type: &apos;ionic&apos;,
@@ -223,6 +231,7 @@ export const BLUEPRINTS = {
 	},
 	acidicHydrogenChloride: {
 		name: &apos;Hydrochloric Acid&apos;,
+		unlocked: false,
 		tooltip: &apos;In a pure form, can corrode metal.&apos;,
 		texture: &apos;../assets/atom_helium.png&apos;,
 		type: &apos;acidic&apos;,
@@ -238,6 +247,7 @@ export const BLUEPRINTS = {
 	},
 	nuclearLithiumHydrogen: {
 		name: &apos;Lithium Deuteride&apos;,
+		unlocked: false,
 		tooltip: &apos;Used as the primary fuel in thermonuclear weapons.&apos;,
 		texture: &apos;../assets/atom_lithium.png&apos;,
 		type: &apos;nuclear&apos;,
@@ -252,7 +262,8 @@ export const BLUEPRINTS = {
 		}
 	},
 	glucose: {
-		name: &apos;Glucose&apos;,
+		name: &apos;Sugar&apos;,
+		unlocked: true,
 		tooltip: &apos;S U G A R R U S H !!!!&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;speed&apos;,
@@ -267,6 +278,7 @@ export const BLUEPRINTS = {
 	},
 	protonPack: {
 		name: &apos;Proton Pack&apos;,
+		unlocked: false,
 		tooltip: &apos;Easy health!&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;health&apos;,
@@ -279,6 +291,7 @@ export const BLUEPRINTS = {
 	},
 	ozone: {
 		name: &apos;Ozone&apos;,
+		unlocked: true,
 		tooltip: &apos;Shield em up!&apos;,
 		texture: &apos;../assets/atom-hydrogen.png&apos;,
 		type: &apos;defense&apos;,

@@ -30,7 +30,7 @@ export const GLOBAL = {
 	MAX_CHATS: 50, // Max number of chats to be displayed before deleting
 
 	// Server
-    SERVER_IP: 'atomblast.bananiumlabs.com:12002', // Change during production!!!!!
+	SERVER_IP: 'atomblast.bananiumlabs.com:12002', // Change during production!!!!!
 	LOCAL_HOST: 'localhost:12002',
 	TEST_IP: 'https://iogame-test.herokuapp.com/',
 	NO_ROOM_IDENTIFIER: '$_NOROOM', // Pass to server if matchmaking is required

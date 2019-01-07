@@ -100,7 +100,6 @@ export function frameSync (socket, room, thisPlayer) {
 				// socket.to(room).broadcast.emit('roomInfo', thisRoom.players);
 				socket.emit('roomInfo', thisRoom.players)
 			}
-			
 		}
 	}
 }

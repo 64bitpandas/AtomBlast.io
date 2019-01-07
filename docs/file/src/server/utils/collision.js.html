@@ -123,6 +123,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 			// console.log(atom);
 			incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
 			socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; })
+
 			socket.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; })
 			deleteObject(&apos;atoms&apos;, atom, room, socket)
 		}
@@ -140,7 +141,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 			// Hit player
 			if (distance &lt; cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
 				damage({
-					damage: (cmp.ignited) ? cmp.blueprints.params.ignitedDamage : cmp.blueprint.params.damage,
+					damage: (cmp.ignited) ? cmp.blueprint.params.ignitedDamage : cmp.blueprint.params.damage,
 					player: socket.id,
 					sentBy: cmp.sender,
 					id: compound

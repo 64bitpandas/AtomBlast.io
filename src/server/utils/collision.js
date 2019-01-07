@@ -22,7 +22,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 			// console.log(atom);
 			incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
 			socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' })
-			
+
 			socket.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' })
 			deleteObject('atoms', atom, room, socket)
 		}

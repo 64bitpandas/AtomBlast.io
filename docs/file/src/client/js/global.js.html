@@ -104,8 +104,8 @@
 // Contains all global constants and functions for both the client and server.
 export const GLOBAL = {
 
-	DEBUG: false,
-	VERBOSE_SOCKET: false, // true = log if any socket method has been called
+	DEBUG: true, // REMEMBER to toggle this lmao if you dont want your entire pc crashing
+	VERBOSE_SOCKET: true, // true = debug clientside socket -&gt; log if any socket method has been called
 	// Keys and other mathematical constants
 	KEY_ESC: 27,
 	KEY_ENTER: 13,
@@ -131,7 +131,7 @@ export const GLOBAL = {
 	MAX_CHATS: 50, // Max number of chats to be displayed before deleting
 
 	// Server
-	SERVER_IP: &apos;https://atomblast.herokuapp.com/&apos;, // Change during production!!!!!
+	SERVER_IP: &apos;atomblast.bananiumlabs.com:12002&apos;, // Change during production!!!!!
 	LOCAL_HOST: &apos;localhost:12002&apos;,
 	TEST_IP: &apos;https://iogame-test.herokuapp.com/&apos;,
 	NO_ROOM_IDENTIFIER: &apos;$_NOROOM&apos;, // Pass to server if matchmaking is required
