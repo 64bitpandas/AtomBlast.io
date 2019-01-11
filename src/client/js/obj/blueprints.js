@@ -200,5 +200,21 @@ export const BLUEPRINTS = {
 		atoms: {
 			o: 3
 		}
+	},
+	cyanide: {
+		name: 'Cyanide',
+		unlocked: true,
+		tooltip: 'Less deadly and more happy than Cyanide and Happiness.',
+		texture: '../assets/atom-hydrogen.png',
+		type: 'toxic',
+		params: {
+			speed: 1,
+			damagePerFrame: 0.2,
+			size: 20
+		},
+		atoms: {
+			c: 1,
+			n: 1
+		}
 	}
 }
