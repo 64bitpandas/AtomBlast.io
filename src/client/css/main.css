@@ -336,6 +336,16 @@ select:focus {
     max-height: 10vh;
 }
 
+
+.joystickbox {
+    width: 25vw;
+    height: 25vh;
+    top: 2rem;
+    left: 2rem;
+    padding: 1.2rem;
+    position: absolute;
+}
+
 /* **********
  * *  CHAT  *
  * ********** */

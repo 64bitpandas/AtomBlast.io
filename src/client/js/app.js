@@ -11,6 +11,7 @@ import { BLUEPRINTS } from './obj/blueprints.js'
 import { beginConnection, disconnect } from './socket.js'
 import { player, deductCraftMaterial, setIngame, getIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
 import swal from 'sweetalert'
+import VirtualJoystick from "./lib/mobilejoystick.js"
 
 // Array containing all inputs which require cookies, and their values
 export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val))
@@ -33,6 +34,8 @@ export let music
 export let sfx
 
 let errorSound = new Sound('assets/sfx/error.mp3')
+
+let joystick = new VirtualJoystick()
 
 // Starts the game if the name is valid.
 function joinGame () {
