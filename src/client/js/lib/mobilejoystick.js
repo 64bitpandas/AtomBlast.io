@@ -1,13 +1,13 @@
 /** 
- * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan
- * Created 17 April 2018
+ * Mobile Joystick - Utilizes nippleJS
+ * Created 12 January 2019
  */
 
 import nipplejs from 'nipplejs';
 
 export default class VirtualJoystick {
 
-    // Use this constructor during init to connect ChatClient to the server
+    // Use this constructor during init of game
     constructor(params) {
         
         var options = {
@@ -16,7 +16,7 @@ export default class VirtualJoystick {
         };
         var manager = nipplejs.create(options);
 
-        //Perform actions based on position/whatever
+        //Perform actions based on direction up
         manager.on('added', function (evt, nipple) {
             nipple.on('dir:up', function (evt) {
                console.log("Up")

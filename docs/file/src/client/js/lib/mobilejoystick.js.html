@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">src/server/utils/compound.js | atomblast.io</title>
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/lib/mobilejoystick.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -99,104 +99,38 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/compound.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
- * Manages compound creation and behavior.
- * Moved from clientside compound.js
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/lib/mobilejoystick.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/** 
+ * Client-side chat window connection, adapted for use from agario-clone (https://github.com/huytd/agar.io-clone/) by Ben Cuan
+ * Created 17 April 2018
  */
-import { GLOBAL, getCurrTile } from &apos;../../client/js/global&apos;
-import { canCraft } from &apos;./atoms&apos;
-import { generateID } from &apos;./serverutils&apos;
-import { incrementField, setField, deleteObject, getField } from &apos;../server&apos;
-import { damage } from &apos;./ondamage&apos;
-import { BLUEPRINTS } from &apos;../../client/js/obj/blueprints&apos;
-import { addExperience } from &apos;./experience&apos;
 
-/**
-  * Checks if a compound can be created, deducts craft material, and returns the new compound.
-  * Does NOT add the new compound to the objects array.
-  * @param data - Data sent from the client.
-  *  - blueprint: The blueprint of the compound to create
-  *  - sendingTeam: Team of the player who sent this
-  *  - mousePos: Mouse position of the player who sent this. Contains x and y components
-  *  - sender: Player who sent this
-  *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
-  * @param {string} room - The name of the room
-  * @param socket - Socket.io instance
-  */
-export function createCompound (data, room, thisPlayer, socket) {
-	if (!canCraft(thisPlayer, room, data.blueprint)) {
-		return false
-	}
+import nipplejs from &apos;nipplejs&apos;;
 
-	// Calculate velocities based on cursor position
-	let theta = Math.atan2(data.mousePos.y, data.mousePos.x)
-	let newCompound = {
-		id: generateID(),
-		posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS,
-		posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS,
-		vx: thisPlayer.vx + data.blueprint.params.speed * Math.cos(theta),
-		vy: thisPlayer.vy + data.blueprint.params.speed * Math.sin(theta),
-		blueprint: data.blueprint,
-		sendingTeam: data.sendingTeam,
-		sender: data.sender
-	}
-	// console.log(&quot;This player: &quot;);
-	// console.log(thisPlayer);
-	// Add functionality for specific blueprint types
-	if (data.blueprint.type === &apos;speed&apos;) {
-		incrementField(data.blueprint.params.speedFactor * (1 / thisPlayer.speedMult), [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;speedMult&apos;])
-	}
-	else if (data.blueprint.type === &apos;health&apos;) {
-		damage({
-			damage: -blueprint.params.healthModifier,
-			sender: socket.id
-		}, room, socket)
-		if (thisPlayer.health &gt; GLOBAL.MAX_HEALTH) {
-			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;health&apos;])
-		}
-	}
-	else if (data.blueprint.type === &apos;defense&apos;) {
-		setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;hasShield&apos;])
-	}
+export default class VirtualJoystick {
 
-	// Emits the crafting event to update experience
-	addExperience(&apos;CRAFT&apos;, socket, room, thisPlayer.id)
+    // Use this constructor during init to connect ChatClient to the server
+    constructor(params) {
+        
+        var options = {
+            zone: document.getElementById(&apos;zone_joystick&apos;),
+            color: &apos;red&apos;
+        };
+        var manager = nipplejs.create(options);
 
-	// Remove atoms from inventory
-	if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
-		for (let atom in data.blueprint.atoms) {
-			incrementField(-data.blueprint.atoms[atom], [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;atomList&apos;, atom])
-		}
-	}
+        //Perform actions based on position/whatever
+        manager.on(&apos;added&apos;, function (evt, nipple) {
+            nipple.on(&apos;dir:up&apos;, function (evt) {
+               console.log(&quot;Up&quot;)
+            });
+        }).on(&apos;removed&apos;, function (evt, nipple) {
+            nipple.off(&apos;start move end dir plain&apos;);
+        });
 
-	return newCompound
-}
+    }
 
-/**
- * Checks compound behavior based on compound type. Runs once a frame.
- * @param {number} compound compound object
- * @param {string} room Name of room
- */
-export function tickCompound (compound, room, socket) {
-	// TODO
-	switch (compound.blueprint.type) {
-		case &apos;flammable&apos;:
-			if (getCurrTile(compound) === &apos;F&apos; &amp;&amp; !compound.ignited) {
-				setField(true, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound.id, &apos;ignited&apos;])
-				// compound.ignited = true;
-				// compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
-			}
-			break
-	}
-
-	if (compound.blueprint.params.evaporate) {
-		if (getCurrTile(compound) === &apos;F&apos;) {
-			deleteObject(&apos;compounds&apos;, compound.id, room, socket)
-		}
-	}
-}
-</code></pre>
+    
+}</code></pre>
 
 </div>
 

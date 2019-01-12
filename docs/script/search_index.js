@@ -54,6 +54,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "atomblast.io/src/client/js/lib/mobilejoystick.js~virtualjoystick",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html",
+    "<span>VirtualJoystick</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/mobilejoystick.js</span>",
+    "class"
+  ],
+  [
     "atomblast.io/src/server/utils/experience.js~addexperience",
     "function/index.html#static-function-addExperience",
     "<span>addExperience</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/experience.js</span>",
@@ -790,6 +796,24 @@ window.esdocSearchIndex = [
     "file/src/client/js/lib/keyboard.js.html",
     "src/client/js/lib/keyboard.js",
     "file"
+  ],
+  [
+    "src/client/js/lib/libjoystick.js",
+    "file/src/client/js/lib/libjoystick.js.html",
+    "src/client/js/lib/libjoystick.js",
+    "file"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js",
+    "file/src/client/js/lib/mobilejoystick.js.html",
+    "src/client/js/lib/mobilejoystick.js",
+    "file"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#constructor",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-constructor-constructor",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#constructor",
+    "method"
   ],
   [
     "src/client/js/obj/blueprints.js",

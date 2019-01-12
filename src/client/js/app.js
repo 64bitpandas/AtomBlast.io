@@ -11,7 +11,7 @@ import { BLUEPRINTS } from './obj/blueprints.js'
 import { beginConnection, disconnect } from './socket.js'
 import { player, deductCraftMaterial, setIngame, getIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
 import swal from 'sweetalert'
-import VirtualJoystick from "./lib/mobilejoystick.js"
+import VirtualJoystick from './lib/mobilejoystick.js'
 
 // Array containing all inputs which require cookies, and their values
 export const cookieInputs = GLOBAL.COOKIES.map(val => document.getElementById(val))
