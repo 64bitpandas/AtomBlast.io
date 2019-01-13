@@ -172,7 +172,7 @@ export function isInBounds (obj) {
 
 /**
  * Gets the tile directly underneath any object.
- * @param {*} compound Compound object.
+ * @param {*} obj Any valid GameObject.
  * @returns {string} one-letter ID of current tile.
  */
 export function getCurrTile (obj) {

@@ -19,6 +19,7 @@ import { addExperience } from './experience'
   *  - sender: Player who sent this
   *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
   * @param {string} room - The name of the room
+  * @param thisPlayer - The current player instance
   * @param socket - Socket.io instance
   */
 export function createCompound (data, room, thisPlayer, socket) {
@@ -74,6 +75,7 @@ export function createCompound (data, room, thisPlayer, socket) {
  * Checks compound behavior based on compound type. Runs once a frame.
  * @param {number} compound compound object
  * @param {string} room Name of room
+ * @param socket - Socket.io instance
  */
 export function tickCompound (compound, room, socket) {
 	// TODO

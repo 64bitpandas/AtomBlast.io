@@ -7612,7 +7612,7 @@
           "trailingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+              "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
               "start": 4957,
               "end": 5105,
               "loc": {
@@ -7649,7 +7649,7 @@
         "trailingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+            "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
             "start": 4957,
             "end": 5105,
             "loc": {
@@ -8622,7 +8622,7 @@
           "leadingComments": [
             {
               "type": "CommentBlock",
-              "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+              "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
               "start": 4957,
               "end": 5105,
               "loc": {
@@ -8642,7 +8642,7 @@
         "leadingComments": [
           {
             "type": "CommentBlock",
-            "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+            "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
             "start": 4957,
             "end": 5105,
             "loc": {
@@ -9544,7 +9544,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+      "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
       "start": 4957,
       "end": 5105,
       "loc": {
@@ -23242,7 +23242,7 @@
     },
     {
       "type": "CommentBlock",
-      "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} compound Compound object.\n * @returns {string} one-letter ID of current tile.\n ",
+      "value": "*\n * Gets the tile directly underneath any object.\n * @param {*} obj Any valid GameObject.\n * @returns {string} one-letter ID of current tile.\n ",
       "start": 4957,
       "end": 5105,
       "loc": {
