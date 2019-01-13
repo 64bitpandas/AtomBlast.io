@@ -38,14 +38,25 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 
 			// Hit player
 			if (distance < cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+				let dmg = cmp.blueprint.params.damage
+
+				// Deal splash damage if it is a toxic compound or on fire
+				if (cmp.blueprint.type === 'toxic' || cmp.ignited) {
+					dmg = cmp.blueprint.params.splashDamage
+				}
+
 				damage({
-					damage: (cmp.ignited) ? cmp.blueprint.params.ignitedDamage : cmp.blueprint.params.damage,
+					damage: dmg,
 					player: socket.id,
 					sentBy: cmp.sender,
 					id: compound
 				}, room, socket)
 
-				deleteObject('compounds', compound, room, socket)
+
+				if(cmp.blueprint.type !== 'toxic' && !cmp.ignited) {
+					deleteObject('compounds', compound, room, socket)
+				}
+				
 			}
 		}
 	}

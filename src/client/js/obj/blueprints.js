@@ -22,7 +22,7 @@ export const BLUEPRINTS = {
 			speed: 5 * 3,
 			damage: 1,
 			size: 20,
-			ignitedDamage: 10,
+			splashDamage: 10,
 			splash: 50,
 			splashImage: '../assets/explosion.png'
 		},
@@ -208,13 +208,18 @@ export const BLUEPRINTS = {
 		texture: '../assets/atom-hydrogen.png',
 		type: 'toxic',
 		params: {
-			speed: 1,
-			damagePerFrame: 0.2,
-			size: 20
+			speed: 2,
+			splashDamage: 0.2,
+			size: 100
 		},
 		atoms: {
 			c: 1,
 			n: 1
 		}
 	}
+	// alcohol: {
+	// 	name: 'Alcohol',
+	// 	unlocked: false,
+	// 	tooltip: ''
+	// }
 }
