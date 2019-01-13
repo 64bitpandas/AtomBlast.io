@@ -52,11 +52,9 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 					id: compound
 				}, room, socket)
 
-
-				if(cmp.blueprint.type !== 'toxic' && !cmp.ignited) {
+				if (cmp.blueprint.type !== 'toxic' && !cmp.ignited) {
 					deleteObject('compounds', compound, room, socket)
 				}
-				
 			}
 		}
 	}
