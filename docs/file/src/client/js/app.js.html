@@ -534,11 +534,11 @@ export function updateCompoundButtons (selectedSlot) {
 		selectedSlot = selectedCompound
 	}
 	else {
-		selectedCompound = selectedSlot
+		selectedCompound = parseInt(selectedSlot)
 	}
 
 	for (let i = 0; i &lt; selectedBlueprints.length; i++) {
-		if (selectedSlot !== i) {
+		if (selectedCompound !== i) {
 			if (canCraft(selectedBlueprints[i])) {
 				document.getElementById(&apos;bp-ingame-&apos; + (i + 1)).style.background = &apos;#2ecc71&apos;
 			}
