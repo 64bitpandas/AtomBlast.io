@@ -68,6 +68,6 @@ export function spawnAtom (x, y, type, room, verbose) {
 
 	// Log to console
 	if (verbose) {
-		console.log('SPAWN ATOM ' + atomToSpawn + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy)
+		console.log('SPAWN ATOM ' + type + ' theta:' + theta + ', vx: ' + atom.vx + ', vy: ' + atom.vy)
 	}
 }

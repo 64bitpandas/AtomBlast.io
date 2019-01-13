@@ -29,6 +29,6 @@ export function addExperience (event, socket, room, player) {
 
 	// Check to see if the player leveled up
 	if (getField(['rooms', room, 'players', player, 'level']) > oldLevel) {
-		socket.emit('levelUp', { newLevel: thisPlayer.level })
+		socket.emit('levelUp', { newLevel: getField(['rooms', room, 'players', player, 'level']) })
 	}
 }

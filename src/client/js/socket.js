@@ -1,9 +1,7 @@
-import { GLOBAL, distanceBetween } from './global'
-import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from './app'
+import { GLOBAL } from './global'
+import { cookieInputs, quitGame, updateLobby, updateScores, hideElement, displayWinner, updateAtomList } from './app'
 import ChatClient from './lib/chat-client'
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from './pixigame'
-import { MapTile } from './obj/maptile'
-import { MAP_LAYOUT } from './obj/tiles'
+import { loadTextures, app, createPlayer, isSetup, startGame, setIngame } from './pixigame'
 import { createRenderAtom, createRenderCompound } from './obj/create'
 
 /**
@@ -175,19 +173,22 @@ function setupSocketObjectRetrieval () {
 			console.info(objects)
 		}
 		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
-			if(GLOBAL.DEBUG)
+			if (GLOBAL.VERBOSE_SOCKET) {
 				console.warn('serverSendObjectRemoval() called on invalid object. Retry.', data)
+			}
 			setTimeout(() => {
 				try {
 					if (removeObject(data)) {
-						if(GLOBAL.DEBUG)
+						if (GLOBAL.VERBOSE_SOCKET) {
 							console.info('Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ')
+						}
 						return 0
 					}
 				}
 				catch (err) {
-					if(GLOBAL.DEBUG)
+					if (GLOBAL.VERBOSE_SOCKET) {
 						console.error('Retry failed. Object removal failed. Abandoning request. ')
+					}
 					return 1
 				}
 				// removeObject(data);
@@ -336,11 +337,6 @@ function setupSocketInfo (chat) {
  * Helper Functions *
  ********************
  */
-
-// Linear Interpolation function. Adapted from p5.lerp
-function lerp (v0, v1, t) {
-	return v0 * (1 - t) + v1 * t
-}
 
 // Helper function for serverSendObjectRemoval
 function removeObject (data) {

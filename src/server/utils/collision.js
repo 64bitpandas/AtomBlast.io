@@ -1,5 +1,5 @@
 import { distanceBetween, GLOBAL } from '../../client/js/global'
-import { setField, deleteObject } from '../server'
+import { deleteObject } from '../server'
 import { damage } from './ondamage'
 import { incrementAtom } from './atoms'
 

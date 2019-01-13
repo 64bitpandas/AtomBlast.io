@@ -1,5 +1,4 @@
-import { getField, setField } from '../server'
-import { GLOBAL } from '../../client/js/global'
+import { getField } from '../server'
 
 /**
  * Misc. standalone utilities for the server.

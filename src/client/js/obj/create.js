@@ -3,13 +3,11 @@
  * for the client (atoms, compounds, players)
  */
 import * as PIXI from 'pixi.js'
-import { Player } from './player.js'
 import { GLOBAL } from '../global.js'
 import { GameObject } from './gameobject.js'
-import { distanceBetween } from '../global.js'
-import { screenCenterX, screenCenterY, player } from '../pixigame.js'
+import { player } from '../pixigame.js'
 import { socket } from '../socket.js'
-import { updateAtomList, updateCompoundButtons } from '../app.js'
+import { updateCompoundButtons } from '../app.js'
 
 /**
  * Renders a new atom.

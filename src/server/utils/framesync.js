@@ -1,5 +1,5 @@
 import { distanceBetween, isInBounds, GLOBAL } from '../../client/js/global'
-import { deleteObject, getField, setField, deleteStack, resetDeleteStack } from '../server'
+import { deleteObject, getField, setField } from '../server'
 import { collisionDetect } from './collision'
 import { tickCompound } from './compound'
 

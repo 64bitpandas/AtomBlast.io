@@ -5,11 +5,9 @@
 'use strict'
 import { GLOBAL } from './global.js'
 import * as cookies from './lib/cookies.js'
-import { Player } from './obj/player.js'
-import { GameObject } from './obj/gameobject.js'
 import { BLUEPRINTS } from './obj/blueprints.js'
 import { beginConnection, disconnect } from './socket.js'
-import { player, deductCraftMaterial, setIngame, getIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
+import { player, setIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
 import swal from 'sweetalert'
 import VirtualJoystick from './lib/mobilejoystick.js'
 
@@ -98,12 +96,6 @@ function allBlueprintsSelected () {
 		}
 	}
 	return true
-}
-/**
- * Its a method for testing stuff
- */
-function testHandler () {
-	swal('SUCCESS', 'The test event is invoked!', 'info')
 }
 
 /**

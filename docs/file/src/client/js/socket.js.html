@@ -100,12 +100,10 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/socket.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL, distanceBetween } from &apos;./global&apos;
-import { cookieInputs, quitGame, updateLobby, updateScores, showElement, hideElement, displayWinner, updateAtomList } from &apos;./app&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;./global&apos;
+import { cookieInputs, quitGame, updateLobby, updateScores, hideElement, displayWinner, updateAtomList } from &apos;./app&apos;
 import ChatClient from &apos;./lib/chat-client&apos;
-import { loadTextures, app, createPlayer, isSetup, showGameUI, startGame, player, setIngame } from &apos;./pixigame&apos;
-import { MapTile } from &apos;./obj/maptile&apos;
-import { MAP_LAYOUT } from &apos;./obj/tiles&apos;
+import { loadTextures, app, createPlayer, isSetup, startGame, setIngame } from &apos;./pixigame&apos;
 import { createRenderAtom, createRenderCompound } from &apos;./obj/create&apos;
 
 /**
@@ -441,11 +439,6 @@ function setupSocketInfo (chat) {
  * Helper Functions *
  ********************
  */
-
-// Linear Interpolation function. Adapted from p5.lerp
-function lerp (v0, v1, t) {
-	return v0 * (1 - t) + v1 * t
-}
 
 // Helper function for serverSendObjectRemoval
 function removeObject (data) {

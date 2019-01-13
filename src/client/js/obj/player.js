@@ -1,6 +1,6 @@
 import { GLOBAL } from '../global.js'
 import * as PIXI from 'pixi.js'
-import { player, screenCenterX, screenCenterY } from '../pixigame.js'
+import { screenCenterX, screenCenterY } from '../pixigame.js'
 import { socket } from '../socket.js'
 import { GameObject } from './gameobject.js'
 import { cookieInputs } from '../app.js'

@@ -2,7 +2,7 @@ import { GLOBAL } from '../../client/js/global'
 import { getField, setField } from '../server'
 import { getTeamNumber } from './serverutils'
 import { tmpdir } from 'os'
-import { spawnAtom } from './atoms';
+import { spawnAtom } from './atoms'
 
 /**
  * ondamage.js

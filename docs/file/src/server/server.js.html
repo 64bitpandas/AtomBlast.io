@@ -105,19 +105,16 @@ const app = express()
 const http = require(&apos;http&apos;).Server(app)
 const io = require(&apos;socket.io&apos;)(http)
 import colors from &apos;colors&apos; // Console colors :D
-import { GLOBAL, distanceBetween, isInBounds } from &apos;../client/js/global&apos;
-import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../client/js/obj/tiles&apos;
+import { GLOBAL } from &apos;../client/js/global&apos;
 import { roomMatchmaker } from &apos;./utils/matchmaker&apos;
-import { generateID, getTeamNumber } from &apos;./utils/serverutils&apos;
 import { initGlobal, initPlayer } from &apos;./utils/serverinit&apos;
 import { frameSync } from &apos;./utils/framesync&apos;
 import { damage } from &apos;./utils/ondamage&apos;
 import { createCompound } from &apos;./utils/compound&apos;
-import { spawnAtomAtVent, spawnAtom } from &apos;./utils/atoms&apos;
+import { spawnAtomAtVent } from &apos;./utils/atoms&apos;
 var config = require(&apos;./config.json&apos;)
 
 const DEBUG = true
-const COLLISIONVERBOSE = false // Turn on for debug messages with collision detection
 
 app.use(express.static(`${__dirname}/../client`))
 
@@ -169,7 +166,6 @@ initGlobal()
 io.on(&apos;connection&apos;, socket =&gt; {
 	// Local variable declaration
 	let room = socket.handshake.query.room
-	let roomType = socket.handshake.query.roomType
 	let team = socket.handshake.query.team
 
 	// Run matchmaker

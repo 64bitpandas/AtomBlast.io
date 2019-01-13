@@ -1,3 +1,4 @@
 src/client/js/lib/*.*
 src/client/js/public/build.js
 docs/*.*
+src/client/js/app.test.js

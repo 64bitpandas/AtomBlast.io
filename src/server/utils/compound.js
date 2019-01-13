@@ -5,9 +5,8 @@
 import { GLOBAL, getCurrTile } from '../../client/js/global'
 import { canCraft } from './atoms'
 import { generateID } from './serverutils'
-import { incrementField, setField, deleteObject, getField } from '../server'
+import { incrementField, setField, deleteObject } from '../server'
 import { damage } from './ondamage'
-import { BLUEPRINTS } from '../../client/js/obj/blueprints'
 import { addExperience } from './experience'
 
 /**
@@ -47,7 +46,7 @@ export function createCompound (data, room, thisPlayer, socket) {
 	}
 	else if (data.blueprint.type === 'health') {
 		damage({
-			damage: -blueprint.params.healthModifier,
+			damage: -data.blueprint.params.healthModifier,
 			sender: socket.id
 		}, room, socket)
 		if (thisPlayer.health > GLOBAL.MAX_HEALTH) {
