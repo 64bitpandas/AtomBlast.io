@@ -104,6 +104,7 @@
 import { getField, setField } from &apos;../server&apos;
 import { getTeamNumber } from &apos;./serverutils&apos;
 import { tmpdir } from &apos;os&apos;
+import { spawnAtom } from &apos;./atoms&apos;
 
 /**
  * ondamage.js
@@ -142,7 +143,20 @@ export function damage (data, room, socket) {
 		// Check if the player has died.
 		if (thisPlayer.health &lt;= 0) {
 			// console.log(thisRoom.teams.indexOf(socket.handshake.query.team));
-			socket.emit(&apos;serverSendPlayerDeath&apos;, { teamNumber: getTeamNumber(room, socket.handshake.query.team) })
+
+			// Releases atoms and deletes the entire atoms array in player
+			for (let at in thisPlayer.atomList) {
+				for (let i = 0; i &lt; GLOBAL.MAX_DEATH_ATOMS &amp;&amp; i &lt; thisPlayer.atomList[at]; i++) {
+					spawnAtom(thisPlayer.posX, thisPlayer.posY, at, room, false)
+				}
+			}
+			for (let at in thisPlayer.atomList) {
+				setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer, &apos;atomList&apos;, at])
+			}
+
+			// Reset position to spawnpoint
+			setField(GLOBAL.SPAWN_POINTS[getTeamNumber(room, thisPlayer.team)].x * GLOBAL.GRID_SPACING * 2, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;posX&apos;])
+			setField(GLOBAL.SPAWN_POINTS[getTeamNumber(room, thisPlayer.team)].y * GLOBAL.GRID_SPACING * 2, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;posY&apos;])
 			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
 
 			if (data.id !== undefined) {

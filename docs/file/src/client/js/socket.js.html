@@ -277,16 +277,22 @@ function setupSocketObjectRetrieval () {
 			console.info(objects)
 		}
 		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
-			console.warn(&apos;serverSendObjectRemoval() called on invalid object. Retry.&apos;)
+			if (GLOBAL.VERBOSE_SOCKET) {
+				console.warn(&apos;serverSendObjectRemoval() called on invalid object. Retry.&apos;, data)
+			}
 			setTimeout(() =&gt; {
 				try {
 					if (removeObject(data)) {
-						console.info(&apos;Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. &apos;)
+						if (GLOBAL.VERBOSE_SOCKET) {
+							console.info(&apos;Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. &apos;)
+						}
 						return 0
 					}
 				}
 				catch (err) {
-					console.err(&apos;Retry failed. Object removal failed. Abandoning request. &apos;)
+					if (GLOBAL.VERBOSE_SOCKET) {
+						console.error(&apos;Retry failed. Object removal failed. Abandoning request. &apos;)
+					}
 					return 1
 				}
 				// removeObject(data);
@@ -405,31 +411,12 @@ function setupSocketInfo (chat) {
 	// Respawn
 	socket.on(&apos;serverSendPlayerDeath&apos;, (data) =&gt; {
 		console.log(&apos;You Died!&apos;)
-
-		// TODO move trigger to server
-		// Releases atoms and deletes the entire atoms array in player
-		socket.emit(&apos;playerDeathAtoms&apos;, { atoms: player.atoms, x: player.posX, y: player.posY })
-		for (let at in player.atoms) {
-			player.atoms[at] = 0
-			updateAtomList(at)
-		}
-
-		// Reset position to spawnpoint
-		player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2
-		player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2
-		socket.emit(&apos;move&apos;, {
-			id: socket.id,
-			posX: player.posX,
-			posY: player.posY,
-			vx: 0,
-			vy: 0,
-			type: &apos;players&apos;
-		})
+		updateAtomList()
 	})
 
 	// Another player died
 	socket.on(&apos;serverSendNotifyPlayerDeath&apos;, (data) =&gt; {
-		// Append to chat
+		// Append to chat TODO
 	})
 
 	// Update timer

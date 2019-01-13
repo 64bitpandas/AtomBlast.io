@@ -4,7 +4,7 @@ import { MAP_LAYOUT } from './obj/tiles'
 export const GLOBAL = {
 
 	DEBUG: true, // REMEMBER to toggle this lmao if you dont want your entire pc crashing
-	VERBOSE_SOCKET: true, // true = debug clientside socket -> log if any socket method has been called
+	VERBOSE_SOCKET: false, // true = debug clientside socket -> log if any socket method has been called
 	// Keys and other mathematical constants
 	KEY_ESC: 27,
 	KEY_ENTER: 13,

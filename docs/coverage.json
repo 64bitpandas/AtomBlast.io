@@ -1,7 +1,7 @@
 {
-  "coverage": "46.19%",
-  "expectCount": 184,
-  "actualCount": 85,
+  "coverage": "50.93%",
+  "expectCount": 161,
+  "actualCount": 82,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -52,32 +52,6 @@
       "actualCount": 0,
       "undocumentLines": [
         8
-      ]
-    },
-    "src/client/js/lib/libjoystick.js": {
-      "expectCount": 23,
-      "actualCount": 3,
-      "undocumentLines": [
-        1,
-        54,
-        108,
-        109,
-        111,
-        119,
-        127,
-        135,
-        148,
-        161,
-        191,
-        219,
-        224,
-        232,
-        243,
-        267,
-        291,
-        362,
-        376,
-        397
       ]
     },
     "src/client/js/lib/mobilejoystick.js": {
@@ -175,8 +149,8 @@
       "undocumentLines": [
         20,
         34,
-        357,
-        362
+        344,
+        349
       ]
     },
     "src/server/server.js": {
@@ -191,7 +165,7 @@
         17,
         18,
         45,
-        222
+        213
       ]
     },
     "src/server/utils/atoms.js": {

@@ -798,12 +798,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/lib/libjoystick.js",
-    "file/src/client/js/lib/libjoystick.js.html",
-    "src/client/js/lib/libjoystick.js",
-    "file"
-  ],
-  [
     "src/client/js/lib/mobilejoystick.js",
     "file/src/client/js/lib/mobilejoystick.js.html",
     "src/client/js/lib/mobilejoystick.js",

@@ -175,16 +175,19 @@ function setupSocketObjectRetrieval () {
 			console.info(objects)
 		}
 		if (objects[data.type][data.id] === undefined || objects[data.type][data.id] === null) {
-			console.warn('serverSendObjectRemoval() called on invalid object. Retry.')
+			if(GLOBAL.DEBUG)
+				console.warn('serverSendObjectRemoval() called on invalid object. Retry.', data)
 			setTimeout(() => {
 				try {
 					if (removeObject(data)) {
-						console.info('Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ')
+						if(GLOBAL.DEBUG)
+							console.info('Retry successfully removed object. While this worked, it should not happen. Please fix root cause of issue. ')
 						return 0
 					}
 				}
 				catch (err) {
-					console.err('Retry failed. Object removal failed. Abandoning request. ')
+					if(GLOBAL.DEBUG)
+						console.error('Retry failed. Object removal failed. Abandoning request. ')
 					return 1
 				}
 				// removeObject(data);
@@ -303,31 +306,12 @@ function setupSocketInfo (chat) {
 	// Respawn
 	socket.on('serverSendPlayerDeath', (data) => {
 		console.log('You Died!')
-
-		// TODO move trigger to server
-		// Releases atoms and deletes the entire atoms array in player
-		socket.emit('playerDeathAtoms', { atoms: player.atoms, x: player.posX, y: player.posY })
-		for (let at in player.atoms) {
-			player.atoms[at] = 0
-			updateAtomList(at)
-		}
-
-		// Reset position to spawnpoint
-		player.posX = GLOBAL.SPAWN_POINTS[data.teamNumber].x * GLOBAL.GRID_SPACING * 2
-		player.posY = GLOBAL.SPAWN_POINTS[data.teamNumber].y * GLOBAL.GRID_SPACING * 2
-		socket.emit('move', {
-			id: socket.id,
-			posX: player.posX,
-			posY: player.posY,
-			vx: 0,
-			vy: 0,
-			type: 'players'
-		})
+		updateAtomList()
 	})
 
 	// Another player died
 	socket.on('serverSendNotifyPlayerDeath', (data) => {
-		// Append to chat
+		// Append to chat TODO
 	})
 
 	// Update timer

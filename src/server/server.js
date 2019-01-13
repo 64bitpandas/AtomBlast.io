@@ -172,15 +172,6 @@ io.on('connection', socket => {
 		spawnAtomAtVent(data.row, data.col, room, true)
 	})
 
-	// Atom information sent on player death. Spreads atoms randomly in a circle around the death area.
-	socket.on('playerDeathAtoms', (data) => {
-		for (let at in data.atoms) {
-			for (let i = 0; i < GLOBAL.MAX_DEATH_ATOMS && i < data.atoms[at]; i++) {
-				spawnAtom(data.x, data.y, at, room, false)
-			}
-		}
-	})
-
 	// Testing purposes- give yourself 5000 of each atom
 	socket.on('testCommand', (data) => {
 		if (GLOBAL.DEBUG) {
@@ -301,5 +292,5 @@ export function deleteObject (type, id, room, socket) {
 
 	// Send clientside message
 	socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: id, type: type })
-	// socket.emit('serverSendObjectRemoval', { id: id, type: type });
+	socket.emit('serverSendObjectRemoval', { id: id, type: type })
 }

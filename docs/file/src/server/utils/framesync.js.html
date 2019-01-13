@@ -182,9 +182,9 @@ export function frameSync (socket, room, thisPlayer) {
 					if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) {
 						tempObjects[objType][obj] = thisRoom[objType][obj]
 					}
-					else if (objType === &apos;players&apos;) { // Player left view
-						socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
-					}
+					// else if (objType === &apos;players&apos;) { // Player left view
+					// 	socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
+					// }
 				}
 			}
 
