@@ -7,20 +7,59 @@
 * {
     font-family: 'Aldrich', sans-serif !important;
 }
-@-webkit-keyframes rotate {
-    from {
-      -webkit-transform: rotate(0deg);
+
+#logoC img {
+    /* -webkit-transform-origin: 35px 30px; */
+    -webkit-animation: spin1 2s infinite linear;
+    -moz-animation: spin1 2s infinite linear;
+    -o-animation: spin1 2s infinite linear;
+    -ms-animation: spin1 2s infinite linear;
+    animation: spin1 2s infinite linear;
+}
+
+@-webkit-keyframes spin1 {
+    0% {
+        -webkit-transform: rotate(0deg);
     }
-    to { 
-      -webkit-transform: rotate(360deg);
+    100% {
+        -webkit-transform: rotate(360deg);
     }
 }
-  
-#logoC img {
-      -webkit-animation-name:            rotate; 
-      -webkit-animation-duration:        0.5s; 
-      -webkit-animation-iteration-count: infinite;
-      -webkit-animation-timing-function: linear;
+
+@-moz-keyframes spin1 {
+    0% {
+        -moz-transform: rotate(0deg);
+    }
+    100% {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes spin1 {
+    0% {
+        -o-transform: rotate(0deg);
+    }
+    100% {
+        -o-transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes spin1 {
+    0% {
+        -ms-transform: rotate(0deg);
+    }
+    100% {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+@-keyframes spin1 {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 html,
@@ -261,13 +300,13 @@ canvas {
     display: none;
     font-size: 12px;
 }
-
+/* 
 #logo img {
     max-height: 20vh;
     padding-top: 5vh;
     display: block;
     margin: auto;
-}
+} */
 
 #logo-firefox {
     margin: auto;
