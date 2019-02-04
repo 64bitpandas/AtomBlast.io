@@ -132,6 +132,16 @@ canvas {
     height: 70%;
 }
 
+#bp-select-info {
+    font-size: 15px !important;
+    margin: 0;
+    font-weight: normal !important;
+}
+
+#bp-select-header {
+    margin: 0;
+}
+
 /* Ingame Menu */
 
 .menubox {
@@ -578,18 +588,19 @@ select:focus {
 
 .btn-blueprint h6 {
     font-weight: 100;
-    margin-top: 5%;
     max-height: 10%;
+    margin: 0;
 }
 
 .btn-blueprint p {
     margin-top: 5%;
+    margin-bottom: 3%;
     line-height: 1;
     max-height: 5%;
 }
 
 .btn-blueprint img {
-    margin-bottom: 5%;
+    margin: 5%;
     max-height: 45%;
 }
 

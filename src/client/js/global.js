@@ -21,6 +21,11 @@ export const GLOBAL = {
 	// Blueprints
 	BP_SELECT: 'Blueprint Select - Slot ', // Text for blueprint select header
 	BP_MAX: 4, // Maximum number of blueprints a player can have in one game at a time
+	// Params that will not display on tooltip
+	BP_TOOLTIP_BLACKLIST: [
+		'evaporate',
+		'splashImage'
+	],
 
 	// Main menu
 	INPUT_COUNT: 3, // Number of input boxes on main menu

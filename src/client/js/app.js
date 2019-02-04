@@ -199,7 +199,7 @@ window.onload = () => {
 				`
 				<button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-blueprint blueprint-${bp.type}" id="btn-blueprint-${blueprint}">
 					<p>${bp.name}</p>
-					<h6>-${getCompoundFormula(bp)}-</h6>
+					<h6>-${getCompoundFormula(bp)} (${bp.type.charAt(0).toUpperCase() + bp.type.slice(1)})-</h6>
 					<img src="${bp.texture}">
 					<span class="tooltip">${bp.tooltip}</span>
 				</button>
@@ -402,6 +402,42 @@ window.tooltipFollow = (button) => {
 	let tooltip = button.getElementsByClassName('tooltip')[0]
 	tooltip.style.top = (mouseY - 150) + 'px'
 	tooltip.style.left = (mouseX - 150) + 'px'
+}
+
+// Toggle compound stats and info tooltips
+let compoundStats = false;
+window.onkeydown = (e) => {
+
+	// Only detect if the blueprint select screen is up
+	if(document.getElementById('bp-select').style.display === 'block' && e.key === 'Shift')
+		compoundStats = !compoundStats
+
+		// Iterate through all compound buttons
+		for(let button of document.getElementsByClassName('btn-blueprint')) {
+
+			// Get blueprint from BLUEPRINTS
+			let blueprint = Object.values(BLUEPRINTS).filter((obj) => {
+				return obj.name === button.getElementsByTagName('p')[0].innerHTML
+			})
+			blueprint = blueprint[0]
+	
+			if(compoundStats) {
+				let newTooltip = ''
+				for(let param in blueprint.params) {
+					
+					if(!GLOBAL.BP_TOOLTIP_BLACKLIST.includes(param)) {
+						let line = ('' + param).replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
+							+ ': ' + blueprint.params[param] + '<br>'
+
+							newTooltip += line
+					}
+					
+				}
+				button.getElementsByClassName('tooltip')[0].innerHTML = newTooltip
+			}
+			else
+				button.getElementsByClassName('tooltip')[0].innerHTML = blueprint.tooltip
+		}
 }
 
 /**
