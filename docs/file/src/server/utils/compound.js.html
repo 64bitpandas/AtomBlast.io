@@ -185,8 +185,8 @@ export function tickCompound (compound, room, socket) {
 		case &apos;flammable&apos;:
 			if (getCurrTile(compound) === &apos;F&apos; &amp;&amp; !compound.ignited) {
 				setField(true, [&apos;rooms&apos;, room, &apos;compounds&apos;, compound.id, &apos;ignited&apos;])
-				// compound.ignited = true;
-				// compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture;
+				// compound.ignited = true (above statement)
+				// compound.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture; moved to client
 			}
 			break
 	}

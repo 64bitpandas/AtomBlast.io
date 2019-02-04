@@ -96,7 +96,7 @@ export const GLOBAL = {
 		'../assets/testplayer.png'
 
 	],
-	IGNITE_SPRITE: '../assets/placeholder_ignited.png',
+	IGNITE_SPRITE: '../assets/compounds/placeholder_ignited.png',
 
 	// Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
 	ATOM_IDS: [
@@ -108,12 +108,12 @@ export const GLOBAL = {
 		'o'
 	],
 	ATOM_SPRITES: [
-		'../assets/atom-hydrogen.png',
-		'../assets/atom_helium.png',
-		'../assets/atom_carbon.png',
-		'../assets/testplayer2.png',
-		'../assets/atom_nitrogen.png',
-		'../assets/atom_oxygen.png'
+		'../assets/atoms/atom-hydrogen.png',
+		'../assets/atoms/atom_helium.png',
+		'../assets/atoms/atom_carbon.png',
+		'../assets/atoms/testplayer2.png',
+		'../assets/atoms/atom_nitrogen.png',
+		'../assets/atoms/atom_oxygen.png'
 	],
 	// Each Value corresponds with the above event
 	EXPERIENCE_VALUES: {

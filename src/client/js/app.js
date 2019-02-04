@@ -104,7 +104,7 @@ function allBlueprintsSelected () {
 window.onload = () => {
 	// Patch logo for firefox
 	if (typeof InstallTrigger !== 'undefined')
-        {document.getElementById('logo').innerHTML = `<img src="assets/logo.svg" id="logo-firefox">`;} // eslint-disable-line
+        {document.getElementById('logo').innerHTML = `<img src="assets/logos/logo.svg" id="logo-firefox">`;} // eslint-disable-line
 
 	// Cookie loading - create array of all cookie values
 	let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val))
