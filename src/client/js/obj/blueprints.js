@@ -164,7 +164,7 @@ export const BLUEPRINTS = {
 		name: 'Sugar',
 		unlocked: true,
 		tooltip: 'S U G A R R U S H !!!!',
-		texture: '../assets/atoms/atom_hydrogen.png',
+		texture: '../assets/compounds/compound_sugar.png',
 		type: 'speed',
 		params: {
 			speedFactor: 0.5
@@ -192,7 +192,7 @@ export const BLUEPRINTS = {
 		name: 'Ozone',
 		unlocked: true,
 		tooltip: 'Shield em up!',
-		texture: '../assets/atoms/atom_hydrogen.png',
+		texture: '../assets/compounds/compound_ozone.png',
 		type: 'defense',
 		params: {
 			defenseModifier: 10
