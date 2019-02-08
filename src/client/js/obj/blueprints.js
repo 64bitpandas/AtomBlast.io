@@ -16,7 +16,7 @@ export const BLUEPRINTS = {
 		name: 'Hydrogen',
 		unlocked: true,
 		tooltip: 'This is quite literally the smallest compound in the universe. Why are you using this as a weapon?',
-		texture: '../assets/spritesheet/atoms/atom_hydrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'flammable',
 		params: {
 			speed: 5 * 3,
@@ -34,7 +34,7 @@ export const BLUEPRINTS = {
 		name: 'Methane',
 		unlocked: true,
 		tooltip: 'Okay, who passed gas?',
-		texture: '../assets/spritesheet/atoms/atom_hydrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'flammable',
 		params: {
 			speed: 3 * 3,
@@ -50,7 +50,7 @@ export const BLUEPRINTS = {
 		name: 'Benzene',
 		unlocked: false,
 		tooltip: 'Carbon rings. They smell nice.',
-		texture: '../assets/spritesheet/atoms/atom_carbon.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'basic',
 		params: {
 			speed: 1 * 3,
@@ -66,7 +66,7 @@ export const BLUEPRINTS = {
 		name: 'Water',
 		unlocked: true,
 		tooltip: 'Why life exists. Are you trying to drown someone?',
-		texture: '../assets/spritesheet/atoms/atom_hydrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'stream',
 		params: {
 			speed: 4 * 3,
@@ -86,7 +86,7 @@ export const BLUEPRINTS = {
 		name: 'Nitrogen',
 		unlocked: true,
 		tooltip: '78% of your air, and also why you get the bends.',
-		texture: '../assets/spritesheet/atoms/atom_nitrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'basic',
 		params: {
 			speed: 3 * 3,
@@ -101,7 +101,7 @@ export const BLUEPRINTS = {
 		name: 'Helium',
 		unlocked: false,
 		tooltip: 'A nonreactive, inert gas. In other words, useless.',
-		texture: '../assets/spritesheet/atoms/atom_helium.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'basic',
 		params: {
 			speed: 4 * 3,
@@ -116,7 +116,7 @@ export const BLUEPRINTS = {
 		name: 'Sodium Chloride',
 		unlocked: false,
 		tooltip: 'Can kill small insects, slugs, and snails. Cannot kill much else.',
-		texture: '../assets/spritesheet/atoms/atom_helium.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'ionic',
 		params: {
 			speed: 4 * 3,
@@ -132,7 +132,7 @@ export const BLUEPRINTS = {
 		name: 'Hydrochloric Acid',
 		unlocked: false,
 		tooltip: 'In a pure form, can corrode metal.',
-		texture: '../assets/spritesheet/atoms/atom_helium.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'acidic',
 		params: {
 			speed: 4 * 3,
@@ -164,7 +164,7 @@ export const BLUEPRINTS = {
 		name: 'Sugar',
 		unlocked: true,
 		tooltip: 'S U G A R R U S H !!!!',
-		texture: '../assets/spritesheet/compounds/compound_sugar.png',
+		texture: 'compound_sugar.png',
 		type: 'speed',
 		params: {
 			speedFactor: 0.5
@@ -179,7 +179,7 @@ export const BLUEPRINTS = {
 		name: 'Proton Pack',
 		unlocked: false,
 		tooltip: 'Easy health!',
-		texture: '../assets/spritesheet/atoms/atom_hydrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'health',
 		params: {
 			healthModifier: 10
@@ -192,7 +192,7 @@ export const BLUEPRINTS = {
 		name: 'Ozone',
 		unlocked: true,
 		tooltip: 'Shield em up!',
-		texture: '../assets/spritesheet/compounds/compound_ozone.png',
+		texture: 'compound_ozone.png',
 		type: 'defense',
 		params: {
 			defenseModifier: 10
@@ -205,7 +205,7 @@ export const BLUEPRINTS = {
 		name: 'Cyanide',
 		unlocked: true,
 		tooltip: 'Less deadly and more happy than Cyanide and Happiness.',
-		texture: '../assets/spritesheet/atoms/atom_hydrogen.png',
+		texture: 'compound_PLACEHOLDER.png',
 		type: 'toxic',
 		params: {
 			speed: 2,

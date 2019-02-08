@@ -251,15 +251,6 @@ function draw (delta) {
 			vx: player.vx,
 			vy: player.vy
 		})
-
-		// Move grid
-		for (let line of vertLines) {
-			line.x = line.oX - player.posX % (GLOBAL.GRID_SPACING * 2)
-		}
-
-		for (let line of horizLines) {
-			line.y = line.oY + player.posY % (GLOBAL.GRID_SPACING * 2)
-		}
 	}
 
 	// Handle objects except for this player

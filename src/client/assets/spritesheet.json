@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"image": "spritesheet.png",
-		"size": {"w":2856,"h":2344},
+		"size": {"w":2856,"h":2610},
 		"scale": "1"
 	},
 	"frames": {
@@ -69,7 +69,7 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
 			"sourceSize": {"w":512,"h":512}
 		},
-		"compound_ozone.png":
+		"compound_PLACEHOLDER.png":
 		{
 			"frame": {"x":527,"y":1561,"w":512,"h":512},
 			"rotated": false,
@@ -77,9 +77,17 @@
 			"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
 			"sourceSize": {"w":512,"h":512}
 		},
-		"compound_sugar.png":
+		"compound_ozone.png":
 		{
 			"frame": {"x":1049,"y":1561,"w":512,"h":512},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+			"sourceSize": {"w":512,"h":512}
+		},
+		"compound_sugar.png":
+		{
+			"frame": {"x":1571,"y":1561,"w":512,"h":512},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
@@ -103,7 +111,7 @@
 		},
 		"CarbonSource.png":
 		{
-			"frame": {"x":1571,"y":1561,"w":256,"h":256},
+			"frame": {"x":2093,"y":1561,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -111,7 +119,7 @@
 		},
 		"Corner BL.png":
 		{
-			"frame": {"x":1837,"y":1561,"w":256,"h":256},
+			"frame": {"x":5,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -119,7 +127,7 @@
 		},
 		"Corner BR.png":
 		{
-			"frame": {"x":2103,"y":1561,"w":256,"h":256},
+			"frame": {"x":271,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -127,7 +135,7 @@
 		},
 		"Corner TL.png":
 		{
-			"frame": {"x":5,"y":2083,"w":256,"h":256},
+			"frame": {"x":537,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -135,7 +143,7 @@
 		},
 		"Corner TR.png":
 		{
-			"frame": {"x":271,"y":2083,"w":256,"h":256},
+			"frame": {"x":803,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -143,7 +151,7 @@
 		},
 		"EdgeTile B.png":
 		{
-			"frame": {"x":537,"y":2083,"w":256,"h":256},
+			"frame": {"x":1069,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -151,7 +159,7 @@
 		},
 		"EdgeTile L.png":
 		{
-			"frame": {"x":803,"y":2083,"w":256,"h":256},
+			"frame": {"x":1335,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -159,7 +167,7 @@
 		},
 		"EdgeTile R.png":
 		{
-			"frame": {"x":1069,"y":2083,"w":256,"h":256},
+			"frame": {"x":1601,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -167,7 +175,7 @@
 		},
 		"EdgeTile T.png":
 		{
-			"frame": {"x":1335,"y":2083,"w":256,"h":256},
+			"frame": {"x":1867,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -175,7 +183,7 @@
 		},
 		"FlameTile.png":
 		{
-			"frame": {"x":1601,"y":2083,"w":256,"h":256},
+			"frame": {"x":2133,"y":2083,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -183,7 +191,7 @@
 		},
 		"HeliumVent.png":
 		{
-			"frame": {"x":1867,"y":2083,"w":256,"h":256},
+			"frame": {"x":2595,"y":5,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -191,7 +199,7 @@
 		},
 		"HydrogenVent.png":
 		{
-			"frame": {"x":2133,"y":2083,"w":256,"h":256},
+			"frame": {"x":2595,"y":271,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -199,7 +207,7 @@
 		},
 		"InteriorCorner BL.png":
 		{
-			"frame": {"x":2595,"y":5,"w":256,"h":256},
+			"frame": {"x":2595,"y":537,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -207,7 +215,7 @@
 		},
 		"InteriorCorner BR.png":
 		{
-			"frame": {"x":2595,"y":271,"w":256,"h":256},
+			"frame": {"x":2595,"y":803,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -215,7 +223,7 @@
 		},
 		"InteriorCorner TL.png":
 		{
-			"frame": {"x":2595,"y":537,"w":256,"h":256},
+			"frame": {"x":2595,"y":1069,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -223,7 +231,7 @@
 		},
 		"InteriorCorner TR.png":
 		{
-			"frame": {"x":2595,"y":803,"w":256,"h":256},
+			"frame": {"x":2595,"y":1335,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -231,7 +239,7 @@
 		},
 		"NitrogenVent.png":
 		{
-			"frame": {"x":2595,"y":1069,"w":256,"h":256},
+			"frame": {"x":2595,"y":1601,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -239,7 +247,7 @@
 		},
 		"Outside.png":
 		{
-			"frame": {"x":2595,"y":1335,"w":256,"h":256},
+			"frame": {"x":2595,"y":1867,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -247,7 +255,7 @@
 		},
 		"OxygenVent.png":
 		{
-			"frame": {"x":2595,"y":1601,"w":256,"h":256},
+			"frame": {"x":5,"y":2349,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
@@ -255,7 +263,7 @@
 		},
 		"SolidTile.png":
 		{
-			"frame": {"x":2595,"y":1867,"w":256,"h":256},
+			"frame": {"x":271,"y":2349,"w":256,"h":256},
 			"rotated": false,
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},

@@ -199,7 +199,7 @@ window.onload = () => {
 				<button onmouseenter="tooltipFollow(this)" class="button width-override col-6 col-12-sm btn-blueprint blueprint-${bp.type}" id="btn-blueprint-${blueprint}">
 					<p>${bp.name}</p>
 					<h6>-${getCompoundFormula(bp)} (${bp.type.charAt(0).toUpperCase() + bp.type.slice(1)})-</h6>
-					<img src="${bp.texture}">
+					<img src="${GLOBAL.COMPOUND_DIR + bp.texture}">
 					<span class="tooltip">${bp.tooltip}</span>
 				</button>
 				`

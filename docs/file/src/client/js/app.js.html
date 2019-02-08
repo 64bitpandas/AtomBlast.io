@@ -301,7 +301,7 @@ window.onload = () =&gt; {
 				&lt;button onmouseenter=&quot;tooltipFollow(this)&quot; class=&quot;button width-override col-6 col-12-sm btn-blueprint blueprint-${bp.type}&quot; id=&quot;btn-blueprint-${blueprint}&quot;&gt;
 					&lt;p&gt;${bp.name}&lt;/p&gt;
 					&lt;h6&gt;-${getCompoundFormula(bp)} (${bp.type.charAt(0).toUpperCase() + bp.type.slice(1)})-&lt;/h6&gt;
-					&lt;img src=&quot;${bp.texture}&quot;&gt;
+					&lt;img src=&quot;${GLOBAL.COMPOUND_DIR + bp.texture}&quot;&gt;
 					&lt;span class=&quot;tooltip&quot;&gt;${bp.tooltip}&lt;/span&gt;
 				&lt;/button&gt;
 				`

@@ -122,6 +122,9 @@ export const GLOBAL = {
 	// Location of spritesheet relative to pixigame
 	SPRITESHEET_DIR: '../assets/spritesheet.json',
 
+	// Used for main menu textures
+	COMPOUND_DIR: '../assets/spritesheet/compounds/',
+
 	// Each Value corresponds with the above event
 	EXPERIENCE_VALUES: {
 		CRAFT: 10,
