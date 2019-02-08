@@ -121,8 +121,6 @@ export var spritesheet // Spritesheet containing all sprites that need to be loa
 let inGame = false // True after game has begun
 let mouseDown = false // True if mouse is pressed down
 let esc, space, blueprintKeys, moveKeys // Key handlers
-let vertLines = [] // Grid stuff
-let horizLines = []
 let streamID = 0 // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
 export function loadTextures () {
@@ -273,28 +271,6 @@ function registerCallbacks () {
 				}
 			}
 		}
-	}
-
-	// Draw grid
-	// Grid
-	let line
-	for (let x = 0; x &lt; window.innerWidth / GLOBAL.GRID_SPACING; x++) {
-		line = new PIXI.Graphics()
-		line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1)
-		line.oX = x * GLOBAL.GRID_SPACING
-		line.moveTo(line.oX, 0)
-		line.lineTo(line.oX, window.innerHeight)
-		vertLines.push(line)
-		app.stage.addChild(line)
-	}
-	for (let y = 0; y &lt; window.innerHeight / GLOBAL.GRID_SPACING; y++) {
-		line = new PIXI.Graphics()
-		line.lineStyle(GLOBAL.GRID_LINE_STROKE, GLOBAL.GRID_LINE_COLOUR, 1)
-		line.oY = y * GLOBAL.GRID_SPACING
-		line.moveTo(0, line.oY)
-		line.lineTo(window.innerWidth, line.oY)
-		horizLines.push(line)
-		app.stage.addChild(line)
 	}
 
 	showGameUI()
