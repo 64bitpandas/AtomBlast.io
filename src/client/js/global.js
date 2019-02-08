@@ -74,7 +74,6 @@ export const GLOBAL = {
 	ATOM_COLLECT_THRESHOLD: 100, // Distance away from center of player that the atom must be before being collected
 
 	// Map
-	TILE_TEXTURE_DIR: '../assets/map/Tiles/',
 	MAP_SIZE: 2000,
 	SPAWN_POINTS: [
 		{ x: 0, y: 0 },
@@ -98,10 +97,9 @@ export const GLOBAL = {
 
 	// Sprites and textures
 	PLAYER_SPRITES: [
-		'../assets/testplayer.png'
-
+		'testplayer.png'
 	],
-	IGNITE_SPRITE: '../assets/compounds/placeholder_ignited.png',
+	IGNITE_SPRITE: 'placeholder_ignited.png',
 
 	// Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.
 	ATOM_IDS: [
@@ -113,13 +111,17 @@ export const GLOBAL = {
 		'o'
 	],
 	ATOM_SPRITES: [
-		'../assets/atoms/atom-hydrogen.png',
-		'../assets/atoms/atom_helium.png',
-		'../assets/atoms/atom_carbon.png',
-		'../assets/atoms/testplayer2.png',
-		'../assets/atoms/atom_nitrogen.png',
-		'../assets/atoms/atom_oxygen.png'
+		'atom_hydrogen.png',
+		'atom_helium.png',
+		'atom_carbon.png',
+		'testplayer2.png',
+		'atom_nitrogen.png',
+		'atom_oxygen.png'
 	],
+
+	// Location of spritesheet relative to pixigame
+	SPRITESHEET_DIR: '../assets/spritesheet.json',
+
 	// Each Value corresponds with the above event
 	EXPERIENCE_VALUES: {
 		CRAFT: 10,

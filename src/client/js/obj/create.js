@@ -5,7 +5,7 @@
 import * as PIXI from 'pixi.js'
 import { GLOBAL } from '../global.js'
 import { GameObject } from './gameobject.js'
-import { player } from '../pixigame.js'
+import { player, spritesheet } from '../pixigame.js'
 import { socket } from '../socket.js'
 import { updateCompoundButtons } from '../app.js'
 
@@ -20,7 +20,7 @@ import { updateCompoundButtons } from '../app.js'
  *  - vy {number}
  */
 export function createRenderAtom (data) {
-	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture
+	let texture = spritesheet.textures[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]]
 
 	if (data.typeID === '') {
 		throw new Error('The Atom object cannot be created without specifying behavior.')
@@ -55,7 +55,7 @@ export function createPlayer (data) {
  *  - sender {number - socket ID}
  */
 export function createRenderCompound (data) {
-	let texture = PIXI.loader.resources[data.blueprint.texture].texture
+	let texture = spritesheet.textures[data.blueprint.texture]
 	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
 	result.blueprint = data.blueprint
 	result.sendingTeam = data.sendingTeam
@@ -84,21 +84,6 @@ export function createRenderCompound (data) {
 export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 	updateCompoundButtons()
 
-	// if (blueprint.type === 'speed') {
-	//     // this.hide();
-	//     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);
-	//     console.log('New speed is ' + player.speedMult);
-	// } else if (blueprint.type === 'health') {
-	//     socket.emit('damage', {
-	//         damage: -blueprint.params.healthModifier,
-	//         sender: socket.id
-	//     });
-	//     if (player.health > GLOBAL.MAX_HEALTH) {
-	//         player.health = GLOBAL.MAX_HEALTH;
-	//     }
-	// } else {
-	// let cursor = app.renderer.plugins.interaction.mouse.global;
-
 	let centerX = window.innerWidth / 2
 	let centerY = window.innerHeight / 2
 	// console.log(centerX - cursor.x, cursor.y - centerY)
@@ -112,9 +97,4 @@ export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 		},
 		streamID: streamID
 	})
-
-	// Emits the crafting event to update experience TODO
-	// socket.emit('experienceEvent', {
-	//     event: 'CRAFT'
-	// });
 }

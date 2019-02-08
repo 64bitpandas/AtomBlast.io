@@ -101,7 +101,7 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/gameobject.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PIXI from &apos;pixi.js&apos;
-import { app, screenCenterX, screenCenterY, player } from &apos;../pixigame&apos;
+import { app, screenCenterX, screenCenterY, player, spritesheet } from &apos;../pixigame&apos;
 import { GLOBAL } from &apos;../global&apos;
 import { MAP_LAYOUT } from &apos;./tiles&apos;
 
@@ -217,7 +217,7 @@ export class GameObject extends PIXI.Sprite {
 		}
 
 		if (this.ignited) {
-			this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture
+			this.texture = spritesheet.textures[GLOBAL.IGNITE_SPRITE]
 		}
 
 		if (!noDraw) {

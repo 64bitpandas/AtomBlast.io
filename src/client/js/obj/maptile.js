@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js'
 import { TILES } from './tiles'
 import { GLOBAL } from '../global'
-import { app, player, screenCenterX, screenCenterY } from '../pixigame'
+import { app, player, screenCenterX, screenCenterY, spritesheet } from '../pixigame'
 /**
  * One Tile component of the map.
  */
@@ -13,7 +13,7 @@ export class MapTile extends PIXI.Sprite {
      * @param {number} gridY Y-coordinate on the grid.
      */
 	constructor (name, gridX, gridY) {
-		super(PIXI.loader.resources[GLOBAL.TILE_TEXTURE_DIR + TILES[name].texture].texture)
+		super(spritesheet.textures[TILES[name].texture])
 		this.tile = TILES[name]
 		this.posX = gridX * GLOBAL.GRID_SPACING * 2
 		this.posY = gridY * GLOBAL.GRID_SPACING * 2

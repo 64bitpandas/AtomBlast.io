@@ -103,7 +103,7 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PIXI from &apos;pixi.js&apos;
 import { TILES } from &apos;./tiles&apos;
 import { GLOBAL } from &apos;../global&apos;
-import { app, player, screenCenterX, screenCenterY } from &apos;../pixigame&apos;
+import { app, player, screenCenterX, screenCenterY, spritesheet } from &apos;../pixigame&apos;
 /**
  * One Tile component of the map.
  */
@@ -115,7 +115,7 @@ export class MapTile extends PIXI.Sprite {
      * @param {number} gridY Y-coordinate on the grid.
      */
 	constructor (name, gridX, gridY) {
-		super(PIXI.loader.resources[GLOBAL.TILE_TEXTURE_DIR + TILES[name].texture].texture)
+		super(spritesheet.textures[TILES[name].texture])
 		this.tile = TILES[name]
 		this.posX = gridX * GLOBAL.GRID_SPACING * 2
 		this.posY = gridY * GLOBAL.GRID_SPACING * 2

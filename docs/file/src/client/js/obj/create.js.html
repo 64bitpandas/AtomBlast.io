@@ -107,7 +107,7 @@
 import * as PIXI from &apos;pixi.js&apos;
 import { GLOBAL } from &apos;../global.js&apos;
 import { GameObject } from &apos;./gameobject.js&apos;
-import { player } from &apos;../pixigame.js&apos;
+import { player, spritesheet } from &apos;../pixigame.js&apos;
 import { socket } from &apos;../socket.js&apos;
 import { updateCompoundButtons } from &apos;../app.js&apos;
 
@@ -122,7 +122,7 @@ import { updateCompoundButtons } from &apos;../app.js&apos;
  *  - vy {number}
  */
 export function createRenderAtom (data) {
-	let texture = PIXI.loader.resources[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]].texture
+	let texture = spritesheet.textures[GLOBAL.ATOM_SPRITES[GLOBAL.ATOM_IDS.indexOf(data.typeID)]]
 
 	if (data.typeID === &apos;&apos;) {
 		throw new Error(&apos;The Atom object cannot be created without specifying behavior.&apos;)
@@ -157,7 +157,7 @@ export function createPlayer (data) {
  *  - sender {number - socket ID}
  */
 export function createRenderCompound (data) {
-	let texture = PIXI.loader.resources[data.blueprint.texture].texture
+	let texture = spritesheet.textures[data.blueprint.texture]
 	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
 	result.blueprint = data.blueprint
 	result.sendingTeam = data.sendingTeam
@@ -186,21 +186,6 @@ export function createRenderCompound (data) {
 export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 	updateCompoundButtons()
 
-	// if (blueprint.type === &apos;speed&apos;) {
-	//     // this.hide();
-	//     player.speedMult += blueprint.params.speedFactor * (1 / player.speedMult);
-	//     console.log(&apos;New speed is &apos; + player.speedMult);
-	// } else if (blueprint.type === &apos;health&apos;) {
-	//     socket.emit(&apos;damage&apos;, {
-	//         damage: -blueprint.params.healthModifier,
-	//         sender: socket.id
-	//     });
-	//     if (player.health &gt; GLOBAL.MAX_HEALTH) {
-	//         player.health = GLOBAL.MAX_HEALTH;
-	//     }
-	// } else {
-	// let cursor = app.renderer.plugins.interaction.mouse.global;
-
 	let centerX = window.innerWidth / 2
 	let centerY = window.innerHeight / 2
 	// console.log(centerX - cursor.x, cursor.y - centerY)
@@ -214,11 +199,6 @@ export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 		},
 		streamID: streamID
 	})
-
-	// Emits the crafting event to update experience TODO
-	// socket.emit(&apos;experienceEvent&apos;, {
-	//     event: &apos;CRAFT&apos;
-	// });
 }
 </code></pre>
 

@@ -14,14 +14,12 @@ export var player // The player being controlled by this client
 export var screenCenterX // X-coordinate of the center of the screen
 export var screenCenterY // Y-coordinate of the center of the screen
 export var app // Pixi app
+export var spritesheet // Spritesheet containing all sprites that need to be loaded
 
 let inGame = false // True after game has begun
 let mouseDown = false // True if mouse is pressed down
-
-// let sprites = []; // Sprites on the stage
-
 let esc, space, blueprintKeys, moveKeys // Key handlers
-let vertLines = []
+let vertLines = [] // Grid stuff
 let horizLines = []
 let streamID = 0 // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
@@ -45,33 +43,33 @@ export function loadTextures () {
 		screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS
 
 		// Load resources if not already loaded
-		let TEXTURES = []
-		TEXTURES.push(GLOBAL.IGNITE_SPRITE)
-		for (let bp in BLUEPRINTS) {
-			// Prevent duplicate textures from being loaded
-			if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0) {
-				TEXTURES.push(BLUEPRINTS[bp].texture)
-			}
-			if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0) {
-				TEXTURES.push(BLUEPRINTS[bp].params.splashImage)
-			}
-		}
-		for (let atom of GLOBAL.ATOM_SPRITES) {
-			if (TEXTURES.indexOf(atom) < 0) {
-				TEXTURES.push(atom)
-			}
-		}
-		for (let tile in TILES) {
-			if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0) {
-				TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture)
-			}
-		}
-		console.log(TEXTURES)
+		// let TEXTURES = []
+		// TEXTURES.push(GLOBAL.IGNITE_SPRITE)
+		// for (let bp in BLUEPRINTS) {
+		// 	// Prevent duplicate textures from being loaded
+		// 	if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0) {
+		// 		TEXTURES.push(BLUEPRINTS[bp].texture)
+		// 	}
+		// 	if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0) {
+		// 		TEXTURES.push(BLUEPRINTS[bp].params.splashImage)
+		// 	}
+		// }
+		// for (let atom of GLOBAL.ATOM_SPRITES) {
+		// 	if (TEXTURES.indexOf(atom) < 0) {
+		// 		TEXTURES.push(atom)
+		// 	}
+		// }
+		// for (let tile in TILES) {
+		// 	if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0) {
+		// 		TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture)
+		// 	}
+		// }
+		// console.log(TEXTURES)
 
+		// Initiate resource loading
 		if (Object.keys(PIXI.loader.resources).length < 1) {
 			PIXI.loader
-				.add(GLOBAL.PLAYER_SPRITES)
-				.add(TEXTURES)
+				.add(GLOBAL.SPRITESHEET_DIR)
 				.load(registerCallbacks)
 		}
 	}
@@ -108,6 +106,7 @@ function registerCallbacks () {
 			keyboard(GLOBAL.KEY_4)
 		]
 
+		// Escape key setup
 		esc.press = () => {
 			if (isFocused()) {
 				if (document.activeElement !== document.getElementById('chatInput')) {
@@ -148,6 +147,10 @@ function registerCallbacks () {
 			player.x = screenCenterX
 			player.y = screenCenterY
 		}
+
+		// Assign spritesheet object
+		spritesheet = PIXI.loader.resources[GLOBAL.SPRITESHEET_DIR].spritesheet
+		console.log(spritesheet)
 
 		// Begin game loop
 		app.ticker.add(delta => draw(delta))
@@ -348,7 +351,7 @@ export function createPlayer (data) {
 	if (isSetup) {
 		console.log('create player ' + data.id)
 		console.log(data)
-		let newPlayer = new Player(PIXI.loader.resources[GLOBAL.PLAYER_SPRITES[0]].texture, data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
+		let newPlayer = new Player(spritesheet.textures[GLOBAL.PLAYER_SPRITES[0]], data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
 		if (data.id === socket.id) {
 			player = newPlayer
 		}

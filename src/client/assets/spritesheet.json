@@ -268,6 +268,46 @@
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":225,"h":225},
 			"sourceSize": {"w":225,"h":225}
+		},
+		"gas1.png":
+		{
+			"frame": {"x":2304,"y":1505,"w":32,"h":32},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+			"sourceSize": {"w":32,"h":32}
+		},
+		"gas2.png":
+		{
+			"frame": {"x":2336,"y":1505,"w":32,"h":32},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+			"sourceSize": {"w":32,"h":32}
+		},
+		"gas3.png":
+		{
+			"frame": {"x":2368,"y":1505,"w":32,"h":32},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+			"sourceSize": {"w":32,"h":32}
+		},
+		"gas4.png":
+		{
+			"frame": {"x":2400,"y":1505,"w":32,"h":32},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+			"sourceSize": {"w":32,"h":32}
+		},
+		"gas5.png":
+		{
+			"frame": {"x":2432,"y":1505,"w":32,"h":32},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+			"sourceSize": {"w":32,"h":32}
 		}
 	}
 }

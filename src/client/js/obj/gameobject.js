@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js'
-import { app, screenCenterX, screenCenterY, player } from '../pixigame'
+import { app, screenCenterX, screenCenterY, player, spritesheet } from '../pixigame'
 import { GLOBAL } from '../global'
 import { MAP_LAYOUT } from './tiles'
 
@@ -115,7 +115,7 @@ export class GameObject extends PIXI.Sprite {
 		}
 
 		if (this.ignited) {
-			this.texture = PIXI.loader.resources[GLOBAL.IGNITE_SPRITE].texture
+			this.texture = spritesheet.textures[GLOBAL.IGNITE_SPRITE]
 		}
 
 		if (!noDraw) {
