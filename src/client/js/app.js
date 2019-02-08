@@ -36,7 +36,7 @@ let errorSound = new Sound('assets/sfx/error.mp3')
 let joystick = new VirtualJoystick()
 
 // Starts the game if the name is valid.
-function joinGame () {
+function joinGame() {
 	if (!allBlueprintsSelected()) {
 		swal('Blueprint(s) not selected', 'Make sure all your blueprint slots are filled before joining a game!', 'error')
 	}
@@ -75,7 +75,7 @@ function joinGame () {
 /** check if nick is valid alphanumeric characters (and underscores)
  * @returns true if the nickname is valid, false otherwise
  */
-function validNick () {
+function validNick() {
 	const regex = /^(\w|_|-| |!|\.|\?){2,16}$/
 	for (let i = 0; i < GLOBAL.INPUT_COUNT; i++) {
 		if (regex.exec(cookieInputs[i].value) === null && !(i === 1 && cookieInputs[7].value !== 'private')) {
@@ -89,7 +89,7 @@ function validNick () {
 /**
  * Returns true if all four blueprint slots are filled.
  */
-function allBlueprintsSelected () {
+function allBlueprintsSelected() {
 	for (let i = GLOBAL.INPUT_COUNT - 1; i < GLOBAL.INPUT_COUNT + GLOBAL.BP_MAX; i++) {
 		if (cookieInputs[i].innerHTML.substring(0, 1) === '-') {
 			return false
@@ -103,8 +103,7 @@ function allBlueprintsSelected () {
  */
 window.onload = () => {
 	// Patch logo for firefox
-	if (typeof InstallTrigger !== 'undefined')
-        {document.getElementById('logo').innerHTML = `<img src="assets/logos/logo.svg" id="logo-firefox">`;} // eslint-disable-line
+	if (typeof InstallTrigger !== 'undefined') { document.getElementById('logo').innerHTML = `<img src="assets/logos/logo.svg" id="logo-firefox">`; } // eslint-disable-line
 
 	// Cookie loading - create array of all cookie values
 	let cookieValues = GLOBAL.COOKIES.map(val => cookies.getCookie(val))
@@ -261,22 +260,11 @@ window.onmousemove = (e) => {
 	mouseX = e.clientX
 	mouseY = e.clientY
 }
-// function setupEventHandlers() {
-//     document.addEventListener('mousedown', this._onMouseDown.bind(this));
-//     document.addEventListener('mousemove', this._onMouseMove.bind(this));
-//     document.addEventListener('mouseup', this._onMouseUp.bind(this));
-//     document.addEventListener('wheel', this._onWheel.bind(this));
-//     document.addEventListener('touchstart', this._onTouchStart.bind(this));
-//     document.addEventListener('touchmove', this._onTouchMove.bind(this));
-//     document.addEventListener('touchend', this._onTouchEnd.bind(this));
-//     document.addEventListener('touchcancel', this._onTouchCancel.bind(this));
-//     document.addEventListener('pointerdown', this._onPointerDown.bind(this));
-// };
 
 /**
  * Loop main menu music
  */
-function playMusic () {
+function playMusic() {
 	music = document.createElement('audio')
 	HTMLElement.prototype.randomSelectMM = function () {
 		music.src = GLOBAL.MAINMENU_MUSICLIST[Math.floor(Math.random() * GLOBAL.MAINMENU_MUSICLIST.length)]
@@ -319,7 +307,7 @@ function playMusic () {
 	}
 }
 
-function Sound (src) {
+function Sound(src) {
 	this.sound = document.createElement('audio')
 	this.sound.src = src
 	this.sound.setAttribute('preload', 'auto')
@@ -340,7 +328,7 @@ function Sound (src) {
  * @param {string} msg The message to be displayed in the menu after disconnect.
  * @param {boolean} isError True if the game quit was due to an error; false otherwise.
  */
-export function quitGame (msg, isError) {
+export function quitGame(msg, isError) {
 	// Disconnect from server
 	disconnect()
 
@@ -361,7 +349,7 @@ export function quitGame (msg, isError) {
  * @param {string} id
  * @param {function} handlerMethod
  */
-export function bindHandler (id, handlerMethod) {
+export function bindHandler(id, handlerMethod) {
 	document.getElementById(id).onclick = handlerMethod
 }
 
@@ -369,7 +357,7 @@ export function bindHandler (id, handlerMethod) {
  * Displays a hidden element
  * @param {string} el The id of the element to show
  */
-export function showElement (el) {
+export function showElement(el) {
 	document.getElementById(el).style.display = 'block'
 	if (el === 'startMenuWrapper') {
 		music.randomSelectMM()
@@ -390,7 +378,7 @@ export function showElement (el) {
  * Hides a visible element
  * @param {string} el The id of the element to hide
  */
-export function hideElement (el) {
+export function hideElement(el) {
 	document.getElementById(el).style.display = 'none'
 }
 
@@ -405,39 +393,37 @@ window.tooltipFollow = (button) => {
 }
 
 // Toggle compound stats and info tooltips
-let compoundStats = false;
+let compoundStats = false
+
 window.onkeydown = (e) => {
-
 	// Only detect if the blueprint select screen is up
-	if(document.getElementById('bp-select').style.display === 'block' && e.key === 'Shift')
+	if (document.getElementById('bp-select').style.display === 'block' && e.key === 'Shift') {
 		compoundStats = !compoundStats
-
 		// Iterate through all compound buttons
-		for(let button of document.getElementsByClassName('btn-blueprint')) {
-
+		for (let button of document.getElementsByClassName('btn-blueprint')) {
 			// Get blueprint from BLUEPRINTS
 			let blueprint = Object.values(BLUEPRINTS).filter((obj) => {
 				return obj.name === button.getElementsByTagName('p')[0].innerHTML
 			})
 			blueprint = blueprint[0]
-	
-			if(compoundStats) {
-				let newTooltip = ''
-				for(let param in blueprint.params) {
-					
-					if(!GLOBAL.BP_TOOLTIP_BLACKLIST.includes(param)) {
-						let line = ('' + param).replace(/([A-Z])/g, ' $1').replace(/^./, function (str) { return str.toUpperCase(); })
-							+ ': ' + blueprint.params[param] + '<br>'
 
-							newTooltip += line
+			if (compoundStats) {
+				let newTooltip = ''
+				for (let param in blueprint.params) {
+					if (!GLOBAL.BP_TOOLTIP_BLACKLIST.includes(param)) {
+						let line = ('' + param).replace(/([A-Z])/g, ' $1').replace(/^./, (str) => {
+							return str.toUpperCase()
+						}) + ': ' + blueprint.params[param] + '<br>'
+						newTooltip += line
 					}
-					
 				}
 				button.getElementsByClassName('tooltip')[0].innerHTML = newTooltip
 			}
-			else
+			else {
 				button.getElementsByClassName('tooltip')[0].innerHTML = blueprint.tooltip
+			}
 		}
+	}
 }
 
 /**
@@ -445,7 +431,7 @@ window.onkeydown = (e) => {
  * Only updates the entry for the particular ID given.
  * @param {string} atomID The ID of the atom to update.
  */
-export function updateAtomList (atomID) {
+export function updateAtomList(atomID) {
 	let list = document.getElementById('atom-count')
 
 	if (document.getElementById('atom-list-' + atomID) === null) {
@@ -463,7 +449,7 @@ export function updateAtomList (atomID) {
  *
  * @param {number} selectedSlot The index of the selected slot. 0-3
  */
-export function updateCompoundButtons (selectedSlot) {
+export function updateCompoundButtons(selectedSlot) {
 	if (selectedSlot === undefined) {
 		selectedSlot = selectedCompound
 	}
@@ -495,7 +481,7 @@ export function updateCompoundButtons (selectedSlot) {
 /**
  * Updates the team scoreboard on screen.
  */
-export function updateScores (teamSlot, increment) {
+export function updateScores(teamSlot, increment) {
 	document.getElementById('team-score-' + teamSlot).innerHTML = parseInt(document.getElementById('team-score-' + teamSlot).innerHTML) + increment
 }
 
@@ -503,7 +489,7 @@ export function updateScores (teamSlot, increment) {
  * Run on new player join to sync lobby information
  * @param {*} data The data transferred from server
  */
-export function updateLobby (data) {
+export function updateLobby(data) {
 	// Wipe innerHTML first
 	let lobby = document.getElementById('team-display')
 	lobby.innerHTML = ''
@@ -527,7 +513,7 @@ export function updateLobby (data) {
  * Displays the winner panel after a game has concluded.
  * @param {*} data Server sent data, including name and score of winning team.
  */
-export function displayWinner (data) {
+export function displayWinner(data) {
 	// console.log(data);
 	document.getElementById('winner-name').innerHTML = data.winner.name + ' has won!'
 	showElement('winner-panel')
@@ -538,7 +524,7 @@ export function displayWinner (data) {
  * @param {*} blueprint The blueprint object as defined in blueprints.js
  * @returns {string} The formula of the compound
  */
-function getCompoundFormula (blueprint) {
+function getCompoundFormula(blueprint) {
 	let formula = ''
 	for (let atom in blueprint.atoms) {
 		formula += atom.toUpperCase() + ((blueprint.atoms[atom] > 1) ? blueprint.atoms[atom] : '')
@@ -552,7 +538,7 @@ function getCompoundFormula (blueprint) {
  * ONLY USE FOR BUTTON GRAPHICS!!! True checking is done serverside.
  * @param {string} blueprint The name of the blueprint to check.
  */
-function canCraft (blueprint) {
+function canCraft(blueprint) {
 	if (blueprint === undefined) {
 		return false
 	}

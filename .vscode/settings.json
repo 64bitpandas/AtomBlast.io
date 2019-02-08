@@ -11,4 +11,5 @@
     "eslint.options": {
         "indent": ["error", "tab", {"SwitchCase": "tab"}]
     },
+    "typescript.surveys.enabled": false,
 }
