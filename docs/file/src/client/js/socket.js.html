@@ -54,6 +54,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-joystick">joystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
@@ -64,6 +65,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -134,11 +136,13 @@ export var objects = {
 export function beginConnection () {
 	// Joins debug server if conditions are met
 	let room = (cookieInputs[7].value === &apos;private&apos; ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER)
+	let teamInput = (document.querySelector(&apos;input[name=&quot;queue-type&quot;]:checked&apos;).id === &apos;team-option&apos;) ? cookieInputs[2].value : GLOBAL.NO_TEAM_IDENTIFIER
+
 	if (cookieInputs[1].value === &apos;test&apos;) {
 		console.info(&apos;Connecting to: &apos; + GLOBAL.TEST_IP)
 		// DEVELOPMENT server - auto deploy from pixi branch
 		socket = io.connect(GLOBAL.TEST_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${cookieInputs[2].value}&amp;roomType=${cookieInputs[7].value}`,
+			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
 			reconnectionAttempts: 3
 		})
 	}
@@ -146,7 +150,7 @@ export function beginConnection () {
 		console.log(&apos;Dev Backdoor Initiated! Connecting to devserver&apos;)
 		// Local server
 		socket = io.connect(GLOBAL.LOCAL_HOST, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${cookieInputs[2].value}&amp;roomType=${cookieInputs[7].value}`,
+			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
 			reconnectionAttempts: 3
 		})
 	}
@@ -154,7 +158,7 @@ export function beginConnection () {
 		// Production server
 		console.log(&apos;connecting to main server&apos;)
 		socket = io.connect(GLOBAL.SERVER_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${cookieInputs[2].value}&amp;roomType=${cookieInputs[7].value}`,
+			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
 			reconnectionAttempts: 3
 		})
 	}

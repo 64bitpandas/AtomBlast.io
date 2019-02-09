@@ -54,6 +54,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-joystick">joystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
@@ -64,6 +65,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -110,6 +112,7 @@ import { BLUEPRINTS } from &apos;./obj/blueprints&apos;
 import { TILES, MAP_LAYOUT, TILE_NAMES } from &apos;./obj/tiles&apos;
 import { requestCreateCompound } from &apos;./obj/create&apos;
 import { MapTile } from &apos;./obj/maptile&apos;
+import { joystick } from &apos;./app&apos;
 
 export var isSetup // True after the stage is fully set up
 export var player // The player being controlled by this client
@@ -198,6 +201,7 @@ function registerCallbacks () {
 			keyboard(GLOBAL.KEY_W), // Up
 			keyboard(GLOBAL.KEY_S) // Down
 		]
+
 		// Set up the blueprint key listeners
 		blueprintKeys = [
 			keyboard(GLOBAL.KEY_1),
@@ -286,6 +290,7 @@ function draw (delta) {
 	if (player !== undefined) {
 		// Make sure player is not in chat before checking move
 		if (isFocused() &amp;&amp; inGame) {
+			// Keyboard based controls
 			if (moveKeys[0].isDown &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
 				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
 			}
@@ -298,7 +303,6 @@ function draw (delta) {
 			if (moveKeys[3].isDown &amp;&amp; player.vy &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Down
 				player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
 			}
-
 			player.isMoving = false
 			for (let key of moveKeys) {
 				if (key.isDown) {

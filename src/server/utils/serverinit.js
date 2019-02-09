@@ -52,8 +52,9 @@ export function initGlobal () {
  * Run on every player join.
  * @param {*} socket The socket.io instance
  * @param {string} room The name of the room that the player belongs to
+ * @param {string} team The name of the team that the player belongs to
  */
-export function initPlayer (socket, room) {
+export function initPlayer (socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField(['rooms', room])
 	if (thisRoom === undefined || thisRoom === null) {
@@ -76,7 +77,7 @@ export function initPlayer (socket, room) {
 	// Add team to database
 
 	// Equivalent to rooms[room].teams.push({ name: team });
-	setField({ name: socket.handshake.query.team }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
+	setField({ name: team }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
 
 	// Check if room is full
 	if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
@@ -88,7 +89,7 @@ export function initPlayer (socket, room) {
 		id: socket.id,
 		name: socket.handshake.query.name,
 		room: socket.handshake.query.room,
-		team: socket.handshake.query.team,
+		team: team,
 		health: GLOBAL.MAX_HEALTH,
 		posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
 		posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,

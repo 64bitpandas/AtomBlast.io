@@ -67,10 +67,12 @@ io.on('connection', socket => {
 	let team = socket.handshake.query.team
 
 	// Run matchmaker
-	room = roomMatchmaker(socket, room, teams[team])
+	let matchData = roomMatchmaker(socket, room, team)
+	room = matchData.room
+	team = matchData.team
 
 	// Init player
-	initPlayer(socket, room)
+	initPlayer(socket, room, team)
 	let thisPlayer = rooms[room].players[socket.id]
 	thisPlayer.team = team
 	thisPlayer.atomList = {}

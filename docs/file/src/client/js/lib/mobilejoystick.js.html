@@ -54,6 +54,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-joystick">joystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
@@ -64,6 +65,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -105,23 +107,53 @@
  * Created 12 January 2019
  */
 
-import nipplejs from &apos;nipplejs&apos;;
+import nipplejs from &apos;nipplejs&apos;; // NIPPLES!!!! god dammit &lt;3 the naming
+import { GLOBAL } from &apos;../global.js&apos; 
+
 
 export default class VirtualJoystick {
 
     // Use this constructor during init of game
     constructor(params) {
-        
+        this.isDown = false
+        this.isUp = true
+
         var options = {
             zone: document.getElementById(&apos;zone_joystick&apos;),
             color: &apos;red&apos;
         };
         var manager = nipplejs.create(options);
 
+        this.movementKeys = [
+            simulatedKey(GLOBAL.KEY_A), // Left
+			simulatedKey(GLOBAL.KEY_D), // Right
+			simulatedKey(GLOBAL.KEY_W), // Up
+			simulatedKey(GLOBAL.KEY_S) // Down
+        ];
+
         //Perform actions based on direction up
         manager.on(&apos;added&apos;, function (evt, nipple) {
-            nipple.on(&apos;dir:up&apos;, function (evt) {
-               console.log(&quot;Up&quot;)
+            nipple.on(&apos;end&apos;, function (evt) {
+                for (let key of movementKeys){
+                    key.isDown = false;
+                    key.isUp = true;
+                }
+            });
+            nipple.on(&apos;plain:left&apos;, function (evt) {
+                movementKeys[0].isDown = true;
+                movementKeys[0].isUp = false;
+            });
+            nipple.on(&apos;plain:right&apos;, function (evt) {
+                movementKeys[1].isDown = true;
+                movementKeys[1].isUp = false;
+            });
+            nipple.on(&apos;plain:up&apos;, function (evt) {
+                movementKeys[2].isDown = true;
+                movementKeys[2].isUp = false;
+            });
+            nipple.on(&apos;plain:down&apos;, function (evt) {
+                movementKeys[3].isDown = true;
+                movementKeys[3].isUp = false;
             });
         }).on(&apos;removed&apos;, function (evt, nipple) {
             nipple.off(&apos;start move end dir plain&apos;);
@@ -130,6 +162,15 @@ export default class VirtualJoystick {
     }
 
     
+}
+
+export function simulatedKey(keyCode){
+  let key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+
+  return key;
 }</code></pre>
 
 </div>

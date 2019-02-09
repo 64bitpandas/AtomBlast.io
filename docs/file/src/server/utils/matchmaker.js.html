@@ -54,6 +54,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-joystick">joystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
@@ -64,6 +65,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -121,10 +123,10 @@ export function roomMatchmaker (socket, room, team) {
 		socket.emit(&apos;connectionError&apos;, { msg: &apos;The room &apos; + room + &apos; has started or is full!&apos; })
 	}
 
-	if (team !== undefined &amp;&amp; team.room !== undefined) {
+	if (team !== GLOBAL.NO_TEAM_IDENTIFIER &amp;&amp; getField([&apos;teams&apos;, team]) !== undefined &amp;&amp; getField([&apos;teams&apos;, team]).room !== undefined) {
 		// Make sure everything is compatible
-		if (getField([&apos;rooms&apos;, team.room]) !== undefined &amp;&amp; getField([&apos;rooms&apos;, team.room]).type !== roomType) { // Wrong room type
-			socket.emit(&apos;connectionError&apos;, { msg: &apos;Your team is playing in a &apos; + getField(&apos;rooms&apos;, team.room).type + &apos; room, but you are trying to join a &apos; + roomType + &apos; room!&apos; })
+		if (getField([&apos;rooms&apos;, getField([&apos;teams&apos;, team]).room]) !== undefined &amp;&amp; getField([&apos;rooms&apos;, getField([&apos;teams&apos;, team]).room]).type !== roomType) { // Wrong room type
+			socket.emit(&apos;connectionError&apos;, { msg: &apos;Your team is playing in a &apos; + getField(&apos;rooms&apos;, getField([&apos;teams&apos;, team]).room).type + &apos; room, but you are trying to join a &apos; + roomType + &apos; room!&apos; })
 		}
 		else if (!team.joinable) { // Team full
 			socket.emit(&apos;connectionError&apos;, { msg: &apos;Your team is already in game or full!&apos; })
@@ -134,19 +136,37 @@ export function roomMatchmaker (socket, room, team) {
 			room = team.room
 
 			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
-			setField(socket.id, [&apos;teams&apos;, socket.handshake.query.team, &apos;players&apos;, getField([&apos;teams&apos;, socket.handshake.query.team, &apos;players&apos;]).length ])
+			setField(socket.id, [&apos;teams&apos;, team, &apos;players&apos;, getField([&apos;teams&apos;, team, &apos;players&apos;]).length ])
 
 			if ((roomType === &apos;2v2v2v2&apos; &amp;&amp; team.players.length === 2) || team.players.length === 4) {
-				setField(false, [&apos;teams&apos;, socket.handshake.query.team, &apos;joinable&apos;])
+				setField(false, [&apos;teams&apos;, team, &apos;joinable&apos;])
 			}
 		}
 	}
-	// Team not found
+	// Team not found or need to join a random team
 	else {
 		// Try joining a room
 		for (let roomName in getField([&apos;rooms&apos;])) {
 			if (roomName.indexOf(roomType) &gt; -1) {
-				if ((roomType === &apos;4v4&apos; &amp;&amp; getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 2) || getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 4) {
+				// Auto team
+				if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+					for (let i = 0; i &lt; 4; i++) {
+						if (getField([&apos;rooms&apos;, roomName, &apos;teams&apos;, room + i, &apos;joinable&apos;])) {
+							room = roomName
+							team = room + i
+						}
+					}
+
+					// No random teams are joinable- test if this room is full or not
+					if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+						if ((roomType === &apos;4v4&apos; &amp;&amp; getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 2) || getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 4) {
+							room = roomName
+							team = room + (getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length - 1)
+						}
+					}
+				}
+				// Custom team
+				else if ((roomType === &apos;4v4&apos; &amp;&amp; getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 2) || getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 4) {
 					room = roomName
 				}
 			}
@@ -155,6 +175,9 @@ export function roomMatchmaker (socket, room, team) {
 		// No matching rooms - must create a new room
 		if (room === GLOBAL.NO_ROOM_IDENTIFIER) {
 			room = &apos;NA_&apos; + roomType + &apos;_&apos; + generateID()
+			if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+				team = room + &apos;_0&apos;
+			}
 		}
 
 		// Make team
@@ -162,7 +185,7 @@ export function roomMatchmaker (socket, room, team) {
 			room: room,
 			players: [socket.id],
 			joinable: true
-		}, [&apos;teams&apos;, socket.handshake.query.team])
+		}, [&apos;teams&apos;, team])
 
 		validJoin = true
 	}
@@ -170,11 +193,11 @@ export function roomMatchmaker (socket, room, team) {
 	// Join custom room
 	if (validJoin) {
 		socket.join(room, () =&gt; {
-			console.log(&apos;[Server] &apos;.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${socket.handshake.query.team}`.yellow)
+			console.log(&apos;[Server] &apos;.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${team}`.yellow)
 		})
 	}
 
-	return room
+	return { room: room, team: team }
 }
 </code></pre>
 

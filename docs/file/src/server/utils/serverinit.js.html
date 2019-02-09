@@ -54,6 +54,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-joystick">joystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
@@ -64,6 +65,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -154,8 +156,9 @@ export function initGlobal () {
  * Run on every player join.
  * @param {*} socket The socket.io instance
  * @param {string} room The name of the room that the player belongs to
+ * @param {string} team The name of the team that the player belongs to
  */
-export function initPlayer (socket, room) {
+export function initPlayer (socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField([&apos;rooms&apos;, room])
 	if (thisRoom === undefined || thisRoom === null) {
@@ -178,7 +181,7 @@ export function initPlayer (socket, room) {
 	// Add team to database
 
 	// Equivalent to rooms[room].teams.push({ name: team });
-	setField({ name: socket.handshake.query.team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
+	setField({ name: team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
 
 	// Check if room is full
 	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
@@ -190,7 +193,7 @@ export function initPlayer (socket, room) {
 		id: socket.id,
 		name: socket.handshake.query.name,
 		room: socket.handshake.query.room,
-		team: socket.handshake.query.team,
+		team: team,
 		health: GLOBAL.MAX_HEALTH,
 		posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
 		posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,

@@ -252,6 +252,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/app.js~joystick",
+    "variable/index.html#static-variable-joystick",
+    "<span>joystick</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
+    "variable"
+  ],
+  [
     "atomblast.io/src/client/js/lib/keyboard.js~keyboard",
     "function/index.html#static-function-keyboard",
     "<span>keyboard</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/keyboard.js</span>",
@@ -339,6 +345,12 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~showgameui",
     "function/index.html#static-function-showGameUI",
     "<span>showGameUI</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/lib/mobilejoystick.js~simulatedkey",
+    "function/index.html#static-function-simulatedKey",
+    "<span>simulatedKey</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/mobilejoystick.js</span>",
     "function"
   ],
   [
@@ -808,6 +820,24 @@ window.esdocSearchIndex = [
     "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-constructor-constructor",
     "src/client/js/lib/mobilejoystick.js~VirtualJoystick#constructor",
     "method"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#isdown",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-isDown",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#isDown",
+    "member"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#isup",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-isUp",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#isUp",
+    "member"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#movementkeys",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-movementKeys",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#movementKeys",
+    "member"
   ],
   [
     "src/client/js/obj/blueprints.js",

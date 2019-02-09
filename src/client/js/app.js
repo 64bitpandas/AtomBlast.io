@@ -33,7 +33,7 @@ export let sfx
 
 let errorSound = new Sound('assets/sfx/error.mp3')
 
-let joystick = new VirtualJoystick()
+export let joystick = new VirtualJoystick()
 
 // Starts the game if the name is valid.
 function joinGame() {
@@ -253,7 +253,7 @@ window.onload = () => {
 
 	document.getElementById('team-option').onchange = document.getElementById('solo').onchange = () => {
 		console.log('change')
-		if(document.querySelector('input[name="queue-type"]:checked').id === 'team-option') {
+		if (document.querySelector('input[name="queue-type"]:checked').id === 'team-option') {
 			showElement('team')
 		}
 		else {
