@@ -270,6 +270,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/pixigame.js~mobilemovement",
+    "function/index.html#static-function-mobileMovement",
+    "<span>mobileMovement</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/pixigame.js~mousedownhandler",
     "function/index.html#static-function-mouseDownHandler",
     "<span>mouseDownHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
@@ -345,12 +351,6 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~showgameui",
     "function/index.html#static-function-showGameUI",
     "<span>showGameUI</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/lib/mobilejoystick.js~simulatedkey",
-    "function/index.html#static-function-simulatedKey",
-    "<span>simulatedKey</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/mobilejoystick.js</span>",
     "function"
   ],
   [
@@ -822,21 +822,27 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/client/js/lib/mobilejoystick.js~virtualjoystick#isdown",
-    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-isDown",
-    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#isDown",
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#downdown",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-downDown",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#downDown",
     "member"
   ],
   [
-    "src/client/js/lib/mobilejoystick.js~virtualjoystick#isup",
-    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-isUp",
-    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#isUp",
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#leftdown",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-leftDown",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#leftDown",
     "member"
   ],
   [
-    "src/client/js/lib/mobilejoystick.js~virtualjoystick#movementkeys",
-    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-movementKeys",
-    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#movementKeys",
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#rightdown",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-rightDown",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#rightDown",
+    "member"
+  ],
+  [
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#updown",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-upDown",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#upDown",
     "member"
   ],
   [

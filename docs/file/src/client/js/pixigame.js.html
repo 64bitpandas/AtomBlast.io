@@ -46,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
@@ -65,7 +66,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -291,7 +291,9 @@ function draw (delta) {
 		// Make sure player is not in chat before checking move
 		if (isFocused() &amp;&amp; inGame) {
 			// Keyboard based controls
-			if (moveKeys[0].isDown &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+			console.log(joystick.leftDown)
+			if ((moveKeys[0].isDown || joystick.leftDown) &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+				console.log(&apos;left&apos;)
 				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
 			}
 			if (moveKeys[1].isDown &amp;&amp; player.vx &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Right
@@ -514,6 +516,22 @@ function shootHandler (e, stream) {
 			streamID++
 		}
 		requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID)
+	}
+}
+
+// actually name this better bro
+export function mobileMovement (direction) {
+	if (direction === &apos;up&apos;) {
+		player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === &apos;down&apos;) {
+		player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === &apos;right&apos;) {
+		player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === &apos;left&apos;) {
+		player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
 	}
 }
 </code></pre>

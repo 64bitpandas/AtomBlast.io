@@ -8,6 +8,7 @@ import { BLUEPRINTS } from './obj/blueprints'
 import { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles'
 import { requestCreateCompound } from './obj/create'
 import { MapTile } from './obj/maptile'
+import { joystick } from './app'
 
 export var isSetup // True after the stage is fully set up
 export var player // The player being controlled by this client
@@ -96,6 +97,7 @@ function registerCallbacks () {
 			keyboard(GLOBAL.KEY_W), // Up
 			keyboard(GLOBAL.KEY_S) // Down
 		]
+
 		// Set up the blueprint key listeners
 		blueprintKeys = [
 			keyboard(GLOBAL.KEY_1),
@@ -184,7 +186,10 @@ function draw (delta) {
 	if (player !== undefined) {
 		// Make sure player is not in chat before checking move
 		if (isFocused() && inGame) {
-			if (moveKeys[0].isDown && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+			// Keyboard based controls
+			console.log(joystick.leftDown)
+			if ((moveKeys[0].isDown || joystick.leftDown) && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+				console.log('left')
 				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
 			}
 			if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) { // Right
@@ -196,7 +201,6 @@ function draw (delta) {
 			if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) { // Down
 				player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
 			}
-
 			player.isMoving = false
 			for (let key of moveKeys) {
 				if (key.isDown) {
@@ -408,5 +412,21 @@ function shootHandler (e, stream) {
 			streamID++
 		}
 		requestCreateCompound(selectedBlueprints[selectedCompound], e.clientX, e.clientY, streamID)
+	}
+}
+
+// actually name this better bro
+export function mobileMovement (direction) {
+	if (direction === 'up') {
+		player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === 'down') {
+		player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === 'right') {
+		player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+	}
+	if (direction === 'left') {
+		player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
 	}
 }

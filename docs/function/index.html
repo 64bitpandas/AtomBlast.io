@@ -46,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
@@ -65,7 +66,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -1069,6 +1069,34 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span><span class="code" data-ice="signature">(direction: <span>*</span>)</span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span><span class="code" data-ice="signature">(e: <span>*</span>)</span>
         </p>
       </div>
@@ -1338,34 +1366,6 @@
         
         <div data-ice="description"><p>Call this function to hide loading div and show UI</p>
 </div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span><span class="code" data-ice="signature">(keyCode: <span>*</span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
       </div>
     </td>
     <td>
@@ -2167,11 +2167,11 @@ Does NOT add the new compound to the objects array.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber319">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber321">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber319">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber321">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Creates a Player instance once the stage is fully set up and ready.</p>
@@ -2570,11 +2570,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber292">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber294">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber292">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber294">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Destroy everything in PIXI. DANGEROUS avoid!</p>
@@ -3214,11 +3214,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber379">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber381">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber379">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber381">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3676,11 +3676,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber335">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber337">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber335">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber337">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>If the document is Focused return true otherwise false</p>
@@ -3909,6 +3909,65 @@ Best used with numbers or strings.</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-mobileMovement">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">mobileMovement</span><span class="code" data-ice="signature">(direction: <span>*</span>)</span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber419">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mobileMovement} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber419">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">direction</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-mouseDownHandler">
     <span class="access" data-ice="access">public</span>
     
@@ -3920,11 +3979,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber397">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber399">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseDownHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber397">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseDownHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber399">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Called on mouse down from app.js</p>
@@ -3981,11 +4040,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber387">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber389">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseUpHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber387">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseUpHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber389">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Called on mouse up from app.js</p>
@@ -4438,11 +4497,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber372">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber374">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber372">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber374">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets the value of inGame</p>
@@ -4560,11 +4619,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber306">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber308">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber306">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber308">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Call this function to hide loading div and show UI</p>
@@ -4576,77 +4635,6 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
 </div>
 
   
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-function-simulatedKey">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">simulatedKey</span><span class="code" data-ice="signature">(keyCode: <span>*</span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/client/js/lib/mobilejoystick.js.html#lineNumber63">source</a></span></span>
-    </span>
-  </h3>
-
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {simulatedKey} from &apos;<span><a href="file/src/client/js/lib/mobilejoystick.js.html#lineNumber63">atomblast.io/src/client/js/lib/mobilejoystick.js</a></span>&apos;</code></pre></div>
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">keyCode</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span>*</span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
 
   
 
@@ -4889,11 +4877,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber344">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber346">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber344">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber346">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Starts the game after lobby closes.</p>

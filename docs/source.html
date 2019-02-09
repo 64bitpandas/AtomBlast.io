@@ -46,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
@@ -65,7 +66,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
@@ -101,7 +101,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">81/161</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">81/162</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -182,13 +182,12 @@
       <td style="display: none;" data-ice="updated">2019-01-01 02:35:47 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/client/js/lib/mobilejoystick.js.html#errorLines=10,13,14,15,23,63">src/client/js/lib/mobilejoystick.js</a></span></td>
-      <td data-ice="identifier" class="identifiers"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span>
-<span><a href="function/index.html#static-function-simulatedKey">simulatedKey</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/client/js/lib/mobilejoystick.js.html#errorLines=11,14,15,16,17,18">src/client/js/lib/mobilejoystick.js</a></span></td>
+      <td data-ice="identifier" class="identifiers"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span></td>
       <td class="coverage"><span data-ice="coverage">0 %</span><span data-ice="coverageCount" class="coverage-count">0/6</span></td>
-      <td style="display: none;" data-ice="size">1948 byte</td>
-      <td style="display: none;" data-ice="lines">69</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 22:06:05 (UTC)</td>
+      <td style="display: none;" data-ice="size">1536 byte</td>
+      <td style="display: none;" data-ice="lines">52</td>
+      <td style="display: none;" data-ice="updated">2019-02-07 23:54:51 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/obj/blueprints.js.html">src/client/js/obj/blueprints.js</a></span></td>
@@ -244,21 +243,22 @@
       <td style="display: none;" data-ice="updated">2019-01-07 00:38:29 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/client/js/pixigame.js.html#errorLines=20,21,23,25">src/client/js/pixigame.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/client/js/pixigame.js.html#errorLines=20,21,23,25,419">src/client/js/pixigame.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span>
 <span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span>
 <span><a href="function/index.html#static-function-getIngame">getIngame</a></span>
 <span><a href="function/index.html#static-function-isFocused">isFocused</a></span>
 <span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span>
+<span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span>
 <span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span>
 <span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span>
 <span><a href="function/index.html#static-function-setIngame">setIngame</a></span>
 <span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span>
 <span><a href="function/index.html#static-function-startGame">startGame</a></span></td>
-      <td class="coverage"><span data-ice="coverage">77 %</span><span data-ice="coverageCount" class="coverage-count">14/18</span></td>
-      <td style="display: none;" data-ice="size">11557 byte</td>
-      <td style="display: none;" data-ice="lines">414</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 22:07:03 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">73 %</span><span data-ice="coverageCount" class="coverage-count">14/19</span></td>
+      <td style="display: none;" data-ice="size">12068 byte</td>
+      <td style="display: none;" data-ice="lines">432</td>
+      <td style="display: none;" data-ice="updated">2019-02-07 23:56:36 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/socket.js.html#errorLines=18,32,344">src/client/js/socket.js</a></span></td>
