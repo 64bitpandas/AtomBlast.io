@@ -352,6 +352,17 @@ window.onload = () =&gt; {
 	cookieInputs[8].onchange = () =&gt; {
 		cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS)
 	}
+
+	document.getElementById(&apos;team-option&apos;).onchange = document.getElementById(&apos;solo&apos;).onchange = () =&gt; {
+		console.log(&apos;change&apos;)
+		if (document.querySelector(&apos;input[name=&quot;queue-type&quot;]:checked&apos;).id === &apos;team-option&apos;) {
+			showElement(&apos;team&apos;)
+		}
+		else {
+			hideElement(&apos;team&apos;)
+		}
+	}
+
 	playMusic()
 }
 

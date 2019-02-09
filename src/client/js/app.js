@@ -250,6 +250,17 @@ window.onload = () => {
 	cookieInputs[8].onchange = () => {
 		cookies.setCookie(GLOBAL.COOKIES[8], cookieInputs[8].value, GLOBAL.COOKIE_DAYS)
 	}
+
+	document.getElementById('team-option').onchange = document.getElementById('solo').onchange = () => {
+		console.log('change')
+		if(document.querySelector('input[name="queue-type"]:checked').id === 'team-option') {
+			showElement('team')
+		}
+		else {
+			hideElement('team')
+		}
+	}
+
 	playMusic()
 }
 

@@ -18,7 +18,7 @@
 
     <div id="gameAreaWrapper" style="display:none;">
         <!-- <div id="p5CanvasHolder"></div> -->
-        
+
 
         <canvas id="gameView"></canvas>
 
@@ -40,7 +40,7 @@
                 <button class="button btn-primary" id="btn-start-game">Start Game</button>
             </div>
         </div>
-        
+
 
         <div class="menubox box centered hidden" id="menubox">
             <h3 class="title">Menu</h3>
@@ -58,10 +58,11 @@
         <div id="hud" class="hidden">
             <div class="chatbox box" id="chatbox">
                 <ul id="chatList" class="chat-list"></ul>
-                <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50" spellcheck="false" />
+                <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50"
+                    spellcheck="false" />
             </div>
-            
-            
+
+
             <div id="zone_joystick" class="joystickbox"></div>
 
             <div id="bp-ingame">
@@ -118,6 +119,16 @@
             </div>
             <div id="startMenu" class="col-6 box">
                 <p>Join a Game</p>
+                
+                <div class="radio-group-wrapper">
+                    <div class="radio-group">
+                        <input type="radio" id="solo" name="queue-type">
+                        <label for="solo">Solo Queue</label>
+                        <input type="radio" id="team-option" name="queue-type" checked>
+                        <label for="team-option">Team Queue</label>
+                    </div>
+                </div>
+
                 <div class="row">
 
                     <div class="col-6">
@@ -126,7 +137,7 @@
                             <option value="4v4v4v4">4v4v4v4</option>
                             <option value="4v4v4v4">4v4</option>
                             <option value="private">Private Match</option>
-                        </select>  
+                        </select>
                     </div>
 
                     <div class="col-6">
@@ -134,14 +145,18 @@
                             <option value="na">North America</option>
                             <option value="eu">Europe</option>
                             <option value="oce">Oceania</option>
-                        </select>  
+                        </select>
                     </div>
                 </div>
-                
-                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="name" spellcheck="false"/>
-                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team" spellcheck="false"/>
-                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room""0" placeholder="Enter room name here" id="room" spellcheck="false" style="display:none"/>
-                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
+
+                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here"
+                    id="name" spellcheck="false" />
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team"
+                    spellcheck="false" />
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room""0"
+                    placeholder="Enter room name here" id="room" spellcheck="false" style="display:none" />
+                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters
+                    and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
                 <br />
                 <button id="startButton" class="button btn-primary">Play</button>
                 <!-- <button id="teamButton" class="button btn-secondary">Join A Team</button> -->
@@ -167,13 +182,13 @@
             <div class="row blueprint-wrapper" id="blueprint-wrapper">
                 <!-- Auto filled in script -->
             </div>
-            
+
 
             <button class="button btn-error" id="btn-close">Close</button>
         </div>
 
     </div>
-    
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/public/build.js"></script>

@@ -310,6 +310,7 @@ canvas {
     display: none;
     font-size: 12px;
 }
+
 /* 
 #logo img {
     max-height: 20vh;
@@ -715,4 +716,43 @@ select:focus {
 #lobbybox {
     height: 70vh;
     width: 70vw;
+}
+
+/* ********
+ * * RADIO BUTTONS *
+ * ********* */
+
+input[type=radio] {
+    visibility: hidden;
+    display: none;
+}
+
+label {
+    color: #9a929e;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 20px;
+}
+
+input[type=radio]:checked+label {
+    color: #ccc8ce;
+    background: #675f6b;
+}
+
+label+input[type=radio]+label {
+    border-left: solid 3px #675f6b;
+}
+
+.radio-group {
+    border: solid 3px #675f6b;
+    display: inline-block;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: auto;
+}
+
+.radio-group-wrapper {
+    text-align: center;
+    width: 100%;
 }
