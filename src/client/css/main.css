@@ -718,9 +718,9 @@ select:focus {
     width: 70vw;
 }
 
-/* ********
+/* *****************
  * * RADIO BUTTONS *
- * ********* */
+ * ***************** */
 
 input[type=radio] {
     visibility: hidden;
@@ -759,4 +759,24 @@ label+input[type=radio]+label {
 .radio-group-wrapper {
     text-align: center;
     width: 100%;
+}
+
+/* ***************
+ * * TEAM COLORS *
+ * *************** */
+
+.purple-team {
+    color: #673ab7;
+}
+
+.green-team {
+    color: #2e7d32;
+}
+
+.orange-team {
+    color: #ff8f00;
+}
+
+.red-team {
+    color: #f44336;
 }

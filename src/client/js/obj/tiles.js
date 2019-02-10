@@ -93,7 +93,7 @@ export const TILES = {
 		}
 	},
 	carbonVent: {
-		texture: 'CarbonSource.png',
+		texture: 'CarbonVent.png',
 		type: 'spawner',
 		params: {
 			atomsToSpawn: ['c']
