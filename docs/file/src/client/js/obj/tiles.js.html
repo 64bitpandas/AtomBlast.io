@@ -202,6 +202,10 @@ export const TILES = {
 		params: {
 			atomsToSpawn: [&apos;c&apos;]
 		}
+	},
+	stronghold: {
+		texture: &apos;StrongholdNeutral.png&apos;,
+		type: &apos;stronghold&apos;
 	}
 }
 
@@ -214,16 +218,13 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
-	[&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
-	[&apos;F&apos;, &apos;N&apos;, &apos;E&apos;, &apos;F&apos;, &apos;C&apos;, &apos;C&apos;, &apos;F&apos;, &apos;E&apos;, &apos;N&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;, &apos;N&apos;, &apos;N&apos;, &apos;E&apos;, &apos;O&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;]
+	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;S&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;E&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;S&apos;, &apos;F&apos;, &apos;C&apos;, &apos;F&apos;, &apos;S&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;E&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;S&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
+	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;]
 ]
 
 export const TILE_NAMES = {
@@ -233,6 +234,7 @@ export const TILE_NAMES = {
 	C: &apos;carbonVent&apos;,
 	H: &apos;hydrogenVent&apos;,
 	F: &apos;flame&apos;,
+	S: &apos;stronghold&apos;,
 	q: &apos;topLeft&apos;,
 	w: &apos;edgeTop&apos;,
 	e: &apos;topRight&apos;,

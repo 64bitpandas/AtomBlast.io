@@ -98,6 +98,10 @@ export const TILES = {
 		params: {
 			atomsToSpawn: ['c']
 		}
+	},
+	stronghold: {
+		texture: 'StrongholdNeutral.png',
+		type: 'stronghold'
 	}
 }
 
@@ -110,16 +114,13 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-	['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H'],
-	['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
-	['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
-	['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],
-	['E', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],
-	['F', 'N', 'E', 'F', 'C', 'C', 'F', 'E', 'N', 'E'],
-	['E', 'E', 'E', 'H', 'F', 'F', 'H', 'E', 'E', 'E'],
-	['E', 'O', 'E', 'E', 'E', 'E', 'E', 'E', 'O', 'E'],
-	['E', 'O', 'O', 'E', 'N', 'N', 'E', 'O', 'O', 'E'],
-	['H', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'E', 'H']
+	['H', 'E', 'E', 'E', 'E', 'E', 'H'],
+	['E', 'O', 'E', 'S', 'E', 'O', 'E'],
+	['E', 'E', 'F', 'N', 'F', 'E', 'E'],
+	['E', 'S', 'F', 'C', 'F', 'S', 'E'],
+	['E', 'E', 'F', 'N', 'F', 'E', 'E'],
+	['E', 'O', 'E', 'S', 'E', 'O', 'E'],
+	['H', 'E', 'E', 'E', 'E', 'E', 'H']
 ]
 
 export const TILE_NAMES = {
@@ -129,6 +130,7 @@ export const TILE_NAMES = {
 	C: 'carbonVent',
 	H: 'hydrogenVent',
 	F: 'flame',
+	S: 'stronghold',
 	q: 'topLeft',
 	w: 'edgeTop',
 	e: 'topRight',
