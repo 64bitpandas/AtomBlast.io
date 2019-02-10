@@ -744,6 +744,10 @@ label+input[type=radio]+label {
     border-left: solid 3px #675f6b;
 }
 
+#solo+label {
+    margin-right: -8px;
+}
+
 .radio-group {
     border: solid 3px #675f6b;
     display: inline-block;
