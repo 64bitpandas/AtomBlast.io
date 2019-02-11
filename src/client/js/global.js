@@ -90,11 +90,12 @@ export const GLOBAL = {
 	FRAME_RATE: 60,
 
 	// Colors
-	GRID_LINE_COLOUR: 0xD3D3D3,
-	FRIENDLY_COLOUR: 0x2ECC71,
-	FRIENDLY_COLOUR_HEX: '#2ECC71',
-	ENEMY_COLOUR: 0xEA6153,
-	ENEMY_COLOUR_HEX: '#EA6153',
+	TEAM_COLORS: [ // Purple, Green, Orange, Red. No prefixes
+		'673ab7',
+		'2e7d32',
+		'ff8f00',
+		'f44336'
+	],
 
 	// Sprites and textures
 	PLAYER_SPRITES: [

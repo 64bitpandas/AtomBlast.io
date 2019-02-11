@@ -204,6 +204,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/serverutils.js~getteamcolors",
+    "function/index.html#static-function-getTeamColors",
+    "<span>getTeamColors</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/serverutils.js~getteamnumber",
     "function/index.html#static-function-getTeamNumber",
     "<span>getTeamNumber</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
@@ -376,6 +382,12 @@ window.esdocSearchIndex = [
     "function/index.html#static-function-startGame",
     "<span>startGame</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
+  ],
+  [
+    "atomblast.io/src/client/js/socket.js~teamcolors",
+    "variable/index.html#static-variable-teamColors",
+    "<span>teamColors</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/socket.js</span>",
+    "variable"
   ],
   [
     "atomblast.io/src/server/utils/compound.js~tickcompound",

@@ -1,7 +1,7 @@
 import { GLOBAL } from '../global.js'
 import * as PIXI from 'pixi.js'
 import { screenCenterX, screenCenterY } from '../pixigame.js'
-import { socket } from '../socket.js'
+import { socket, teamColors } from '../socket.js'
 import { GameObject } from './gameobject.js'
 import { cookieInputs } from '../app.js'
 
@@ -79,7 +79,7 @@ export class Player extends GameObject {
 		for (let item in this.textObjects) {
 			// Add text
 			this.textObjects[item].style = new PIXI.TextStyle({
-				fill: (cookieInputs[2].value === this.team) ? GLOBAL.FRIENDLY_COLOUR : GLOBAL.ENEMY_COLOUR,
+				fill: '0x' + GLOBAL.TEAM_COLORS[teamColors[this.team]],
 				fontSize: 120
 			})
 			this.addChild(this.textObjects[item])

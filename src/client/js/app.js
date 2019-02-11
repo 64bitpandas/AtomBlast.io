@@ -6,7 +6,7 @@
 import { GLOBAL } from './global.js'
 import * as cookies from './lib/cookies.js'
 import { BLUEPRINTS } from './obj/blueprints.js'
-import { beginConnection, disconnect } from './socket.js'
+import { beginConnection, disconnect, teamColors } from './socket.js'
 import { player, setIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
 import swal from 'sweetalert'
 import VirtualJoystick from './lib/mobilejoystick.js'
@@ -508,7 +508,7 @@ export function updateLobby(data) {
 		if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
 			lobby.innerHTML += `
             <div class="col-3">
-                <h3>` + data[player].team + `</h3>
+                <h3 style="color: #${GLOBAL.TEAM_COLORS[teamColors[data[player].team]]}">` + data[player].team + `</h3>
                 <ul id="` + data[player].team + `">
                 </ul>
             </div>

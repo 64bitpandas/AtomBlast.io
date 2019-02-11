@@ -60,6 +60,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
@@ -96,6 +97,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 </ul>
 </div>
@@ -125,6 +127,16 @@ export var objects = {
 	compounds: {},
 	tiles: {}
 }
+
+/**
+ * Team colors object. Number corresponds to index at GLOBAL.TEAM_COLORS.
+ * Format: {
+ * 	teamname1: 0,
+ * 	teamname: color,
+ * 	...
+ * }
+ */
+export var teamColors = {}
 
 /**
  * Attempts to connect to the server. Run on &apos;start game&apos; press.
@@ -435,6 +447,12 @@ function setupSocketInfo (chat) {
 	socket.on(&apos;serverSendWinner&apos;, (data) =&gt; {
 		setIngame(false) // Disable keyboard controls and rendering
 		displayWinner(data)
+	})
+
+	// Team colors
+	socket.on(&apos;serverSendTeamColors&apos;, (data) =&gt; {
+		teamColors = data
+		console.log(teamColors)
 	})
 }
 

@@ -60,6 +60,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
@@ -96,6 +97,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 </ul>
 </div>
@@ -155,7 +157,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Attempts to connect to the server.</p>
+</div>
       </div>
     </td>
     <td>
@@ -761,6 +764,35 @@
         
         
         
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span><span class="code" data-ice="signature">(room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Returns the team colors object (see client socket.js for more information on the format)</p>
+</div>
       </div>
     </td>
     <td>
@@ -1731,14 +1763,21 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber32">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber42">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber32">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber42">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
-  
+  <div data-ice="description"><p>Attempts to connect to the server. Run on &apos;start game&apos; press.</p>
+<ul>
+<li>Manages connecting to main server vs. devserver</li>
+<li>Sets up socket listeners</li>
+<li>Loads textures</li>
+<li>Loads pixi</li>
+</ul>
+</div>
 
   
 
@@ -2167,11 +2206,11 @@ Does NOT add the new compound to the objects array.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber321">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber320">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber321">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createPlayer} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber320">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Creates a Player instance once the stage is fully set up and ready.</p>
@@ -2488,11 +2527,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber288">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber293">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {deleteObject} from &apos;<span><a href="file/src/server/server.js.html#lineNumber288">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {deleteObject} from &apos;<span><a href="file/src/server/server.js.html#lineNumber293">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Deletes one of the three types of gameObjects synced to the server</p>
@@ -2570,11 +2609,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber294">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber293">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber294">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {destroyPIXI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber293">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Destroy everything in PIXI. DANGEROUS avoid!</p>
@@ -2614,11 +2653,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber75">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber85">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber75">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber85">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Run on disconnect to reset all server-based variables and connections</p>
@@ -2719,11 +2758,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber171">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber172">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {distanceBetween} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber171">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {distanceBetween} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber172">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2932,11 +2971,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber12">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {generateID} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber12">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {generateID} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns a random number between between 10000000 and 99999999, inclusive.
@@ -3064,11 +3103,11 @@ TODO Make every ID guaranteed unique</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber189">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber190">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getCurrTile} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber189">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getCurrTile} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber190">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Gets the tile directly underneath any object.</p>
@@ -3138,11 +3177,11 @@ TODO Make every ID guaranteed unique</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber261">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber266">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber261">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber266">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the value given a path to that value.
@@ -3214,11 +3253,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber381">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber380">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber381">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber380">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3259,6 +3298,79 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-getTeamColors">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">getTeamColors</span><span class="code" data-ice="signature">(room: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber36">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamColors} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber36">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  
+  
+  <div data-ice="description"><p>Returns the team colors object (see client socket.js for more information on the format)</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">room</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The room name to check</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span>*</span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-getTeamNumber">
     <span class="access" data-ice="access">public</span>
     
@@ -3270,11 +3382,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber22">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamNumber} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber21">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamNumber} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber22">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the index of the given team within the team array of the given room.</p>
@@ -3488,11 +3600,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber250">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber255">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber250">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber255">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Shorthand to add or concatenate an amount to a field.
@@ -3676,11 +3788,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber337">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber336">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber337">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isFocused} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber336">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>If the document is Focused return true otherwise false</p>
@@ -3732,11 +3844,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber180">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber181">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isInBounds} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber180">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isInBounds} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber181">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns true if the object parameter is within the map boundaries.</p>
@@ -3920,11 +4032,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber419">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber418">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mobileMovement} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber419">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mobileMovement} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber418">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3979,11 +4091,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber399">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber398">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseDownHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber399">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseDownHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber398">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Called on mouse down from app.js</p>
@@ -4040,11 +4152,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber389">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber388">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseUpHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber389">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mouseUpHandler} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber388">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Called on mouse up from app.js</p>
@@ -4427,11 +4539,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber224">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/server.js.html#lineNumber229">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber224">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setField} from &apos;<span><a href="file/src/server/server.js.html#lineNumber229">atomblast.io/src/server/server.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets a new value for a protected server field.
@@ -4497,11 +4609,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber374">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber373">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber374">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {setIngame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber373">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Sets the value of inGame</p>
@@ -4619,11 +4731,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber308">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber307">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber308">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {showGameUI} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber307">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Call this function to hide loading div and show UI</p>
@@ -4877,11 +4989,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber346">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/pixigame.js.html#lineNumber345">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber346">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {startGame} from &apos;<span><a href="file/src/client/js/pixigame.js.html#lineNumber345">atomblast.io/src/client/js/pixigame.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Starts the game after lobby closes.</p>

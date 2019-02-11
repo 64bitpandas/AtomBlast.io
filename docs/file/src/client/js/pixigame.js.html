@@ -60,6 +60,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
@@ -96,6 +97,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 </ul>
 </div>
@@ -107,7 +109,7 @@ import { keyboard } from &apos;./lib/keyboard&apos;
 import { GLOBAL } from &apos;./global&apos;
 import { Player } from &apos;./obj/player&apos;
 import { hideElement, showElement, selectedBlueprints, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from &apos;./app&apos;
-import { socket, objects } from &apos;./socket&apos;
+import { socket, objects, teamColors } from &apos;./socket&apos;
 import { BLUEPRINTS } from &apos;./obj/blueprints&apos;
 import { TILES, MAP_LAYOUT, TILE_NAMES } from &apos;./obj/tiles&apos;
 import { requestCreateCompound } from &apos;./obj/create&apos;
@@ -293,17 +295,16 @@ function draw (delta) {
 			// Keyboard based controls
 			console.log(joystick.leftDown)
 			if ((moveKeys[0].isDown || joystick.leftDown) &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
-				console.log(&apos;left&apos;)
-				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement(&apos;left&apos;)
 			}
 			if (moveKeys[1].isDown &amp;&amp; player.vx &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Right
-				player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement(&apos;right&apos;)
 			}
 			if (moveKeys[2].isDown &amp;&amp; player.vy &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Up
-				player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement(&apos;up&apos;)
 			}
 			if (moveKeys[3].isDown &amp;&amp; player.vy &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Down
-				player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement(&apos;down&apos;)
 			}
 			player.isMoving = false
 			for (let key of moveKeys) {
@@ -464,7 +465,7 @@ export function startGame (emit, teams) {
 
 		for (let i = 0; i &lt; teams.length; i++) {
 			document.getElementById(&apos;score&apos;).innerHTML += &apos;-&lt;span id=&quot;team-score-&apos; + i + &apos;&quot;&gt;0&lt;/span&gt;&apos;
-			document.getElementById(&apos;team-score-&apos; + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX)
+			document.getElementById(&apos;team-score-&apos; + i).style.color = &apos;#&apos; + GLOBAL.TEAM_COLORS[i]
 		}
 		document.getElementById(&apos;score&apos;).style.fontSize = &apos;3vw&apos;
 		document.getElementById(&apos;score&apos;).innerHTML += &apos;-&apos;

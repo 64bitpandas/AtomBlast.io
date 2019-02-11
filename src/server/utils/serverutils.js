@@ -1,4 +1,5 @@
 import { getField } from '../server'
+import { GLOBAL } from '../../client/js/global'
 
 /**
  * Misc. standalone utilities for the server.
@@ -26,4 +27,19 @@ export function getTeamNumber (room, teamName) {
 	}
 
 	return -1 // Team not found
+}
+
+/**
+ * Returns the team colors object (see client socket.js for more information on the format)
+ * @param {string} room The room name to check
+ */
+export function getTeamColors (room) {
+	let teamObj = getField(['rooms', room, 'teams'])
+	let result = {}
+	for (let i = 0; i < 4; i++) {
+		if (teamObj[i]) {
+			result[teamObj[i].name] = i
+		}
+	}
+	return result
 }

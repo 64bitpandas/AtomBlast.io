@@ -10,6 +10,7 @@ import { frameSync } from './utils/framesync'
 import { damage } from './utils/ondamage'
 import { createCompound } from './utils/compound'
 import { spawnAtomAtVent } from './utils/atoms'
+import { getTeamColors } from './utils/serverutils'
 var config = require('./config.json')
 
 const DEBUG = true
@@ -80,6 +81,10 @@ io.on('connection', socket => {
 	for (let atom of GLOBAL.ATOM_IDS) {
 		thisPlayer.atomList[atom] = 0
 	}
+
+	// Announce colors
+	socket.emit('serverSendTeamColors', getTeamColors(room))
+	socket.to(room).emit('serverSendTeamColors', getTeamColors(room))
 
 	// Setup player array sync- once a frame
 	setInterval(() => {

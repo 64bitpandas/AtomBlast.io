@@ -23,6 +23,16 @@ export var objects = {
 }
 
 /**
+ * Team colors object. Number corresponds to index at GLOBAL.TEAM_COLORS.
+ * Format: {
+ * 	teamname1: 0,
+ * 	teamname: color,
+ * 	...
+ * }
+ */
+export var teamColors = {}
+
+/**
  * Attempts to connect to the server. Run on 'start game' press.
  *  - Manages connecting to main server vs. devserver
  *  - Sets up socket listeners
@@ -331,6 +341,12 @@ function setupSocketInfo (chat) {
 	socket.on('serverSendWinner', (data) => {
 		setIngame(false) // Disable keyboard controls and rendering
 		displayWinner(data)
+	})
+
+	// Team colors
+	socket.on('serverSendTeamColors', (data) => {
+		teamColors = data
+		console.log(teamColors)
 	})
 }
 

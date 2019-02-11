@@ -3,7 +3,7 @@ import { keyboard } from './lib/keyboard'
 import { GLOBAL } from './global'
 import { Player } from './obj/player'
 import { hideElement, showElement, selectedBlueprints, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app'
-import { socket, objects } from './socket'
+import { socket, objects, teamColors } from './socket'
 import { BLUEPRINTS } from './obj/blueprints'
 import { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles'
 import { requestCreateCompound } from './obj/create'
@@ -189,17 +189,16 @@ function draw (delta) {
 			// Keyboard based controls
 			console.log(joystick.leftDown)
 			if ((moveKeys[0].isDown || joystick.leftDown) && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
-				console.log('left')
-				player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement('left')
 			}
 			if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) { // Right
-				player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement('right')
 			}
 			if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) { // Up
-				player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement('up')
 			}
 			if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) { // Down
-				player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+				mobileMovement('down')
 			}
 			player.isMoving = false
 			for (let key of moveKeys) {
@@ -360,7 +359,7 @@ export function startGame (emit, teams) {
 
 		for (let i = 0; i < teams.length; i++) {
 			document.getElementById('score').innerHTML += '-<span id="team-score-' + i + '">0</span>'
-			document.getElementById('team-score-' + i).style.color = ((cookieInputs[2].value === teams[i].name) ? GLOBAL.FRIENDLY_COLOUR_HEX : GLOBAL.ENEMY_COLOUR_HEX)
+			document.getElementById('team-score-' + i).style.color = '#' + GLOBAL.TEAM_COLORS[i]
 		}
 		document.getElementById('score').style.fontSize = '3vw'
 		document.getElementById('score').innerHTML += '-'
