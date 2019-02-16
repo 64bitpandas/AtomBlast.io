@@ -557,7 +557,12 @@ export function updateAtomList(atomID) {
 		list.appendChild(newEntry)
 	}
 
-	document.getElementById(&apos;atom-list-&apos; + atomID).innerHTML = &apos;&apos; + atomID.charAt(0).toUpperCase() + atomID.substr(1) + &apos;: &apos; + player.atomList[atomID]
+	try {
+		document.getElementById(&apos;atom-list-&apos; + atomID).innerHTML = &apos;&apos; + atomID.charAt(0).toUpperCase() + atomID.substr(1) + &apos;: &apos; + player.atomList[atomID]
+	}
+	catch (e) {
+		console.warn(&apos;Atom &apos; + atomID + &apos; could not be updated on the list!&apos;)
+	}
 
 	updateCompoundButtons() // No need to update selection
 }

@@ -56,6 +56,12 @@ export function damage (data, room, socket) {
 			setField(GLOBAL.SPAWN_POINTS[getTeamNumber(room, thisPlayer.team)].x * GLOBAL.GRID_SPACING * 2, ['rooms', room, 'players', data.player, 'posX'])
 			setField(GLOBAL.SPAWN_POINTS[getTeamNumber(room, thisPlayer.team)].y * GLOBAL.GRID_SPACING * 2, ['rooms', room, 'players', data.player, 'posY'])
 			setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', data.player, 'health'])
+			setField(true, ['rooms', room, 'players', data.player, 'dead']) // This will be reset when it has been verified that the player has been placed at the proper spawnpoint
+
+			if (socket.id === data.player) {
+				let pl = getField(['rooms', room, 'players', data.player])
+				socket.emit('serverSendPlayerDeath', { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+			}
 
 			if (data.id !== undefined) {
 				// Read damagedBy to award points, clear in the process

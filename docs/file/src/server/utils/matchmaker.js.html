@@ -163,7 +163,7 @@ export function roomMatchmaker (socket, room, team) {
 					if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
 						if ((roomType === &apos;4v4&apos; &amp;&amp; getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 2) || getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length &lt; 4) {
 							room = roomName
-							team = room + (getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length - 1)
+							team = room + &apos;_&apos; + (getField([&apos;rooms&apos;, roomName, &apos;teams&apos;]).length)
 						}
 					}
 				}
@@ -178,6 +178,24 @@ export function roomMatchmaker (socket, room, team) {
 		if (room === GLOBAL.NO_ROOM_IDENTIFIER) {
 			room = &apos;NA_&apos; + roomType + &apos;_&apos; + generateID()
 			if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+				team = room + &apos;_0&apos;
+			}
+		}
+
+		// Custom room auto team
+		if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+			for (let i = 0; i &lt; 4; i++) {
+				if (getField([&apos;rooms&apos;, room]) &amp;&amp; getField([&apos;rooms&apos;, room, &apos;teams&apos;, room + &apos;_&apos; + i]) &amp;&amp; getField([&apos;rooms&apos;, room, &apos;teams&apos;, room + &apos;_&apos; + i, &apos;joinable&apos;])) {
+					team = room + i
+				}
+			}
+		}
+		// No random teams are joinable make a new team in custom room
+		if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
+			try {
+				team = room + &apos;_&apos; + (getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length)
+			}
+			catch (e) {
 				team = room + &apos;_0&apos;
 			}
 		}

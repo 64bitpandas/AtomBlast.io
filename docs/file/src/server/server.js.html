@@ -244,7 +244,7 @@ io.on(&apos;connection&apos;, socket =&gt; {
    */
 	socket.to(room).on(&apos;move&apos;, data =&gt; {
 		// Player exists in database already because it was created serverside - no need for extra checking
-		if (rooms[room][data.type][data.id] !== undefined) {
+		if (rooms[room][data.type][data.id] !== undefined &amp;&amp; !rooms[room][data.type][data.id].dead) {
 			rooms[room][data.type][data.id].posX = data.posX
 			rooms[room][data.type][data.id].posY = data.posY
 			rooms[room][data.type][data.id].vx = data.vx
@@ -254,6 +254,10 @@ io.on(&apos;connection&apos;, socket =&gt; {
 
 	socket.to(room).on(&apos;damage&apos;, data =&gt; {
 		damage(data, room, socket)
+	})
+
+	socket.on(&apos;verifyPlayerDeath&apos;, data =&gt; {
+		rooms[room].players[data.id].dead = false
 	})
 
 	// A player spawned a Compound

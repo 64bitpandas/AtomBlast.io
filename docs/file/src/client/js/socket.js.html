@@ -425,6 +425,9 @@ function setupSocketInfo (chat) {
 	// Respawn
 	socket.on(&apos;serverSendPlayerDeath&apos;, (data) =&gt; {
 		console.log(&apos;You Died!&apos;)
+		objects.players[socket.id].setData(data.posX, data.posY, data.vx, data.vy)
+		socket.emit(&apos;verifyPlayerDeath&apos;, { id: socket.id })
+		console.log(objects.players[socket.id])
 		updateAtomList()
 	})
 
