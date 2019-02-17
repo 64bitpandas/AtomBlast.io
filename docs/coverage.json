@@ -1,7 +1,7 @@
 {
-  "coverage": "50.6%",
-  "expectCount": 164,
-  "actualCount": 83,
+  "coverage": "52.14%",
+  "expectCount": 163,
+  "actualCount": 85,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -19,8 +19,8 @@
       ]
     },
     "src/client/js/global.js": {
-      "expectCount": 4,
-      "actualCount": 2,
+      "expectCount": 5,
+      "actualCount": 3,
       "undocumentLines": [
         4,
         174
@@ -56,15 +56,12 @@
       ]
     },
     "src/client/js/lib/mobilejoystick.js": {
-      "expectCount": 6,
+      "expectCount": 3,
       "actualCount": 0,
       "undocumentLines": [
         11,
         14,
-        15,
-        16,
-        17,
-        18
+        15
       ]
     },
     "src/client/js/obj/blueprints.js": {
@@ -214,8 +211,8 @@
       "undocumentLines": []
     },
     "src/server/utils/serverutils.js": {
-      "expectCount": 3,
-      "actualCount": 3,
+      "expectCount": 4,
+      "actualCount": 4,
       "undocumentLines": []
     }
   }

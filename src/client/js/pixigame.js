@@ -187,17 +187,17 @@ function draw (delta) {
 		// Make sure player is not in chat before checking move
 		if (isFocused() && inGame) {
 			// Keyboard based controls
-			console.log(joystick.leftDown)
-			if ((moveKeys[0].isDown || joystick.leftDown) && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+
+			if ((moveKeys[0].isDown || joystick.mobileKey.leftDown === true) && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
 				mobileMovement('left')
 			}
-			if (moveKeys[1].isDown && player.vx < GLOBAL.MAX_SPEED * player.speedMult) { // Right
+			if ((moveKeys[1].isDown || joystick.mobileKey.rightDown === true) && player.vx < GLOBAL.MAX_SPEED * player.speedMult) { // Right
 				mobileMovement('right')
 			}
-			if (moveKeys[2].isDown && player.vy < GLOBAL.MAX_SPEED * player.speedMult) { // Up
+			if ((moveKeys[2].isDown || joystick.mobileKey.upDown === true) && player.vy < GLOBAL.MAX_SPEED * player.speedMult) { // Up
 				mobileMovement('up')
 			}
-			if (moveKeys[3].isDown && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) { // Down
+			if ((moveKeys[3].isDown || joystick.mobileKey.downDown === true) && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) { // Down
 				mobileMovement('down')
 			}
 			player.isMoving = false

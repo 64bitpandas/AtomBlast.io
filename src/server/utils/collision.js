@@ -1,7 +1,9 @@
-import { distanceBetween, GLOBAL } from '../../client/js/global'
+import { distanceBetween, GLOBAL, getCurrTile, getGlobalLocation } from '../../client/js/global'
 import { deleteObject } from '../server'
 import { damage } from './ondamage'
 import { incrementAtom } from './atoms'
+import { TILE_NAMES, TILES } from '../../client/js/obj/tiles'
+import { getTileID } from './serverutils'
 
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
@@ -55,6 +57,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 				if (cmp.blueprint.type !== 'toxic' && !cmp.ignited) {
 					deleteObject('compounds', compound, room, socket)
 				}
+			}
+		}
+		else { // check for tile collisions
+			let tileID = getTileID(getGlobalLocation(cmp), room)
+			if (tileID) {
+				console.log('hit ' + tileID + ' at ' + JSON.stringify(getGlobalLocation(cmp)))
 			}
 		}
 	}

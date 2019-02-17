@@ -43,3 +43,20 @@ export function getTeamColors (room) {
 	}
 	return result
 }
+
+/**
+ * Returns the serverside ID of the tile at this location.
+ * If the tile is not capturable, then returns false.
+ * @param {*} globalLocation Contains globalX and globalY. Location on the map
+ * @param {string} room The room name to check
+ */
+export function getTileID (globalLocation, room) {
+	for (let tileID in getField(['rooms', room, 'tiles'])) {
+		let tile = getField(['rooms', room, 'tiles', tileID])
+		if (tile.globalX === globalLocation.globalX && tile.globalY === globalLocation.globalY) {
+			return tileID
+		}
+	}
+
+	return false
+}

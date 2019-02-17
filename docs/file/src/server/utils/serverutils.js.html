@@ -40,6 +40,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
@@ -99,6 +100,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -148,6 +150,23 @@ export function getTeamColors (room) {
 		}
 	}
 	return result
+}
+
+/**
+ * Returns the serverside ID of the tile at this location.
+ * If the tile is not capturable, then returns false.
+ * @param {*} globalLocation Contains globalX and globalY. Location on the map
+ * @param {string} room The room name to check
+ */
+export function getTileID (globalLocation, room) {
+	for (let tileID in getField([&apos;rooms&apos;, room, &apos;tiles&apos;])) {
+		let tile = getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID])
+		if (tile.globalX === globalLocation.globalX &amp;&amp; tile.globalY === globalLocation.globalY) {
+			return tileID
+		}
+	}
+
+	return false
 }
 </code></pre>
 

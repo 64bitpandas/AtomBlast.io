@@ -190,13 +190,23 @@ export function isInBounds (obj) {
  * @returns {string} one-letter ID of current tile.
  */
 export function getCurrTile (obj) {
-	let tileCol = Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2))
-	let tileRow = Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2))
+	let pos = getGlobalLocation(obj)
 
 	try {
-		return MAP_LAYOUT[MAP_LAYOUT.length - tileRow - 2][tileCol]
+		return MAP_LAYOUT[MAP_LAYOUT.length - pos.globalY - 2][pos.globalX]
 	}
 	catch (error) {
 		return 'E'
+	}
+}
+
+/**
+ * Gets the coordinates of the tile directly underneath the object.
+ * @param {*} obj Any valid GameObject.
+ */
+export function getGlobalLocation (obj) {
+	return {
+		globalX: Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2)),
+		globalY: Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2))
 	}
 }

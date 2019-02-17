@@ -40,6 +40,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
@@ -99,15 +100,18 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/collision.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, GLOBAL } from &apos;../../client/js/global&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, GLOBAL, getCurrTile, getGlobalLocation } from &apos;../../client/js/global&apos;
 import { deleteObject } from &apos;../server&apos;
 import { damage } from &apos;./ondamage&apos;
 import { incrementAtom } from &apos;./atoms&apos;
+import { TILE_NAMES, TILES } from &apos;../../client/js/obj/tiles&apos;
+import { getTileID } from &apos;./serverutils&apos;
 
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
@@ -161,6 +165,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 				if (cmp.blueprint.type !== &apos;toxic&apos; &amp;&amp; !cmp.ignited) {
 					deleteObject(&apos;compounds&apos;, compound, room, socket)
 				}
+			}
+		}
+		else { // check for tile collisions
+			let tileID = getTileID(getGlobalLocation(cmp), room)
+			if (tileID) {
+				console.log(&apos;hit &apos; + tileID + &apos; at &apos; + JSON.stringify(getGlobalLocation(cmp)))
 			}
 		}
 	}

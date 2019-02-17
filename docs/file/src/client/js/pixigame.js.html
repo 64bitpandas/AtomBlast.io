@@ -40,6 +40,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
@@ -99,6 +100,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -293,17 +295,17 @@ function draw (delta) {
 		// Make sure player is not in chat before checking move
 		if (isFocused() &amp;&amp; inGame) {
 			// Keyboard based controls
-			console.log(joystick.leftDown)
-			if ((moveKeys[0].isDown || joystick.leftDown) &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
+
+			if ((moveKeys[0].isDown || joystick.mobileKey.leftDown === true) &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
 				mobileMovement(&apos;left&apos;)
 			}
-			if (moveKeys[1].isDown &amp;&amp; player.vx &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Right
+			if ((moveKeys[1].isDown || joystick.mobileKey.rightDown === true) &amp;&amp; player.vx &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Right
 				mobileMovement(&apos;right&apos;)
 			}
-			if (moveKeys[2].isDown &amp;&amp; player.vy &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Up
+			if ((moveKeys[2].isDown || joystick.mobileKey.upDown === true) &amp;&amp; player.vy &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Up
 				mobileMovement(&apos;up&apos;)
 			}
-			if (moveKeys[3].isDown &amp;&amp; player.vy &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Down
+			if ((moveKeys[3].isDown || joystick.mobileKey.downDown === true) &amp;&amp; player.vy &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Down
 				mobileMovement(&apos;down&apos;)
 			}
 			player.isMoving = false

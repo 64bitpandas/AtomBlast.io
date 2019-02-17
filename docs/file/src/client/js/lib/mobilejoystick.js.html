@@ -40,6 +40,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
@@ -99,6 +100,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -118,16 +120,20 @@ export default class VirtualJoystick {
 
     // Use this constructor during init of game
     constructor(params) {
-        this.leftDown = false
-        this.upDown = false
-        this.rightDown = false
-        this.downDown = false
+        this.mobileKey = {} //that failed me tho that should work
+        this.mobileKey.leftDown = false
+        this.mobileKey.upDown = false
+        this.mobileKey.rightDown = false
+        this.mobileKey.downDown = false //lolol that naming is a beuaty
 
         var options = {
             zone: document.getElementById(&apos;zone_joystick&apos;),
             color: &apos;red&apos;
         };
         var manager = nipplejs.create(options);
+
+
+        let self = this // hacky hak
 
         //Perform actions based on direction up
         manager.on(&apos;added&apos;, function (evt, nipple) {
@@ -138,25 +144,39 @@ export default class VirtualJoystick {
             //     }
             // });
             nipple.on(&apos;plain:left&apos;, function (evt) {
-                mobileMovement(&apos;left&apos;);
-            });
+                mobileMovement(&apos;left&apos;) 
+                self.mobileKey.leftDown = true 
+                self.mobileKey.rightDown = false
+            })
             nipple.on(&apos;plain:right&apos;, function (evt) {
-                mobileMovement(&apos;right&apos;);
-            });
+                mobileMovement(&apos;right&apos;)
+                self.mobileKey.rightDown = true
+                self.mobileKey.leftDown = false
+            })
             nipple.on(&apos;plain:up&apos;, function (evt) {
-                mobileMovement(&apos;up&apos;);
-            });
+                mobileMovement(&apos;up&apos;)
+                self.mobileKey.upDown = true
+                self.mobileKey.downDown = false
+            })
             nipple.on(&apos;plain:down&apos;, function (evt) {
-                mobileMovement(&apos;down&apos;);
-            });
+                mobileMovement(&apos;down&apos;)
+                self.mobileKey.downDown = true
+                self.mobileKey.upDown = false
+            })
+            nipple.on(&apos;end&apos;, function(evt){
+                self.mobileKey.leftDown = false
+                self.mobileKey.upDown = false
+                self.mobileKey.rightDown = false
+                self.mobileKey.downDown = false
+            })
         }).on(&apos;removed&apos;, function (evt, nipple) {
-            nipple.off(&apos;start move end dir plain&apos;);
-        });
-
-        
+            nipple.off(&apos;start move end dir plain&apos;)
+        })
     }
     
-} </code></pre>
+} 
+
+</code></pre>
 
 </div>
 
