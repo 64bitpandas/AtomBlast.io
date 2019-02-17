@@ -3,6 +3,7 @@ import { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles'
 import { GLOBAL } from '../../client/js/global'
 import { spawnAtomAtVent } from './atoms'
 import colors from 'colors' // Console colors :D
+import { generateID } from './serverutils'
 
 /**
  * Methods to run on server initialization and player connect initialization.
@@ -57,6 +58,8 @@ export function initGlobal () {
 export function initPlayer (socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField(['rooms', room])
+
+	// Set up room if it does not exist
 	if (thisRoom === undefined || thisRoom === null) {
 		console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType)
 		setField({
@@ -71,6 +74,28 @@ export function initPlayer (socket, room, team) {
 				formattedTime: '0:00'
 			}
 		}, ['rooms', room])
+
+		// Set up capturable tiles
+		setField({}, ['rooms', room, 'tiles'])
+		// TODO support multiple map layouts
+		for (let row = 0; row < MAP_LAYOUT.length; row++) {
+			for (let col = 0; col < MAP_LAYOUT[row].length; col++) {
+				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
+				if (currTile.type === 'spawner' || currTile.type === 'stronghold') {
+					let tileID = generateID()
+					setField({
+						id: tileID,
+						type: currTile.type,
+						globalX: col,
+						globalY: row,
+						captured: false,
+						owner: 'none',
+						health: GLOBAL[('MAX_' + currTile.type + '_HEALTH').toUpperCase()]
+					}, ['rooms', room, 'tiles', tileID])
+				}
+			}
+		}
+		console.log(getField(['rooms', room, 'tiles']))
 	}
 	thisRoom = getField(['rooms', room])
 

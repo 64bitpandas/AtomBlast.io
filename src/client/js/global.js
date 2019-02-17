@@ -82,6 +82,8 @@ export const GLOBAL = {
 		{ x: 0, y: 6 },
 		{ x: 6, y: 0 }
 	], // Spawn points for different teams
+	MAX_SPAWNER_HEALTH: 100,
+	MAX_STRONGHOLD_HEALTH: 200,
 
 	// Drawing
 	DRAW_RADIUS: 1000, // Radius around player in which to draw other objects

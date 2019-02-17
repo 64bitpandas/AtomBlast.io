@@ -133,11 +133,12 @@ app.use(express.static(`${__dirname}/../client`))
 //         type: &apos;4v4&apos;,
 //         teams: [
 //             name: &apos;teamname&apos;,
-//             players: [...]
+//             players: [&apos;id1&apos;, &apos;id2&apos;...]
 //         ],
-//         players: {...},
-//         atoms: {...},
-//         compounds: {...},
+//         players: { id, name, room, team, health, posX, posY, vx, vy, dead, experience, damagedBy },
+//         atoms: { typeID, id, posX, posY, vx, vy },
+//         compounds: {	id, posX, posY, vx, vy, blueprint, sendingTeam, sender },
+//		   tiles: { id, type, globalX, globalY, captured, owner, health }
 //         time: {
 //             minutes: 0,
 //             seconds: 0,

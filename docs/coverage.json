@@ -23,7 +23,7 @@
       "actualCount": 2,
       "undocumentLines": [
         4,
-        172
+        174
       ]
     },
     "src/client/js/lib/chat-client.js": {
@@ -166,8 +166,8 @@
         4,
         14,
         16,
-        43,
-        220
+        44,
+        221
       ]
     },
     "src/server/utils/atoms.js": {
