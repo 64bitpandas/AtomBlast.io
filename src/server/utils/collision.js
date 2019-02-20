@@ -62,9 +62,9 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 		else { // check for tile collisions
 			let tileID = getTileID(getGlobalLocation(cmp), room)
 			if (tileID) {
-				if(distanceBetween(cmp, {
+				if (distanceBetween(cmp, {
 					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
-					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING,
+					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 				}) < GLOBAL.STRONGHOLD_RADIUS) {
 					deleteObject('compounds', compound, room, socket)
 					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)

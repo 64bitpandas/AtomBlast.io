@@ -94,6 +94,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damageTile">damageTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
@@ -269,7 +270,7 @@ function registerCallbacks () {
 	// Draw map
 	for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
 		for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
-			let tileName = &apos;tile_&apos; + col + &apos;_&apos; + row
+			let tileName = &apos;tile_&apos; + col + &apos;_&apos; + (MAP_LAYOUT.length - row - 1)
 			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
 				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
 					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)

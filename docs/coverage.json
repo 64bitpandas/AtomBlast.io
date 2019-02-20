@@ -1,6 +1,6 @@
 {
-  "coverage": "52.14%",
-  "expectCount": 163,
+  "coverage": "51.82%",
+  "expectCount": 164,
   "actualCount": 85,
   "files": {
     "src/client/js/app.js": {
@@ -23,7 +23,7 @@
       "actualCount": 3,
       "undocumentLines": [
         4,
-        174
+        176
       ]
     },
     "src/client/js/lib/chat-client.js": {
@@ -150,7 +150,7 @@
       "undocumentLines": [
         18,
         33,
-        363
+        369
       ]
     },
     "src/server/server.js": {
@@ -201,9 +201,11 @@
       "undocumentLines": []
     },
     "src/server/utils/ondamage.js": {
-      "expectCount": 2,
+      "expectCount": 3,
       "actualCount": 2,
-      "undocumentLines": []
+      "undocumentLines": [
+        139
+      ]
     },
     "src/server/utils/serverinit.js": {
       "expectCount": 2,

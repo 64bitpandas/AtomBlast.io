@@ -94,6 +94,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damageTile">damageTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
@@ -107,7 +108,7 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/ondamage.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../../client/js/global&apos;
-import { getField, setField } from &apos;../server&apos;
+import { getField, setField, incrementField } from &apos;../server&apos;
 import { getTeamNumber } from &apos;./serverutils&apos;
 import { tmpdir } from &apos;os&apos;
 import { spawnAtom } from &apos;./atoms&apos;
@@ -201,7 +202,7 @@ export function damage (data, room, socket) {
 				socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
 
 				// Add to team score
-				setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
+				incrementField(dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
 
 				// Clear damagedBy values
 				for (let pl in thisPlayer.damagedBy) {
@@ -241,6 +242,36 @@ export function damage (data, room, socket) {
 	}
 	else {
 		console.warn(&apos;Player of ID &apos; + data.player + &apos; couldn\&apos;t be damaged because they don\&apos;t exist!&apos;)
+	}
+}
+
+export function damageTile (tileID, damageAmount, player, room, socket) {
+	incrementField(-damageAmount, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;health&apos;])
+
+	console.log(&apos;tile &apos; + tileID + &apos; is now at &apos; + getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;health&apos;]))
+
+	// Check if tile is fully captured
+	if (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;health&apos;]) &lt;= 0) {
+		for (let i = 0; i &lt; 3; i++) {
+			if (getField([&apos;rooms&apos;, room, &apos;teams&apos;, i]).name === getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;team&apos;])) {
+				// Notify clients of texture change
+				let data = {
+					teamNumber: i,
+					tileX: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalX&apos;]),
+					tileY: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalY&apos;])
+				}
+				socket.to(room).emit(&apos;serverSendTileCapture&apos;, data)
+				socket.emit(&apos;serverSendTileCapture&apos;, data)
+
+				// Distribute points
+				incrementField(GLOBAL.CAPTURE_SCORE, [&apos;rooms&apos;, room, &apos;teams&apos;, i, &apos;score&apos;])
+
+				// Reset health
+				setField(GLOBAL[(&apos;MAX_&apos; + getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;type&apos;]) + &apos;_HEALTH&apos;).toUpperCase()], [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;health&apos;])
+
+				return true
+			}
+		}
 	}
 }
 

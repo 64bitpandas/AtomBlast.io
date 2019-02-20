@@ -94,6 +94,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damageTile">damageTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
@@ -109,7 +110,7 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;./global&apos;
 import { cookieInputs, quitGame, updateLobby, updateScores, hideElement, displayWinner, updateAtomList } from &apos;./app&apos;
 import ChatClient from &apos;./lib/chat-client&apos;
-import { loadTextures, app, createPlayer, isSetup, startGame, setIngame } from &apos;./pixigame&apos;
+import { loadTextures, app, createPlayer, isSetup, startGame, setIngame, spritesheet } from &apos;./pixigame&apos;
 import { createRenderAtom, createRenderCompound } from &apos;./obj/create&apos;
 
 /**
@@ -454,10 +455,16 @@ function setupSocketInfo (chat) {
 		displayWinner(data)
 	})
 
-	// Team colors
+	// Sync team colors
 	socket.on(&apos;serverSendTeamColors&apos;, (data) =&gt; {
 		teamColors = data
 		console.log(teamColors)
+	})
+
+	// Change texture when a tile has been captured
+	socket.on(&apos;serverSendTileCapture&apos;, (data) =&gt; {
+		objects.tiles[&apos;tile_&apos; + data.tileY + &apos;_&apos; + data.tileX].texture = (spritesheet.textures[data.teamNumber + objects.tiles[&apos;tile_&apos; + data.tileY + &apos;_&apos; + data.tileX].tile.texture])
+		// console.log(objects.tiles[&apos;tile_&apos; + data.tileY + &apos;_&apos; + data.tileX].texture)
 	})
 }
 

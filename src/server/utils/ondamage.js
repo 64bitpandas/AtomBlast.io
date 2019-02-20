@@ -141,15 +141,15 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 
 	console.log('tile ' + tileID + ' is now at ' + getField(['rooms', room, 'tiles', tileID, 'health']))
 
-	//Check if tile is fully captured
+	// Check if tile is fully captured
 	if (getField(['rooms', room, 'tiles', tileID, 'health']) <= 0) {
 		for (let i = 0; i < 3; i++) {
 			if (getField(['rooms', room, 'teams', i]).name === getField(['rooms', room, 'players', player, 'team'])) {
 				// Notify clients of texture change
 				let data = {
-					teamNumber: i, 
+					teamNumber: i,
 					tileX: getField(['rooms', room, 'tiles', tileID, 'globalX']),
-					tileY: getField(['rooms', room, 'tiles', tileID, 'globalY']),
+					tileY: getField(['rooms', room, 'tiles', tileID, 'globalY'])
 				}
 				socket.to(room).emit('serverSendTileCapture', data)
 				socket.emit('serverSendTileCapture', data)

@@ -94,6 +94,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damageTile">damageTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
@@ -105,7 +106,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">85/163</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">85/164</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -149,16 +150,16 @@
       <td style="display: none;" data-ice="updated">2019-01-07 00:38:29 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/client/js/global.js.html#errorLines=174,4">src/client/js/global.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/client/js/global.js.html#errorLines=176,4">src/client/js/global.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span>
 <span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span>
 <span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span>
 <span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span>
 <span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></td>
       <td class="coverage"><span data-ice="coverage">60 %</span><span data-ice="coverageCount" class="coverage-count">3/5</span></td>
-      <td style="display: none;" data-ice="size">5848 byte</td>
-      <td style="display: none;" data-ice="lines">212</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 11:59:33 (UTC)</td>
+      <td style="display: none;" data-ice="size">5956 byte</td>
+      <td style="display: none;" data-ice="lines">214</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 05:48:18 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/lib/chat-client.js.html#errorLines=11,14,140,150,17,170,18,20,206,21,214">src/client/js/lib/chat-client.js</a></span></td>
@@ -227,7 +228,7 @@
       <td class="coverage"><span data-ice="coverage">30 %</span><span data-ice="coverageCount" class="coverage-count">3/10</span></td>
       <td style="display: none;" data-ice="size">1308 byte</td>
       <td style="display: none;" data-ice="lines">43</td>
-      <td style="display: none;" data-ice="updated">2019-02-06 17:38:17 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:23:19 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/obj/player.js.html#errorLines=30,31,35,36,43,44,45,46,47,48,49,50,52,53,8">src/client/js/obj/player.js</a></span></td>
@@ -243,9 +244,9 @@
 <span><a href="variable/index.html#static-variable-TILES">TILES</a></span>
 <span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></td>
       <td class="coverage"><span data-ice="coverage">33 %</span><span data-ice="coverageCount" class="coverage-count">1/3</span></td>
-      <td style="display: none;" data-ice="size">2731 byte</td>
+      <td style="display: none;" data-ice="size">2724 byte</td>
       <td style="display: none;" data-ice="lines">142</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 18:17:28 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:25:49 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/pixigame.js.html#errorLines=20,21,23,25,418">src/client/js/pixigame.js</a></span></td>
@@ -261,20 +262,20 @@
 <span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span>
 <span><a href="function/index.html#static-function-startGame">startGame</a></span></td>
       <td class="coverage"><span data-ice="coverage">73 %</span><span data-ice="coverageCount" class="coverage-count">14/19</span></td>
-      <td style="display: none;" data-ice="size">11973 byte</td>
+      <td style="display: none;" data-ice="size">11999 byte</td>
       <td style="display: none;" data-ice="lines">431</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 11:59:33 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:42:06 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/client/js/socket.js.html#errorLines=18,33,363">src/client/js/socket.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/client/js/socket.js.html#errorLines=18,33,369">src/client/js/socket.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span>
 <span><a href="function/index.html#static-function-disconnect">disconnect</a></span>
 <span><a href="variable/index.html#static-variable-objects">objects</a></span>
 <span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></td>
       <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">6/9</span></td>
-      <td style="display: none;" data-ice="size">10565 byte</td>
-      <td style="display: none;" data-ice="lines">373</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 01:17:05 (UTC)</td>
+      <td style="display: none;" data-ice="size">10943 byte</td>
+      <td style="display: none;" data-ice="lines">379</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:37:53 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/entry.js.html">src/server/entry.js</a></span></td>
@@ -291,9 +292,9 @@
 <span><a href="function/index.html#static-function-incrementField">incrementField</a></span>
 <span><a href="function/index.html#static-function-setField">setField</a></span></td>
       <td class="coverage"><span data-ice="coverage">38 %</span><span data-ice="coverageCount" class="coverage-count">5/13</span></td>
-      <td style="display: none;" data-ice="size">10228 byte</td>
+      <td style="display: none;" data-ice="size">10231 byte</td>
       <td style="display: none;" data-ice="lines">304</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 10:50:18 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:08:40 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/atoms.js.html#errorLines=14,9">src/server/utils/atoms.js</a></span></td>
@@ -310,9 +311,9 @@
       <td data-ice="filePath"><span><a href="file/src/server/utils/collision.js.html">src/server/utils/collision.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">1/1</span></td>
-      <td style="display: none;" data-ice="size">2576 byte</td>
-      <td style="display: none;" data-ice="lines">69</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 11:59:33 (UTC)</td>
+      <td style="display: none;" data-ice="size">2893 byte</td>
+      <td style="display: none;" data-ice="lines">75</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:44:32 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/compound.js.html">src/server/utils/compound.js</a></span></td>
@@ -348,22 +349,23 @@
       <td style="display: none;" data-ice="updated">2019-02-07 01:17:05 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/server/utils/ondamage.js.html">src/server/utils/ondamage.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/server/utils/ondamage.js.html#errorLines=139">src/server/utils/ondamage.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-damage">damage</a></span>
+<span><a href="function/index.html#static-function-damageTile">damageTile</a></span>
 <span><a href="function/index.html#static-function-splash">splash</a></span></td>
-      <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">2/2</span></td>
-      <td style="display: none;" data-ice="size">5452 byte</td>
-      <td style="display: none;" data-ice="lines">144</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 01:17:05 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">2/3</span></td>
+      <td style="display: none;" data-ice="size">6558 byte</td>
+      <td style="display: none;" data-ice="lines">174</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:44:32 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/serverinit.js.html">src/server/utils/serverinit.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span>
 <span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">2/2</span></td>
-      <td style="display: none;" data-ice="size">4059 byte</td>
-      <td style="display: none;" data-ice="lines">126</td>
-      <td style="display: none;" data-ice="updated">2019-02-01 11:06:49 (UTC)</td>
+      <td style="display: none;" data-ice="size">4009 byte</td>
+      <td style="display: none;" data-ice="lines">125</td>
+      <td style="display: none;" data-ice="updated">2019-02-04 06:11:14 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/serverutils.js.html">src/server/utils/serverutils.js</a></span></td>

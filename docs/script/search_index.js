@@ -132,6 +132,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/ondamage.js~damagetile",
+    "function/index.html#static-function-damageTile",
+    "<span>damageTile</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/server.js~deleteobject",
     "function/index.html#static-function-deleteObject",
     "<span>deleteObject</span> <span class=\"search-result-import-path\">atomblast.io/src/server/server.js</span>",
