@@ -95,7 +95,6 @@ export function initPlayer (socket, room, team) {
 				}
 			}
 		}
-		console.log(getField(['rooms', room, 'tiles']))
 	}
 	thisRoom = getField(['rooms', room])
 

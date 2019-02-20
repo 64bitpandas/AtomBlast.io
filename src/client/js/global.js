@@ -74,7 +74,7 @@ export const GLOBAL = {
 	ATOM_SPAWN_DELAY: 5000, // Atom spawn delay, in milliseconds
 	ATOM_COLLECT_THRESHOLD: 100, // Distance away from center of player that the atom must be before being collected
 
-	// Map
+	// Map and Tiles
 	MAP_SIZE: 2000,
 	SPAWN_POINTS: [
 		{ x: 0, y: 0 },
@@ -84,6 +84,7 @@ export const GLOBAL = {
 	], // Spawn points for different teams
 	MAX_SPAWNER_HEALTH: 100,
 	MAX_STRONGHOLD_HEALTH: 200,
+	STRONGHOLD_RADIUS: 100,
 
 	// Drawing
 	DRAW_RADIUS: 1000, // Radius around player in which to draw other objects
@@ -162,6 +163,7 @@ export const GLOBAL = {
 	KILL_SCORE: 6, // How many points are awarded to the player/team who dealt the most damage to the player
 	ASSIST_SCORE: 2, // How many points are awarded to all players who assist in killing the player
 	WINNING_SCORE: 20, // How many points are required to win the game per team. TODO increase
+	CAPTURE_SCORE: 5, // How many points are awarded to the team who captured a stronghold/vent
 	MAX_DEATH_ATOMS: 100 // How many atoms of each type can be ejected on death at maximum. Prevents testers from ejecting thousands of atoms at a time.
 }
 
@@ -193,7 +195,7 @@ export function getCurrTile (obj) {
 	let pos = getGlobalLocation(obj)
 
 	try {
-		return MAP_LAYOUT[MAP_LAYOUT.length - pos.globalY - 2][pos.globalX]
+		return MAP_LAYOUT[pos.globalY][pos.globalX]
 	}
 	catch (error) {
 		return 'E'
@@ -206,7 +208,7 @@ export function getCurrTile (obj) {
  */
 export function getGlobalLocation (obj) {
 	return {
-		globalX: Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2)),
-		globalY: Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2))
+		globalY: Math.floor(obj.posY / (GLOBAL.GRID_SPACING * 2)) + 1,
+		globalX: Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2))
 	}
 }

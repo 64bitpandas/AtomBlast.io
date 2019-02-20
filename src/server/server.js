@@ -183,7 +183,7 @@ io.on('connection', socket => {
 	// Testing purposes- give yourself 5000 of each atom
 	socket.on('testCommand', (data) => {
 		if (GLOBAL.DEBUG) {
-			console.log(rooms[room].players[data.player].atomList)
+			// console.log(rooms[room].players[data.player].atomList)
 			for (let i in rooms[room].players[data.player].atomList) {
 				rooms[room].players[data.player].atomList[i] += 5000
 			}

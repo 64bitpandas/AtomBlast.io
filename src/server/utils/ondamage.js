@@ -1,5 +1,5 @@
 import { GLOBAL } from '../../client/js/global'
-import { getField, setField } from '../server'
+import { getField, setField, incrementField } from '../server'
 import { getTeamNumber } from './serverutils'
 import { tmpdir } from 'os'
 import { spawnAtom } from './atoms'
@@ -93,7 +93,7 @@ export function damage (data, room, socket) {
 				socket.emit('serverSendScoreUpdate', dataToSend)
 
 				// Add to team score
-				setField(thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score'])
+				incrementField(dataToSend.increment, ['rooms', room, 'teams', dataToSend.teamSlot, 'score'])
 
 				// Clear damagedBy values
 				for (let pl in thisPlayer.damagedBy) {
@@ -133,6 +133,36 @@ export function damage (data, room, socket) {
 	}
 	else {
 		console.warn('Player of ID ' + data.player + ' couldn\'t be damaged because they don\'t exist!')
+	}
+}
+
+export function damageTile (tileID, damageAmount, player, room, socket) {
+	incrementField(-damageAmount, ['rooms', room, 'tiles', tileID, 'health'])
+
+	console.log('tile ' + tileID + ' is now at ' + getField(['rooms', room, 'tiles', tileID, 'health']))
+
+	//Check if tile is fully captured
+	if (getField(['rooms', room, 'tiles', tileID, 'health']) <= 0) {
+		for (let i = 0; i < 3; i++) {
+			if (getField(['rooms', room, 'teams', i]).name === getField(['rooms', room, 'players', player, 'team'])) {
+				// Notify clients of texture change
+				let data = {
+					teamNumber: i, 
+					tileX: getField(['rooms', room, 'tiles', tileID, 'globalX']),
+					tileY: getField(['rooms', room, 'tiles', tileID, 'globalY']),
+				}
+				socket.to(room).emit('serverSendTileCapture', data)
+				socket.emit('serverSendTileCapture', data)
+
+				// Distribute points
+				incrementField(GLOBAL.CAPTURE_SCORE, ['rooms', room, 'teams', i, 'score'])
+
+				// Reset health
+				setField(GLOBAL[('MAX_' + getField(['rooms', room, 'tiles', tileID, 'type']) + '_HEALTH').toUpperCase()], ['rooms', room, 'tiles', tileID, 'health'])
+
+				return true
+			}
+		}
 	}
 }
 

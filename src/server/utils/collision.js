@@ -1,6 +1,6 @@
 import { distanceBetween, GLOBAL, getCurrTile, getGlobalLocation } from '../../client/js/global'
 import { deleteObject } from '../server'
-import { damage } from './ondamage'
+import { damage, damageTile } from './ondamage'
 import { incrementAtom } from './atoms'
 import { TILE_NAMES, TILES } from '../../client/js/obj/tiles'
 import { getTileID } from './serverutils'
@@ -62,7 +62,13 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 		else { // check for tile collisions
 			let tileID = getTileID(getGlobalLocation(cmp), room)
 			if (tileID) {
-				console.log('hit ' + tileID + ' at ' + JSON.stringify(getGlobalLocation(cmp)))
+				if(distanceBetween(cmp, {
+					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
+					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING,
+				}) < GLOBAL.STRONGHOLD_RADIUS) {
+					deleteObject('compounds', compound, room, socket)
+					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)
+				}
 			}
 		}
 	}

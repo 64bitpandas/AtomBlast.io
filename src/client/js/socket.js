@@ -1,7 +1,7 @@
 import { GLOBAL } from './global'
 import { cookieInputs, quitGame, updateLobby, updateScores, hideElement, displayWinner, updateAtomList } from './app'
 import ChatClient from './lib/chat-client'
-import { loadTextures, app, createPlayer, isSetup, startGame, setIngame } from './pixigame'
+import { loadTextures, app, createPlayer, isSetup, startGame, setIngame, spritesheet } from './pixigame'
 import { createRenderAtom, createRenderCompound } from './obj/create'
 
 /**
@@ -346,10 +346,16 @@ function setupSocketInfo (chat) {
 		displayWinner(data)
 	})
 
-	// Team colors
+	// Sync team colors
 	socket.on('serverSendTeamColors', (data) => {
 		teamColors = data
 		console.log(teamColors)
+	})
+
+	// Change texture when a tile has been captured
+	socket.on('serverSendTileCapture', (data) => {
+		objects.tiles['tile_' + data.tileY + '_' + data.tileX].texture = (spritesheet.textures[data.teamNumber + objects.tiles['tile_' + data.tileY + '_' + data.tileX].tile.texture])
+		// console.log(objects.tiles['tile_' + data.tileY + '_' + data.tileX].texture)
 	})
 }
 

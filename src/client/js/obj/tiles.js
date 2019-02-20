@@ -100,7 +100,7 @@ export const TILES = {
 		}
 	},
 	stronghold: {
-		texture: 'StrongholdNeutral.png',
+		texture: 'stronghold.png',
 		type: 'stronghold'
 	}
 }

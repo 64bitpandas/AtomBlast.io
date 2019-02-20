@@ -161,7 +161,7 @@ function registerCallbacks () {
 	// Draw map
 	for (let row = 0; row < MAP_LAYOUT.length; row++) {
 		for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
-			let tileName = 'tile_' + col + '_' + row
+			let tileName = 'tile_' + col + '_' + (MAP_LAYOUT.length - row - 1)
 			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
 				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
 					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)
