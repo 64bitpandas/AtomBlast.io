@@ -41,30 +41,6 @@ export function loadTextures () {
 		screenCenterX = window.innerWidth / 2 - GLOBAL.PLAYER_RADIUS
 		screenCenterY = window.innerHeight / 2 - GLOBAL.PLAYER_RADIUS
 
-		// Load resources if not already loaded
-		// let TEXTURES = []
-		// TEXTURES.push(GLOBAL.IGNITE_SPRITE)
-		// for (let bp in BLUEPRINTS) {
-		// 	// Prevent duplicate textures from being loaded
-		// 	if (TEXTURES.indexOf(BLUEPRINTS[bp].texture) < 0) {
-		// 		TEXTURES.push(BLUEPRINTS[bp].texture)
-		// 	}
-		// 	if (BLUEPRINTS[bp].params.splashImage !== undefined && TEXTURES.indexOf(BLUEPRINTS[bp].params.splashImage) < 0) {
-		// 		TEXTURES.push(BLUEPRINTS[bp].params.splashImage)
-		// 	}
-		// }
-		// for (let atom of GLOBAL.ATOM_SPRITES) {
-		// 	if (TEXTURES.indexOf(atom) < 0) {
-		// 		TEXTURES.push(atom)
-		// 	}
-		// }
-		// for (let tile in TILES) {
-		// 	if (TEXTURES.indexOf(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture) < 0) {
-		// 		TEXTURES.push(GLOBAL.TILE_TEXTURE_DIR + TILES[tile].texture)
-		// 	}
-		// }
-		// console.log(TEXTURES)
-
 		// Initiate resource loading
 		if (Object.keys(PIXI.loader.resources).length < 1) {
 			PIXI.loader

@@ -167,6 +167,9 @@ export function createCompound (data, room, thisPlayer, socket) {
 	else if (data.blueprint.type === &apos;defense&apos;) {
 		setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;hasShield&apos;])
 	}
+	else if (data.blueprint.type === &apos;block&apos;) {
+		newCompound.vx = newCompound.vy = 0
+	}
 
 	// Emits the crafting event to update experience
 	addExperience(&apos;CRAFT&apos;, socket, room, thisPlayer.id)

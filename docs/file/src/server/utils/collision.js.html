@@ -168,6 +168,26 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 					deleteObject(&apos;compounds&apos;, compound, room, socket)
 				}
 			}
+
+			// Barrier block collisions
+			if (cmp.blueprint.type === &apos;block&apos;) {
+				for (let otherCompound in tempObjects.compounds) {
+					let othercmp = tempObjects.compounds[otherCompound]
+
+					if (cmp.sendingTeam !== othercmp.sendingTeam &amp;&amp; othercmp.blueprint.type !== &apos;block&apos;) {
+						let distance = distanceBetween(
+							{ posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
+							{ posX: othercmp.posX + othercmp.blueprint.params.size / 2, posY: othercmp.posY - othercmp.blueprint.params.size / 2 }
+						)
+
+						if (distance &lt; cmp.blueprint.params.size + othercmp.blueprint.params.size) {
+							// Delete both compounds. TODO deal damage to higher level barrier blocks
+							deleteObject(&apos;compounds&apos;, compound, room, socket)
+							deleteObject(&apos;compounds&apos;, otherCompound, room, socket)
+						}
+					}
+				}
+			}
 		}
 		else { // check for tile collisions
 			let tileID = getTileID(getGlobalLocation(cmp), room)

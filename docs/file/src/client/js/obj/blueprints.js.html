@@ -142,7 +142,7 @@ export const BLUEPRINTS = {
 	},
 	basicMethane: {
 		name: &apos;Methane&apos;,
-		unlocked: true,
+		unlocked: false,
 		tooltip: &apos;Okay, who passed gas?&apos;,
 		texture: &apos;compound_PLACEHOLDER.png&apos;,
 		type: &apos;flammable&apos;,
@@ -205,6 +205,21 @@ export const BLUEPRINTS = {
 		},
 		atoms: {
 			n: 2
+		}
+	},
+	carbon: {
+		name: &apos;Carbon&apos;,
+		unlocked: true,
+		tooltip: &apos;The building block of life.&apos;,
+		texture: &apos;placeholder_barrier.png&apos;,
+		type: &apos;block&apos;,
+		params: {
+			health: 1,
+			size: 50,
+			speed: 0
+		},
+		atoms: {
+			c: 1
 		}
 	},
 	binaryHelium: {
@@ -315,7 +330,7 @@ export const BLUEPRINTS = {
 		name: &apos;Cyanide&apos;,
 		unlocked: true,
 		tooltip: &apos;Less deadly and more happy than Cyanide and Happiness.&apos;,
-		texture: &apos;compound_PLACEHOLDER.png&apos;,
+		texture: &apos;cyanide.png&apos;,
 		type: &apos;toxic&apos;,
 		params: {
 			speed: 2,
