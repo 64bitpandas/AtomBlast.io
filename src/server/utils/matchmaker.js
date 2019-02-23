@@ -34,7 +34,7 @@ export function roomMatchmaker (socket, room, team) {
 			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
 			setField(socket.id, ['teams', team, 'players', getField(['teams', team, 'players']).length ])
 
-			if ((roomType === '2v2v2v2' && team.players.length === 2) || team.players.length === 4) {
+			if (((roomType === '2v2v2v2' || roomType === '2v2') && team.players.length === 2) || team.players.length === 4) {
 				setField(false, ['teams', team, 'joinable'])
 			}
 		}
