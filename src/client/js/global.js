@@ -63,6 +63,8 @@ export const GLOBAL = {
 	LERP_VALUE: 0.2,
 	DEADZONE: 0.1,
 	MAX_HEALTH: 100, // Starting health of players
+	PLAYER_ROTATION: 0.05,
+	PLAYER_EXPEDITED_ROTATION: 0.1,
 
 	// Atoms
 	ATOM_RADIUS: 30, // size of spawned atoms
@@ -100,10 +102,6 @@ export const GLOBAL = {
 		'f44336'
 	],
 
-	// Sprites and textures
-	PLAYER_SPRITES: [
-		'testplayer.png'
-	],
 	IGNITE_SPRITE: 'placeholder_ignited.png',
 
 	// Atoms: ID's and Sprites. ATOM_SPRITES[id] returns the texture location of atom of that id.

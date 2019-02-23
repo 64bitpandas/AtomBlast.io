@@ -1,6 +1,6 @@
 {
-  "coverage": "51.82%",
-  "expectCount": 164,
+  "coverage": "51.51%",
+  "expectCount": 165,
   "actualCount": 85,
   "files": {
     "src/client/js/app.js": {
@@ -23,7 +23,7 @@
       "actualCount": 3,
       "undocumentLines": [
         4,
-        176
+        174
       ]
     },
     "src/client/js/lib/chat-client.js": {
@@ -105,7 +105,7 @@
       ]
     },
     "src/client/js/obj/player.js": {
-      "expectCount": 18,
+      "expectCount": 19,
       "actualCount": 3,
       "undocumentLines": [
         8,
@@ -122,7 +122,8 @@
         49,
         50,
         52,
-        53
+        53,
+        54
       ]
     },
     "src/client/js/obj/tiles.js": {

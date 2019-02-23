@@ -1,6 +1,6 @@
 import { GLOBAL } from '../global.js'
 import * as PIXI from 'pixi.js'
-import { screenCenterX, screenCenterY } from '../pixigame.js'
+import { screenCenterX, screenCenterY, mouseDown, spritesheet } from '../pixigame.js'
 import { socket, teamColors } from '../socket.js'
 import { GameObject } from './gameobject.js'
 import { cookieInputs } from '../app.js'
@@ -51,6 +51,7 @@ export class Player extends GameObject {
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
 		this.textObjects = {} // Contains Text to be drawn under the player (name, id, etc)
+		this.playerSprite = new PIXI.Sprite(texture)
 
 		this.setup()
 	}
@@ -84,6 +85,12 @@ export class Player extends GameObject {
 			})
 			this.addChild(this.textObjects[item])
 		}
+
+		// Create player sprite child
+		this.playerSprite.anchor.set(0.5, 0.5)
+		this.playerSprite.position.set(GLOBAL.PLAYER_RADIUS * 5, GLOBAL.PLAYER_RADIUS * 5)
+		this.playerSprite.scale.set(1.3, 1.3)
+		this.addChild(this.playerSprite)
 	}
 	/**
       * Draws all components of a given player.
@@ -98,6 +105,9 @@ export class Player extends GameObject {
 		// Update text
 		this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')'
 		this.textObjects.healthtext.text = 'health: ' + this.health
+
+		// Rotation
+		this.playerSprite.rotation += (this.id === socket.id && mouseDown) ? GLOBAL.PLAYER_EXPEDITED_ROTATION : GLOBAL.PLAYER_ROTATION
 
 		// Draw other player
 		if (this.id !== socket.id) {

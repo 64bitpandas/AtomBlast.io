@@ -17,8 +17,8 @@ export var screenCenterY // Y-coordinate of the center of the screen
 export var app // Pixi app
 export var spritesheet // Spritesheet containing all sprites that need to be loaded
 
+export let mouseDown = false // True if mouse is pressed down
 let inGame = false // True after game has begun
-let mouseDown = false // True if mouse is pressed down
 let esc, space, blueprintKeys, moveKeys // Key handlers
 let streamID = 0 // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
@@ -320,8 +320,8 @@ export function showGameUI () {
 export function createPlayer (data) {
 	if (isSetup) {
 		console.log('create player ' + data.id)
-		console.log(data)
-		let newPlayer = new Player(spritesheet.textures[GLOBAL.PLAYER_SPRITES[0]], data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
+		// console.log(data)
+		let newPlayer = new Player(spritesheet.textures[teamColors[data.team] + 'player.png'], data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
 		if (data.id === socket.id) {
 			player = newPlayer
 		}

@@ -60,6 +60,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouseDown">mouseDown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
@@ -109,7 +110,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/player.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../global.js&apos;
 import * as PIXI from &apos;pixi.js&apos;
-import { screenCenterX, screenCenterY } from &apos;../pixigame.js&apos;
+import { screenCenterX, screenCenterY, mouseDown, spritesheet } from &apos;../pixigame.js&apos;
 import { socket, teamColors } from &apos;../socket.js&apos;
 import { GameObject } from &apos;./gameobject.js&apos;
 import { cookieInputs } from &apos;../app.js&apos;
@@ -160,6 +161,7 @@ export class Player extends GameObject {
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
 		this.textObjects = {} // Contains Text to be drawn under the player (name, id, etc)
+		this.playerSprite = new PIXI.Sprite(texture)
 
 		this.setup()
 	}
@@ -193,6 +195,12 @@ export class Player extends GameObject {
 			})
 			this.addChild(this.textObjects[item])
 		}
+
+		// Create player sprite child
+		this.playerSprite.anchor.set(0.5, 0.5)
+		this.playerSprite.position.set(GLOBAL.PLAYER_RADIUS * 5, GLOBAL.PLAYER_RADIUS * 5)
+		this.playerSprite.scale.set(1.3, 1.3)
+		this.addChild(this.playerSprite)
 	}
 	/**
       * Draws all components of a given player.
@@ -207,6 +215,9 @@ export class Player extends GameObject {
 		// Update text
 		this.textObjects.postext.text = &apos;(&apos; + Math.round(this.posX) + &apos;, &apos; + Math.round(this.posY) + &apos;)&apos;
 		this.textObjects.healthtext.text = &apos;health: &apos; + this.health
+
+		// Rotation
+		this.playerSprite.rotation += (this.id === socket.id &amp;&amp; mouseDown) ? GLOBAL.PLAYER_EXPEDITED_ROTATION : GLOBAL.PLAYER_ROTATION
 
 		// Draw other player
 		if (this.id !== socket.id) {

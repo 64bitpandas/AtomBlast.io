@@ -26,7 +26,7 @@ export var objects = {
  * Team colors object. Number corresponds to index at GLOBAL.TEAM_COLORS.
  * Format: {
  * 	teamname1: 0,
- * 	teamname: color,
+ * 	teamname: colorid,
  * 	...
  * }
  */

@@ -60,6 +60,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-mouseDown">mouseDown</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
@@ -126,8 +127,8 @@ export var screenCenterY // Y-coordinate of the center of the screen
 export var app // Pixi app
 export var spritesheet // Spritesheet containing all sprites that need to be loaded
 
+export let mouseDown = false // True if mouse is pressed down
 let inGame = false // True after game has begun
-let mouseDown = false // True if mouse is pressed down
 let esc, space, blueprintKeys, moveKeys // Key handlers
 let streamID = 0 // Current stream compound number. Resets when mouse/space is released; otherwise increments by one every time a compound is created.
 
@@ -429,8 +430,8 @@ export function showGameUI () {
 export function createPlayer (data) {
 	if (isSetup) {
 		console.log(&apos;create player &apos; + data.id)
-		console.log(data)
-		let newPlayer = new Player(spritesheet.textures[GLOBAL.PLAYER_SPRITES[0]], data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
+		// console.log(data)
+		let newPlayer = new Player(spritesheet.textures[teamColors[data.team] + &apos;player.png&apos;], data.id, data.name, data.room, data.team, data.health, data.posX, data.posY, data.vx, data.vy)
 		if (data.id === socket.id) {
 			player = newPlayer
 		}
