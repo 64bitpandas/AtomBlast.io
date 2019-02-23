@@ -619,19 +619,29 @@ export function updateLobby(data) {
 	// Wipe innerHTML first
 	let lobby = document.getElementById(&apos;team-display&apos;)
 	lobby.innerHTML = &apos;&apos;
-	for (let player in data) {
-		if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
+	for (let player in data.players) {
+		if (document.getElementById(data.players[player].team) === null || document.getElementById(data.players[player].team) === undefined) {
 			lobby.innerHTML += `
             &lt;div class=&quot;col-3&quot;&gt;
-                &lt;h3 style=&quot;color: #${GLOBAL.TEAM_COLORS[teamColors[data[player].team]]}&quot;&gt;` + data[player].team + `&lt;/h3&gt;
-                &lt;ul id=&quot;` + data[player].team + `&quot;&gt;
+                &lt;h3 style=&quot;color: #${GLOBAL.TEAM_COLORS[teamColors[data.players[player].team]]}&quot;&gt;` + data.players[player].team + `&lt;/h3&gt;
+                &lt;ul id=&quot;` + data.players[player].team + `&quot;&gt;
                 &lt;/ul&gt;
             &lt;/div&gt;
             `
 		}
 		let listItem = document.createElement(&apos;LI&apos;)
-		listItem.appendChild(document.createTextNode(data[player].name))
-		document.getElementById(data[player].team).appendChild(listItem)
+		listItem.appendChild(document.createTextNode(data.players[player].name))
+		document.getElementById(data.players[player].team).appendChild(listItem)
+	}
+
+	// Check if room is startable
+	if (data.canStart) {
+		document.getElementById(&apos;btn-start-game&apos;).innerHTML = &apos;Start Game&apos;
+		document.getElementById(&apos;btn-start-game&apos;).disabled = false
+	}
+	else {
+		document.getElementById(&apos;btn-start-game&apos;).innerHTML = &apos;Waiting for Players...&apos;
+		document.getElementById(&apos;btn-start-game&apos;).disabled = true
 	}
 }
 

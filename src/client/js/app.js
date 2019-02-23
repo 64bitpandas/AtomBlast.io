@@ -509,19 +509,29 @@ export function updateLobby(data) {
 	// Wipe innerHTML first
 	let lobby = document.getElementById('team-display')
 	lobby.innerHTML = ''
-	for (let player in data) {
-		if (document.getElementById(data[player].team) === null || document.getElementById(data[player].team) === undefined) {
+	for (let player in data.players) {
+		if (document.getElementById(data.players[player].team) === null || document.getElementById(data.players[player].team) === undefined) {
 			lobby.innerHTML += `
             <div class="col-3">
-                <h3 style="color: #${GLOBAL.TEAM_COLORS[teamColors[data[player].team]]}">` + data[player].team + `</h3>
-                <ul id="` + data[player].team + `">
+                <h3 style="color: #${GLOBAL.TEAM_COLORS[teamColors[data.players[player].team]]}">` + data.players[player].team + `</h3>
+                <ul id="` + data.players[player].team + `">
                 </ul>
             </div>
             `
 		}
 		let listItem = document.createElement('LI')
-		listItem.appendChild(document.createTextNode(data[player].name))
-		document.getElementById(data[player].team).appendChild(listItem)
+		listItem.appendChild(document.createTextNode(data.players[player].name))
+		document.getElementById(data.players[player].team).appendChild(listItem)
+	}
+
+	// Check if room is startable
+	if (data.canStart) {
+		document.getElementById('btn-start-game').innerHTML = 'Start Game'
+		document.getElementById('btn-start-game').disabled = false
+	}
+	else {
+		document.getElementById('btn-start-game').innerHTML = 'Waiting for Players...'
+		document.getElementById('btn-start-game').disabled = true
 	}
 }
 

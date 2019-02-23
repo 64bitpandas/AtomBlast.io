@@ -16,10 +16,12 @@ export function initGlobal () {
 	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
 	setInterval(() => {
 		for (let room in getField(['rooms'])) {
-			for (let row = 0; row < MAP_LAYOUT.length; row++) {
-				for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
-					if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
-						spawnAtomAtVent(row, col, room, false)
+			if (getField(['rooms', room, 'started'])) {
+				for (let row = 0; row < MAP_LAYOUT.length; row++) {
+					for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
+						if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === 'spawner') {
+							spawnAtomAtVent(row, col, room, false)
+						}
 					}
 				}
 			}
@@ -101,7 +103,9 @@ export function initPlayer (socket, room, team) {
 	// Add team to database
 
 	// Equivalent to rooms[room].teams.push({ name: team });
-	setField({ name: team }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
+	if (getField(['teams', team, 'players']).length === 1) {
+		setField({ name: team }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
+	}
 
 	// Check if room is full
 	if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {

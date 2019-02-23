@@ -195,7 +195,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 				if (distanceBetween(cmp, {
 					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
 					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
-				}) &lt; GLOBAL.STRONGHOLD_RADIUS) {
+				}) &lt; GLOBAL.STRONGHOLD_RADIUS &amp;&amp; cmp.blueprint.type !== &apos;block&apos;) {
 					deleteObject(&apos;compounds&apos;, compound, room, socket)
 					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)
 				}

@@ -9,7 +9,7 @@ import { tickCompound } from './compound'
  * @param {string} room The name of the room
  * @param {*} thisPlayer The player object
  */
-export function frameSync (socket, room, thisPlayer) {
+export function frameSync(socket, room, thisPlayer) {
 	if (socket.connected) {
 		let thisRoom = getField(['rooms', room])
 
@@ -98,7 +98,13 @@ export function frameSync (socket, room, thisPlayer) {
 			if (thisRoom !== undefined && !thisRoom.started) {
 				// Send over the room player information
 				// socket.to(room).broadcast.emit('roomInfo', thisRoom.players);
-				socket.emit('roomInfo', thisRoom.players)
+				socket.emit('roomInfo', {
+					players: thisRoom.players,
+					canStart: (thisRoom.type === '2v2' && Object.keys(thisRoom.players).length === 4) ||
+						((thisRoom.type === '4v4' || thisRoom.type === '2v2v2v2') && Object.keys(thisRoom.players).length === 8) ||
+						(thisRoom.type === '4v4v4v4' && Object.keys(thisRoom.players).length === 16) ||
+						thisRoom.type === 'private'
+				})
 			}
 		}
 	}

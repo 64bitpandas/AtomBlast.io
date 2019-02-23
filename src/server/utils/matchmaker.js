@@ -14,7 +14,6 @@ export function roomMatchmaker (socket, room, team) {
 	let roomType = socket.handshake.query.roomType
 
 	// Make sure the room you are trying to join is valid
-	// console.log(getField(['rooms', room]));
 	if (room !== GLOBAL.NO_ROOM_IDENTIFIER && getField(['rooms', room]) !== undefined && !getField(['rooms', room]).joinable && getField(['rooms', room]) !== undefined) { // Room full
 		socket.emit('connectionError', { msg: 'The room ' + room + ' has started or is full!' })
 	}
@@ -24,17 +23,17 @@ export function roomMatchmaker (socket, room, team) {
 		if (getField(['rooms', getField(['teams', team]).room]) !== undefined && getField(['rooms', getField(['teams', team]).room]).type !== roomType) { // Wrong room type
 			socket.emit('connectionError', { msg: 'Your team is playing in a ' + getField('rooms', getField(['teams', team]).room).type + ' room, but you are trying to join a ' + roomType + ' room!' })
 		}
-		else if (!team.joinable) { // Team full
+		else if (!getField(['teams', team, 'joinable'])) { // Team full
 			socket.emit('connectionError', { msg: 'Your team is already in game or full!' })
 		}
 		else { // is joinable
 			validJoin = true
-			room = team.room
+			room = getField(['teams', team, 'room'])
 
 			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
 			setField(socket.id, ['teams', team, 'players', getField(['teams', team, 'players']).length ])
 
-			if (((roomType === '2v2v2v2' || roomType === '2v2') && team.players.length === 2) || team.players.length === 4) {
+			if (((roomType === '2v2v2v2' || roomType === '2v2') && getField(['teams', team, 'players']).length === 2) || getField(['teams', team, 'players']).length === 4) {
 				setField(false, ['teams', team, 'joinable'])
 			}
 		}
@@ -47,7 +46,7 @@ export function roomMatchmaker (socket, room, team) {
 				// Auto team
 				if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
 					for (let i = 0; i < 4; i++) {
-						if (getField(['rooms', roomName, 'teams', room + i, 'joinable'])) {
+						if (getField(['rooms', roomName, 'teams', room + i]) && getField(['rooms', roomName, 'teams', room + i, 'joinable'])) {
 							room = roomName
 							team = room + i
 						}
@@ -55,14 +54,14 @@ export function roomMatchmaker (socket, room, team) {
 
 					// No random teams are joinable- test if this room is full or not
 					if (team === GLOBAL.NO_TEAM_IDENTIFIER) {
-						if ((roomType === '4v4' && getField(['rooms', roomName, 'teams']).length < 2) || getField(['rooms', roomName, 'teams']).length < 4) {
+						if (((roomType === '4v4v4v4' || roomType === '2v2v2v2') && getField(['rooms', roomName, 'teams']).length < 4) || getField(['rooms', roomName, 'teams']).length < 2) {
 							room = roomName
 							team = room + '_' + (getField(['rooms', roomName, 'teams']).length)
 						}
 					}
 				}
 				// Custom team
-				else if ((roomType === '4v4' && getField(['rooms', roomName, 'teams']).length < 2) || getField(['rooms', roomName, 'teams']).length < 4) {
+				else if (((roomType === '4v4v4v4' || roomType === '2v2v2v2') && getField(['rooms', roomName, 'teams']).length < 4) || getField(['rooms', roomName, 'teams']).length < 2) {
 					room = roomName
 				}
 			}

@@ -145,6 +145,7 @@ export function getTeamNumber (room, teamName) {
  */
 export function getTeamColors (room) {
 	let teamObj = getField([&apos;rooms&apos;, room, &apos;teams&apos;])
+
 	let result = {}
 	for (let i = 0; i &lt; 4; i++) {
 		if (teamObj[i]) {

@@ -126,10 +126,12 @@ export function initGlobal () {
 	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
 	setInterval(() =&gt; {
 		for (let room in getField([&apos;rooms&apos;])) {
-			for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
-				for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
-					if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
-						spawnAtomAtVent(row, col, room, false)
+			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
+				for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
+					for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
+						if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
+							spawnAtomAtVent(row, col, room, false)
+						}
 					}
 				}
 			}
@@ -211,7 +213,9 @@ export function initPlayer (socket, room, team) {
 	// Add team to database
 
 	// Equivalent to rooms[room].teams.push({ name: team });
-	setField({ name: team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
+	if (getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 1) {
+		setField({ name: team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
+	}
 
 	// Check if room is full
 	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
