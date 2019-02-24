@@ -83,7 +83,7 @@ export function initPlayer (socket, room, team) {
 		for (let row = 0; row < MAP_LAYOUT.length; row++) {
 			for (let col = 0; col < MAP_LAYOUT[row].length; col++) {
 				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
-				if (currTile.type === 'spawner' || currTile.type === 'stronghold') {
+				if (currTile.type === 'spawner' || currTile.type === 'stronghold' || currTile.type === 'nucleus') {
 					let tileID = generateID()
 					setField({
 						id: tileID,

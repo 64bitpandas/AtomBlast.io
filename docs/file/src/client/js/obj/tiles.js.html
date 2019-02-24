@@ -212,6 +212,22 @@ export const TILES = {
 	stronghold: {
 		texture: &apos;stronghold.png&apos;,
 		type: &apos;stronghold&apos;
+	},
+	nucleus0: {
+		texture: &apos;0nucleus.png&apos;,
+		type: &apos;nucleus&apos;
+	},
+	nucleus1: {
+		texture: &apos;1nucleus.png&apos;,
+		type: &apos;nucleus&apos;
+	},
+	nucleus2: {
+		texture: &apos;2nucleus.png&apos;,
+		type: &apos;nucleus&apos;
+	},
+	nucleus3: {
+		texture: &apos;3nucleus.png&apos;,
+		type: &apos;nucleus&apos;
 	}
 }
 
@@ -224,13 +240,13 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;],
+	[&apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;n1&apos;],
 	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;S&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;E&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;],
 	[&apos;E&apos;, &apos;S&apos;, &apos;F&apos;, &apos;C&apos;, &apos;F&apos;, &apos;S&apos;, &apos;E&apos;],
-	[&apos;E&apos;, &apos;E&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;E&apos;, &apos;E&apos;],
+	[&apos;E&apos;, &apos;H&apos;, &apos;F&apos;, &apos;N&apos;, &apos;F&apos;, &apos;H&apos;, &apos;E&apos;],
 	[&apos;E&apos;, &apos;O&apos;, &apos;E&apos;, &apos;S&apos;, &apos;E&apos;, &apos;O&apos;, &apos;E&apos;],
-	[&apos;H&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;H&apos;]
+	[&apos;n0&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;, &apos;E&apos;]
 ]
 
 export const TILE_NAMES = {
@@ -248,7 +264,12 @@ export const TILE_NAMES = {
 	d: &apos;edgeRight&apos;,
 	z: &apos;bottomLeft&apos;,
 	x: &apos;edgeBottom&apos;,
-	c: &apos;bottomRight&apos;
+	c: &apos;bottomRight&apos;,
+	n0: &apos;nucleus0&apos;,
+	n1: &apos;nucleus1&apos;,
+	n2: &apos;nucleus2&apos;,
+	n3: &apos;nucleus3&apos;
+
 }
 </code></pre>
 

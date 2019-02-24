@@ -86,6 +86,7 @@ export const GLOBAL = {
 	], // Spawn points for different teams
 	MAX_SPAWNER_HEALTH: 100,
 	MAX_STRONGHOLD_HEALTH: 200,
+	MAX_NUCLEUS_HEALTH: 300,
 	STRONGHOLD_RADIUS: 100,
 
 	// Drawing

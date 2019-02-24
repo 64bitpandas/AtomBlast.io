@@ -102,6 +102,22 @@ export const TILES = {
 	stronghold: {
 		texture: 'stronghold.png',
 		type: 'stronghold'
+	},
+	nucleus0: {
+		texture: '0nucleus.png',
+		type: 'nucleus'
+	},
+	nucleus1: {
+		texture: '1nucleus.png',
+		type: 'nucleus'
+	},
+	nucleus2: {
+		texture: '2nucleus.png',
+		type: 'nucleus'
+	},
+	nucleus3: {
+		texture: '3nucleus.png',
+		type: 'nucleus'
 	}
 }
 
@@ -114,13 +130,13 @@ export const TILES = {
  * C = Carbon
  */
 export const MAP_LAYOUT = [
-	['H', 'E', 'E', 'E', 'E', 'E', 'H'],
+	['E', 'E', 'E', 'E', 'E', 'E', 'n1'],
 	['E', 'O', 'E', 'S', 'E', 'O', 'E'],
-	['E', 'E', 'F', 'N', 'F', 'E', 'E'],
+	['E', 'H', 'F', 'N', 'F', 'H', 'E'],
 	['E', 'S', 'F', 'C', 'F', 'S', 'E'],
-	['E', 'E', 'F', 'N', 'F', 'E', 'E'],
+	['E', 'H', 'F', 'N', 'F', 'H', 'E'],
 	['E', 'O', 'E', 'S', 'E', 'O', 'E'],
-	['H', 'E', 'E', 'E', 'E', 'E', 'H']
+	['n0', 'E', 'E', 'E', 'E', 'E', 'E']
 ]
 
 export const TILE_NAMES = {
@@ -138,5 +154,10 @@ export const TILE_NAMES = {
 	d: 'edgeRight',
 	z: 'bottomLeft',
 	x: 'edgeBottom',
-	c: 'bottomRight'
+	c: 'bottomRight',
+	n0: 'nucleus0',
+	n1: 'nucleus1',
+	n2: 'nucleus2',
+	n3: 'nucleus3'
+
 }

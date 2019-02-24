@@ -23,7 +23,7 @@
       "actualCount": 3,
       "undocumentLines": [
         4,
-        174
+        175
       ]
     },
     "src/client/js/lib/chat-client.js": {
@@ -130,8 +130,8 @@
       "expectCount": 3,
       "actualCount": 1,
       "undocumentLines": [
-        116,
-        126
+        132,
+        142
       ]
     },
     "src/client/js/pixigame.js": {
