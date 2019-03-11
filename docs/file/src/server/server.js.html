@@ -210,7 +210,7 @@ io.on(&apos;connection&apos;, socket =&gt; {
 
 		console.log(&apos;[CHAT] &apos;.bold.blue + `${(new Date()).getHours()}:${(new Date()).getMinutes()} ${_sender}: ${_message}`.magenta)
 
-		socket.to(room).broadcast.emit(&apos;serverSendPlayerChat&apos;, { sender: _sender, message: _message.substring(0, 35) })
+		socket.to(room).broadcast.emit(&apos;serverSendPlayerChat&apos;, { sender: _sender, message: _message.substring(0, 35), sendingTeam: data.sendingTeam })
 	})
 
 	// Other player joins the socket.to(room)

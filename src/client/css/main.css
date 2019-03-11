@@ -449,14 +449,6 @@ select:focus {
     margin: 2px;
 }
 
-.chatbox .chat-list li.me b {
-    color: #ea6153;
-}
-
-.chatbox .chat-list li.friend b {
-    color: #2ecc71;
-}
-
 .chatbox .chat-list li.join {
     color: #1b47e5;
 }

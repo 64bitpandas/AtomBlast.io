@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "name": "ChatClient#appendMessage",
+    "filePath": "src/client/js/lib/chat-client.js",
+    "lines": [
+      {
+        "lineNumber": 78,
+        "line": "    /**"
+      },
+      {
+        "lineNumber": 79,
+        "line": "     * Places the message DOM node into the chat box."
+      },
+      {
+        "lineNumber": 80,
+        "line": "     * @param {string} innerHTML The message to be displayed."
+      },
+      {
+        "lineNumber": 81,
+        "line": "     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles."
+      },
+      {
+        "lineNumber": 82,
+        "line": "     */"
+      },
+      {
+        "lineNumber": 83,
+        "line": "    appendMessage(innerHTML, color) {"
+      }
+    ],
+    "codeParams": [
+      "innerHTML",
+      "color"
+    ],
+    "docParams": [
+      "innerHTML",
+      "styleClass"
+    ]
+  }
+]

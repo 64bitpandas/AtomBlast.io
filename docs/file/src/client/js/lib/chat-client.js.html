@@ -114,7 +114,7 @@
  */
 
 import {GLOBAL} from &apos;../global.js&apos;;
-import { socket } from &apos;../socket.js&apos;;
+import { socket, teamColors } from &apos;../socket.js&apos;;
 import { updateCompoundButtons } from &apos;../app.js&apos;;
 
 let player, room, team;
@@ -191,14 +191,14 @@ export default class ChatClient {
      * @param {string} innerHTML The message to be displayed.
      * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
      */
-    appendMessage(innerHTML, styleClass) {
+    appendMessage(innerHTML, color) {
         if (this.mobile)
             return;
 
         const newline = document.createElement(&apos;li&apos;);
 
         // Colours the chat input correctly.
-        newline.className = styleClass;
+        newline.style.color = color;
         // Add content
         newline.innerHTML = innerHTML;
 
@@ -217,11 +217,12 @@ export default class ChatClient {
      * @param {string} name Name of the player who sent the message
      * @param {string} message Message that was sent
      * @param {boolean} me True if the sender matches the receiver
+     * @param {string} sendingTeam The name of the team that sent this message
      */
-    addChatLine(name, message, me) {
+    addChatLine(name, message, me, sendingTeam) {
        this.appendMessage(
-           `&lt;b&gt;${(name.length &lt; 1) ? GLOBAL.PLACEHOLDER_NAME : name}&lt;/b&gt;: ${message}`,
-           (me) ? &apos;me&apos; : &apos;friend&apos;
+           `&lt;b style=&quot;color: ${&apos;#&apos; + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]}&quot;&gt;${(name.length &lt; 1) ? GLOBAL.PLACEHOLDER_NAME : name} ${(me) ? &apos;(YOU)&apos; : &apos;&apos;}&lt;/b&gt;: ${message}`,
+           &apos;#&apos; + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]
         );
     }
 
@@ -298,8 +299,8 @@ export default class ChatClient {
                     //Debug lines for messages - Remove on production
                     // console.log(&quot;This Player: &quot; + this.player);
                     // console.log(&quot;This message: &quot; + text);
-                    socket.emit(&apos;playerChat&apos;, { sender: this.player, message: text });
-                    this.addChatLine(this.player, text, true);
+                    socket.emit(&apos;playerChat&apos;, { sender: this.player, message: text, sendingTeam: this.team});
+                    this.addChatLine(this.player, text, true, this.team);
                 }
 
                 // Resets input.

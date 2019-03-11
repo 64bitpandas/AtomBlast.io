@@ -20,7 +20,6 @@ export function initGlobal () {
 				let tiles = getField(['rooms', room, 'tiles'])
 				for (let tile in tiles) {
 					if (tiles[tile].type === 'spawner') {
-						console.log(tiles[tile].globalX, tiles[tile].globalY, TILES[TILE_NAMES[MAP_LAYOUT[tiles[tile].globalY][tiles[tile].globalX]]])
 						spawnAtomAtVent(tiles[tile].globalY, tiles[tile].globalX, room, tiles[tile].owner, false)
 					}
 				}

@@ -160,6 +160,12 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 				}
 				socket.to(room).emit('serverSendTileCapture', data)
 				socket.emit('serverSendTileCapture', data)
+				let tileCaptureMSG = {
+					message: 'A ' + getField(['rooms', room, 'tiles', tileID, 'type']) + ' has been captured by ' + getField(['rooms', room, 'players', player, 'name']),
+					team: getField(['rooms', room, 'players', player, 'team'])
+				}
+				socket.to(room).emit('serverAnnouncement', tileCaptureMSG)
+				socket.emit('serverAnnouncement', tileCaptureMSG)
 
 				// Set capture status
 				setField(true, ['rooms', room, 'tiles', tileID, 'captured'])

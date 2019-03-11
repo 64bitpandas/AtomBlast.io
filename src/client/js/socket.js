@@ -290,7 +290,7 @@ function setupSocketInfo (chat) {
 	})
 
 	socket.on('serverSendPlayerChat', data => {
-		chat.addChatLine(data.sender, data.message, false)
+		chat.addChatLine(data.sender, data.message, false, data.sendingTeam)
 	})
 
 	socket.on('serverSendLoginMessage', data => {
