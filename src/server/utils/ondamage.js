@@ -170,7 +170,13 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 
 				// Reset health
 				setField(GLOBAL[('MAX_' + getField(['rooms', room, 'tiles', tileID, 'type']) + '_HEALTH').toUpperCase()], ['rooms', room, 'tiles', tileID, 'health'])
-
+				let hpData = {
+					newHealth: getField(['rooms', room, 'tiles', tileID, 'health']),
+					tileX: getField(['rooms', room, 'tiles', tileID, 'globalX']),
+					tileY: getField(['rooms', room, 'tiles', tileID, 'globalY'])
+				}
+				socket.to(room).emit('serverSendTileHealth', hpData)
+				socket.emit('serverSendTileHealth', hpData)
 				return true
 			}
 		}

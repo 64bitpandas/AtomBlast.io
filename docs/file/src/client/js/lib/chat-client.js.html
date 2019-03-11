@@ -175,9 +175,6 @@ export default class ChatClient {
                 self.addSystemLine(&quot;Invalid Permission.&quot;);
             }
         });
-        this.registerCommand(&apos;spawnAtom&apos;, &apos;Spawns a Hydrogen atom at the bottom left vent.&apos;, () =&gt; {
-            socket.emit(&apos;spawnAtom&apos;, {row: 9, col: 0});
-        })
 
         // this.registerCommand(&apos;login&apos;, &apos;Login as an admin.&apos;, function (args) {
         //     self.socket.emit(&apos;pass&apos;, args);

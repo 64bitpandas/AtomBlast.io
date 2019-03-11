@@ -34,7 +34,6 @@ export class MapTile extends PIXI.Sprite {
 			this.addChild(this.hpText)
 		}
 
-
 		app.stage.addChild(this)
 	}
 

@@ -1,5 +1,5 @@
 import { distanceBetween, GLOBAL, getCurrTile, getGlobalLocation } from '../../client/js/global'
-import { deleteObject } from '../server'
+import { deleteObject, getField } from '../server'
 import { damage, damageTile } from './ondamage'
 import { incrementAtom } from './atoms'
 import { TILE_NAMES, TILES } from '../../client/js/obj/tiles'
@@ -16,16 +16,18 @@ import { getTileID } from './serverutils'
 export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 	// Check for collected atoms
 	for (let atom in tempObjects.atoms) {
-		let distance = distanceBetween(
-			{ posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-			{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
+		if (tempObjects.atoms[atom].team === thisPlayer.team || tempObjects.atoms[atom].team === 'all') {
+			let distance = distanceBetween(
+				{ posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+				{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
 
-		if (distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
-			// console.log(atom);
-			incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
-			socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' })
+			if (distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
+				// console.log(atom);
+				incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
+				socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' })
 
-			deleteObject('atoms', atom, room, socket)
+				deleteObject('atoms', atom, room, socket)
+			}
 		}
 	}
 
@@ -85,7 +87,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 				if (distanceBetween(cmp, {
 					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
 					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
-				}) < GLOBAL.STRONGHOLD_RADIUS && cmp.blueprint.type !== 'block') {
+				}) < GLOBAL.STRONGHOLD_RADIUS && cmp.blueprint.type !== 'block' && cmp.sendingTeam !== getField(['rooms', room, 'tiles', tileID, 'owner'])) {
 					deleteObject('compounds', compound, room, socket)
 					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)
 				}

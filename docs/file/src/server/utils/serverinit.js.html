@@ -127,11 +127,11 @@ export function initGlobal () {
 	setInterval(() =&gt; {
 		for (let room in getField([&apos;rooms&apos;])) {
 			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
-				for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
-					for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
-						if (TILES[TILE_NAMES[MAP_LAYOUT[row][col]]].type === &apos;spawner&apos;) {
-							spawnAtomAtVent(row, col, room, false)
-						}
+				let tiles = getField([&apos;rooms&apos;, room, &apos;tiles&apos;])
+				for (let tile in tiles) {
+					if (tiles[tile].type === &apos;spawner&apos;) {
+						console.log(tiles[tile].globalX, tiles[tile].globalY, TILES[TILE_NAMES[MAP_LAYOUT[tiles[tile].globalY][tiles[tile].globalX]]])
+						spawnAtomAtVent(tiles[tile].globalY, tiles[tile].globalX, room, tiles[tile].owner, false)
 					}
 				}
 			}
@@ -201,7 +201,7 @@ export function initPlayer (socket, room, team) {
 						globalX: col,
 						globalY: row,
 						captured: false,
-						owner: &apos;none&apos;,
+						owner: &apos;all&apos;,
 						health: GLOBAL[(&apos;MAX_&apos; + currTile.type + &apos;_HEALTH&apos;).toUpperCase()]
 					}, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID])
 				}

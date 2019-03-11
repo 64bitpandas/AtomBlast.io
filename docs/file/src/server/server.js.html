@@ -140,7 +140,7 @@ app.use(express.static(`${__dirname}/../client`))
 //             players: [&apos;id1&apos;, &apos;id2&apos;...]
 //         ],
 //         players: { id, name, room, team, health, posX, posY, vx, vy, dead, experience, damagedBy },
-//         atoms: { typeID, id, posX, posY, vx, vy },
+//         atoms: { typeID, id, posX, posY, vx, vy, team },
 //         compounds: {	id, posX, posY, vx, vy, blueprint, sendingTeam, sender },
 //		   tiles: { id, type, globalX, globalY, captured, owner, health }
 //         time: {
@@ -284,10 +284,6 @@ io.on(&apos;connection&apos;, socket =&gt; {
 		socket.broadcast.to(room).emit(&apos;serverSendStartGame&apos;, { start: data.start, teams: rooms[room].teams })
 		socket.emit(&apos;serverSendStartGame&apos;, { start: data.start, teams: rooms[room].teams })
 		rooms[room].started = true
-	})
-
-	socket.on(&apos;spawnAtom&apos;, (data) =&gt; {
-		spawnAtomAtVent(data.row, data.col, room, true)
 	})
 
 	// Testing purposes- give yourself 5000 of each atom

@@ -41,7 +41,7 @@ export function frameSync(socket, room, thisPlayer) {
 					{ posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
 					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
 				// Attractive force
-				if (distance < GLOBAL.ATTRACTION_RADIUS) {
+				if (distance < GLOBAL.ATTRACTION_RADIUS && (thisRoom.atoms[atom].team === 'all' || thisPlayer.team === thisRoom.atoms[atom].team)) {
 					let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX))
 
 					// Attraction is based on logarithmic algorithm
