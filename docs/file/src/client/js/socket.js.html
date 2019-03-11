@@ -407,6 +407,10 @@ function setupSocketInfo (chat) {
 		chat.addSystemLine(data)
 	})
 
+	socket.on(&apos;serverAnnouncement&apos;, data =&gt; {
+		chat.addChatAnnouncement(data.message, data.sendingTeam)
+	})
+
 	socket.on(&apos;serverSendPlayerChat&apos;, data =&gt; {
 		chat.addChatLine(data.sender, data.message, false, data.sendingTeam)
 	})

@@ -122,15 +122,15 @@ export class Player extends GameObject {
 	 * @param {string} stronghold 'team' if player is in team stronghold, 'notteam' if player is in enemy stronghold, 'none', if not in a stronghold
 	 */
 	changeSprite(hasShield, stronghold) {
-
 		// Set values
 		this.hasShield = hasShield
 		this.stronghold = stronghold
-		
+
 		// Set sprite
 		if (this.hasShield || this.stronghold === 'team') {
 			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'playershield.png']
-		} else {
+		}
+		else {
 			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'player.png']
 		}
 	}

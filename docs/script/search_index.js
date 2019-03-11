@@ -750,6 +750,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/lib/chat-client.js~chatclient#addchatannouncement",
+    "class/src/client/js/lib/chat-client.js~ChatClient.html#instance-method-addChatAnnouncement",
+    "src/client/js/lib/chat-client.js~ChatClient#addChatAnnouncement",
+    "method"
+  ],
+  [
     "src/client/js/lib/chat-client.js~chatclient#addchatline",
     "class/src/client/js/lib/chat-client.js~ChatClient.html#instance-method-addChatLine",
     "src/client/js/lib/chat-client.js~ChatClient#addChatLine",

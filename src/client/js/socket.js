@@ -137,8 +137,7 @@ function setupSocketObjectRetrieval () {
 								objects[objType][obj].atomList = objRef.atomList
 								objects[objType][obj].speedMult = objRef.speedMult
 
-								
-								if (objects[objType][obj].hasShield !== objRef.hasShield || objects[objType][obj].stronghold !== objRef.stronghold ) {
+								if (objects[objType][obj].hasShield !== objRef.hasShield || objects[objType][obj].stronghold !== objRef.stronghold) {
 									objects[objType][obj].changeSprite(objRef.hasShield, objRef.stronghold)
 									console.log('change tex')
 								}
@@ -296,6 +295,10 @@ function setupSocketInfo (chat) {
 	// Chat system receiver
 	socket.on('serverMSG', data => {
 		chat.addSystemLine(data)
+	})
+
+	socket.on('serverAnnouncement', data => {
+		chat.addChatAnnouncement(data.message, data.sendingTeam)
 	})
 
 	socket.on('serverSendPlayerChat', data => {

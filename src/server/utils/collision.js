@@ -98,8 +98,9 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 	// Check for stronghold buff
 	let currTile = getTileID(getGlobalLocation(thisPlayer), room)
 	if (currTile && getField(['rooms', room, 'tiles', currTile, 'type']) === 'stronghold' && getField(['rooms', room, 'tiles', currTile, 'owner']) !== 'all') {
-			thisPlayer.stronghold = (getField(['rooms', room, 'tiles', currTile, 'owner']) === thisPlayer.team) ? 'team' : 'notteam'
-	} else {
+		thisPlayer.stronghold = (getField(['rooms', room, 'tiles', currTile, 'owner']) === thisPlayer.team) ? 'team' : 'notteam'
+	}
+	else {
 		thisPlayer.stronghold = 'none'
 	}
 }

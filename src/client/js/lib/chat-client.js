@@ -117,6 +117,17 @@ export default class ChatClient {
     }
 
     /**
+     * Chat box implementation for event announcements (capturing, etc)
+     * @param {string} message What message was sent
+     * @param {string} sendingTeam Subject of the message.
+     */
+    addChatAnnouncement(message, sendingTeam) {
+       this.appendMessage(
+           message, '#' + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]
+        );
+    }
+
+    /**
      * 
      */
 

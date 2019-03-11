@@ -1,7 +1,7 @@
 {
-  "coverage": "50.29%",
-  "expectCount": 171,
-  "actualCount": 86,
+  "coverage": "50.58%",
+  "expectCount": 172,
+  "actualCount": 87,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -27,8 +27,8 @@
       ]
     },
     "src/client/js/lib/chat-client.js": {
-      "expectCount": 15,
-      "actualCount": 4,
+      "expectCount": 16,
+      "actualCount": 5,
       "undocumentLines": [
         11,
         14,
@@ -36,11 +36,11 @@
         18,
         20,
         21,
-        138,
-        148,
-        168,
-        204,
-        212
+        149,
+        159,
+        179,
+        215,
+        223
       ]
     },
     "src/client/js/lib/cookies.js": {
@@ -156,7 +156,7 @@
       "undocumentLines": [
         18,
         33,
-        382
+        386
       ]
     },
     "src/server/server.js": {
