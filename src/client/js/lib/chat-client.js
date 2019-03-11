@@ -79,7 +79,7 @@ export default class ChatClient {
     /**
      * Places the message DOM node into the chat box.
      * @param {string} innerHTML The message to be displayed.
-     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
+     * @param {string} color How the message should be styled - see `main.css` for styles and to create more styles.
      */
     appendMessage(innerHTML, color) {
         if (this.mobile)

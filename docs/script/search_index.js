@@ -1074,6 +1074,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/obj/player.js~player#changesprite",
+    "class/src/client/js/obj/player.js~Player.html#instance-method-changeSprite",
+    "src/client/js/obj/player.js~Player#changeSprite",
+    "method"
+  ],
+  [
     "src/client/js/obj/player.js~player#constructor",
     "class/src/client/js/obj/player.js~Player.html#instance-constructor-constructor",
     "src/client/js/obj/player.js~Player#constructor",
@@ -1143,6 +1149,12 @@ window.esdocSearchIndex = [
     "src/client/js/obj/player.js~player#speedmult",
     "class/src/client/js/obj/player.js~Player.html#instance-member-speedMult",
     "src/client/js/obj/player.js~Player#speedMult",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#stronghold",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-stronghold",
+    "src/client/js/obj/player.js~Player#stronghold",
     "member"
   ],
   [

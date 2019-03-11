@@ -48,6 +48,7 @@ export class Player extends GameObject {
 		this.experience = experience // Sets the experience of the player(Passed in)
 		this.speedMult = 1 // Speed multiplier. Increased/decreased by different compounds
 		this.hasShield = false
+		this.stronghold = 'none'
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
 		this.textObjects = {} // Contains Text to be drawn under the player (name, id, etc)
@@ -112,6 +113,25 @@ export class Player extends GameObject {
 		// Draw other player
 		if (this.id !== socket.id) {
 			this.draw()
+		}
+	}
+
+	/**
+	 * Notifies the player to check for a sprite change (shield, etc).
+	 * @param {boolean} hasShield True if the player has shield from an element
+	 * @param {string} stronghold 'team' if player is in team stronghold, 'notteam' if player is in enemy stronghold, 'none', if not in a stronghold
+	 */
+	changeSprite(hasShield, stronghold) {
+
+		// Set values
+		this.hasShield = hasShield
+		this.stronghold = stronghold
+		
+		// Set sprite
+		if (this.hasShield || this.stronghold === 'team') {
+			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'playershield.png']
+		} else {
+			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'player.png']
 		}
 	}
 }
