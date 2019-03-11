@@ -1,6 +1,6 @@
 {
-  "coverage": "51.51%",
-  "expectCount": 165,
+  "coverage": "50.29%",
+  "expectCount": 169,
   "actualCount": 85,
   "files": {
     "src/client/js/app.js": {
@@ -92,7 +92,7 @@
       ]
     },
     "src/client/js/obj/maptile.js": {
-      "expectCount": 10,
+      "expectCount": 14,
       "actualCount": 3,
       "undocumentLines": [
         17,
@@ -100,8 +100,12 @@
         19,
         20,
         21,
-        30,
-        31
+        24,
+        25,
+        29,
+        45,
+        46,
+        50
       ]
     },
     "src/client/js/obj/player.js": {
@@ -151,7 +155,7 @@
       "undocumentLines": [
         18,
         33,
-        369
+        374
       ]
     },
     "src/server/server.js": {

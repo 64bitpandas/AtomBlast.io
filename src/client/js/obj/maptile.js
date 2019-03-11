@@ -19,6 +19,22 @@ export class MapTile extends PIXI.Sprite {
 		this.posY = gridY * GLOBAL.GRID_SPACING * 2
 		this.height = GLOBAL.GRID_SPACING * 2
 		this.width = GLOBAL.GRID_SPACING * 2
+
+		// To be assigned later
+		this.owner = null
+		this.captured = false
+
+		if (TILES[name].type === 'spawner' || TILES[name].type === 'stronghold' || TILES[name].type === 'nucleus') {
+			// Create text object
+			this.hpText = new PIXI.Text('HP: ' + GLOBAL[('MAX_' + TILES[name].type + '_HEALTH').toUpperCase()])
+			// Set style
+			this.hpText.style = new PIXI.TextStyle({
+				fontSize: 36
+			})
+			this.addChild(this.hpText)
+		}
+
+
 		app.stage.addChild(this)
 	}
 
@@ -30,6 +46,10 @@ export class MapTile extends PIXI.Sprite {
 			this.x = screenCenterX + this.posX - player.posX
 			this.y = screenCenterY + player.posY - this.posY
 		}
+	}
+
+	updateHealth(newHealth) {
+		this.hpText.text = 'HP: ' + newHealth
 	}
 
 	/** TEMP

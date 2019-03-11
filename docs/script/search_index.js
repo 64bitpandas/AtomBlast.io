@@ -990,6 +990,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/obj/maptile.js~maptile#captured",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-captured",
+    "src/client/js/obj/maptile.js~MapTile#captured",
+    "member"
+  ],
+  [
     "src/client/js/obj/maptile.js~maptile#constructor",
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-constructor-constructor",
     "src/client/js/obj/maptile.js~MapTile#constructor",
@@ -999,6 +1005,18 @@ window.esdocSearchIndex = [
     "src/client/js/obj/maptile.js~maptile#height",
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-height",
     "src/client/js/obj/maptile.js~MapTile#height",
+    "member"
+  ],
+  [
+    "src/client/js/obj/maptile.js~maptile#hptext",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-hpText",
+    "src/client/js/obj/maptile.js~MapTile#hpText",
+    "member"
+  ],
+  [
+    "src/client/js/obj/maptile.js~maptile#owner",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-owner",
+    "src/client/js/obj/maptile.js~MapTile#owner",
     "member"
   ],
   [
@@ -1024,6 +1042,12 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-tile",
     "src/client/js/obj/maptile.js~MapTile#tile",
     "member"
+  ],
+  [
+    "src/client/js/obj/maptile.js~maptile#updatehealth",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-method-updateHealth",
+    "src/client/js/obj/maptile.js~MapTile#updateHealth",
+    "method"
   ],
   [
     "src/client/js/obj/maptile.js~maptile#width",

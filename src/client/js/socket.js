@@ -354,8 +354,13 @@ function setupSocketInfo (chat) {
 
 	// Change texture when a tile has been captured
 	socket.on('serverSendTileCapture', (data) => {
-		objects.tiles['tile_' + data.tileY + '_' + data.tileX].texture = (spritesheet.textures[data.teamNumber + objects.tiles['tile_' + data.tileY + '_' + data.tileX].tile.texture])
+		objects.tiles['tile_' + data.tileX + '_' + data.tileY].texture = (spritesheet.textures[data.teamNumber + objects.tiles['tile_' + data.tileX + '_' + data.tileY].tile.texture])
 		// console.log(objects.tiles['tile_' + data.tileY + '_' + data.tileX].texture)
+	})
+
+	// Tile health changed
+	socket.on('serverSendTileHealth', (data) => {
+		objects.tiles['tile_' + data.tileX + '_' + data.tileY].updateHealth(data.newHealth)
 	})
 }
 
@@ -363,7 +368,7 @@ function setupSocketInfo (chat) {
  ********************
  * Helper Functions *
  ********************
- */
+*/
 
 // Helper function for serverSendObjectRemoval
 function removeObject (data) {

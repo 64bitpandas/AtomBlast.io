@@ -139,7 +139,14 @@ export function damage (data, room, socket) {
 export function damageTile (tileID, damageAmount, player, room, socket) {
 	incrementField(-damageAmount, ['rooms', room, 'tiles', tileID, 'health'])
 
-	console.log('tile ' + tileID + ' is now at ' + getField(['rooms', room, 'tiles', tileID, 'health']))
+	// console.log('tile ' + tileID + ' is now at ' + getField(['rooms', room, 'tiles', tileID, 'health']))
+	let hpData = {
+		newHealth: getField(['rooms', room, 'tiles', tileID, 'health']),
+		tileX: getField(['rooms', room, 'tiles', tileID, 'globalX']),
+		tileY: getField(['rooms', room, 'tiles', tileID, 'globalY'])
+	}
+	socket.to(room).emit('serverSendTileHealth', hpData)
+	socket.emit('serverSendTileHealth', hpData)
 
 	// Check if tile is fully captured
 	if (getField(['rooms', room, 'tiles', tileID, 'health']) <= 0) {
@@ -153,6 +160,10 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 				}
 				socket.to(room).emit('serverSendTileCapture', data)
 				socket.emit('serverSendTileCapture', data)
+
+				// Set capture status
+				setField(true, ['rooms', room, 'tiles', tileID, 'captured'])
+				setField(getField(['rooms', room, 'players', player, 'team']), ['rooms', room, 'tiles', tileID, 'owner'])
 
 				// Distribute points
 				incrementField(GLOBAL.CAPTURE_SCORE, ['rooms', room, 'teams', i, 'score'])
