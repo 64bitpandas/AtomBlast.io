@@ -83,12 +83,14 @@ export function initPlayer (socket, room, team) {
 			for (let col = 0; col < MAP_LAYOUT[row].length; col++) {
 				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
 				if (currTile.type === 'spawner' || currTile.type === 'stronghold' || currTile.type === 'nucleus') {
-					let tileID = generateID()
+					// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
+					let tileID = (currTile.type === 'nucleus') ? MAP_LAYOUT[row][col] : generateID()
+
 					setField({
 						id: tileID,
 						type: currTile.type,
 						globalX: col,
-						globalY: row,
+						globalY: MAP_LAYOUT.length - row - 1,
 						captured: false,
 						owner: 'all',
 						health: GLOBAL[('MAX_' + currTile.type + '_HEALTH').toUpperCase()]

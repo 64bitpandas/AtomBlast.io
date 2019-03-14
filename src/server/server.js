@@ -171,6 +171,19 @@ io.on('connection', socket => {
 		}
 		rooms[room].joinable = false
 
+		// Assign nucleus teams
+		for (let tile in rooms[room].tiles) {
+			if (rooms[room].tiles[tile].type === 'nucleus') {
+				// console.log(rooms[room].teams)
+				try {
+					rooms[room].tiles[tile].owner = rooms[room].teams[parseInt(rooms[room].tiles[tile].id.substring(1))].name
+				}
+				catch (e) {
+					// console.warn('No team exists for nucleus ' + rooms[room].tiles[tile].id.substring(1))
+				}
+			}
+		}
+
 		socket.broadcast.to(room).emit('serverSendStartGame', { start: data.start, teams: rooms[room].teams })
 		socket.emit('serverSendStartGame', { start: data.start, teams: rooms[room].teams })
 		rooms[room].started = true

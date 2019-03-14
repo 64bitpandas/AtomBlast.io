@@ -6,8 +6,10 @@ import * as PIXI from 'pixi.js'
 import { GLOBAL } from '../global.js'
 import { GameObject } from './gameobject.js'
 import { player, spritesheet } from '../pixigame.js'
-import { socket } from '../socket.js'
+import { socket, objects } from '../socket.js'
 import { updateCompoundButtons } from '../app.js'
+import { MAP_LAYOUT, TILE_NAMES } from './tiles.js'
+import { MapTile } from './maptile.js'
 
 /**
  * Renders a new atom.
@@ -97,4 +99,20 @@ export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 		},
 		streamID: streamID
 	})
+}
+
+export function createTiles() {
+	for (let row = 0; row < MAP_LAYOUT.length; row++) {
+		for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
+			let tileName = 'tile_' + col + '_' + (MAP_LAYOUT.length - row - 1)
+			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
+				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
+					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)
+				}
+				else {
+					throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.')
+				}
+			}
+		}
+	}
 }

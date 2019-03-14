@@ -75,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
@@ -280,6 +281,19 @@ io.on(&apos;connection&apos;, socket =&gt; {
 			teams[tm.name].joinable = false
 		}
 		rooms[room].joinable = false
+
+		// Assign nucleus teams
+		for (let tile in rooms[room].tiles) {
+			if (rooms[room].tiles[tile].type === &apos;nucleus&apos;) {
+				// console.log(rooms[room].teams)
+				try {
+					rooms[room].tiles[tile].owner = rooms[room].teams[parseInt(rooms[room].tiles[tile].id.substring(1))].name
+				}
+				catch (e) {
+					// console.warn(&apos;No team exists for nucleus &apos; + rooms[room].tiles[tile].id.substring(1))
+				}
+			}
+		}
 
 		socket.broadcast.to(room).emit(&apos;serverSendStartGame&apos;, { start: data.start, teams: rooms[room].teams })
 		socket.emit(&apos;serverSendStartGame&apos;, { start: data.start, teams: rooms[room].teams })

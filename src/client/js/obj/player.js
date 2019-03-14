@@ -3,7 +3,6 @@ import * as PIXI from 'pixi.js'
 import { screenCenterX, screenCenterY, mouseDown, spritesheet } from '../pixigame.js'
 import { socket, teamColors } from '../socket.js'
 import { GameObject } from './gameobject.js'
-import { cookieInputs } from '../app.js'
 
 export class Player extends GameObject {
 	/**

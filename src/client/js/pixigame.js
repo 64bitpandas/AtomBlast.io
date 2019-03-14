@@ -2,12 +2,9 @@ import * as PIXI from 'pixi.js'
 import { keyboard } from './lib/keyboard'
 import { GLOBAL } from './global'
 import { Player } from './obj/player'
-import { hideElement, showElement, selectedBlueprints, updateCompoundButtons, selectedCompound, cookieInputs, mouseX, mouseY } from './app'
+import { hideElement, showElement, selectedBlueprints, updateCompoundButtons, selectedCompound, mouseX, mouseY } from './app'
 import { socket, objects, teamColors } from './socket'
-import { BLUEPRINTS } from './obj/blueprints'
-import { TILES, MAP_LAYOUT, TILE_NAMES } from './obj/tiles'
-import { requestCreateCompound } from './obj/create'
-import { MapTile } from './obj/maptile'
+import { requestCreateCompound, createTiles } from './obj/create'
 import { joystick } from './app'
 
 export var isSetup // True after the stage is fully set up
@@ -135,19 +132,7 @@ function registerCallbacks () {
 	isSetup = true
 
 	// Draw map
-	for (let row = 0; row < MAP_LAYOUT.length; row++) {
-		for (let col = 0; col < MAP_LAYOUT[0].length; col++) {
-			let tileName = 'tile_' + col + '_' + (MAP_LAYOUT.length - row - 1)
-			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
-				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
-					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)
-				}
-				else {
-					throw new Error('Tile ' + MAP_LAYOUT[row][col] + ' could not be resolved to a name.')
-				}
-			}
-		}
-	}
+	createTiles()
 
 	showGameUI()
 }
@@ -178,7 +163,7 @@ function draw (delta) {
 			}
 			player.isMoving = false
 
-			console.log(moveKeys[0].isDown, moveKeys[1].isDown, moveKeys[2].isDown, moveKeys[3].isDown, mouseDown)
+			// console.log(moveKeys[0].isDown, moveKeys[1].isDown, moveKeys[2].isDown, moveKeys[3].isDown, mouseDown)
 			for (let key of moveKeys) {
 				if (key.isDown) {
 					player.isMoving = true

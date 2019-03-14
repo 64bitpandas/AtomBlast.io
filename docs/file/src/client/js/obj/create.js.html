@@ -75,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
@@ -116,8 +117,10 @@ import * as PIXI from &apos;pixi.js&apos;
 import { GLOBAL } from &apos;../global.js&apos;
 import { GameObject } from &apos;./gameobject.js&apos;
 import { player, spritesheet } from &apos;../pixigame.js&apos;
-import { socket } from &apos;../socket.js&apos;
+import { socket, objects } from &apos;../socket.js&apos;
 import { updateCompoundButtons } from &apos;../app.js&apos;
+import { MAP_LAYOUT, TILE_NAMES } from &apos;./tiles.js&apos;
+import { MapTile } from &apos;./maptile.js&apos;
 
 /**
  * Renders a new atom.
@@ -207,6 +210,22 @@ export function requestCreateCompound (blueprint, xIn, yIn, streamID) {
 		},
 		streamID: streamID
 	})
+}
+
+export function createTiles() {
+	for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
+		for (let col = 0; col &lt; MAP_LAYOUT[0].length; col++) {
+			let tileName = &apos;tile_&apos; + col + &apos;_&apos; + (MAP_LAYOUT.length - row - 1)
+			if (objects.tiles[tileName] === undefined || objects.tiles[tileName] === null) {
+				if (TILE_NAMES[MAP_LAYOUT[row][col]] !== undefined) {
+					objects.tiles[tileName] = new MapTile(TILE_NAMES[MAP_LAYOUT[row][col]], col, MAP_LAYOUT.length - row - 1)
+				}
+				else {
+					throw new Error(&apos;Tile &apos; + MAP_LAYOUT[row][col] + &apos; could not be resolved to a name.&apos;)
+				}
+			}
+		}
+	}
 }
 </code></pre>
 

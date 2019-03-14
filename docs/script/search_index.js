@@ -126,6 +126,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/obj/create.js~createtiles",
+    "function/index.html#static-function-createTiles",
+    "<span>createTiles</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/ondamage.js~damage",
     "function/index.html#static-function-damage",
     "<span>damage</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",

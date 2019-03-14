@@ -75,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
@@ -193,12 +194,14 @@ export function initPlayer (socket, room, team) {
 			for (let col = 0; col &lt; MAP_LAYOUT[row].length; col++) {
 				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
 				if (currTile.type === &apos;spawner&apos; || currTile.type === &apos;stronghold&apos; || currTile.type === &apos;nucleus&apos;) {
-					let tileID = generateID()
+					// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
+					let tileID = (currTile.type === &apos;nucleus&apos;) ? MAP_LAYOUT[row][col] : generateID()
+
 					setField({
 						id: tileID,
 						type: currTile.type,
 						globalX: col,
-						globalY: row,
+						globalY: MAP_LAYOUT.length - row - 1,
 						captured: false,
 						owner: &apos;all&apos;,
 						health: GLOBAL[(&apos;MAX_&apos; + currTile.type + &apos;_HEALTH&apos;).toUpperCase()]
