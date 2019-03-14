@@ -47,9 +47,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-movePlayer">movePlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
@@ -113,7 +113,7 @@
  * Please refer to this link for extended documentation.
  * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
  */
-import { isFocused } from &apos;../pixigame&apos;;
+import { isFocused, getIngame } from &apos;../pixigame&apos;;
 
 export function keyboard(keyCode) {
   let key = {};
@@ -127,7 +127,7 @@ export function keyboard(keyCode) {
   //The `downHandler`
   key.downHandler = event =&gt; {
       if (event.keyCode === key.code &amp;&amp; !key.mobile) {
-        if (isFocused()) {
+        if (isFocused() &amp;&amp; getIngame()) {
           if (key.isUp &amp;&amp; key.press){
             key.press();
           }
@@ -146,7 +146,7 @@ export function keyboard(keyCode) {
   //The `upHandler`
   key.upHandler = event =&gt; {
       if (event.keyCode === key.code &amp;&amp; !key.mobile) {
-        if(isFocused()){
+        if(isFocused() &amp;&amp; getIngame()){
           if (key.isDown &amp;&amp; key.release){
             key.release();
           }

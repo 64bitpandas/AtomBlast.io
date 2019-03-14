@@ -47,9 +47,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-movePlayer">movePlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
@@ -275,18 +275,20 @@ function draw (delta) {
 			// Keyboard based controls
 
 			if ((moveKeys[0].isDown || joystick.mobileKey.leftDown === true) &amp;&amp; player.vx &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Left
-				mobileMovement(&apos;left&apos;)
+				movePlayer(&apos;left&apos;)
 			}
 			if ((moveKeys[1].isDown || joystick.mobileKey.rightDown === true) &amp;&amp; player.vx &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Right
-				mobileMovement(&apos;right&apos;)
+				movePlayer(&apos;right&apos;)
 			}
 			if ((moveKeys[2].isDown || joystick.mobileKey.upDown === true) &amp;&amp; player.vy &lt; GLOBAL.MAX_SPEED * player.speedMult) { // Up
-				mobileMovement(&apos;up&apos;)
+				movePlayer(&apos;up&apos;)
 			}
 			if ((moveKeys[3].isDown || joystick.mobileKey.downDown === true) &amp;&amp; player.vy &gt; -GLOBAL.MAX_SPEED * player.speedMult) { // Down
-				mobileMovement(&apos;down&apos;)
+				movePlayer(&apos;down&apos;)
 			}
 			player.isMoving = false
+
+			console.log(moveKeys[0].isDown, moveKeys[1].isDown, moveKeys[2].isDown, moveKeys[3].isDown, mouseDown)
 			for (let key of moveKeys) {
 				if (key.isDown) {
 					player.isMoving = true
@@ -500,19 +502,24 @@ function shootHandler (e, stream) {
 	}
 }
 
-// actually name this better bro
-export function mobileMovement (direction) {
-	if (direction === &apos;up&apos;) {
-		player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === &apos;down&apos;) {
-		player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === &apos;right&apos;) {
-		player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === &apos;left&apos;) {
-		player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+/**
+ * Moves the player by changing its velocity.
+ * @param {string} direction up, down, left, or right
+ */
+export function movePlayer (direction) {
+	if (player.isMoving) {
+		if (direction === &apos;up&apos;) {
+			player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === &apos;down&apos;) {
+			player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === &apos;right&apos;) {
+			player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === &apos;left&apos;) {
+			player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+		}
 	}
 }
 </code></pre>

@@ -3,7 +3,7 @@
  * Please refer to this link for extended documentation.
  * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
  */
-import { isFocused } from '../pixigame';
+import { isFocused, getIngame } from '../pixigame';
 
 export function keyboard(keyCode) {
   let key = {};
@@ -17,7 +17,7 @@ export function keyboard(keyCode) {
   //The `downHandler`
   key.downHandler = event => {
       if (event.keyCode === key.code && !key.mobile) {
-        if (isFocused()) {
+        if (isFocused() && getIngame()) {
           if (key.isUp && key.press){
             key.press();
           }
@@ -36,7 +36,7 @@ export function keyboard(keyCode) {
   //The `upHandler`
   key.upHandler = event => {
       if (event.keyCode === key.code && !key.mobile) {
-        if(isFocused()){
+        if(isFocused() && getIngame()){
           if (key.isDown && key.release){
             key.release();
           }

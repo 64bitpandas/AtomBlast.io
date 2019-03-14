@@ -47,9 +47,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mobileMovement">mobileMovement</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-movePlayer">movePlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
@@ -115,7 +115,7 @@
 
 import nipplejs from &apos;nipplejs&apos;; // NIPPLES!!!! god dammit &lt;3 the naming
 import { GLOBAL } from &apos;../global.js&apos; 
-import { mobileMovement } from &apos;../pixigame.js&apos;;
+import { movePlayer } from &apos;../pixigame.js&apos;;
 
 
 export default class VirtualJoystick {
@@ -146,22 +146,22 @@ export default class VirtualJoystick {
             //     }
             // });
             nipple.on(&apos;plain:left&apos;, function (evt) {
-                mobileMovement(&apos;left&apos;) 
+                movePlayer(&apos;left&apos;) 
                 self.mobileKey.leftDown = true 
                 self.mobileKey.rightDown = false
             })
             nipple.on(&apos;plain:right&apos;, function (evt) {
-                mobileMovement(&apos;right&apos;)
+                movePlayer(&apos;right&apos;)
                 self.mobileKey.rightDown = true
                 self.mobileKey.leftDown = false
             })
             nipple.on(&apos;plain:up&apos;, function (evt) {
-                mobileMovement(&apos;up&apos;)
+                movePlayer(&apos;up&apos;)
                 self.mobileKey.upDown = true
                 self.mobileKey.downDown = false
             })
             nipple.on(&apos;plain:down&apos;, function (evt) {
-                mobileMovement(&apos;down&apos;)
+                movePlayer(&apos;down&apos;)
                 self.mobileKey.downDown = true
                 self.mobileKey.upDown = false
             })

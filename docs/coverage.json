@@ -1,7 +1,7 @@
 {
-  "coverage": "50.58%",
+  "coverage": "51.16%",
   "expectCount": 172,
-  "actualCount": 87,
+  "actualCount": 88,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -141,13 +141,12 @@
     },
     "src/client/js/pixigame.js": {
       "expectCount": 19,
-      "actualCount": 14,
+      "actualCount": 15,
       "undocumentLines": [
         20,
         21,
         23,
-        25,
-        394
+        25
       ]
     },
     "src/client/js/socket.js": {

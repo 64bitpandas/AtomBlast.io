@@ -5,7 +5,7 @@
 
 import nipplejs from 'nipplejs'; // NIPPLES!!!! god dammit <3 the naming
 import { GLOBAL } from '../global.js' 
-import { mobileMovement } from '../pixigame.js';
+import { movePlayer } from '../pixigame.js';
 
 
 export default class VirtualJoystick {
@@ -36,22 +36,22 @@ export default class VirtualJoystick {
             //     }
             // });
             nipple.on('plain:left', function (evt) {
-                mobileMovement('left') 
+                movePlayer('left') 
                 self.mobileKey.leftDown = true 
                 self.mobileKey.rightDown = false
             })
             nipple.on('plain:right', function (evt) {
-                mobileMovement('right')
+                movePlayer('right')
                 self.mobileKey.rightDown = true
                 self.mobileKey.leftDown = false
             })
             nipple.on('plain:up', function (evt) {
-                mobileMovement('up')
+                movePlayer('up')
                 self.mobileKey.upDown = true
                 self.mobileKey.downDown = false
             })
             nipple.on('plain:down', function (evt) {
-                mobileMovement('down')
+                movePlayer('down')
                 self.mobileKey.downDown = true
                 self.mobileKey.upDown = false
             })

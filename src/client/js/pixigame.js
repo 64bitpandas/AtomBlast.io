@@ -165,18 +165,20 @@ function draw (delta) {
 			// Keyboard based controls
 
 			if ((moveKeys[0].isDown || joystick.mobileKey.leftDown === true) && player.vx > -GLOBAL.MAX_SPEED * player.speedMult) { // Left
-				mobileMovement('left')
+				movePlayer('left')
 			}
 			if ((moveKeys[1].isDown || joystick.mobileKey.rightDown === true) && player.vx < GLOBAL.MAX_SPEED * player.speedMult) { // Right
-				mobileMovement('right')
+				movePlayer('right')
 			}
 			if ((moveKeys[2].isDown || joystick.mobileKey.upDown === true) && player.vy < GLOBAL.MAX_SPEED * player.speedMult) { // Up
-				mobileMovement('up')
+				movePlayer('up')
 			}
 			if ((moveKeys[3].isDown || joystick.mobileKey.downDown === true) && player.vy > -GLOBAL.MAX_SPEED * player.speedMult) { // Down
-				mobileMovement('down')
+				movePlayer('down')
 			}
 			player.isMoving = false
+
+			console.log(moveKeys[0].isDown, moveKeys[1].isDown, moveKeys[2].isDown, moveKeys[3].isDown, mouseDown)
 			for (let key of moveKeys) {
 				if (key.isDown) {
 					player.isMoving = true
@@ -390,18 +392,23 @@ function shootHandler (e, stream) {
 	}
 }
 
-// actually name this better bro
-export function mobileMovement (direction) {
-	if (direction === 'up') {
-		player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === 'down') {
-		player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === 'right') {
-		player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
-	}
-	if (direction === 'left') {
-		player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+/**
+ * Moves the player by changing its velocity.
+ * @param {string} direction up, down, left, or right
+ */
+export function movePlayer (direction) {
+	if (player.isMoving) {
+		if (direction === 'up') {
+			player.vy += GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === 'down') {
+			player.vy += -GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === 'right') {
+			player.vx += GLOBAL.VELOCITY_STEP * player.speedMult
+		}
+		if (direction === 'left') {
+			player.vx += -GLOBAL.VELOCITY_STEP * player.speedMult
+		}
 	}
 }

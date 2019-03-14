@@ -294,12 +294,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~mobilemovement",
-    "function/index.html#static-function-mobileMovement",
-    "<span>mobileMovement</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/client/js/pixigame.js~mousedown",
     "variable/index.html#static-variable-mouseDown",
     "<span>mouseDown</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
@@ -315,6 +309,12 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~mouseuphandler",
     "function/index.html#static-function-mouseUpHandler",
     "<span>mouseUpHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/pixigame.js~moveplayer",
+    "function/index.html#static-function-movePlayer",
+    "<span>movePlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
   ],
   [
