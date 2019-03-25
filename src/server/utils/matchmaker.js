@@ -1,6 +1,6 @@
-import { GLOBAL } from '../../client/js/global'
+import { generateID, GLOBAL } from '../../client/js/global'
 import { getField, setField } from '../server'
-import { generateID, getTeamColors } from './serverutils'
+import { getTeamColors } from './serverutils'
 
 /**
  * Matchmaking system for public matches. Runs after initial socket.io server connection, but before connecting to a server.

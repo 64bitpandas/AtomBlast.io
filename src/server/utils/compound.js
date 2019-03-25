@@ -2,9 +2,8 @@
  * Manages compound creation and behavior.
  * Moved from clientside compound.js
  */
-import { GLOBAL, getCurrTile } from '../../client/js/global'
+import { GLOBAL, getCurrTile, generateID } from '../../client/js/global'
 import { canCraft } from './atoms'
-import { generateID } from './serverutils'
 import { incrementField, setField, deleteObject } from '../server'
 import { damage } from './ondamage'
 import { addExperience } from './experience'

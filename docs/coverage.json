@@ -1,7 +1,7 @@
 {
-  "coverage": "50.86%",
-  "expectCount": 173,
-  "actualCount": 88,
+  "coverage": "49.72%",
+  "expectCount": 183,
+  "actualCount": 91,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -19,8 +19,8 @@
       ]
     },
     "src/client/js/global.js": {
-      "expectCount": 5,
-      "actualCount": 3,
+      "expectCount": 6,
+      "actualCount": 4,
       "undocumentLines": [
         4,
         176
@@ -75,6 +75,19 @@
       "undocumentLines": [
         43,
         104
+      ]
+    },
+    "src/client/js/obj/damageindicator.js": {
+      "expectCount": 10,
+      "actualCount": 3,
+      "undocumentLines": [
+        17,
+        18,
+        19,
+        20,
+        23,
+        40,
+        41
       ]
     },
     "src/client/js/obj/gameobject.js": {
@@ -154,9 +167,9 @@
       "expectCount": 9,
       "actualCount": 6,
       "undocumentLines": [
-        18,
-        33,
-        386
+        19,
+        34,
+        398
       ]
     },
     "src/server/server.js": {
@@ -177,8 +190,8 @@
       "expectCount": 4,
       "actualCount": 2,
       "undocumentLines": [
-        9,
-        14
+        8,
+        13
       ]
     },
     "src/server/utils/collision.js": {
@@ -210,7 +223,7 @@
       "expectCount": 3,
       "actualCount": 2,
       "undocumentLines": [
-        144
+        157
       ]
     },
     "src/server/utils/serverinit.js": {
@@ -219,8 +232,8 @@
       "undocumentLines": []
     },
     "src/server/utils/serverutils.js": {
-      "expectCount": 4,
-      "actualCount": 4,
+      "expectCount": 3,
+      "actualCount": 3,
       "undocumentLines": []
     }
   }

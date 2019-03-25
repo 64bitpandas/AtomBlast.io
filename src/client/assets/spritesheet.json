@@ -564,6 +564,14 @@
 			"trimmed": false,
 			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 			"sourceSize": {"w":32,"h":32}
+		},
+		"notexture.png":
+		{
+			"frame": {"x":3629,"y":3463,"w":1,"h":1},
+			"rotated": false,
+			"trimmed": false,
+			"spriteSourceSize": {"x":0,"y":0,"w":1,"h":1},
+			"sourceSize": {"w":1,"h":1}
 		}
 	}
 }

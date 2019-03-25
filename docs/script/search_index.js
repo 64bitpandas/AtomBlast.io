@@ -12,6 +12,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "atomblast.io/src/client/js/obj/damageindicator.js~damageindicator",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html",
+    "<span>DamageIndicator</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/damageindicator.js</span>",
+    "class"
+  ],
+  [
     "atomblast.io/src/client/js/global.js~global",
     "variable/index.html#static-variable-GLOBAL",
     "<span>GLOBAL</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
@@ -186,9 +192,9 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~generateid",
+    "atomblast.io/src/client/js/global.js~generateid",
     "function/index.html#static-function-generateID",
-    "<span>generateID</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>generateID</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
     "function"
   ],
   [
@@ -886,6 +892,66 @@ window.esdocSearchIndex = [
     "file/src/client/js/obj/create.js.html",
     "src/client/js/obj/create.js",
     "file"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js",
+    "file/src/client/js/obj/damageindicator.js.html",
+    "src/client/js/obj/damageindicator.js",
+    "file"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#constructor",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-constructor-constructor",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#constructor",
+    "method"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#height",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-height",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#height",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#posx",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-posX",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#posX",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#posy",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-posY",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#posY",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#text",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-text",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#text",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#tick",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-method-tick",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#tick",
+    "method"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#width",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-width",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#width",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#x",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-x",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#x",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#y",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-y",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#y",
+    "member"
   ],
   [
     "src/client/js/obj/gameobject.js",

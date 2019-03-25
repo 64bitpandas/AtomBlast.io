@@ -73,6 +73,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 						)
 
 						if (distance < cmp.blueprint.params.size + othercmp.blueprint.params.size) {
+							// Damage indcator
+							socket.emit('serverSendDamageIndicator', {
+								damage: 1,
+								posX: cmp.posX,
+								posY: cmp.posY
+							})
 							// Delete both compounds. TODO deal damage to higher level barrier blocks
 							deleteObject('compounds', compound, room, socket)
 							deleteObject('compounds', otherCompound, room, socket)
@@ -88,6 +94,11 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
 					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 				}) < GLOBAL.STRONGHOLD_RADIUS && cmp.blueprint.type !== 'block' && cmp.sendingTeam !== getField(['rooms', room, 'tiles', tileID, 'owner'])) {
+					socket.emit('serverSendDamageIndicator', {
+						damage: cmp.blueprint.params.damage,
+						posX: cmp.posX,
+						posY: cmp.posY
+					})
 					deleteObject('compounds', compound, room, socket)
 					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)
 				}

@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../../">
-  <title data-ice="title">src/server/utils/serverinit.js | atomblast.io</title>
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/obj/damageindicator.js | atomblast.io</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -109,136 +109,50 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/serverinit.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { getField, setField } from &apos;../server&apos;
-import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../../client/js/obj/tiles&apos;
-import { generateID, GLOBAL } from &apos;../../client/js/global&apos;
-import { spawnAtomAtVent } from &apos;./atoms&apos;
-import colors from &apos;colors&apos; // Console colors :D
-
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/obj/damageindicator.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import * as PIXI from &apos;pixi.js&apos;
+import { app, spritesheet, player, screenCenterX, screenCenterY } from &apos;../pixigame&apos;
+import { generateID } from &apos;../global&apos;
 /**
- * Methods to run on server initialization and player connect initialization.
+ * One Tile component of the map.
  */
+export class DamageIndicator extends PIXI.Sprite {
+	/**
+     *
+     * @param {*} damageAmount
+     * @param {*} posX
+     * @param {*} posY
+     */
+	constructor(damageAmount, posX, posY) {
+		super(spritesheet.textures[&apos;notexture.png&apos;])
 
-/**
- * Global initialiation. Run once on server start.
- */
-export function initGlobal () {
-	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
-	setInterval(() =&gt; {
-		for (let room in getField([&apos;rooms&apos;])) {
-			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
-				let tiles = getField([&apos;rooms&apos;, room, &apos;tiles&apos;])
-				for (let tile in tiles) {
-					if (tiles[tile].type === &apos;spawner&apos;) {
-						spawnAtomAtVent(tiles[tile].globalY, tiles[tile].globalX, room, tiles[tile].owner, false)
-					}
-				}
-			}
-		}
-	}, GLOBAL.ATOM_SPAWN_DELAY)
+		this.posX = posX
+		this.posY = posY
+		this.height = 1
+		this.width = 1
 
-	// Timer
-	setInterval(() =&gt; {
-		for (let room in getField([&apos;rooms&apos;])) {
-			if (getField([&apos;rooms&apos;, room, &apos;started&apos;])) {
-				let seconds = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
+		// Create text object
+		this.text = new PIXI.Text(&apos;-&apos; + damageAmount)
 
-				let minutes = getField([&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;])
+		// Set style
+		this.text.style = new PIXI.TextStyle({
+			fontSize: 72
+			// fill: this.color
+		})
 
-				// Equivalent to rooms[room].time.seconds++;
-				setField(seconds + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
-
-				if (seconds &gt;= 60) {
-					setField(0, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;seconds&apos;])
-					setField(minutes + 1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;minutes&apos;])
-				}
-
-				// Set formatted Time
-				setField(minutes + &apos;:&apos; + ((seconds &lt; 10) ? &apos;0&apos; : &apos;&apos;) + seconds, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;formattedTime&apos;])
-			}
-		}
-	}, 1000)
-}
-
-/**
- * Run on every player join.
- * @param {*} socket The socket.io instance
- * @param {string} room The name of the room that the player belongs to
- * @param {string} team The name of the team that the player belongs to
- */
-export function initPlayer (socket, room, team) {
-	// Initialize room array and spawn atoms on first player join
-	let thisRoom = getField([&apos;rooms&apos;, room])
-
-	// Set up room if it does not exist
-	if (thisRoom === undefined || thisRoom === null) {
-		console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType)
-		setField({
-			joinable: true,
-			teams: [],
-			atoms: {},
-			compounds: {},
-			type: socket.handshake.query.roomType,
-			time: {
-				minutes: 0,
-				seconds: 0,
-				formattedTime: &apos;0:00&apos;
-			}
-		}, [&apos;rooms&apos;, room])
-
-		// Set up capturable tiles
-		setField({}, [&apos;rooms&apos;, room, &apos;tiles&apos;])
-		// TODO support multiple map layouts
-		for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
-			for (let col = 0; col &lt; MAP_LAYOUT[row].length; col++) {
-				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
-				if (currTile.type === &apos;spawner&apos; || currTile.type === &apos;stronghold&apos; || currTile.type === &apos;nucleus&apos;) {
-					// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
-					let tileID = (currTile.type === &apos;nucleus&apos;) ? MAP_LAYOUT[row][col] : generateID()
-
-					setField({
-						id: tileID,
-						type: currTile.type,
-						globalX: col,
-						globalY: MAP_LAYOUT.length - row - 1,
-						captured: false,
-						owner: &apos;all&apos;,
-						health: GLOBAL[(&apos;MAX_&apos; + currTile.type + &apos;_HEALTH&apos;).toUpperCase()]
-					}, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID])
-				}
-			}
-		}
-	}
-	thisRoom = getField([&apos;rooms&apos;, room])
-
-	// Add team to database
-
-	// Equivalent to rooms[room].teams.push({ name: team });
-	if (getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 1) {
-		setField({ name: team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
+		this.addChild(this.text)
+		app.stage.addChild(this)
 	}
 
-	// Check if room is full
-	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
-		setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;])
+	/**
+     * Draws object in the correct position on the player screen.
+     */
+	tick() {
+		if (player !== undefined) {
+			this.x = screenCenterX + this.posX - player.posX
+			this.y = screenCenterY + player.posY - this.posY
+		}
 	}
-
-	// Create new player in rooms object
-	setField({
-		id: socket.id,
-		name: socket.handshake.query.name,
-		room: socket.handshake.query.room,
-		team: team,
-		health: GLOBAL.MAX_HEALTH,
-		posX: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].x * GLOBAL.GRID_SPACING * 2,
-		posY: GLOBAL.SPAWN_POINTS[thisRoom.teams.length - 1].y * GLOBAL.GRID_SPACING * 2,
-		vx: 0,
-		vy: 0,
-		experience: 0,
-		damagedBy: {},
-		shield: 0
-	}, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id])
 }
 </code></pre>
 

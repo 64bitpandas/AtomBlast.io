@@ -1,8 +1,9 @@
-import { GLOBAL } from './global'
+import { GLOBAL, generateID } from './global'
 import { cookieInputs, quitGame, updateLobby, updateScores, hideElement, displayWinner, updateAtomList } from './app'
 import ChatClient from './lib/chat-client'
 import { loadTextures, app, createPlayer, isSetup, startGame, setIngame, spritesheet } from './pixigame'
 import { createRenderAtom, createRenderCompound } from './obj/create'
+import { DamageIndicator } from './obj/damageindicator'
 
 /**
  * Socket.js contains all of the clientside networking interface.
@@ -373,6 +374,17 @@ function setupSocketInfo (chat) {
 	// Tile health changed
 	socket.on('serverSendTileHealth', (data) => {
 		objects.tiles['tile_' + data.tileX + '_' + data.tileY].updateHealth(data.newHealth)
+	})
+
+	// Damage Indicators
+	objects.di = {}
+	socket.on('serverSendDamageIndicator', (data) => {
+		let randID = generateID()
+		objects.di[randID] = (new DamageIndicator(data.damage, data.posX, data.posY))
+		setTimeout(() => {
+			app.stage.removeChild(objects.di[randID])
+			delete objects.di[randID]
+		}, 1000)
 	})
 }
 

@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
@@ -69,7 +70,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/damageindicator.js~DamageIndicator.html">DamageIndicator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
@@ -100,7 +102,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -108,7 +109,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">88/173</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">91/183</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -155,13 +156,14 @@
       <td data-ice="filePath"><span><a href="file/src/client/js/global.js.html#errorLines=176,4">src/client/js/global.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span>
 <span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span>
+<span><a href="function/index.html#static-function-generateID">generateID</a></span>
 <span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span>
 <span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span>
 <span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></td>
-      <td class="coverage"><span data-ice="coverage">60 %</span><span data-ice="coverageCount" class="coverage-count">3/5</span></td>
-      <td style="display: none;" data-ice="size">5996 byte</td>
-      <td style="display: none;" data-ice="lines">214</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:11:00 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">4/6</span></td>
+      <td style="display: none;" data-ice="size">6259 byte</td>
+      <td style="display: none;" data-ice="lines">223</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:54:27 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/lib/chat-client.js.html#errorLines=11,14,149,159,17,179,18,20,21,215,223">src/client/js/lib/chat-client.js</a></span></td>
@@ -218,6 +220,14 @@
       <td style="display: none;" data-ice="updated">2019-03-05 05:18:28 (UTC)</td>
     </tr>
 <tr data-ice="file">
+      <td data-ice="filePath"><span><a href="file/src/client/js/obj/damageindicator.js.html#errorLines=17,18,19,20,23,40,41">src/client/js/obj/damageindicator.js</a></span></td>
+      <td data-ice="identifier" class="identifiers"><span><a href="class/src/client/js/obj/damageindicator.js~DamageIndicator.html">DamageIndicator</a></span></td>
+      <td class="coverage"><span data-ice="coverage">30 %</span><span data-ice="coverageCount" class="coverage-count">3/10</span></td>
+      <td style="display: none;" data-ice="size">973 byte</td>
+      <td style="display: none;" data-ice="lines">44</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:54:27 (UTC)</td>
+    </tr>
+<tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/obj/gameobject.js.html#errorLines=118,26,27,28,29,30,31,65,66">src/client/js/obj/gameobject.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></td>
       <td class="coverage"><span data-ice="coverage">50 %</span><span data-ice="coverageCount" class="coverage-count">9/18</span></td>
@@ -239,7 +249,7 @@
       <td class="coverage"><span data-ice="coverage">19 %</span><span data-ice="coverageCount" class="coverage-count">4/21</span></td>
       <td style="display: none;" data-ice="size">5160 byte</td>
       <td style="display: none;" data-ice="lines">140</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:58:50 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:03:49 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/client/js/obj/tiles.js.html#errorLines=132,142">src/client/js/obj/tiles.js</a></span></td>
@@ -271,15 +281,15 @@
       <td style="display: none;" data-ice="updated">2019-03-05 05:19:15 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/client/js/socket.js.html#errorLines=18,33,386">src/client/js/socket.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/client/js/socket.js.html#errorLines=19,34,398">src/client/js/socket.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span>
 <span><a href="function/index.html#static-function-disconnect">disconnect</a></span>
 <span><a href="variable/index.html#static-variable-objects">objects</a></span>
 <span><a href="variable/index.html#static-variable-teamColors">teamColors</a></span></td>
       <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">6/9</span></td>
-      <td style="display: none;" data-ice="size">11532 byte</td>
-      <td style="display: none;" data-ice="lines">396</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:55:00 (UTC)</td>
+      <td style="display: none;" data-ice="size">11910 byte</td>
+      <td style="display: none;" data-ice="lines">408</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:54:27 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/entry.js.html">src/server/entry.js</a></span></td>
@@ -301,32 +311,32 @@
       <td style="display: none;" data-ice="updated">2019-03-02 16:15:03 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/server/utils/atoms.js.html#errorLines=14,9">src/server/utils/atoms.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/server/utils/atoms.js.html#errorLines=13,8">src/server/utils/atoms.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span>
 <span><a href="function/index.html#static-function-incrementAtom">incrementAtom</a></span>
 <span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span>
 <span><a href="function/index.html#static-function-spawnAtomAtVent">spawnAtomAtVent</a></span></td>
       <td class="coverage"><span data-ice="coverage">50 %</span><span data-ice="coverageCount" class="coverage-count">2/4</span></td>
-      <td style="display: none;" data-ice="size">2659 byte</td>
-      <td style="display: none;" data-ice="lines">76</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 03:34:56 (UTC)</td>
+      <td style="display: none;" data-ice="size">2628 byte</td>
+      <td style="display: none;" data-ice="lines">75</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:39:07 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/collision.js.html">src/server/utils/collision.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">1/1</span></td>
-      <td style="display: none;" data-ice="size">4413 byte</td>
-      <td style="display: none;" data-ice="lines">106</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 22:28:18 (UTC)</td>
+      <td style="display: none;" data-ice="size">4707 byte</td>
+      <td style="display: none;" data-ice="lines">117</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:35:43 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/compound.js.html">src/server/utils/compound.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span>
 <span><a href="function/index.html#static-function-tickCompound">tickCompound</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">2/2</span></td>
-      <td style="display: none;" data-ice="size">3673 byte</td>
-      <td style="display: none;" data-ice="lines">100</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:20:39 (UTC)</td>
+      <td style="display: none;" data-ice="size">3642 byte</td>
+      <td style="display: none;" data-ice="lines">99</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:38:56 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/experience.js.html">src/server/utils/experience.js</a></span></td>
@@ -350,37 +360,36 @@
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">1/1</span></td>
       <td style="display: none;" data-ice="size">4355 byte</td>
       <td style="display: none;" data-ice="lines">114</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 23:40:21 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:38:56 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/src/server/utils/ondamage.js.html#errorLines=144">src/server/utils/ondamage.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/src/server/utils/ondamage.js.html#errorLines=157">src/server/utils/ondamage.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-damage">damage</a></span>
 <span><a href="function/index.html#static-function-damageTile">damageTile</a></span>
 <span><a href="function/index.html#static-function-splash">splash</a></span></td>
       <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">2/3</span></td>
-      <td style="display: none;" data-ice="size">7948 byte</td>
-      <td style="display: none;" data-ice="lines">202</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:22:07 (UTC)</td>
+      <td style="display: none;" data-ice="size">8255 byte</td>
+      <td style="display: none;" data-ice="lines">215</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:22:44 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/serverinit.js.html">src/server/utils/serverinit.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span>
 <span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></td>
       <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">2/2</span></td>
-      <td style="display: none;" data-ice="size">4346 byte</td>
-      <td style="display: none;" data-ice="lines">131</td>
-      <td style="display: none;" data-ice="updated">2019-03-02 16:55:36 (UTC)</td>
+      <td style="display: none;" data-ice="size">4315 byte</td>
+      <td style="display: none;" data-ice="lines">130</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:38:56 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/src/server/utils/serverutils.js.html">src/server/utils/serverutils.js</a></span></td>
-      <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-generateID">generateID</a></span>
-<span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span>
+      <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span>
 <span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span>
 <span><a href="function/index.html#static-function-getTileID">getTileID</a></span></td>
-      <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">4/4</span></td>
-      <td style="display: none;" data-ice="size">1749 byte</td>
-      <td style="display: none;" data-ice="lines">63</td>
-      <td style="display: none;" data-ice="updated">2019-02-07 23:52:26 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">100 %</span><span data-ice="coverageCount" class="coverage-count">3/3</span></td>
+      <td style="display: none;" data-ice="size">1485 byte</td>
+      <td style="display: none;" data-ice="lines">54</td>
+      <td style="display: none;" data-ice="updated">2019-03-02 17:38:56 (UTC)</td>
     </tr>
 </tbody>
 </table>

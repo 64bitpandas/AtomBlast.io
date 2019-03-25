@@ -212,3 +212,12 @@ export function getGlobalLocation (obj) {
 		globalX: Math.floor(obj.posX / (GLOBAL.GRID_SPACING * 2))
 	}
 }
+
+/**
+* Returns a random number between between 10000000 and 99999999, inclusive.
+* TODO Make every ID guaranteed unique
+* @returns random id between 10000000 and 99999999
+*/
+export function generateID() {
+	return Math.floor(Math.random() * 90000000) + 10000000
+}

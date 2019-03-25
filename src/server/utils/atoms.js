@@ -2,8 +2,7 @@
  * Manages the atom list and atom usage for players.
  */
 import { incrementField, getField, setField } from '../server'
-import { generateID } from './serverutils'
-import { GLOBAL } from '../../client/js/global'
+import { GLOBAL, generateID } from '../../client/js/global'
 import { TILES, TILE_NAMES, MAP_LAYOUT } from '../../client/js/obj/tiles'
 
 export function incrementAtom (player, room, atomType, quantity) {

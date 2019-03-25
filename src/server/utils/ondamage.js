@@ -29,8 +29,21 @@ export function damage (data, room, socket) {
 
 	if (thisPlayer !== undefined) {
 		// thisPlayer.health -= data.damage;
-		if (data.damage > GLOBAL.STRONGHOLD_DEFENSE) {
-			setField(thisPlayer.health - data.damage - thisPlayer.defense, ['rooms', room, 'players', data.player, 'health'])
+		if (data.damage > thisPlayer.shield) {
+			setField(thisPlayer.health - data.damage + thisPlayer.shield, ['rooms', room, 'players', data.player, 'health'])
+			// Send damage indicator data
+			socket.emit('serverSendDamageIndicator', {
+				damage: data.damage - thisPlayer.shield,
+				posX: thisPlayer.posX,
+				posY: thisPlayer.posY
+			})
+		}
+		else {
+			socket.emit('serverSendDamageIndicator', {
+				damage: 0,
+				posX: thisPlayer.posX,
+				posY: thisPlayer.posY
+			})
 		}
 
 		// Add damage to database

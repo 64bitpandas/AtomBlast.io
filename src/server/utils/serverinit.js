@@ -1,9 +1,8 @@
 import { getField, setField } from '../server'
 import { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles'
-import { GLOBAL } from '../../client/js/global'
+import { generateID, GLOBAL } from '../../client/js/global'
 import { spawnAtomAtVent } from './atoms'
 import colors from 'colors' // Console colors :D
-import { generateID } from './serverutils'
 
 /**
  * Methods to run on server initialization and player connect initialization.

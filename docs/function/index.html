@@ -39,6 +39,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getGlobalLocation">getGlobalLocation</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
@@ -69,7 +70,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/damageindicator.js~DamageIndicator.html">DamageIndicator</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
@@ -100,7 +102,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -1883,11 +1884,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber42">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber43">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber42">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {beginConnection} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber43">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Attempts to connect to the server. Run on &apos;start game&apos; press.</p>
@@ -1999,11 +2000,11 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber14">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {canCraft} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber14">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {canCraft} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber13">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2165,11 +2166,11 @@ Run using</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber25">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber25">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {createCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber24">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks if a compound can be created, deducts craft material, and returns the new compound.
@@ -2690,11 +2691,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber144">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber157">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {damageTile} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber144">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {damageTile} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber157">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2911,11 +2912,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber85">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/socket.js.html#lineNumber86">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber85">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {disconnect} from &apos;<span><a href="file/src/client/js/socket.js.html#lineNumber86">atomblast.io/src/client/js/socket.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Run on disconnect to reset all server-based variables and connections</p>
@@ -3229,11 +3230,11 @@ Amount may be negative (for health boost).</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/client/js/global.js.html#lineNumber221">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {generateID} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {generateID} from &apos;<span><a href="file/src/client/js/global.js.html#lineNumber221">atomblast.io/src/client/js/global.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns a random number between between 10000000 and 99999999, inclusive.
@@ -3640,11 +3641,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber36">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber27">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamColors} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber36">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamColors} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber27">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the team colors object (see client socket.js for more information on the format)</p>
@@ -3713,11 +3714,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber22">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamNumber} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber22">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTeamNumber} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber13">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the index of the given team within the team array of the given room.</p>
@@ -3793,11 +3794,11 @@ Adopted from <a href="https://stackoverflow.com/questions/6491463/accessing-nest
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber54">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverutils.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTileID} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber54">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {getTileID} from &apos;<span><a href="file/src/server/utils/serverutils.js.html#lineNumber45">atomblast.io/src/server/utils/serverutils.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Returns the serverside ID of the tile at this location.
@@ -3935,11 +3936,11 @@ If the tile is not capturable, then returns false.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber9">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber8">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementAtom} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber9">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {incrementAtom} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber8">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -4081,11 +4082,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverinit.js.html#lineNumber15">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverinit.js.html#lineNumber14">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {initGlobal} from &apos;<span><a href="file/src/server/utils/serverinit.js.html#lineNumber15">atomblast.io/src/server/utils/serverinit.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {initGlobal} from &apos;<span><a href="file/src/server/utils/serverinit.js.html#lineNumber14">atomblast.io/src/server/utils/serverinit.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Global initialiation. Run once on server start.</p>
@@ -4125,11 +4126,11 @@ Best used with numbers or strings.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/serverinit.js.html#lineNumber59">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/serverinit.js.html#lineNumber58">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {initPlayer} from &apos;<span><a href="file/src/server/utils/serverinit.js.html#lineNumber59">atomblast.io/src/server/utils/serverinit.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {initPlayer} from &apos;<span><a href="file/src/server/utils/serverinit.js.html#lineNumber58">atomblast.io/src/server/utils/serverinit.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Run on every player join.</p>
@@ -5189,11 +5190,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber56">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {spawnAtom} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber56">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {spawnAtom} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber55">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -5284,11 +5285,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber37">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/atoms.js.html#lineNumber36">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {spawnAtomAtVent} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber37">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {spawnAtomAtVent} from &apos;<span><a href="file/src/server/utils/atoms.js.html#lineNumber36">atomblast.io/src/server/utils/atoms.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Spawns an atom at the vent at the given row and column.</p>
@@ -5373,11 +5374,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber200">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/ondamage.js.html#lineNumber213">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {splash} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber200">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {splash} from &apos;<span><a href="file/src/server/utils/ondamage.js.html#lineNumber213">atomblast.io/src/server/utils/ondamage.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>TODO</p>
@@ -5485,11 +5486,11 @@ Adopted from <a href="https://stackoverflow.com/questions/18936915/dynamically-s
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber83">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/server/utils/compound.js.html#lineNumber82">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber83">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {tickCompound} from &apos;<span><a href="file/src/server/utils/compound.js.html#lineNumber82">atomblast.io/src/server/utils/compound.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>Checks compound behavior based on compound type. Runs once a frame.</p>
