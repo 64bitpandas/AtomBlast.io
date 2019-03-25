@@ -23,7 +23,7 @@
       "actualCount": 3,
       "undocumentLines": [
         4,
-        175
+        176
       ]
     },
     "src/client/js/lib/chat-client.js": {
@@ -210,7 +210,7 @@
       "expectCount": 3,
       "actualCount": 2,
       "undocumentLines": [
-        139
+        144
       ]
     },
     "src/server/utils/serverinit.js": {

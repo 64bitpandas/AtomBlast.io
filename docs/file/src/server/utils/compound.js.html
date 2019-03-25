@@ -166,7 +166,7 @@ export function createCompound (data, room, thisPlayer, socket) {
 		}
 	}
 	else if (data.blueprint.type === &apos;defense&apos;) {
-		setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;hasShield&apos;])
+		setField(data.blueprint.params.defenseModifier, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;shield&apos;])
 	}
 	else if (data.blueprint.type === &apos;block&apos;) {
 		newCompound.vx = newCompound.vy = 0

@@ -1110,12 +1110,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/client/js/obj/player.js~player#hasshield",
-    "class/src/client/js/obj/player.js~Player.html#instance-member-hasShield",
-    "src/client/js/obj/player.js~Player#hasShield",
-    "member"
-  ],
-  [
     "src/client/js/obj/player.js~player#health",
     "class/src/client/js/obj/player.js~Player.html#instance-member-health",
     "src/client/js/obj/player.js~Player#health",
@@ -1156,6 +1150,12 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/player.js~Player.html#instance-method-setup",
     "src/client/js/obj/player.js~Player#setup",
     "method"
+  ],
+  [
+    "src/client/js/obj/player.js~player#shield",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-shield",
+    "src/client/js/obj/player.js~Player#shield",
+    "member"
   ],
   [
     "src/client/js/obj/player.js~player#speedmult",

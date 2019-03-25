@@ -140,7 +140,9 @@ export function damage (data, room, socket) {
 
 	if (thisPlayer !== undefined) {
 		// thisPlayer.health -= data.damage;
-		setField(thisPlayer.health - data.damage, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
+		if (data.damage &gt; GLOBAL.STRONGHOLD_DEFENSE) {
+			setField(thisPlayer.health - data.damage - thisPlayer.defense, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
+		}
 
 		// Add damage to database
 		if (thisPlayer.damagedBy[data.sentBy] === undefined) {
@@ -162,6 +164,9 @@ export function damage (data, room, socket) {
 			for (let at in thisPlayer.atomList) {
 				setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer, &apos;atomList&apos;, at])
 			}
+
+			// Set defense to 0
+			setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;shield&apos;])
 
 			// Reset position to spawnpoint
 			setField(GLOBAL.SPAWN_POINTS[getTeamNumber(room, thisPlayer.team)].x * GLOBAL.GRID_SPACING * 2, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;posX&apos;])

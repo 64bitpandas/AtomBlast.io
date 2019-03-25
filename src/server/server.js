@@ -29,7 +29,7 @@ app.use(express.static(`${__dirname}/../client`))
 //             name: 'teamname',
 //             players: ['id1', 'id2'...]
 //         ],
-//         players: { id, name, room, team, health, posX, posY, vx, vy, dead, experience, damagedBy, stronghold },
+//         players: { id, name, room, team, health, posX, posY, vx, vy, dead, experience, damagedBy, stronghold, defense },
 //         atoms: { typeID, id, posX, posY, vx, vy, team },
 //         compounds: {	id, posX, posY, vx, vy, blueprint, sendingTeam, sender },
 //		   tiles: { id, type, globalX, globalY, captured, owner, health }

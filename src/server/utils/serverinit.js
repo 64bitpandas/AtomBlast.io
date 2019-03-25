@@ -125,6 +125,7 @@ export function initPlayer (socket, room, team) {
 		vx: 0,
 		vy: 0,
 		experience: 0,
-		damagedBy: {}
+		damagedBy: {},
+		shield: 0
 	}, ['rooms', room, 'players', socket.id])
 }

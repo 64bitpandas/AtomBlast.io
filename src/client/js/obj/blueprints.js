@@ -210,7 +210,7 @@ export const BLUEPRINTS = {
 		texture: 'compound_ozone.png',
 		type: 'defense',
 		params: {
-			defenseModifier: 10
+			defenseModifier: 1
 		},
 		atoms: {
 			o: 3

@@ -137,12 +137,12 @@ function setupSocketObjectRetrieval () {
 								objects[objType][obj].atomList = objRef.atomList
 								objects[objType][obj].speedMult = objRef.speedMult
 
-								if (objects[objType][obj].hasShield !== objRef.hasShield || objects[objType][obj].stronghold !== objRef.stronghold) {
-									objects[objType][obj].changeSprite(objRef.hasShield, objRef.stronghold)
+								if (objects[objType][obj].shield !== objRef.shield || objects[objType][obj].stronghold !== objRef.stronghold) {
+									objects[objType][obj].changeSprite(objRef.shield, objRef.stronghold)
 									console.log('change tex')
 								}
 
-								objects[objType][obj].hasShield = objRef.hasShield
+								objects[objType][obj].shield = objRef.shield
 								objects[objType][obj].stronghold = objRef.stronghold
 
 								for (let atom in objRef.atomList) {

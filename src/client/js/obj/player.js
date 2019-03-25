@@ -46,7 +46,7 @@ export class Player extends GameObject {
 		this.isMoving = false
 		this.experience = experience // Sets the experience of the player(Passed in)
 		this.speedMult = 1 // Speed multiplier. Increased/decreased by different compounds
-		this.hasShield = false
+		this.shield = 0
 		this.stronghold = 'none'
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
@@ -66,6 +66,7 @@ export class Player extends GameObject {
 		this.textObjects.postext = new PIXI.Text('placeholderpos')
 		this.textObjects.teamtext = new PIXI.Text('team: ')
 		this.textObjects.healthtext = new PIXI.Text('health: ')
+		this.textObjects.defensetext = new PIXI.Text('defense: ')
 
 		// Assign values and positions
 		this.textObjects.idtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9)
@@ -75,6 +76,8 @@ export class Player extends GameObject {
 		this.textObjects.postext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 200)
 		this.textObjects.teamtext.text += this.team
 		this.textObjects.teamtext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 300)
+		this.textObjects.defensetext.text += this.shield
+		this.textObjects.defensetext.position.set(0, GLOBAL.PLAYER_RADIUS * 9 + 400)
 
 		// create text and assign color
 		for (let item in this.textObjects) {
@@ -105,6 +108,7 @@ export class Player extends GameObject {
 		// Update text
 		this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')'
 		this.textObjects.healthtext.text = 'health: ' + this.health
+		this.textObjects.defensetext.text = 'defense: ' + this.shield + ((this.stronghold === 'team') ? ' (+5)' : '')
 
 		// Rotation
 		this.playerSprite.rotation += (this.id === socket.id && mouseDown) ? GLOBAL.PLAYER_EXPEDITED_ROTATION : GLOBAL.PLAYER_ROTATION
@@ -117,16 +121,16 @@ export class Player extends GameObject {
 
 	/**
 	 * Notifies the player to check for a sprite change (shield, etc).
-	 * @param {boolean} hasShield True if the player has shield from an element
+	 * @param {number} shield Number of extra defense points from buffs, elements, etc.
 	 * @param {string} stronghold 'team' if player is in team stronghold, 'notteam' if player is in enemy stronghold, 'none', if not in a stronghold
 	 */
-	changeSprite(hasShield, stronghold) {
+	changeSprite(shield, stronghold) {
 		// Set values
-		this.hasShield = hasShield
+		this.shield = shield
 		this.stronghold = stronghold
 
 		// Set sprite
-		if (this.hasShield || this.stronghold === 'team') {
+		if (this.shield > 0 || this.stronghold === 'team') {
 			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'playershield.png']
 		}
 		else {
