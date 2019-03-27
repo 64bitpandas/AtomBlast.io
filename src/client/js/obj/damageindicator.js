@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js'
 import { app, spritesheet, player, screenCenterX, screenCenterY } from '../pixigame'
-import { generateID } from '../global'
 /**
  * One Tile component of the map.
  */
@@ -24,8 +23,8 @@ export class DamageIndicator extends PIXI.Sprite {
 
 		// Set style
 		this.text.style = new PIXI.TextStyle({
-			fontSize: 72
-			// fill: this.color
+			fontSize: 25,
+			fill: '0xf44336'
 		})
 
 		this.addChild(this.text)
