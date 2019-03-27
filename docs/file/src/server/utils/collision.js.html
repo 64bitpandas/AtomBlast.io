@@ -207,12 +207,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 				}) &lt; GLOBAL.STRONGHOLD_RADIUS &amp;&amp; cmp.blueprint.type !== &apos;block&apos; &amp;&amp; cmp.sendingTeam !== getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;owner&apos;])) {
 					socket.emit(&apos;serverSendDamageIndicator&apos;, {
-						damage: cmp.blueprint.params.damage,
+						damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 						posX: cmp.posX,
 						posY: cmp.posY
 					})
 					deleteObject(&apos;compounds&apos;, compound, room, socket)
-					damageTile(tileID, cmp.blueprint.params.damage, socket.id, room, socket)
+					damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, socket.id, room, socket)
 				}
 			}
 		}
