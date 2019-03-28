@@ -59,6 +59,13 @@ export function initPlayer(socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField(['rooms', room])
 
+	// This is sloppy, but idk what's happening
+	if (!thisRoom) {
+		console.log('Room ' + room + ' was undefined, kicking player ' + socket.id)
+		socket.emit('connectionError', { msg: 'The room ' + room + ' could not be joined at this moment, please try again shortly.' })
+		return -1
+	}
+
 	// Set up capturable tiles
 	setField({}, ['rooms', room, 'tiles'])
 	// TODO support multiple map layouts

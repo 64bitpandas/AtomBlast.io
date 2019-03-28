@@ -24,6 +24,7 @@ export function roomMatchmaker (socket, room, team) {
 			socket.emit('connectionError', { msg: 'Your team is playing in a ' + getField('rooms', getField(['teams', team]).room).type + ' room, but you are trying to join a ' + roomType + ' room!' })
 		}
 		else if (!getField(['teams', team, 'joinable'])) { // Team full
+			console.log(getField(['teams']))
 			socket.emit('connectionError', { msg: 'Your team is already in game or full!' })
 		}
 		else { // is joinable
@@ -93,7 +94,7 @@ export function roomMatchmaker (socket, room, team) {
 		// Make team
 		setField({
 			room: room,
-			players: [socket.id],
+			players: [],
 			joinable: true
 		}, ['teams', team])
 
@@ -121,14 +122,14 @@ export function roomMatchmaker (socket, room, team) {
 
 		// Add player to team
 		// Equivalent to rooms[room].teams.push({ name: team });
+		getField(['teams', team, 'players']).push(socket.id)
+		// Instantiate team in the room if it has not been done already
 		if (getField(['teams', team, 'players']).length === 1) {
-			// console.log('setup team')
 			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
-			setField({ name: team, players: [socket.id] }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
+			getField(['rooms', room, 'teams']).push({ name: team, players: [socket.id] })
 		}
-		else {
-			getField(['teams', team, 'players']).push(socket.id)
-		}
+
+		// console.log(getField(['rooms', room, 'teams']))
 		socket.join(room, () => {
 			console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${team}`.yellow)
 		})

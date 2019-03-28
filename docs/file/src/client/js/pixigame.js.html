@@ -481,7 +481,7 @@ export function mouseDownHandler (e) {
  * @param {boolean} stream True if sending a stream (such as water); false otherwise.
  */
 function shootHandler (e, stream) {
-	if (isFocused() &amp;&amp; inGame) {
+	if (isFocused() &amp;&amp; inGame &amp;&amp; !player.spectatingl) {
 		if (stream) {
 			streamID++
 		}

@@ -222,6 +222,13 @@ io.on('connection', socket => {
 				if (teams[team].players.length === 0) {
 					delete teams[team]
 				}
+
+				// Final sweep over teams object
+				for (let team in teams) {
+					if (teams[team].room === room) {
+						delete teams[team]
+					}
+				}
 			}
 		}
 	})
