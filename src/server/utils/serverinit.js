@@ -11,7 +11,7 @@ import colors from 'colors' // Console colors :D
 /**
  * Global initialiation. Run once on server start.
  */
-export function initGlobal () {
+export function initGlobal() {
 	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
 	setInterval(() => {
 		for (let room in getField(['rooms'])) {
@@ -55,62 +55,39 @@ export function initGlobal () {
  * @param {string} room The name of the room that the player belongs to
  * @param {string} team The name of the team that the player belongs to
  */
-export function initPlayer (socket, room, team) {
+export function initPlayer(socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField(['rooms', room])
 
-	// Set up room if it does not exist
-	if (thisRoom === undefined || thisRoom === null) {
-		console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType)
-		setField({
-			joinable: true,
-			teams: [],
-			atoms: {},
-			compounds: {},
-			type: socket.handshake.query.roomType,
-			time: {
-				minutes: 0,
-				seconds: 0,
-				formattedTime: '0:00'
-			}
-		}, ['rooms', room])
+	// Set up capturable tiles
+	setField({}, ['rooms', room, 'tiles'])
+	// TODO support multiple map layouts
+	for (let row = 0; row < MAP_LAYOUT.length; row++) {
+		for (let col = 0; col < MAP_LAYOUT[row].length; col++) {
+			let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
+			if (currTile.type === 'spawner' || currTile.type === 'stronghold' || currTile.type === 'nucleus') {
+				// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
+				let tileID = (currTile.type === 'nucleus') ? MAP_LAYOUT[row][col] : generateID()
 
-		// Set up capturable tiles
-		setField({}, ['rooms', room, 'tiles'])
-		// TODO support multiple map layouts
-		for (let row = 0; row < MAP_LAYOUT.length; row++) {
-			for (let col = 0; col < MAP_LAYOUT[row].length; col++) {
-				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
-				if (currTile.type === 'spawner' || currTile.type === 'stronghold' || currTile.type === 'nucleus') {
-					// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
-					let tileID = (currTile.type === 'nucleus') ? MAP_LAYOUT[row][col] : generateID()
-
-					setField({
-						id: tileID,
-						type: currTile.type,
-						globalX: col,
-						globalY: MAP_LAYOUT.length - row - 1,
-						captured: false,
-						owner: 'all',
-						health: GLOBAL[('MAX_' + currTile.type + '_HEALTH').toUpperCase()]
-					}, ['rooms', room, 'tiles', tileID])
-				}
+				setField({
+					id: tileID,
+					type: currTile.type,
+					globalX: col,
+					globalY: MAP_LAYOUT.length - row - 1,
+					captured: false,
+					owner: 'all',
+					health: GLOBAL[('MAX_' + currTile.type + '_HEALTH').toUpperCase()]
+				}, ['rooms', room, 'tiles', tileID])
 			}
 		}
 	}
-	thisRoom = getField(['rooms', room])
 
-	// Add team to database
+	// console.log(getField(['teams', team, 'players']))
 
-	// Equivalent to rooms[room].teams.push({ name: team });
-	if (getField(['teams', team, 'players']).length === 1) {
-		setField({ name: team }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
-	}
-
-	// Check if room is full
-	if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
-		setField(false, ['rooms', room, 'joinable'])
-	}
+	// // Check if room is full
+	// if (((thisRoom.type === '4v4' || thisRoom.type === '2v2') && thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
+	// 	setField(false, ['rooms', room, 'joinable'])
+	// }
 
 	// Create new player in rooms object
 	setField({

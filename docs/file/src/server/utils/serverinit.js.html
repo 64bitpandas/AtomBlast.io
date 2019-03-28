@@ -123,7 +123,7 @@ import colors from &apos;colors&apos; // Console colors :D
 /**
  * Global initialiation. Run once on server start.
  */
-export function initGlobal () {
+export function initGlobal() {
 	// Set up atom spawning three times a second. This is processed outside of the player specific behavior because more players joining !== more resources spawn.
 	setInterval(() =&gt; {
 		for (let room in getField([&apos;rooms&apos;])) {
@@ -167,62 +167,39 @@ export function initGlobal () {
  * @param {string} room The name of the room that the player belongs to
  * @param {string} team The name of the team that the player belongs to
  */
-export function initPlayer (socket, room, team) {
+export function initPlayer(socket, room, team) {
 	// Initialize room array and spawn atoms on first player join
 	let thisRoom = getField([&apos;rooms&apos;, room])
 
-	// Set up room if it does not exist
-	if (thisRoom === undefined || thisRoom === null) {
-		console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType)
-		setField({
-			joinable: true,
-			teams: [],
-			atoms: {},
-			compounds: {},
-			type: socket.handshake.query.roomType,
-			time: {
-				minutes: 0,
-				seconds: 0,
-				formattedTime: &apos;0:00&apos;
-			}
-		}, [&apos;rooms&apos;, room])
+	// Set up capturable tiles
+	setField({}, [&apos;rooms&apos;, room, &apos;tiles&apos;])
+	// TODO support multiple map layouts
+	for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
+		for (let col = 0; col &lt; MAP_LAYOUT[row].length; col++) {
+			let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
+			if (currTile.type === &apos;spawner&apos; || currTile.type === &apos;stronghold&apos; || currTile.type === &apos;nucleus&apos;) {
+				// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
+				let tileID = (currTile.type === &apos;nucleus&apos;) ? MAP_LAYOUT[row][col] : generateID()
 
-		// Set up capturable tiles
-		setField({}, [&apos;rooms&apos;, room, &apos;tiles&apos;])
-		// TODO support multiple map layouts
-		for (let row = 0; row &lt; MAP_LAYOUT.length; row++) {
-			for (let col = 0; col &lt; MAP_LAYOUT[row].length; col++) {
-				let currTile = TILES[TILE_NAMES[MAP_LAYOUT[row][col]]]
-				if (currTile.type === &apos;spawner&apos; || currTile.type === &apos;stronghold&apos; || currTile.type === &apos;nucleus&apos;) {
-					// Tile ID is randomized for everything except nucleus, which are equal to nx where x is a number from 0 to 3
-					let tileID = (currTile.type === &apos;nucleus&apos;) ? MAP_LAYOUT[row][col] : generateID()
-
-					setField({
-						id: tileID,
-						type: currTile.type,
-						globalX: col,
-						globalY: MAP_LAYOUT.length - row - 1,
-						captured: false,
-						owner: &apos;all&apos;,
-						health: GLOBAL[(&apos;MAX_&apos; + currTile.type + &apos;_HEALTH&apos;).toUpperCase()]
-					}, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID])
-				}
+				setField({
+					id: tileID,
+					type: currTile.type,
+					globalX: col,
+					globalY: MAP_LAYOUT.length - row - 1,
+					captured: false,
+					owner: &apos;all&apos;,
+					health: GLOBAL[(&apos;MAX_&apos; + currTile.type + &apos;_HEALTH&apos;).toUpperCase()]
+				}, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID])
 			}
 		}
 	}
-	thisRoom = getField([&apos;rooms&apos;, room])
 
-	// Add team to database
+	// console.log(getField([&apos;teams&apos;, team, &apos;players&apos;]))
 
-	// Equivalent to rooms[room].teams.push({ name: team });
-	if (getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 1) {
-		setField({ name: team }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
-	}
-
-	// Check if room is full
-	if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
-		setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;])
-	}
+	// // Check if room is full
+	// if (((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2&apos;) &amp;&amp; thisRoom.teams.length === 2) || thisRoom.teams.length === 4) {
+	// 	setField(false, [&apos;rooms&apos;, room, &apos;joinable&apos;])
+	// }
 
 	// Create new player in rooms object
 	setField({

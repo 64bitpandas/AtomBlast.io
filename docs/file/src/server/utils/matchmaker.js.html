@@ -142,9 +142,6 @@ export function roomMatchmaker (socket, room, team) {
 			validJoin = true
 			room = getField([&apos;teams&apos;, team, &apos;room&apos;])
 
-			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
-			setField(socket.id, [&apos;teams&apos;, team, &apos;players&apos;, getField([&apos;teams&apos;, team, &apos;players&apos;]).length ])
-
 			if (((roomType === &apos;2v2v2v2&apos; || roomType === &apos;2v2&apos;) &amp;&amp; getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 2) || getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 4) {
 				setField(false, [&apos;teams&apos;, team, &apos;joinable&apos;])
 			}
@@ -217,6 +214,33 @@ export function roomMatchmaker (socket, room, team) {
 
 	// Join custom room
 	if (validJoin) {
+		// Set up room if it does not exist
+		if (getField([&apos;rooms&apos;, room]) === undefined || getField([&apos;rooms&apos;, room]) === null) {
+			console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + room).bold.red + &apos; as type &apos; + socket.handshake.query.roomType)
+			setField({
+				joinable: true,
+				teams: [],
+				atoms: {},
+				compounds: {},
+				type: socket.handshake.query.roomType,
+				time: {
+					minutes: 0,
+					seconds: 0,
+					formattedTime: &apos;0:00&apos;
+				}
+			}, [&apos;rooms&apos;, room])
+		}
+
+		// Add player to team
+		// Equivalent to rooms[room].teams.push({ name: team });
+		if (getField([&apos;teams&apos;, team, &apos;players&apos;]).length === 1) {
+			// console.log(&apos;setup team&apos;)
+			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
+			setField({ name: team, players: [socket.id] }, [&apos;rooms&apos;, room, &apos;teams&apos;, getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length])
+		}
+		else {
+			getField([&apos;teams&apos;, team, &apos;players&apos;]).push(socket.id)
+		}
 		socket.join(room, () =&gt; {
 			console.log(&apos;[Server] &apos;.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${team}`.yellow)
 		})

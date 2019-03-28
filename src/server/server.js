@@ -27,7 +27,8 @@ app.use(express.static(`${__dirname}/../client`))
 //         type: '4v4',
 //         teams: [
 //             name: 'teamname',
-//             players: ['id1', 'id2'...]
+//             players: ['id1', 'id2'...],
+//			   dead: false
 //         ],
 //         players: { id, name, room, team, health, posX, posY, vx, vy, dead, experience, damagedBy, stronghold, defense, spectating },
 //         atoms: { typeID, id, posX, posY, vx, vy, team },

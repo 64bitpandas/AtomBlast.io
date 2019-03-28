@@ -30,9 +30,6 @@ export function roomMatchmaker (socket, room, team) {
 			validJoin = true
 			room = getField(['teams', team, 'room'])
 
-			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
-			setField(socket.id, ['teams', team, 'players', getField(['teams', team, 'players']).length ])
-
 			if (((roomType === '2v2v2v2' || roomType === '2v2') && getField(['teams', team, 'players']).length === 2) || getField(['teams', team, 'players']).length === 4) {
 				setField(false, ['teams', team, 'joinable'])
 			}
@@ -105,6 +102,33 @@ export function roomMatchmaker (socket, room, team) {
 
 	// Join custom room
 	if (validJoin) {
+		// Set up room if it does not exist
+		if (getField(['rooms', room]) === undefined || getField(['rooms', room]) === null) {
+			console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType)
+			setField({
+				joinable: true,
+				teams: [],
+				atoms: {},
+				compounds: {},
+				type: socket.handshake.query.roomType,
+				time: {
+					minutes: 0,
+					seconds: 0,
+					formattedTime: '0:00'
+				}
+			}, ['rooms', room])
+		}
+
+		// Add player to team
+		// Equivalent to rooms[room].teams.push({ name: team });
+		if (getField(['teams', team, 'players']).length === 1) {
+			// console.log('setup team')
+			// Equivalent to teams[socket.handshake.query.team].players.push(socket.id);
+			setField({ name: team, players: [socket.id] }, ['rooms', room, 'teams', getField(['rooms', room, 'teams']).length])
+		}
+		else {
+			getField(['teams', team, 'players']).push(socket.id)
+		}
 		socket.join(room, () => {
 			console.log('[Server] '.bold.blue + `Player ${socket.handshake.query.name} (${socket.id}) joined room ${room} in team ${team}`.yellow)
 		})

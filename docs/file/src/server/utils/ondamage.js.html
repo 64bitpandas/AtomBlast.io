@@ -219,73 +219,125 @@ export function damage (data, room, socket) {
 				}
 			}
 
-			// Award points (TODO)_
+			// Check if a team was eliminated
 			if (data.id !== undefined) {
-				// Read damagedBy to award points, clear in the process
-				let max = null
-				let dataToSend
-				for (let pl in thisPlayer.damagedBy) {
-					dataToSend = {
-						player: pl,
-						teamSlot: getTeamNumber(room, thisRoom.compounds[data.id].sendingTeam),
-						increment: GLOBAL.ASSIST_SCORE,
-						kill: false
-					}
-
-					// Add to team score, checking if team score is initialized
-					setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
-
-					socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
-					socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
-					if (max === null || thisPlayer.damagedBy[pl] &gt; thisPlayer.damagedBy[max]) {
-						max = pl
-					}
-				}
-
-				// Add to score of person who dealt the most damage
-				dataToSend.player = max
-				dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE
-				dataToSend.kill = true
-				socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
-				socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
-
-				// Add to team score
-				incrementField(dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
-
-				// Clear damagedBy values
-				for (let pl in thisPlayer.damagedBy) {
-					setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, pl])
-				}
-
-				// Check if a team won
-				let highScores = [] // Possible winning teams
-				let maxScore = 0
-				for (let tm of thisRoom.teams) {
-					if (tm.score &gt;= GLOBAL.WINNING_SCORE) {
-						highScores.push(tm)
-						if (maxScore &lt; tm.score) {
-							maxScore = tm.score
+				for (let team of getField([&apos;rooms&apos;, room, &apos;teams&apos;])) {
+					// console.log(team)
+					if (!team.dead) {
+						let stillAlive = false
+						for (let player of team.players) {
+							if (!getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;spectating&apos;])) {
+								stillAlive = true
+							}
 						}
-					}
-				}
-				for (let winningTm of highScores) {
-					if (winningTm.score === maxScore) {
-						let dataToSend = {
-							winner: winningTm
-							// teamScore: thisRoom.teams[dataToSend.teamSlot].score
-							// other data here TODO post ranking
-						}
-						socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend)
-						socket.emit(&apos;serverSendWinner&apos;, dataToSend)
+						if (!stillAlive) {
+							// Announce elimination of team
+							team.dead = true
+							socket.to(room).emit(&apos;serverAnnouncement&apos;, {
+								message: team.name + &apos; has been eliminated!&apos;,
+								sendingTeam: team.name
+							})
+							socket.emit(&apos;serverAnnouncement&apos;, {
+								message: team.name + &apos; has been eliminated!&apos;,
+								sendingTeam: team.name
+							})
 
-						// Close room after delay (kick all players)
-						setTimeout(() =&gt; {
-							socket.emit(&apos;serverSendDisconnect&apos;, {})
-							socket.to(room).broadcast.emit(&apos;serverSendDisconnect&apos;, {})
-						}, GLOBAL.ROOM_DELETE_DELAY)
+							// Check if a team has won
+							let deadCount = 0
+							let notDeadTeam = null
+							for (let team of getField([&apos;rooms&apos;, room, &apos;teams&apos;])) {
+								if (team.dead) {
+									deadCount++
+								}
+								else {
+									notDeadTeam = team.name
+								}
+							}
+
+							console.log(deadCount)
+							console.log(notDeadTeam)
+
+							// A team has won!
+							if (deadCount === getField([&apos;rooms&apos;, room, &apos;teams&apos;]).length - 1) {
+								let dataToSend = {
+									winner: notDeadTeam
+									// teamScore: thisRoom.teams[dataToSend.teamSlot].score
+									// other data here TODO post ranking
+								}
+								socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend)
+								socket.emit(&apos;serverSendWinner&apos;, dataToSend)
+							}
+						}
 					}
 				}
 			}
+			// // Award points (TODO)_
+			// if (data.id !== undefined) {
+			// 	// Read damagedBy to award points, clear in the process
+			// 	let max = null
+			// 	let dataToSend
+			// 	for (let pl in thisPlayer.damagedBy) {
+			// 		dataToSend = {
+			// 			player: pl,
+			// 			teamSlot: getTeamNumber(room, thisRoom.compounds[data.id].sendingTeam),
+			// 			increment: GLOBAL.ASSIST_SCORE,
+			// 			kill: false
+			// 		}
+
+			// 		// Add to team score, checking if team score is initialized
+			// 		setField((thisRoom.teams[dataToSend.teamSlot].score === undefined) ? dataToSend.increment : thisRoom.teams[dataToSend.teamSlot].score + dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
+
+			// 		socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+			// 		socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+			// 		if (max === null || thisPlayer.damagedBy[pl] &gt; thisPlayer.damagedBy[max]) {
+			// 			max = pl
+			// 		}
+			// 	}
+
+			// 	// Add to score of person who dealt the most damage
+			// 	dataToSend.player = max
+			// 	dataToSend.increment = GLOBAL.KILL_SCORE - GLOBAL.ASSIST_SCORE
+			// 	dataToSend.kill = true
+			// 	socket.to(room).broadcast.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+			// 	socket.emit(&apos;serverSendScoreUpdate&apos;, dataToSend)
+
+			// 	// Add to team score
+			// 	incrementField(dataToSend.increment, [&apos;rooms&apos;, room, &apos;teams&apos;, dataToSend.teamSlot, &apos;score&apos;])
+
+			// 	// Clear damagedBy values
+			// 	for (let pl in thisPlayer.damagedBy) {
+			// 		setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;damagedBy&apos;, pl])
+			// 	}
+
+			// 	// Check if a team won
+			// 	let highScores = [] // Possible winning teams
+			// 	let maxScore = 0
+			// 	for (let tm of thisRoom.teams) {
+			// 		if (tm.score &gt;= GLOBAL.WINNING_SCORE) {
+			// 			highScores.push(tm)
+			// 			if (maxScore &lt; tm.score) {
+			// 				maxScore = tm.score
+			// 			}
+			// 		}
+			// 	}
+			// 	for (let winningTm of highScores) {
+			// 		if (winningTm.score === maxScore) {
+			// 			let dataToSend = {
+			// 				winner: winningTm
+			// 				// teamScore: thisRoom.teams[dataToSend.teamSlot].score
+			// 				// other data here TODO post ranking
+			// 			}
+			// 			socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend)
+			// 			socket.emit(&apos;serverSendWinner&apos;, dataToSend)
+
+			// 			// Close room after delay (kick all players)
+			// 			setTimeout(() =&gt; {
+			// 				socket.emit(&apos;serverSendDisconnect&apos;, {})
+			// 				socket.to(room).broadcast.emit(&apos;serverSendDisconnect&apos;, {})
+			// 			}, GLOBAL.ROOM_DELETE_DELAY)
+			// 		}
+			// 	}
+			// }
 		}
 	}
 	else {

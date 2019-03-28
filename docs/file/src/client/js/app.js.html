@@ -464,6 +464,7 @@ export function quitGame(msg, isError) {
 	hideElement(&apos;menubox&apos;)
 	showElement(&apos;startMenuWrapper&apos;)
 	hideElement(&apos;lobby&apos;)
+	hideElement(&apos;winner-panel&apos;)
 	swal(&apos;Disconnected from Game&apos;, msg, (isError) ? &apos;error&apos; : &apos;info&apos;)
 }
 
@@ -653,7 +654,7 @@ export function updateLobby(data) {
  */
 export function displayWinner(data) {
 	// console.log(data);
-	document.getElementById(&apos;winner-name&apos;).innerHTML = data.winner.name + &apos; has won!&apos;
+	document.getElementById(&apos;winner-name&apos;).innerHTML = data.winner + &apos; has won!&apos;
 	showElement(&apos;winner-panel&apos;)
 }
 
