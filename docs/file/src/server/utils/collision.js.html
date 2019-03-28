@@ -126,105 +126,108 @@ import { getTileID } from &apos;./serverutils&apos;
  * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer. Contains compounds, atoms, players
  */
 export function collisionDetect (socket, room, thisPlayer, tempObjects) {
-	// Check for collected atoms
-	for (let atom in tempObjects.atoms) {
-		if (tempObjects.atoms[atom].team === thisPlayer.team || tempObjects.atoms[atom].team === &apos;all&apos;) {
-			let distance = distanceBetween(
-				{ posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-				{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
+	// Make sure the player is currently ingame
+	if (!thisPlayer.dead &amp;&amp; !thisPlayer.spectating) {
+		// Check for collected atoms
+		for (let atom in tempObjects.atoms) {
+			if (tempObjects.atoms[atom].team === thisPlayer.team || tempObjects.atoms[atom].team === &apos;all&apos;) {
+				let distance = distanceBetween(
+					{ posX: tempObjects.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: tempObjects.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
 
-			if (distance &lt; GLOBAL.ATOM_COLLECT_THRESHOLD) {
-				// console.log(atom);
-				incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
-				socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; })
+				if (distance &lt; GLOBAL.ATOM_COLLECT_THRESHOLD) {
+					// console.log(atom);
+					incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
+					socket.to(room).broadcast.emit(&apos;serverSendObjectRemoval&apos;, { id: atom, type: &apos;atoms&apos; })
 
-				deleteObject(&apos;atoms&apos;, atom, room, socket)
+					deleteObject(&apos;atoms&apos;, atom, room, socket)
+				}
 			}
 		}
-	}
 
-	// Check for compound collisions
-	for (let compound in tempObjects.compounds) {
-		let cmp = tempObjects.compounds[compound]
+		// Check for compound collisions
+		for (let compound in tempObjects.compounds) {
+			let cmp = tempObjects.compounds[compound]
 
-		if (cmp.sendingTeam !== thisPlayer.team) {
-			let distance = distanceBetween(
-				{ posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
-				{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
+			if (cmp.sendingTeam !== thisPlayer.team) {
+				let distance = distanceBetween(
+					{ posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
+					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
 
-			// Hit player
-			if (distance &lt; cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
-				let dmg = cmp.blueprint.params.damage
+				// Hit player
+				if (distance &lt; cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+					let dmg = cmp.blueprint.params.damage
 
-				// Deal splash damage if it is a toxic compound or on fire
-				if (cmp.blueprint.type === &apos;toxic&apos; || cmp.ignited) {
-					dmg = cmp.blueprint.params.splashDamage
+					// Deal splash damage if it is a toxic compound or on fire
+					if (cmp.blueprint.type === &apos;toxic&apos; || cmp.ignited) {
+						dmg = cmp.blueprint.params.splashDamage
+					}
+
+					damage({
+						damage: dmg,
+						player: socket.id,
+						sentBy: cmp.sender,
+						id: compound
+					}, room, socket)
+
+					if (cmp.blueprint.type !== &apos;toxic&apos; &amp;&amp; !cmp.ignited) {
+						deleteObject(&apos;compounds&apos;, compound, room, socket)
+					}
 				}
 
-				damage({
-					damage: dmg,
-					player: socket.id,
-					sentBy: cmp.sender,
-					id: compound
-				}, room, socket)
+				// Barrier block collisions
+				if (cmp.blueprint.type === &apos;block&apos;) {
+					for (let otherCompound in tempObjects.compounds) {
+						let othercmp = tempObjects.compounds[otherCompound]
 
-				if (cmp.blueprint.type !== &apos;toxic&apos; &amp;&amp; !cmp.ignited) {
-					deleteObject(&apos;compounds&apos;, compound, room, socket)
-				}
-			}
+						if (cmp.sendingTeam !== othercmp.sendingTeam &amp;&amp; othercmp.blueprint.type !== &apos;block&apos;) {
+							let distance = distanceBetween(
+								{ posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
+								{ posX: othercmp.posX + othercmp.blueprint.params.size / 2, posY: othercmp.posY - othercmp.blueprint.params.size / 2 }
+							)
 
-			// Barrier block collisions
-			if (cmp.blueprint.type === &apos;block&apos;) {
-				for (let otherCompound in tempObjects.compounds) {
-					let othercmp = tempObjects.compounds[otherCompound]
-
-					if (cmp.sendingTeam !== othercmp.sendingTeam &amp;&amp; othercmp.blueprint.type !== &apos;block&apos;) {
-						let distance = distanceBetween(
-							{ posX: cmp.posX + cmp.blueprint.params.size / 2, posY: cmp.posY - cmp.blueprint.params.size / 2 },
-							{ posX: othercmp.posX + othercmp.blueprint.params.size / 2, posY: othercmp.posY - othercmp.blueprint.params.size / 2 }
-						)
-
-						if (distance &lt; cmp.blueprint.params.size + othercmp.blueprint.params.size) {
-							// Damage indcator
-							socket.emit(&apos;serverSendDamageIndicator&apos;, {
-								damage: 1,
-								posX: cmp.posX,
-								posY: cmp.posY
-							})
-							// Delete both compounds. TODO deal damage to higher level barrier blocks
-							deleteObject(&apos;compounds&apos;, compound, room, socket)
-							deleteObject(&apos;compounds&apos;, otherCompound, room, socket)
+							if (distance &lt; cmp.blueprint.params.size + othercmp.blueprint.params.size) {
+								// Damage indcator
+								socket.emit(&apos;serverSendDamageIndicator&apos;, {
+									damage: 1,
+									posX: cmp.posX,
+									posY: cmp.posY
+								})
+								// Delete both compounds. TODO deal damage to higher level barrier blocks
+								deleteObject(&apos;compounds&apos;, compound, room, socket)
+								deleteObject(&apos;compounds&apos;, otherCompound, room, socket)
+							}
 						}
 					}
 				}
 			}
-		}
-		else { // check for tile collisions
-			let tileID = getTileID(getGlobalLocation(cmp), room)
-			if (tileID) {
-				if (distanceBetween(cmp, {
-					posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
-					posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
-				}) &lt; GLOBAL.STRONGHOLD_RADIUS &amp;&amp; cmp.blueprint.type !== &apos;block&apos; &amp;&amp; cmp.sendingTeam !== getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;owner&apos;])) {
-					socket.emit(&apos;serverSendDamageIndicator&apos;, {
-						damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
-						posX: cmp.posX,
-						posY: cmp.posY
-					})
-					deleteObject(&apos;compounds&apos;, compound, room, socket)
-					damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, socket.id, room, socket)
+			else { // check for tile collisions
+				let tileID = getTileID(getGlobalLocation(cmp), room)
+				if (tileID) {
+					if (distanceBetween(cmp, {
+						posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
+						posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
+					}) &lt; GLOBAL.STRONGHOLD_RADIUS &amp;&amp; cmp.blueprint.type !== &apos;block&apos; &amp;&amp; cmp.sendingTeam !== getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;owner&apos;])) {
+						socket.emit(&apos;serverSendDamageIndicator&apos;, {
+							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
+							posX: cmp.posX,
+							posY: cmp.posY
+						})
+						deleteObject(&apos;compounds&apos;, compound, room, socket)
+						damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, socket.id, room, socket)
+					}
 				}
 			}
 		}
-	}
 
-	// Check for stronghold buff
-	let currTile = getTileID(getGlobalLocation(thisPlayer), room)
-	if (currTile &amp;&amp; getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;type&apos;]) === &apos;stronghold&apos; &amp;&amp; getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;owner&apos;]) !== &apos;all&apos;) {
-		thisPlayer.stronghold = (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;owner&apos;]) === thisPlayer.team) ? &apos;team&apos; : &apos;notteam&apos;
-	}
-	else {
-		thisPlayer.stronghold = &apos;none&apos;
+		// Check for stronghold buff
+		let currTile = getTileID(getGlobalLocation(thisPlayer), room)
+		if (currTile &amp;&amp; getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;type&apos;]) === &apos;stronghold&apos; &amp;&amp; getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;owner&apos;]) !== &apos;all&apos;) {
+			thisPlayer.stronghold = (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, currTile, &apos;owner&apos;]) === thisPlayer.team) ? &apos;team&apos; : &apos;notteam&apos;
+		}
+		else {
+			thisPlayer.stronghold = &apos;none&apos;
+		}
 	}
 }
 </code></pre>

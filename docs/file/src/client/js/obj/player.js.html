@@ -160,6 +160,7 @@ export class Player extends GameObject {
 		this.speedMult = 1 // Speed multiplier. Increased/decreased by different compounds
 		this.shield = 0
 		this.stronghold = &apos;none&apos;
+		this.spectating = false
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
 		this.textObjects = {} // Contains Text to be drawn under the player (name, id, etc)
@@ -217,10 +218,12 @@ export class Player extends GameObject {
 		// Movement
 		super.tick(true)
 
-		// Update text
-		this.textObjects.postext.text = &apos;(&apos; + Math.round(this.posX) + &apos;, &apos; + Math.round(this.posY) + &apos;)&apos;
-		this.textObjects.healthtext.text = &apos;health: &apos; + this.health
-		this.textObjects.defensetext.text = &apos;defense: &apos; + this.shield + ((this.stronghold === &apos;team&apos;) ? &apos; (+5)&apos; : &apos;&apos;)
+		if (!this.spectating) {
+			// Update text
+			this.textObjects.postext.text = &apos;(&apos; + Math.round(this.posX) + &apos;, &apos; + Math.round(this.posY) + &apos;)&apos;
+			this.textObjects.healthtext.text = &apos;health: &apos; + this.health
+			this.textObjects.defensetext.text = &apos;defense: &apos; + this.shield + ((this.stronghold === &apos;team&apos;) ? &apos; (+5)&apos; : &apos;&apos;)
+		}
 
 		// Rotation
 		this.playerSprite.rotation += (this.id === socket.id &amp;&amp; mouseDown) ? GLOBAL.PLAYER_EXPEDITED_ROTATION : GLOBAL.PLAYER_ROTATION
@@ -248,6 +251,21 @@ export class Player extends GameObject {
 		else {
 			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + &apos;player.png&apos;]
 		}
+	}
+
+	beginSpectate() {
+		// Hide all text objects except for player name
+		for (let textObject in this.textObjects) {
+			if (textObject !== &apos;nametext&apos;) {
+				this.removeChild(this.textObjects[textObject])
+				delete this.textObjects[textObject]
+			}
+		}
+
+		this.textObjects.nametext.text += &apos; (SPECTATING)&apos;
+
+		// Add a filter to create transparency
+		this.filters = [new PIXI.filters.AlphaFilter(0.5)]
 	}
 }
 </code></pre>

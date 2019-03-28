@@ -1152,6 +1152,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/obj/player.js~player#beginspectate",
+    "class/src/client/js/obj/player.js~Player.html#instance-method-beginSpectate",
+    "src/client/js/obj/player.js~Player#beginSpectate",
+    "method"
+  ],
+  [
     "src/client/js/obj/player.js~player#changesprite",
     "class/src/client/js/obj/player.js~Player.html#instance-method-changeSprite",
     "src/client/js/obj/player.js~Player#changeSprite",
@@ -1173,6 +1179,12 @@ window.esdocSearchIndex = [
     "src/client/js/obj/player.js~player#experience",
     "class/src/client/js/obj/player.js~Player.html#instance-member-experience",
     "src/client/js/obj/player.js~Player#experience",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#filters",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-filters",
+    "src/client/js/obj/player.js~Player#filters",
     "member"
   ],
   [
@@ -1221,6 +1233,12 @@ window.esdocSearchIndex = [
     "src/client/js/obj/player.js~player#shield",
     "class/src/client/js/obj/player.js~Player.html#instance-member-shield",
     "src/client/js/obj/player.js~Player#shield",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#spectating",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-spectating",
+    "src/client/js/obj/player.js~Player#spectating",
     "member"
   ],
   [

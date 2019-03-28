@@ -1,6 +1,6 @@
 {
-  "coverage": "49.72%",
-  "expectCount": 183,
+  "coverage": "48.92%",
+  "expectCount": 186,
   "actualCount": 91,
   "files": {
     "src/client/js/app.js": {
@@ -123,7 +123,7 @@
       ]
     },
     "src/client/js/obj/player.js": {
-      "expectCount": 21,
+      "expectCount": 24,
       "actualCount": 4,
       "undocumentLines": [
         7,
@@ -140,9 +140,12 @@
         48,
         49,
         50,
-        52,
+        51,
         53,
-        54
+        54,
+        55,
+        144,
+        156
       ]
     },
     "src/client/js/obj/tiles.js": {
@@ -169,7 +172,7 @@
       "undocumentLines": [
         19,
         34,
-        398
+        403
       ]
     },
     "src/server/server.js": {
@@ -223,7 +226,7 @@
       "expectCount": 3,
       "actualCount": 2,
       "undocumentLines": [
-        157
+        184
       ]
     },
     "src/server/utils/serverinit.js": {

@@ -48,6 +48,7 @@ export class Player extends GameObject {
 		this.speedMult = 1 // Speed multiplier. Increased/decreased by different compounds
 		this.shield = 0
 		this.stronghold = 'none'
+		this.spectating = false
 
 		this.damagedBy = {} // Object containing the values of damage that each player has dealt.
 		this.textObjects = {} // Contains Text to be drawn under the player (name, id, etc)
@@ -105,10 +106,12 @@ export class Player extends GameObject {
 		// Movement
 		super.tick(true)
 
-		// Update text
-		this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')'
-		this.textObjects.healthtext.text = 'health: ' + this.health
-		this.textObjects.defensetext.text = 'defense: ' + this.shield + ((this.stronghold === 'team') ? ' (+5)' : '')
+		if (!this.spectating) {
+			// Update text
+			this.textObjects.postext.text = '(' + Math.round(this.posX) + ', ' + Math.round(this.posY) + ')'
+			this.textObjects.healthtext.text = 'health: ' + this.health
+			this.textObjects.defensetext.text = 'defense: ' + this.shield + ((this.stronghold === 'team') ? ' (+5)' : '')
+		}
 
 		// Rotation
 		this.playerSprite.rotation += (this.id === socket.id && mouseDown) ? GLOBAL.PLAYER_EXPEDITED_ROTATION : GLOBAL.PLAYER_ROTATION
@@ -136,5 +139,20 @@ export class Player extends GameObject {
 		else {
 			this.playerSprite.texture = spritesheet.textures[teamColors[this.team] + 'player.png']
 		}
+	}
+
+	beginSpectate() {
+		// Hide all text objects except for player name
+		for (let textObject in this.textObjects) {
+			if (textObject !== 'nametext') {
+				this.removeChild(this.textObjects[textObject])
+				delete this.textObjects[textObject]
+			}
+		}
+
+		this.textObjects.nametext.text += ' (SPECTATING)'
+
+		// Add a filter to create transparency
+		this.filters = [new PIXI.filters.AlphaFilter(0.5)]
 	}
 }

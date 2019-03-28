@@ -138,6 +138,11 @@ function setupSocketObjectRetrieval () {
 								objects[objType][obj].atomList = objRef.atomList
 								objects[objType][obj].speedMult = objRef.speedMult
 
+								if (objRef.spectating && !objects[objType][obj].spectating) {
+									objects[objType][obj].spectating = true
+									objects[objType][obj].beginSpectate()
+								}
+
 								if (objects[objType][obj].shield !== objRef.shield || objects[objType][obj].stronghold !== objRef.stronghold) {
 									objects[objType][obj].changeSprite(objRef.shield, objRef.stronghold)
 									console.log('change tex')

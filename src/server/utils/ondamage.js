@@ -76,11 +76,38 @@ export function damage (data, room, socket) {
 			setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', data.player, 'health'])
 			setField(true, ['rooms', room, 'players', data.player, 'dead']) // This will be reset when it has been verified that the player has been placed at the proper spawnpoint
 
+			// Send player death info to client
 			if (socket.id === data.player) {
 				let pl = getField(['rooms', room, 'players', data.player])
 				socket.emit('serverSendPlayerDeath', { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+
+				// Announce death. TODO make some cool messages
+				socket.emit('serverAnnouncement', {
+					message: pl.name + ' was obliterated by ' + getField(['rooms', room, 'players', data.sentBy, 'name']),
+					sendingTeam: pl.team
+				})
+				socket.to(room).emit('serverAnnouncement', {
+					message: pl.name + ' was obliterated by ' + getField(['rooms', room, 'players', data.sentBy, 'name']),
+					sendingTeam: pl.team
+				})
+
+				// Check if the nucleus has died
+				if (getField(['rooms', room, 'tiles', 'n' + getTeamNumber(room, pl.team), 'captured'])) {
+					// Announce final death
+					socket.emit('serverAnnouncement', {
+						message: 'FINAL KILL!!!',
+						sendingTeam: pl.team
+					})
+					socket.to(room).emit('serverAnnouncement', {
+						message: 'FINAL KILL!!!',
+						sendingTeam: pl.team
+					})
+
+					setField(true, ['rooms', room, 'players', data.player, 'spectating'])
+				}
 			}
 
+			// Award points (TODO)_
 			if (data.id !== undefined) {
 				// Read damagedBy to award points, clear in the process
 				let max = null

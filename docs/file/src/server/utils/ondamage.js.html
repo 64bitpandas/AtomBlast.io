@@ -188,11 +188,38 @@ export function damage (data, room, socket) {
 			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
 			setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;dead&apos;]) // This will be reset when it has been verified that the player has been placed at the proper spawnpoint
 
+			// Send player death info to client
 			if (socket.id === data.player) {
 				let pl = getField([&apos;rooms&apos;, room, &apos;players&apos;, data.player])
 				socket.emit(&apos;serverSendPlayerDeath&apos;, { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+
+				// Announce death. TODO make some cool messages
+				socket.emit(&apos;serverAnnouncement&apos;, {
+					message: pl.name + &apos; was obliterated by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, data.sentBy, &apos;name&apos;]),
+					sendingTeam: pl.team
+				})
+				socket.to(room).emit(&apos;serverAnnouncement&apos;, {
+					message: pl.name + &apos; was obliterated by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, data.sentBy, &apos;name&apos;]),
+					sendingTeam: pl.team
+				})
+
+				// Check if the nucleus has died
+				if (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, &apos;n&apos; + getTeamNumber(room, pl.team), &apos;captured&apos;])) {
+					// Announce final death
+					socket.emit(&apos;serverAnnouncement&apos;, {
+						message: &apos;FINAL KILL!!!&apos;,
+						sendingTeam: pl.team
+					})
+					socket.to(room).emit(&apos;serverAnnouncement&apos;, {
+						message: &apos;FINAL KILL!!!&apos;,
+						sendingTeam: pl.team
+					})
+
+					setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;spectating&apos;])
+				}
 			}
 
+			// Award points (TODO)_
 			if (data.id !== undefined) {
 				// Read damagedBy to award points, clear in the process
 				let max = null
