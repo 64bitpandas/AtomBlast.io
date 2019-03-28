@@ -43,7 +43,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
 
 				// Hit player
-				if (distance < cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
+				if (cmp.blueprint.type !== 'block' && distance < cmp.blueprint.params.size + GLOBAL.PLAYER_RADIUS) {
 					let dmg = cmp.blueprint.params.damage
 
 					// Deal splash damage if it is a toxic compound or on fire

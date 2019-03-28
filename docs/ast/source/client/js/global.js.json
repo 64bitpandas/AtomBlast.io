@@ -3380,10 +3380,10 @@
                         }
                       },
                       "extra": {
-                        "rawValue": 5000,
-                        "raw": "5000"
+                        "rawValue": 3000,
+                        "raw": "3000"
                       },
-                      "value": 5000
+                      "value": 3000
                     },
                     "leadingComments": [
                       {
@@ -16682,7 +16682,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": 5000,
+      "value": 3000,
       "start": 2330,
       "end": 2334,
       "loc": {

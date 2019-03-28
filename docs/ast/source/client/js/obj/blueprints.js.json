@@ -615,10 +615,10 @@
                                     }
                                   },
                                   "extra": {
-                                    "rawValue": 1,
-                                    "raw": "1"
+                                    "rawValue": 3,
+                                    "raw": "3"
                                   },
-                                  "value": 1
+                                  "value": 3
                                 }
                               },
                               {
@@ -9213,10 +9213,10 @@
                                     }
                                   },
                                   "extra": {
-                                    "rawValue": 1,
-                                    "raw": "1"
+                                    "rawValue": 2,
+                                    "raw": "2"
                                   },
-                                  "value": 1
+                                  "value": 2
                                 }
                               }
                             ]
@@ -11400,7 +11400,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": 1,
+      "value": 3,
       "start": 1008,
       "end": 1009,
       "loc": {
@@ -27907,7 +27907,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": 1,
+      "value": 2,
       "start": 4209,
       "end": 4210,
       "loc": {

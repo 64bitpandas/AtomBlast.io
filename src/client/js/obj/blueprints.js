@@ -20,7 +20,7 @@ export const BLUEPRINTS = {
 		type: 'flammable',
 		params: {
 			speed: 5 * 3,
-			damage: 1,
+			damage: 3,
 			size: 20,
 			splashDamage: 10,
 			splash: 50,
@@ -210,7 +210,7 @@ export const BLUEPRINTS = {
 		texture: 'compound_ozone.png',
 		type: 'defense',
 		params: {
-			defenseModifier: 1
+			defenseModifier: 2
 		},
 		atoms: {
 			o: 3
