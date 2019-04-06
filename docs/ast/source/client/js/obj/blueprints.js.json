@@ -1,28 +1,28 @@
 {
   "type": "File",
   "start": 0,
-  "end": 4588,
+  "end": 5915,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 241,
+      "line": 268,
       "column": 0
     }
   },
   "program": {
     "type": "Program",
     "start": 0,
-    "end": 4588,
+    "end": 5915,
     "loc": {
       "start": {
         "line": 1,
         "column": 0
       },
       "end": {
-        "line": 241,
+        "line": 268,
         "column": 0
       }
     },
@@ -31,14 +31,14 @@
       {
         "type": "ExportNamedDeclaration",
         "start": 710,
-        "end": 4587,
+        "end": 4783,
         "loc": {
           "start": {
             "line": 14,
             "column": 0
           },
           "end": {
-            "line": 240,
+            "line": 252,
             "column": 1
           }
         },
@@ -47,14 +47,14 @@
         "declaration": {
           "type": "VariableDeclaration",
           "start": 717,
-          "end": 4587,
+          "end": 4783,
           "loc": {
             "start": {
               "line": 14,
               "column": 7
             },
             "end": {
-              "line": 240,
+              "line": 252,
               "column": 1
             }
           },
@@ -62,14 +62,14 @@
             {
               "type": "VariableDeclarator",
               "start": 723,
-              "end": 4587,
+              "end": 4783,
               "loc": {
                 "start": {
                   "line": 14,
                   "column": 13
                 },
                 "end": {
-                  "line": 240,
+                  "line": 252,
                   "column": 1
                 }
               },
@@ -94,14 +94,14 @@
               "init": {
                 "type": "ObjectExpression",
                 "start": 736,
-                "end": 4587,
+                "end": 4783,
                 "loc": {
                   "start": {
                     "line": 14,
                     "column": 26
                   },
                   "end": {
-                    "line": 240,
+                    "line": 252,
                     "column": 1
                   }
                 },
@@ -2006,10 +2006,10 @@
                               }
                             },
                             "extra": {
-                              "rawValue": "basic",
-                              "raw": "'basic'"
+                              "rawValue": "inert",
+                              "raw": "'inert'"
                             },
-                            "value": "basic"
+                            "value": "inert"
                           }
                         },
                         {
@@ -3698,10 +3698,10 @@
                               }
                             },
                             "extra": {
-                              "rawValue": "basic",
-                              "raw": "'basic'"
+                              "rawValue": "inert",
+                              "raw": "'inert'"
                             },
-                            "value": "basic"
+                            "value": "inert"
                           }
                         },
                         {
@@ -5028,10 +5028,10 @@
                               }
                             },
                             "extra": {
-                              "rawValue": "basic",
-                              "raw": "'basic'"
+                              "rawValue": "inert",
+                              "raw": "'inert'"
                             },
-                            "value": "basic"
+                            "value": "inert"
                           }
                         },
                         {
@@ -10029,179 +10029,791 @@
                                 }
                               }
                             ]
-                          },
-                          "trailingComments": [
-                            {
-                              "type": "CommentLine",
-                              "value": " alcohol: {",
-                              "start": 4505,
-                              "end": 4518,
-                              "loc": {
-                                "start": {
-                                  "line": 235,
-                                  "column": 1
-                                },
-                                "end": {
-                                  "line": 235,
-                                  "column": 14
-                                }
-                              }
-                            },
-                            {
-                              "type": "CommentLine",
-                              "value": " \tname: 'Alcohol',",
-                              "start": 4520,
-                              "end": 4540,
-                              "loc": {
-                                "start": {
-                                  "line": 236,
-                                  "column": 1
-                                },
-                                "end": {
-                                  "line": 236,
-                                  "column": 21
-                                }
-                              }
-                            },
-                            {
-                              "type": "CommentLine",
-                              "value": " \tunlocked: false,",
-                              "start": 4542,
-                              "end": 4562,
-                              "loc": {
-                                "start": {
-                                  "line": 237,
-                                  "column": 1
-                                },
-                                "end": {
-                                  "line": 237,
-                                  "column": 21
-                                }
-                              }
-                            },
-                            {
-                              "type": "CommentLine",
-                              "value": " \ttooltip: ''",
-                              "start": 4564,
-                              "end": 4579,
-                              "loc": {
-                                "start": {
-                                  "line": 238,
-                                  "column": 1
-                                },
-                                "end": {
-                                  "line": 238,
-                                  "column": 16
-                                }
-                              }
-                            },
-                            {
-                              "type": "CommentLine",
-                              "value": " }",
-                              "start": 4581,
-                              "end": 4585,
-                              "loc": {
-                                "start": {
-                                  "line": 239,
-                                  "column": 1
-                                },
-                                "end": {
-                                  "line": 239,
-                                  "column": 5
-                                }
-                              }
-                            }
-                          ]
+                          }
                         }
-                      ],
-                      "trailingComments": null
+                      ]
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 4506,
+                    "end": 4781,
+                    "loc": {
+                      "start": {
+                        "line": 235,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 251,
+                        "column": 2
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 4506,
+                      "end": 4516,
+                      "loc": {
+                        "start": {
+                          "line": 235,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 235,
+                          "column": 11
+                        },
+                        "identifierName": "nitricAcid"
+                      },
+                      "name": "nitricAcid"
+                    },
+                    "value": {
+                      "type": "ObjectExpression",
+                      "start": 4518,
+                      "end": 4781,
+                      "loc": {
+                        "start": {
+                          "line": 235,
+                          "column": 13
+                        },
+                        "end": {
+                          "line": 251,
+                          "column": 2
+                        }
+                      },
+                      "properties": [
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4522,
+                          "end": 4541,
+                          "loc": {
+                            "start": {
+                              "line": 236,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 236,
+                              "column": 21
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4522,
+                            "end": 4526,
+                            "loc": {
+                              "start": {
+                                "line": 236,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 236,
+                                "column": 6
+                              },
+                              "identifierName": "name"
+                            },
+                            "name": "name"
+                          },
+                          "value": {
+                            "type": "StringLiteral",
+                            "start": 4528,
+                            "end": 4541,
+                            "loc": {
+                              "start": {
+                                "line": 236,
+                                "column": 8
+                              },
+                              "end": {
+                                "line": 236,
+                                "column": 21
+                              }
+                            },
+                            "extra": {
+                              "rawValue": "Nitric Acid",
+                              "raw": "'Nitric Acid'"
+                            },
+                            "value": "Nitric Acid"
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4545,
+                          "end": 4559,
+                          "loc": {
+                            "start": {
+                              "line": 237,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 237,
+                              "column": 16
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4545,
+                            "end": 4553,
+                            "loc": {
+                              "start": {
+                                "line": 237,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 237,
+                                "column": 10
+                              },
+                              "identifierName": "unlocked"
+                            },
+                            "name": "unlocked"
+                          },
+                          "value": {
+                            "type": "BooleanLiteral",
+                            "start": 4555,
+                            "end": 4559,
+                            "loc": {
+                              "start": {
+                                "line": 237,
+                                "column": 12
+                              },
+                              "end": {
+                                "line": 237,
+                                "column": 16
+                              }
+                            },
+                            "value": true
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4563,
+                          "end": 4615,
+                          "loc": {
+                            "start": {
+                              "line": 238,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 238,
+                              "column": 54
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4563,
+                            "end": 4570,
+                            "loc": {
+                              "start": {
+                                "line": 238,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 238,
+                                "column": 9
+                              },
+                              "identifierName": "tooltip"
+                            },
+                            "name": "tooltip"
+                          },
+                          "value": {
+                            "type": "StringLiteral",
+                            "start": 4572,
+                            "end": 4615,
+                            "loc": {
+                              "start": {
+                                "line": 238,
+                                "column": 11
+                              },
+                              "end": {
+                                "line": 238,
+                                "column": 54
+                              }
+                            },
+                            "extra": {
+                              "rawValue": "Contains \"NO\"... as in NO don't use this",
+                              "raw": "'Contains \"NO\"... as in NO don\\'t use this'"
+                            },
+                            "value": "Contains \"NO\"... as in NO don't use this"
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4619,
+                          "end": 4654,
+                          "loc": {
+                            "start": {
+                              "line": 239,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 239,
+                              "column": 37
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4619,
+                            "end": 4626,
+                            "loc": {
+                              "start": {
+                                "line": 239,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 239,
+                                "column": 9
+                              },
+                              "identifierName": "texture"
+                            },
+                            "name": "texture"
+                          },
+                          "value": {
+                            "type": "StringLiteral",
+                            "start": 4628,
+                            "end": 4654,
+                            "loc": {
+                              "start": {
+                                "line": 239,
+                                "column": 11
+                              },
+                              "end": {
+                                "line": 239,
+                                "column": 37
+                              }
+                            },
+                            "extra": {
+                              "rawValue": "compound_PLACEHOLDER.png",
+                              "raw": "'compound_PLACEHOLDER.png'"
+                            },
+                            "value": "compound_PLACEHOLDER.png"
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4658,
+                          "end": 4670,
+                          "loc": {
+                            "start": {
+                              "line": 240,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 240,
+                              "column": 14
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4658,
+                            "end": 4662,
+                            "loc": {
+                              "start": {
+                                "line": 240,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 240,
+                                "column": 6
+                              },
+                              "identifierName": "type"
+                            },
+                            "name": "type"
+                          },
+                          "value": {
+                            "type": "StringLiteral",
+                            "start": 4664,
+                            "end": 4670,
+                            "loc": {
+                              "start": {
+                                "line": 240,
+                                "column": 8
+                              },
+                              "end": {
+                                "line": 240,
+                                "column": 14
+                              }
+                            },
+                            "extra": {
+                              "rawValue": "acid",
+                              "raw": "'acid'"
+                            },
+                            "value": "acid"
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4674,
+                          "end": 4736,
+                          "loc": {
+                            "start": {
+                              "line": 241,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 245,
+                              "column": 3
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4674,
+                            "end": 4680,
+                            "loc": {
+                              "start": {
+                                "line": 241,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 241,
+                                "column": 8
+                              },
+                              "identifierName": "params"
+                            },
+                            "name": "params"
+                          },
+                          "value": {
+                            "type": "ObjectExpression",
+                            "start": 4682,
+                            "end": 4736,
+                            "loc": {
+                              "start": {
+                                "line": 241,
+                                "column": 10
+                              },
+                              "end": {
+                                "line": 245,
+                                "column": 3
+                              }
+                            },
+                            "properties": [
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4687,
+                                "end": 4705,
+                                "loc": {
+                                  "start": {
+                                    "line": 242,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 242,
+                                    "column": 21
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4687,
+                                  "end": 4702,
+                                  "loc": {
+                                    "start": {
+                                      "line": 242,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 242,
+                                      "column": 18
+                                    },
+                                    "identifierName": "damagePerSecond"
+                                  },
+                                  "name": "damagePerSecond"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4704,
+                                  "end": 4705,
+                                  "loc": {
+                                    "start": {
+                                      "line": 242,
+                                      "column": 20
+                                    },
+                                    "end": {
+                                      "line": 242,
+                                      "column": 21
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 2,
+                                    "raw": "2"
+                                  },
+                                  "value": 2
+                                }
+                              },
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4710,
+                                "end": 4719,
+                                "loc": {
+                                  "start": {
+                                    "line": 243,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 243,
+                                    "column": 12
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4710,
+                                  "end": 4714,
+                                  "loc": {
+                                    "start": {
+                                      "line": 243,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 243,
+                                      "column": 7
+                                    },
+                                    "identifierName": "size"
+                                  },
+                                  "name": "size"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4716,
+                                  "end": 4719,
+                                  "loc": {
+                                    "start": {
+                                      "line": 243,
+                                      "column": 9
+                                    },
+                                    "end": {
+                                      "line": 243,
+                                      "column": 12
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 100,
+                                    "raw": "100"
+                                  },
+                                  "value": 100
+                                }
+                              },
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4724,
+                                "end": 4732,
+                                "loc": {
+                                  "start": {
+                                    "line": 244,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 244,
+                                    "column": 11
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4724,
+                                  "end": 4729,
+                                  "loc": {
+                                    "start": {
+                                      "line": 244,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 244,
+                                      "column": 8
+                                    },
+                                    "identifierName": "speed"
+                                  },
+                                  "name": "speed"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4731,
+                                  "end": 4732,
+                                  "loc": {
+                                    "start": {
+                                      "line": 244,
+                                      "column": 10
+                                    },
+                                    "end": {
+                                      "line": 244,
+                                      "column": 11
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 0,
+                                    "raw": "0"
+                                  },
+                                  "value": 0
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "type": "ObjectProperty",
+                          "start": 4740,
+                          "end": 4778,
+                          "loc": {
+                            "start": {
+                              "line": 246,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 250,
+                              "column": 3
+                            }
+                          },
+                          "method": false,
+                          "shorthand": false,
+                          "computed": false,
+                          "key": {
+                            "type": "Identifier",
+                            "start": 4740,
+                            "end": 4745,
+                            "loc": {
+                              "start": {
+                                "line": 246,
+                                "column": 2
+                              },
+                              "end": {
+                                "line": 246,
+                                "column": 7
+                              },
+                              "identifierName": "atoms"
+                            },
+                            "name": "atoms"
+                          },
+                          "value": {
+                            "type": "ObjectExpression",
+                            "start": 4747,
+                            "end": 4778,
+                            "loc": {
+                              "start": {
+                                "line": 246,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 250,
+                                "column": 3
+                              }
+                            },
+                            "properties": [
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4752,
+                                "end": 4756,
+                                "loc": {
+                                  "start": {
+                                    "line": 247,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 247,
+                                    "column": 7
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4752,
+                                  "end": 4753,
+                                  "loc": {
+                                    "start": {
+                                      "line": 247,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 247,
+                                      "column": 4
+                                    },
+                                    "identifierName": "h"
+                                  },
+                                  "name": "h"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4755,
+                                  "end": 4756,
+                                  "loc": {
+                                    "start": {
+                                      "line": 247,
+                                      "column": 6
+                                    },
+                                    "end": {
+                                      "line": 247,
+                                      "column": 7
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 1,
+                                    "raw": "1"
+                                  },
+                                  "value": 1
+                                }
+                              },
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4761,
+                                "end": 4765,
+                                "loc": {
+                                  "start": {
+                                    "line": 248,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 248,
+                                    "column": 7
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4761,
+                                  "end": 4762,
+                                  "loc": {
+                                    "start": {
+                                      "line": 248,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 248,
+                                      "column": 4
+                                    },
+                                    "identifierName": "n"
+                                  },
+                                  "name": "n"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4764,
+                                  "end": 4765,
+                                  "loc": {
+                                    "start": {
+                                      "line": 248,
+                                      "column": 6
+                                    },
+                                    "end": {
+                                      "line": 248,
+                                      "column": 7
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 1,
+                                    "raw": "1"
+                                  },
+                                  "value": 1
+                                }
+                              },
+                              {
+                                "type": "ObjectProperty",
+                                "start": 4770,
+                                "end": 4774,
+                                "loc": {
+                                  "start": {
+                                    "line": 249,
+                                    "column": 3
+                                  },
+                                  "end": {
+                                    "line": 249,
+                                    "column": 7
+                                  }
+                                },
+                                "method": false,
+                                "shorthand": false,
+                                "computed": false,
+                                "key": {
+                                  "type": "Identifier",
+                                  "start": 4770,
+                                  "end": 4771,
+                                  "loc": {
+                                    "start": {
+                                      "line": 249,
+                                      "column": 3
+                                    },
+                                    "end": {
+                                      "line": 249,
+                                      "column": 4
+                                    },
+                                    "identifierName": "o"
+                                  },
+                                  "name": "o"
+                                },
+                                "value": {
+                                  "type": "NumericLiteral",
+                                  "start": 4773,
+                                  "end": 4774,
+                                  "loc": {
+                                    "start": {
+                                      "line": 249,
+                                      "column": 6
+                                    },
+                                    "end": {
+                                      "line": 249,
+                                      "column": 7
+                                    }
+                                  },
+                                  "extra": {
+                                    "rawValue": 3,
+                                    "raw": "3"
+                                  },
+                                  "value": 3
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
                     },
                     "trailingComments": [
                       {
-                        "type": "CommentLine",
-                        "value": " alcohol: {",
-                        "start": 4505,
-                        "end": 4518,
+                        "type": "CommentBlock",
+                        "value": "*\n * Contains descriptions for the different types of compounds (acid, stream, etc)\n ",
+                        "start": 4785,
+                        "end": 4874,
                         "loc": {
                           "start": {
-                            "line": 235,
-                            "column": 1
+                            "line": 254,
+                            "column": 0
                           },
                           "end": {
-                            "line": 235,
-                            "column": 14
-                          }
-                        }
-                      },
-                      {
-                        "type": "CommentLine",
-                        "value": " \tname: 'Alcohol',",
-                        "start": 4520,
-                        "end": 4540,
-                        "loc": {
-                          "start": {
-                            "line": 236,
-                            "column": 1
-                          },
-                          "end": {
-                            "line": 236,
-                            "column": 21
-                          }
-                        }
-                      },
-                      {
-                        "type": "CommentLine",
-                        "value": " \tunlocked: false,",
-                        "start": 4542,
-                        "end": 4562,
-                        "loc": {
-                          "start": {
-                            "line": 237,
-                            "column": 1
-                          },
-                          "end": {
-                            "line": 237,
-                            "column": 21
-                          }
-                        }
-                      },
-                      {
-                        "type": "CommentLine",
-                        "value": " \ttooltip: ''",
-                        "start": 4564,
-                        "end": 4579,
-                        "loc": {
-                          "start": {
-                            "line": 238,
-                            "column": 1
-                          },
-                          "end": {
-                            "line": 238,
-                            "column": 16
-                          }
-                        }
-                      },
-                      {
-                        "type": "CommentLine",
-                        "value": " }",
-                        "start": 4581,
-                        "end": 4585,
-                        "loc": {
-                          "start": {
-                            "line": 239,
-                            "column": 1
-                          },
-                          "end": {
-                            "line": 239,
-                            "column": 5
+                            "line": 256,
+                            "column": 3
                           }
                         }
                       }
                     ]
                   }
-                ]
+                ],
+                "trailingComments": null
               },
-              "leadingComments": null
+              "leadingComments": null,
+              "trailingComments": null
             }
           ],
           "kind": "const",
@@ -10223,7 +10835,24 @@
               }
             }
           ],
-          "trailingComments": []
+          "trailingComments": [
+            {
+              "type": "CommentBlock",
+              "value": "*\n * Contains descriptions for the different types of compounds (acid, stream, etc)\n ",
+              "start": 4785,
+              "end": 4874,
+              "loc": {
+                "start": {
+                  "line": 254,
+                  "column": 0
+                },
+                "end": {
+                  "line": 256,
+                  "column": 3
+                }
+              }
+            }
+          ]
         },
         "leadingComments": [
           {
@@ -10242,7 +10871,606 @@
               }
             }
           }
+        ],
+        "trailingComments": [
+          {
+            "type": "CommentBlock",
+            "value": "*\n * Contains descriptions for the different types of compounds (acid, stream, etc)\n ",
+            "start": 4785,
+            "end": 4874,
+            "loc": {
+              "start": {
+                "line": 254,
+                "column": 0
+              },
+              "end": {
+                "line": 256,
+                "column": 3
+              }
+            }
+          }
         ]
+      },
+      {
+        "type": "ExportNamedDeclaration",
+        "start": 4875,
+        "end": 5914,
+        "loc": {
+          "start": {
+            "line": 257,
+            "column": 0
+          },
+          "end": {
+            "line": 267,
+            "column": 1
+          }
+        },
+        "specifiers": [],
+        "source": null,
+        "declaration": {
+          "type": "VariableDeclaration",
+          "start": 4882,
+          "end": 5914,
+          "loc": {
+            "start": {
+              "line": 257,
+              "column": 7
+            },
+            "end": {
+              "line": 267,
+              "column": 1
+            }
+          },
+          "declarations": [
+            {
+              "type": "VariableDeclarator",
+              "start": 4888,
+              "end": 5914,
+              "loc": {
+                "start": {
+                  "line": 257,
+                  "column": 13
+                },
+                "end": {
+                  "line": 267,
+                  "column": 1
+                }
+              },
+              "id": {
+                "type": "Identifier",
+                "start": 4888,
+                "end": 4896,
+                "loc": {
+                  "start": {
+                    "line": 257,
+                    "column": 13
+                  },
+                  "end": {
+                    "line": 257,
+                    "column": 21
+                  },
+                  "identifierName": "TOOLTIPS"
+                },
+                "name": "TOOLTIPS"
+              },
+              "init": {
+                "type": "ObjectExpression",
+                "start": 4899,
+                "end": 5914,
+                "loc": {
+                  "start": {
+                    "line": 257,
+                    "column": 24
+                  },
+                  "end": {
+                    "line": 267,
+                    "column": 1
+                  }
+                },
+                "properties": [
+                  {
+                    "type": "ObjectProperty",
+                    "start": 4902,
+                    "end": 5005,
+                    "loc": {
+                      "start": {
+                        "line": 258,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 258,
+                        "column": 104
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 4902,
+                      "end": 4911,
+                      "loc": {
+                        "start": {
+                          "line": 258,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 258,
+                          "column": 10
+                        },
+                        "identifierName": "flammable"
+                      },
+                      "name": "flammable"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 4913,
+                      "end": 5005,
+                      "loc": {
+                        "start": {
+                          "line": 258,
+                          "column": 12
+                        },
+                        "end": {
+                          "line": 258,
+                          "column": 104
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Flammable: When passing over a lava pit, this compound ignites, dealing additional damage.",
+                        "raw": "'Flammable: When passing over a lava pit, this compound ignites, dealing additional damage.'"
+                      },
+                      "value": "Flammable: When passing over a lava pit, this compound ignites, dealing additional damage."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5008,
+                    "end": 5180,
+                    "loc": {
+                      "start": {
+                        "line": 259,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 259,
+                        "column": 173
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5008,
+                      "end": 5014,
+                      "loc": {
+                        "start": {
+                          "line": 259,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 259,
+                          "column": 7
+                        },
+                        "identifierName": "stream"
+                      },
+                      "name": "stream"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5016,
+                      "end": 5180,
+                      "loc": {
+                        "start": {
+                          "line": 259,
+                          "column": 9
+                        },
+                        "end": {
+                          "line": 259,
+                          "column": 173
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Stream: Hold down the shoot button to shoot a large number of individual compounds, like a stream. Several individual compounds can be shot using a single recipe.",
+                        "raw": "'Stream: Hold down the shoot button to shoot a large number of individual compounds, like a stream. Several individual compounds can be shot using a single recipe.'"
+                      },
+                      "value": "Stream: Hold down the shoot button to shoot a large number of individual compounds, like a stream. Several individual compounds can be shot using a single recipe."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5183,
+                    "end": 5277,
+                    "loc": {
+                      "start": {
+                        "line": 260,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 260,
+                        "column": 95
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5183,
+                      "end": 5188,
+                      "loc": {
+                        "start": {
+                          "line": 260,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 260,
+                          "column": 6
+                        },
+                        "identifierName": "inert"
+                      },
+                      "name": "inert"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5190,
+                      "end": 5277,
+                      "loc": {
+                        "start": {
+                          "line": 260,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 260,
+                          "column": 95
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Inert: Just a plain old compound. You can shoot it and it can hit stuff, that is all.",
+                        "raw": "'Inert: Just a plain old compound. You can shoot it and it can hit stuff, that is all.'"
+                      },
+                      "value": "Inert: Just a plain old compound. You can shoot it and it can hit stuff, that is all."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5280,
+                    "end": 5396,
+                    "loc": {
+                      "start": {
+                        "line": 261,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 261,
+                        "column": 117
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5280,
+                      "end": 5285,
+                      "loc": {
+                        "start": {
+                          "line": 261,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 261,
+                          "column": 6
+                        },
+                        "identifierName": "block"
+                      },
+                      "name": "block"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5287,
+                      "end": 5396,
+                      "loc": {
+                        "start": {
+                          "line": 261,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 261,
+                          "column": 117
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Block: Place it down to protect strategic points! Deals no damage, but will intercept compounds if touched.",
+                        "raw": "'Block: Place it down to protect strategic points! Deals no damage, but will intercept compounds if touched.'"
+                      },
+                      "value": "Block: Place it down to protect strategic points! Deals no damage, but will intercept compounds if touched."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5399,
+                    "end": 5455,
+                    "loc": {
+                      "start": {
+                        "line": 262,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 262,
+                        "column": 57
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5399,
+                      "end": 5404,
+                      "loc": {
+                        "start": {
+                          "line": 262,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 262,
+                          "column": 6
+                        },
+                        "identifierName": "speed"
+                      },
+                      "name": "speed"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5406,
+                      "end": 5455,
+                      "loc": {
+                        "start": {
+                          "line": 262,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 262,
+                          "column": 57
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Speed: When consumed, it makes you move faster!",
+                        "raw": "'Speed: When consumed, it makes you move faster!'"
+                      },
+                      "value": "Speed: When consumed, it makes you move faster!"
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5458,
+                    "end": 5569,
+                    "loc": {
+                      "start": {
+                        "line": 263,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 263,
+                        "column": 112
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5458,
+                      "end": 5465,
+                      "loc": {
+                        "start": {
+                          "line": 263,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 263,
+                          "column": 8
+                        },
+                        "identifierName": "defense"
+                      },
+                      "name": "defense"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5467,
+                      "end": 5569,
+                      "loc": {
+                        "start": {
+                          "line": 263,
+                          "column": 10
+                        },
+                        "end": {
+                          "line": 263,
+                          "column": 112
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Defense: When consumed, it increases your shield. Damage below your shield amount will not harm you.",
+                        "raw": "'Defense: When consumed, it increases your shield. Damage below your shield amount will not harm you.'"
+                      },
+                      "value": "Defense: When consumed, it increases your shield. Damage below your shield amount will not harm you."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5572,
+                    "end": 5656,
+                    "loc": {
+                      "start": {
+                        "line": 264,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 264,
+                        "column": 85
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5572,
+                      "end": 5577,
+                      "loc": {
+                        "start": {
+                          "line": 264,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 264,
+                          "column": 6
+                        },
+                        "identifierName": "toxic"
+                      },
+                      "name": "toxic"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5579,
+                      "end": 5656,
+                      "loc": {
+                        "start": {
+                          "line": 264,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 264,
+                          "column": 85
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Toxic: Moves slowly, but deals splash damage to everyone inside the radius.",
+                        "raw": "'Toxic: Moves slowly, but deals splash damage to everyone inside the radius.'"
+                      },
+                      "value": "Toxic: Moves slowly, but deals splash damage to everyone inside the radius."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5659,
+                    "end": 5807,
+                    "loc": {
+                      "start": {
+                        "line": 265,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 265,
+                        "column": 149
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5659,
+                      "end": 5663,
+                      "loc": {
+                        "start": {
+                          "line": 265,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 265,
+                          "column": 5
+                        },
+                        "identifierName": "acid"
+                      },
+                      "name": "acid"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5665,
+                      "end": 5807,
+                      "loc": {
+                        "start": {
+                          "line": 265,
+                          "column": 7
+                        },
+                        "end": {
+                          "line": 265,
+                          "column": 149
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Acid: Places a stationary pool of corrosive material that damages all who touches it. If a base touches it, then both react to create water.",
+                        "raw": "'Acid: Places a stationary pool of corrosive material that damages all who touches it. If a base touches it, then both react to create water.'"
+                      },
+                      "value": "Acid: Places a stationary pool of corrosive material that damages all who touches it. If a base touches it, then both react to create water."
+                    }
+                  },
+                  {
+                    "type": "ObjectProperty",
+                    "start": 5810,
+                    "end": 5912,
+                    "loc": {
+                      "start": {
+                        "line": 266,
+                        "column": 1
+                      },
+                      "end": {
+                        "line": 266,
+                        "column": 103
+                      }
+                    },
+                    "method": false,
+                    "shorthand": false,
+                    "computed": false,
+                    "key": {
+                      "type": "Identifier",
+                      "start": 5810,
+                      "end": 5814,
+                      "loc": {
+                        "start": {
+                          "line": 266,
+                          "column": 1
+                        },
+                        "end": {
+                          "line": 266,
+                          "column": 5
+                        },
+                        "identifierName": "base"
+                      },
+                      "name": "base"
+                    },
+                    "value": {
+                      "type": "StringLiteral",
+                      "start": 5816,
+                      "end": 5912,
+                      "loc": {
+                        "start": {
+                          "line": 266,
+                          "column": 7
+                        },
+                        "end": {
+                          "line": 266,
+                          "column": 103
+                        }
+                      },
+                      "extra": {
+                        "rawValue": "Base: Acts like an inert compound, but when it is shot at acid, it will react to create water.",
+                        "raw": "'Base: Acts like an inert compound, but when it is shot at acid, it will react to create water.'"
+                      },
+                      "value": "Base: Acts like an inert compound, but when it is shot at acid, it will react to create water."
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "kind": "const",
+          "leadingComments": [],
+          "trailingComments": []
+        }
       }
     ],
     "directives": []
@@ -10265,82 +11493,18 @@
       }
     },
     {
-      "type": "CommentLine",
-      "value": " alcohol: {",
-      "start": 4505,
-      "end": 4518,
+      "type": "CommentBlock",
+      "value": "*\n * Contains descriptions for the different types of compounds (acid, stream, etc)\n ",
+      "start": 4785,
+      "end": 4874,
       "loc": {
         "start": {
-          "line": 235,
-          "column": 1
+          "line": 254,
+          "column": 0
         },
         "end": {
-          "line": 235,
-          "column": 14
-        }
-      }
-    },
-    {
-      "type": "CommentLine",
-      "value": " \tname: 'Alcohol',",
-      "start": 4520,
-      "end": 4540,
-      "loc": {
-        "start": {
-          "line": 236,
-          "column": 1
-        },
-        "end": {
-          "line": 236,
-          "column": 21
-        }
-      }
-    },
-    {
-      "type": "CommentLine",
-      "value": " \tunlocked: false,",
-      "start": 4542,
-      "end": 4562,
-      "loc": {
-        "start": {
-          "line": 237,
-          "column": 1
-        },
-        "end": {
-          "line": 237,
-          "column": 21
-        }
-      }
-    },
-    {
-      "type": "CommentLine",
-      "value": " \ttooltip: ''",
-      "start": 4564,
-      "end": 4579,
-      "loc": {
-        "start": {
-          "line": 238,
-          "column": 1
-        },
-        "end": {
-          "line": 238,
-          "column": 16
-        }
-      }
-    },
-    {
-      "type": "CommentLine",
-      "value": " }",
-      "start": 4581,
-      "end": 4585,
-      "loc": {
-        "start": {
-          "line": 239,
-          "column": 1
-        },
-        "end": {
-          "line": 239,
-          "column": 5
+          "line": 256,
+          "column": 3
         }
       }
     }
@@ -14091,7 +15255,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "basic",
+      "value": "inert",
       "start": 1528,
       "end": 1535,
       "loc": {
@@ -17334,7 +18498,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "basic",
+      "value": "inert",
       "start": 2144,
       "end": 2151,
       "loc": {
@@ -19892,7 +21056,7 @@
         "binop": null,
         "updateContext": null
       },
-      "value": "basic",
+      "value": "inert",
       "start": 2633,
       "end": 2640,
       "loc": {
@@ -29536,14 +30700,101 @@
       }
     },
     {
-      "type": "CommentLine",
-      "value": " alcohol: {",
-      "start": 4505,
-      "end": 4518,
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4503,
+      "end": 4504,
+      "loc": {
+        "start": {
+          "line": 234,
+          "column": 2
+        },
+        "end": {
+          "line": 234,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "nitricAcid",
+      "start": 4506,
+      "end": 4516,
       "loc": {
         "start": {
           "line": 235,
           "column": 1
+        },
+        "end": {
+          "line": 235,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4516,
+      "end": 4517,
+      "loc": {
+        "start": {
+          "line": 235,
+          "column": 11
+        },
+        "end": {
+          "line": 235,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4518,
+      "end": 4519,
+      "loc": {
+        "start": {
+          "line": 235,
+          "column": 13
         },
         "end": {
           "line": 235,
@@ -29552,14 +30803,77 @@
       }
     },
     {
-      "type": "CommentLine",
-      "value": " \tname: 'Alcohol',",
-      "start": 4520,
-      "end": 4540,
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "name",
+      "start": 4522,
+      "end": 4526,
       "loc": {
         "start": {
           "line": 236,
-          "column": 1
+          "column": 2
+        },
+        "end": {
+          "line": 236,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4526,
+      "end": 4527,
+      "loc": {
+        "start": {
+          "line": 236,
+          "column": 6
+        },
+        "end": {
+          "line": 236,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Nitric Acid",
+      "start": 4528,
+      "end": 4541,
+      "loc": {
+        "start": {
+          "line": 236,
+          "column": 8
         },
         "end": {
           "line": 236,
@@ -29568,50 +30882,815 @@
       }
     },
     {
-      "type": "CommentLine",
-      "value": " \tunlocked: false,",
-      "start": 4542,
-      "end": 4562,
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4541,
+      "end": 4542,
       "loc": {
         "start": {
-          "line": 237,
-          "column": 1
+          "line": 236,
+          "column": 21
         },
         "end": {
-          "line": 237,
-          "column": 21
+          "line": 236,
+          "column": 22
         }
       }
     },
     {
-      "type": "CommentLine",
-      "value": " \ttooltip: ''",
-      "start": 4564,
-      "end": 4579,
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "unlocked",
+      "start": 4545,
+      "end": 4553,
       "loc": {
         "start": {
-          "line": 238,
-          "column": 1
+          "line": 237,
+          "column": 2
         },
         "end": {
-          "line": 238,
+          "line": 237,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4553,
+      "end": 4554,
+      "loc": {
+        "start": {
+          "line": 237,
+          "column": 10
+        },
+        "end": {
+          "line": 237,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "true",
+        "keyword": "true",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "true",
+      "start": 4555,
+      "end": 4559,
+      "loc": {
+        "start": {
+          "line": 237,
+          "column": 12
+        },
+        "end": {
+          "line": 237,
           "column": 16
         }
       }
     },
     {
-      "type": "CommentLine",
-      "value": " }",
-      "start": 4581,
-      "end": 4585,
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4559,
+      "end": 4560,
+      "loc": {
+        "start": {
+          "line": 237,
+          "column": 16
+        },
+        "end": {
+          "line": 237,
+          "column": 17
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "tooltip",
+      "start": 4563,
+      "end": 4570,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 2
+        },
+        "end": {
+          "line": 238,
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4570,
+      "end": 4571,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 9
+        },
+        "end": {
+          "line": 238,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Contains \"NO\"... as in NO don't use this",
+      "start": 4572,
+      "end": 4615,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 11
+        },
+        "end": {
+          "line": 238,
+          "column": 54
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4615,
+      "end": 4616,
+      "loc": {
+        "start": {
+          "line": 238,
+          "column": 54
+        },
+        "end": {
+          "line": 238,
+          "column": 55
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "texture",
+      "start": 4619,
+      "end": 4626,
       "loc": {
         "start": {
           "line": 239,
-          "column": 1
+          "column": 2
         },
         "end": {
           "line": 239,
-          "column": 5
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4626,
+      "end": 4627,
+      "loc": {
+        "start": {
+          "line": 239,
+          "column": 9
+        },
+        "end": {
+          "line": 239,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "compound_PLACEHOLDER.png",
+      "start": 4628,
+      "end": 4654,
+      "loc": {
+        "start": {
+          "line": 239,
+          "column": 11
+        },
+        "end": {
+          "line": 239,
+          "column": 37
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4654,
+      "end": 4655,
+      "loc": {
+        "start": {
+          "line": 239,
+          "column": 37
+        },
+        "end": {
+          "line": 239,
+          "column": 38
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "type",
+      "start": 4658,
+      "end": 4662,
+      "loc": {
+        "start": {
+          "line": 240,
+          "column": 2
+        },
+        "end": {
+          "line": 240,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4662,
+      "end": 4663,
+      "loc": {
+        "start": {
+          "line": 240,
+          "column": 6
+        },
+        "end": {
+          "line": 240,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "acid",
+      "start": 4664,
+      "end": 4670,
+      "loc": {
+        "start": {
+          "line": 240,
+          "column": 8
+        },
+        "end": {
+          "line": 240,
+          "column": 14
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4670,
+      "end": 4671,
+      "loc": {
+        "start": {
+          "line": 240,
+          "column": 14
+        },
+        "end": {
+          "line": 240,
+          "column": 15
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "params",
+      "start": 4674,
+      "end": 4680,
+      "loc": {
+        "start": {
+          "line": 241,
+          "column": 2
+        },
+        "end": {
+          "line": 241,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4680,
+      "end": 4681,
+      "loc": {
+        "start": {
+          "line": 241,
+          "column": 8
+        },
+        "end": {
+          "line": 241,
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4682,
+      "end": 4683,
+      "loc": {
+        "start": {
+          "line": 241,
+          "column": 10
+        },
+        "end": {
+          "line": 241,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "damagePerSecond",
+      "start": 4687,
+      "end": 4702,
+      "loc": {
+        "start": {
+          "line": 242,
+          "column": 3
+        },
+        "end": {
+          "line": 242,
+          "column": 18
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4702,
+      "end": 4703,
+      "loc": {
+        "start": {
+          "line": 242,
+          "column": 18
+        },
+        "end": {
+          "line": 242,
+          "column": 19
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 2,
+      "start": 4704,
+      "end": 4705,
+      "loc": {
+        "start": {
+          "line": 242,
+          "column": 20
+        },
+        "end": {
+          "line": 242,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4705,
+      "end": 4706,
+      "loc": {
+        "start": {
+          "line": 242,
+          "column": 21
+        },
+        "end": {
+          "line": 242,
+          "column": 22
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "size",
+      "start": 4710,
+      "end": 4714,
+      "loc": {
+        "start": {
+          "line": 243,
+          "column": 3
+        },
+        "end": {
+          "line": 243,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4714,
+      "end": 4715,
+      "loc": {
+        "start": {
+          "line": 243,
+          "column": 7
+        },
+        "end": {
+          "line": 243,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 100,
+      "start": 4716,
+      "end": 4719,
+      "loc": {
+        "start": {
+          "line": 243,
+          "column": 9
+        },
+        "end": {
+          "line": 243,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4719,
+      "end": 4720,
+      "loc": {
+        "start": {
+          "line": 243,
+          "column": 12
+        },
+        "end": {
+          "line": 243,
+          "column": 13
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "speed",
+      "start": 4724,
+      "end": 4729,
+      "loc": {
+        "start": {
+          "line": 244,
+          "column": 3
+        },
+        "end": {
+          "line": 244,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4729,
+      "end": 4730,
+      "loc": {
+        "start": {
+          "line": 244,
+          "column": 8
+        },
+        "end": {
+          "line": 244,
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 0,
+      "start": 4731,
+      "end": 4732,
+      "loc": {
+        "start": {
+          "line": 244,
+          "column": 10
+        },
+        "end": {
+          "line": 244,
+          "column": 11
         }
       }
     },
@@ -29627,15 +31706,1576 @@
         "postfix": false,
         "binop": null
       },
-      "start": 4586,
-      "end": 4587,
+      "start": 4735,
+      "end": 4736,
       "loc": {
         "start": {
-          "line": 240,
+          "line": 245,
+          "column": 2
+        },
+        "end": {
+          "line": 245,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4736,
+      "end": 4737,
+      "loc": {
+        "start": {
+          "line": 245,
+          "column": 3
+        },
+        "end": {
+          "line": 245,
+          "column": 4
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "atoms",
+      "start": 4740,
+      "end": 4745,
+      "loc": {
+        "start": {
+          "line": 246,
+          "column": 2
+        },
+        "end": {
+          "line": 246,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4745,
+      "end": 4746,
+      "loc": {
+        "start": {
+          "line": 246,
+          "column": 7
+        },
+        "end": {
+          "line": 246,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4747,
+      "end": 4748,
+      "loc": {
+        "start": {
+          "line": 246,
+          "column": 9
+        },
+        "end": {
+          "line": 246,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "h",
+      "start": 4752,
+      "end": 4753,
+      "loc": {
+        "start": {
+          "line": 247,
+          "column": 3
+        },
+        "end": {
+          "line": 247,
+          "column": 4
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4753,
+      "end": 4754,
+      "loc": {
+        "start": {
+          "line": 247,
+          "column": 4
+        },
+        "end": {
+          "line": 247,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 1,
+      "start": 4755,
+      "end": 4756,
+      "loc": {
+        "start": {
+          "line": 247,
+          "column": 6
+        },
+        "end": {
+          "line": 247,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4756,
+      "end": 4757,
+      "loc": {
+        "start": {
+          "line": 247,
+          "column": 7
+        },
+        "end": {
+          "line": 247,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "n",
+      "start": 4761,
+      "end": 4762,
+      "loc": {
+        "start": {
+          "line": 248,
+          "column": 3
+        },
+        "end": {
+          "line": 248,
+          "column": 4
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4762,
+      "end": 4763,
+      "loc": {
+        "start": {
+          "line": 248,
+          "column": 4
+        },
+        "end": {
+          "line": 248,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 1,
+      "start": 4764,
+      "end": 4765,
+      "loc": {
+        "start": {
+          "line": 248,
+          "column": 6
+        },
+        "end": {
+          "line": 248,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4765,
+      "end": 4766,
+      "loc": {
+        "start": {
+          "line": 248,
+          "column": 7
+        },
+        "end": {
+          "line": 248,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "o",
+      "start": 4770,
+      "end": 4771,
+      "loc": {
+        "start": {
+          "line": 249,
+          "column": 3
+        },
+        "end": {
+          "line": 249,
+          "column": 4
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4771,
+      "end": 4772,
+      "loc": {
+        "start": {
+          "line": 249,
+          "column": 4
+        },
+        "end": {
+          "line": 249,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "num",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": 3,
+      "start": 4773,
+      "end": 4774,
+      "loc": {
+        "start": {
+          "line": 249,
+          "column": 6
+        },
+        "end": {
+          "line": 249,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4777,
+      "end": 4778,
+      "loc": {
+        "start": {
+          "line": 250,
+          "column": 2
+        },
+        "end": {
+          "line": 250,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4780,
+      "end": 4781,
+      "loc": {
+        "start": {
+          "line": 251,
+          "column": 1
+        },
+        "end": {
+          "line": 251,
+          "column": 2
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4782,
+      "end": 4783,
+      "loc": {
+        "start": {
+          "line": 252,
           "column": 0
         },
         "end": {
-          "line": 240,
+          "line": 252,
+          "column": 1
+        }
+      }
+    },
+    {
+      "type": "CommentBlock",
+      "value": "*\n * Contains descriptions for the different types of compounds (acid, stream, etc)\n ",
+      "start": 4785,
+      "end": 4874,
+      "loc": {
+        "start": {
+          "line": 254,
+          "column": 0
+        },
+        "end": {
+          "line": 256,
+          "column": 3
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "export",
+        "keyword": "export",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "export",
+      "start": 4875,
+      "end": 4881,
+      "loc": {
+        "start": {
+          "line": 257,
+          "column": 0
+        },
+        "end": {
+          "line": 257,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "const",
+        "keyword": "const",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "const",
+      "start": 4882,
+      "end": 4887,
+      "loc": {
+        "start": {
+          "line": 257,
+          "column": 7
+        },
+        "end": {
+          "line": 257,
+          "column": 12
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "TOOLTIPS",
+      "start": 4888,
+      "end": 4896,
+      "loc": {
+        "start": {
+          "line": 257,
+          "column": 13
+        },
+        "end": {
+          "line": 257,
+          "column": 21
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "=",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": true,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "=",
+      "start": 4897,
+      "end": 4898,
+      "loc": {
+        "start": {
+          "line": 257,
+          "column": 22
+        },
+        "end": {
+          "line": 257,
+          "column": 23
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "{",
+        "beforeExpr": true,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 4899,
+      "end": 4900,
+      "loc": {
+        "start": {
+          "line": 257,
+          "column": 24
+        },
+        "end": {
+          "line": 257,
+          "column": 25
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "flammable",
+      "start": 4902,
+      "end": 4911,
+      "loc": {
+        "start": {
+          "line": 258,
+          "column": 1
+        },
+        "end": {
+          "line": 258,
+          "column": 10
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 4911,
+      "end": 4912,
+      "loc": {
+        "start": {
+          "line": 258,
+          "column": 10
+        },
+        "end": {
+          "line": 258,
+          "column": 11
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Flammable: When passing over a lava pit, this compound ignites, dealing additional damage.",
+      "start": 4913,
+      "end": 5005,
+      "loc": {
+        "start": {
+          "line": 258,
+          "column": 12
+        },
+        "end": {
+          "line": 258,
+          "column": 104
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5005,
+      "end": 5006,
+      "loc": {
+        "start": {
+          "line": 258,
+          "column": 104
+        },
+        "end": {
+          "line": 258,
+          "column": 105
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "stream",
+      "start": 5008,
+      "end": 5014,
+      "loc": {
+        "start": {
+          "line": 259,
+          "column": 1
+        },
+        "end": {
+          "line": 259,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5014,
+      "end": 5015,
+      "loc": {
+        "start": {
+          "line": 259,
+          "column": 7
+        },
+        "end": {
+          "line": 259,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Stream: Hold down the shoot button to shoot a large number of individual compounds, like a stream. Several individual compounds can be shot using a single recipe.",
+      "start": 5016,
+      "end": 5180,
+      "loc": {
+        "start": {
+          "line": 259,
+          "column": 9
+        },
+        "end": {
+          "line": 259,
+          "column": 173
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5180,
+      "end": 5181,
+      "loc": {
+        "start": {
+          "line": 259,
+          "column": 173
+        },
+        "end": {
+          "line": 259,
+          "column": 174
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "inert",
+      "start": 5183,
+      "end": 5188,
+      "loc": {
+        "start": {
+          "line": 260,
+          "column": 1
+        },
+        "end": {
+          "line": 260,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5188,
+      "end": 5189,
+      "loc": {
+        "start": {
+          "line": 260,
+          "column": 6
+        },
+        "end": {
+          "line": 260,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Inert: Just a plain old compound. You can shoot it and it can hit stuff, that is all.",
+      "start": 5190,
+      "end": 5277,
+      "loc": {
+        "start": {
+          "line": 260,
+          "column": 8
+        },
+        "end": {
+          "line": 260,
+          "column": 95
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5277,
+      "end": 5278,
+      "loc": {
+        "start": {
+          "line": 260,
+          "column": 95
+        },
+        "end": {
+          "line": 260,
+          "column": 96
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "block",
+      "start": 5280,
+      "end": 5285,
+      "loc": {
+        "start": {
+          "line": 261,
+          "column": 1
+        },
+        "end": {
+          "line": 261,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5285,
+      "end": 5286,
+      "loc": {
+        "start": {
+          "line": 261,
+          "column": 6
+        },
+        "end": {
+          "line": 261,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Block: Place it down to protect strategic points! Deals no damage, but will intercept compounds if touched.",
+      "start": 5287,
+      "end": 5396,
+      "loc": {
+        "start": {
+          "line": 261,
+          "column": 8
+        },
+        "end": {
+          "line": 261,
+          "column": 117
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5396,
+      "end": 5397,
+      "loc": {
+        "start": {
+          "line": 261,
+          "column": 117
+        },
+        "end": {
+          "line": 261,
+          "column": 118
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "speed",
+      "start": 5399,
+      "end": 5404,
+      "loc": {
+        "start": {
+          "line": 262,
+          "column": 1
+        },
+        "end": {
+          "line": 262,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5404,
+      "end": 5405,
+      "loc": {
+        "start": {
+          "line": 262,
+          "column": 6
+        },
+        "end": {
+          "line": 262,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Speed: When consumed, it makes you move faster!",
+      "start": 5406,
+      "end": 5455,
+      "loc": {
+        "start": {
+          "line": 262,
+          "column": 8
+        },
+        "end": {
+          "line": 262,
+          "column": 57
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5455,
+      "end": 5456,
+      "loc": {
+        "start": {
+          "line": 262,
+          "column": 57
+        },
+        "end": {
+          "line": 262,
+          "column": 58
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "defense",
+      "start": 5458,
+      "end": 5465,
+      "loc": {
+        "start": {
+          "line": 263,
+          "column": 1
+        },
+        "end": {
+          "line": 263,
+          "column": 8
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5465,
+      "end": 5466,
+      "loc": {
+        "start": {
+          "line": 263,
+          "column": 8
+        },
+        "end": {
+          "line": 263,
+          "column": 9
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Defense: When consumed, it increases your shield. Damage below your shield amount will not harm you.",
+      "start": 5467,
+      "end": 5569,
+      "loc": {
+        "start": {
+          "line": 263,
+          "column": 10
+        },
+        "end": {
+          "line": 263,
+          "column": 112
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5569,
+      "end": 5570,
+      "loc": {
+        "start": {
+          "line": 263,
+          "column": 112
+        },
+        "end": {
+          "line": 263,
+          "column": 113
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "toxic",
+      "start": 5572,
+      "end": 5577,
+      "loc": {
+        "start": {
+          "line": 264,
+          "column": 1
+        },
+        "end": {
+          "line": 264,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5577,
+      "end": 5578,
+      "loc": {
+        "start": {
+          "line": 264,
+          "column": 6
+        },
+        "end": {
+          "line": 264,
+          "column": 7
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Toxic: Moves slowly, but deals splash damage to everyone inside the radius.",
+      "start": 5579,
+      "end": 5656,
+      "loc": {
+        "start": {
+          "line": 264,
+          "column": 8
+        },
+        "end": {
+          "line": 264,
+          "column": 85
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5656,
+      "end": 5657,
+      "loc": {
+        "start": {
+          "line": 264,
+          "column": 85
+        },
+        "end": {
+          "line": 264,
+          "column": 86
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "acid",
+      "start": 5659,
+      "end": 5663,
+      "loc": {
+        "start": {
+          "line": 265,
+          "column": 1
+        },
+        "end": {
+          "line": 265,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5663,
+      "end": 5664,
+      "loc": {
+        "start": {
+          "line": 265,
+          "column": 5
+        },
+        "end": {
+          "line": 265,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Acid: Places a stationary pool of corrosive material that damages all who touches it. If a base touches it, then both react to create water.",
+      "start": 5665,
+      "end": 5807,
+      "loc": {
+        "start": {
+          "line": 265,
+          "column": 7
+        },
+        "end": {
+          "line": 265,
+          "column": 149
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ",",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5807,
+      "end": 5808,
+      "loc": {
+        "start": {
+          "line": 265,
+          "column": 149
+        },
+        "end": {
+          "line": 265,
+          "column": 150
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "name",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "value": "base",
+      "start": 5810,
+      "end": 5814,
+      "loc": {
+        "start": {
+          "line": 266,
+          "column": 1
+        },
+        "end": {
+          "line": 266,
+          "column": 5
+        }
+      }
+    },
+    {
+      "type": {
+        "label": ":",
+        "beforeExpr": true,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "start": 5814,
+      "end": 5815,
+      "loc": {
+        "start": {
+          "line": 266,
+          "column": 5
+        },
+        "end": {
+          "line": 266,
+          "column": 6
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "string",
+        "beforeExpr": false,
+        "startsExpr": true,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null,
+        "updateContext": null
+      },
+      "value": "Base: Acts like an inert compound, but when it is shot at acid, it will react to create water.",
+      "start": 5816,
+      "end": 5912,
+      "loc": {
+        "start": {
+          "line": 266,
+          "column": 7
+        },
+        "end": {
+          "line": 266,
+          "column": 103
+        }
+      }
+    },
+    {
+      "type": {
+        "label": "}",
+        "beforeExpr": false,
+        "startsExpr": false,
+        "rightAssociative": false,
+        "isLoop": false,
+        "isAssign": false,
+        "prefix": false,
+        "postfix": false,
+        "binop": null
+      },
+      "start": 5913,
+      "end": 5914,
+      "loc": {
+        "start": {
+          "line": 267,
+          "column": 0
+        },
+        "end": {
+          "line": 267,
           "column": 1
         }
       }
@@ -29653,15 +33293,15 @@
         "binop": null,
         "updateContext": null
       },
-      "start": 4588,
-      "end": 4588,
+      "start": 5915,
+      "end": 5915,
       "loc": {
         "start": {
-          "line": 241,
+          "line": 268,
           "column": 0
         },
         "end": {
-          "line": 241,
+          "line": 268,
           "column": 0
         }
       }

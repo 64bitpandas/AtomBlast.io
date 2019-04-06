@@ -80,6 +80,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TOOLTIPS">TOOLTIPS</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></span></li>
@@ -117,7 +118,7 @@
 &apos;use strict&apos;
 import { GLOBAL } from &apos;./global.js&apos;
 import * as cookies from &apos;./lib/cookies.js&apos;
-import { BLUEPRINTS } from &apos;./obj/blueprints.js&apos;
+import { BLUEPRINTS, TOOLTIPS } from &apos;./obj/blueprints.js&apos;
 import { beginConnection, disconnect, teamColors } from &apos;./socket.js&apos;
 import { player, setIngame, startGame, mouseUpHandler, mouseDownHandler } from &apos;./pixigame.js&apos;
 import swal from &apos;sweetalert&apos;
@@ -532,7 +533,7 @@ window.onkeydown = (e) =&gt; {
 			blueprint = blueprint[0]
 
 			if (compoundStats) {
-				let newTooltip = &apos;&apos;
+				let newTooltip = TOOLTIPS[blueprint.type] + &apos;&lt;br&gt;&lt;br&gt;&apos;
 				for (let param in blueprint.params) {
 					if (!GLOBAL.BP_TOOLTIP_BLACKLIST.includes(param)) {
 						let line = (&apos;&apos; + param).replace(/([A-Z])/g, &apos; $1&apos;).replace(/^./, (str) =&gt; {

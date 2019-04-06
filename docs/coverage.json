@@ -1,6 +1,6 @@
 {
-  "coverage": "48.92%",
-  "expectCount": 186,
+  "coverage": "48.66%",
+  "expectCount": 187,
   "actualCount": 91,
   "files": {
     "src/client/js/app.js": {
@@ -65,9 +65,11 @@
       ]
     },
     "src/client/js/obj/blueprints.js": {
-      "expectCount": 1,
+      "expectCount": 2,
       "actualCount": 1,
-      "undocumentLines": []
+      "undocumentLines": [
+        257
+      ]
     },
     "src/client/js/obj/create.js": {
       "expectCount": 5,

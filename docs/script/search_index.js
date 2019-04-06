@@ -60,6 +60,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "atomblast.io/src/client/js/obj/blueprints.js~tooltips",
+    "variable/index.html#static-variable-TOOLTIPS",
+    "<span>TOOLTIPS</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/blueprints.js</span>",
+    "variable"
+  ],
+  [
     "atomblast.io/src/client/js/lib/mobilejoystick.js~virtualjoystick",
     "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html",
     "<span>VirtualJoystick</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/mobilejoystick.js</span>",

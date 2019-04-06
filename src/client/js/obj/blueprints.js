@@ -51,7 +51,7 @@ export const BLUEPRINTS = {
 		unlocked: false,
 		tooltip: 'Carbon rings. They smell nice.',
 		texture: 'compound_PLACEHOLDER.png',
-		type: 'basic',
+		type: 'inert',
 		params: {
 			speed: 1 * 3,
 			damage: 5,
@@ -87,7 +87,7 @@ export const BLUEPRINTS = {
 		unlocked: true,
 		tooltip: '78% of your air, and also why you get the bends.',
 		texture: 'compound_PLACEHOLDER.png',
-		type: 'basic',
+		type: 'inert',
 		params: {
 			speed: 3 * 3,
 			damage: 3,
@@ -117,7 +117,7 @@ export const BLUEPRINTS = {
 		unlocked: false,
 		tooltip: 'A nonreactive, inert gas. In other words, useless.',
 		texture: 'compound_PLACEHOLDER.png',
-		type: 'basic',
+		type: 'inert',
 		params: {
 			speed: 4 * 3,
 			damage: 2,
@@ -231,10 +231,37 @@ export const BLUEPRINTS = {
 			c: 1,
 			n: 1
 		}
+	},
+	nitricAcid: {
+		name: 'Nitric Acid',
+		unlocked: true,
+		tooltip: 'Contains "NO"... as in NO don\'t use this',
+		texture: 'compound_PLACEHOLDER.png',
+		type: 'acid',
+		params: {
+			damagePerSecond: 2,
+			size: 100,
+			speed: 0
+		},
+		atoms: {
+			h: 1,
+			n: 1,
+			o: 3
+		}
 	}
-	// alcohol: {
-	// 	name: 'Alcohol',
-	// 	unlocked: false,
-	// 	tooltip: ''
-	// }
+}
+
+/**
+ * Contains descriptions for the different types of compounds (acid, stream, etc)
+ */
+export const TOOLTIPS = {
+	flammable: 'Flammable: When passing over a lava pit, this compound ignites, dealing additional damage.',
+	stream: 'Stream: Hold down the shoot button to shoot a large number of individual compounds, like a stream. Several individual compounds can be shot using a single recipe.',
+	inert: 'Inert: Just a plain old compound. You can shoot it and it can hit stuff, that is all.',
+	block: 'Block: Place it down to protect strategic points! Deals no damage, but will intercept compounds if touched.',
+	speed: 'Speed: When consumed, it makes you move faster!',
+	defense: 'Defense: When consumed, it increases your shield. Damage below your shield amount will not harm you.',
+	toxic: 'Toxic: Moves slowly, but deals splash damage to everyone inside the radius.',
+	acid: 'Acid: Places a stationary pool of corrosive material that damages all who touches it. If a base touches it, then both react to create water.',
+	base: 'Base: Acts like an inert compound, but when it is shot at acid, it will react to create water.'
 }

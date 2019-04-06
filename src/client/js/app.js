@@ -5,7 +5,7 @@
 'use strict'
 import { GLOBAL } from './global.js'
 import * as cookies from './lib/cookies.js'
-import { BLUEPRINTS } from './obj/blueprints.js'
+import { BLUEPRINTS, TOOLTIPS } from './obj/blueprints.js'
 import { beginConnection, disconnect, teamColors } from './socket.js'
 import { player, setIngame, startGame, mouseUpHandler, mouseDownHandler } from './pixigame.js'
 import swal from 'sweetalert'
@@ -420,7 +420,7 @@ window.onkeydown = (e) => {
 			blueprint = blueprint[0]
 
 			if (compoundStats) {
-				let newTooltip = ''
+				let newTooltip = TOOLTIPS[blueprint.type] + '<br><br>'
 				for (let param in blueprint.params) {
 					if (!GLOBAL.BP_TOOLTIP_BLACKLIST.includes(param)) {
 						let line = ('' + param).replace(/([A-Z])/g, ' $1').replace(/^./, (str) => {
