@@ -74,7 +74,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
@@ -103,6 +102,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initRoom">initRoom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -112,28 +112,24 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/framesync.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { distanceBetween, isInBounds, GLOBAL } from &apos;../../client/js/global&apos;
-import { deleteObject, getField, setField } from &apos;../server&apos;
+import { deleteObject, getField, setField, incrementField } from &apos;../server&apos;
 import { collisionDetect } from &apos;./collision&apos;
 import { tickCompound } from &apos;./compound&apos;
+import { Socket } from &apos;net&apos;
 
 /**
- * Runs once a frame, per player.
- * @param {*} socket The socket.io instance
+ * Runs once a frame, per ROOM. Refactored 4/8/19 from player to room.
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  * @param {string} room The name of the room
- * @param {*} thisPlayer The player object
  */
-export function frameSync(socket, room, thisPlayer) {
+export function frameSync(socket, room) {
 	if (socket.connected) {
+		// Increment frame count in the room
+		incrementField(1, [&apos;rooms&apos;, room, &apos;time&apos;, &apos;frames&apos;])
+
 		let thisRoom = getField([&apos;rooms&apos;, room])
 
 		if (thisRoom !== undefined) {
-			// Distance checking for all objects
-			let tempObjects = {
-				players: {},
-				atoms: {},
-				compounds: {}
-			}
-
 			// Move compounds
 			for (let compound in thisRoom.compounds) {
 				let compoundRef = thisRoom.compounds[compound]
@@ -150,23 +146,8 @@ export function frameSync(socket, room, thisPlayer) {
 			}
 			// Move atoms
 			for (let atom in thisRoom.atoms) {
-				let distance = distanceBetween(
-					{ posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
-					{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
-				// Attractive force
-				if (!thisPlayer.spectating &amp;&amp; distance &lt; GLOBAL.ATTRACTION_RADIUS &amp;&amp; (thisRoom.atoms[atom].team === &apos;all&apos; || thisPlayer.team === thisRoom.atoms[atom].team)) {
-					let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX))
-
-					// Attraction is based on logarithmic algorithm
-
-					setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;])
-					setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;])
-					// thisRoom.atoms[atom].vx = 1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-					// thisRoom.atoms[atom].vy = 1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT;
-					// console.log(this.vx, this.vy, this.posX, this.posY);
-				}
-				// Atom slowing down
-				else if (Math.abs(thisRoom.atoms[atom].vx) &gt; GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) &gt; GLOBAL.DEADZONE) {
+				// Atom slowing down. This will be overridden by the player attraction if a player is close enough
+				if (Math.abs(thisRoom.atoms[atom].vx) &gt; GLOBAL.DEADZONE || Math.abs(thisRoom.atoms[atom].vy) &gt; GLOBAL.DEADZONE) {
 					setField(thisRoom.atoms[atom].vx * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;])
 					setField(thisRoom.atoms[atom].vy * GLOBAL.VELOCITY_STEP, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;])
 					// thisRoom.atoms[atom].vx *= GLOBAL.VELOCITY_STEP;
@@ -187,37 +168,71 @@ export function frameSync(socket, room, thisPlayer) {
 				// thisRoom.atoms[atom].posY += thisRoom.atoms[atom].vy;
 			}
 
-			// Populate tempObjects
-			for (let objType in tempObjects) {
-				for (let obj in thisRoom[objType]) {
-					if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) {
-						tempObjects[objType][obj] = thisRoom[objType][obj]
+			// Player specific actions
+			for (let playerI in thisRoom.players) {
+				// Distance checking for all objects
+				let tempObjects = {
+					players: {},
+					atoms: {},
+					compounds: {}
+				}
+				let thisPlayer = thisRoom.players[playerI]
+
+				// Populate tempObjects
+				for (let objType in tempObjects) {
+					for (let obj in thisRoom[objType]) {
+						if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) {
+							tempObjects[objType][obj] = thisRoom[objType][obj]
+						}
+						// else if (objType === &apos;players&apos;) { // Player left view
+						// 	socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
+						// }
 					}
-					// else if (objType === &apos;players&apos;) { // Player left view
-					// 	socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
-					// }
+				}
+
+				// Check for atom attraction
+				for (let atom in tempObjects.atoms) {
+					let distance = distanceBetween(
+						{ posX: thisRoom.atoms[atom].posX + GLOBAL.ATOM_RADIUS, posY: thisRoom.atoms[atom].posY - GLOBAL.ATOM_RADIUS },
+						{ posX: thisPlayer.posX + GLOBAL.PLAYER_RADIUS, posY: thisPlayer.posY - GLOBAL.PLAYER_RADIUS })
+					// Attractive force
+					if (!thisPlayer.spectating &amp;&amp; distance &lt; GLOBAL.ATTRACTION_RADIUS &amp;&amp; (thisRoom.atoms[atom].team === &apos;all&apos; || thisPlayer.team === thisRoom.atoms[atom].team)) {
+						let theta = Math.atan2((thisPlayer.posY - thisRoom.atoms[atom].posY), (thisPlayer.posX - thisRoom.atoms[atom].posX))
+
+						// Attraction is based on logarithmic function
+						setField(1 / distance * Math.cos(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vx&apos;])
+						setField(1 / distance * Math.sin(theta) * GLOBAL.ATTRACTION_COEFFICIENT, [&apos;rooms&apos;, room, &apos;atoms&apos;, atom, &apos;vy&apos;])
+						// console.log(this.vx, this.vy, this.posX, this.posY);
+					}
+				}
+
+				// Collision detection
+				collisionDetect(socket, room, thisPlayer, tempObjects)
+
+				if (socket.id === thisPlayer.id) {
+					socket.emit(&apos;objectSync&apos;, tempObjects)
+				}
+				else {
+					socket.to(thisPlayer.id).emit(&apos;objectSync&apos;, tempObjects)
 				}
 			}
 
-			// Run collision detection script
-			collisionDetect(socket, room, thisPlayer, tempObjects)
-
-			socket.emit(&apos;objectSync&apos;, tempObjects)
-
 			if (thisRoom.started) {
+				socket.to(room).emit(&apos;time&apos;, { time: thisRoom.time.formattedTime })
 				socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime })
 			}
 
 			if (thisRoom !== undefined &amp;&amp; !thisRoom.started) {
 				// Send over the room player information
-				// socket.to(room).broadcast.emit(&apos;roomInfo&apos;, thisRoom.players);
-				socket.emit(&apos;roomInfo&apos;, {
+				let roomInfo = {
 					players: thisRoom.players,
 					canStart: (thisRoom.type === &apos;2v2&apos; &amp;&amp; Object.keys(thisRoom.players).length === 4) ||
 						((thisRoom.type === &apos;4v4&apos; || thisRoom.type === &apos;2v2v2v2&apos;) &amp;&amp; Object.keys(thisRoom.players).length === 8) ||
 						(thisRoom.type === &apos;4v4v4v4&apos; &amp;&amp; Object.keys(thisRoom.players).length === 16) ||
 						thisRoom.type === &apos;private&apos;
-				})
+				}
+				socket.emit(&apos;roomInfo&apos;, roomInfo)
+				socket.to(room).emit(&apos;roomInfo&apos;, roomInfo)
 			}
 		}
 	}

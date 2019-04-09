@@ -114,12 +114,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/obj/create.js~createplayer",
-    "function/index.html#static-function-createPlayer",
-    "<span>createPlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/client/js/pixigame.js~createplayer",
     "function/index.html#static-function-createPlayer",
     "<span>createPlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
@@ -279,6 +273,12 @@ window.esdocSearchIndex = [
     "atomblast.io/src/server/utils/serverinit.js~initplayer",
     "function/index.html#static-function-initPlayer",
     "<span>initPlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverinit.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/serverinit.js~initroom",
+    "function/index.html#static-function-initRoom",
+    "<span>initRoom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverinit.js</span>",
     "function"
   ],
   [

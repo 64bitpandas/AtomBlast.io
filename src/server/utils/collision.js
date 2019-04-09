@@ -1,5 +1,5 @@
 import { distanceBetween, GLOBAL, getCurrTile, getGlobalLocation } from '../../client/js/global'
-import { deleteObject, getField } from '../server'
+import { deleteObject, getField, setField } from '../server'
 import { damage, damageTile } from './ondamage'
 import { incrementAtom } from './atoms'
 import { TILE_NAMES, TILES } from '../../client/js/obj/tiles'
@@ -8,7 +8,7 @@ import { getTileID } from './serverutils'
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
  * Run using
- * @param {*} socket The socket.io instance
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  * @param {string} room The name of the room
  * @param {*} thisPlayer The player object
  * @param {*} tempObjects The list of objects to tick. Should only be the objects rendered on the screen of thisPlayer. Contains compounds, atoms, players
@@ -26,7 +26,6 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 				if (distance < GLOBAL.ATOM_COLLECT_THRESHOLD) {
 					// console.log(atom);
 					incrementAtom(thisPlayer.id, room, tempObjects.atoms[atom].typeID, 1)
-					socket.to(room).broadcast.emit('serverSendObjectRemoval', { id: atom, type: 'atoms' })
 
 					deleteObject('atoms', atom, room, socket)
 				}
@@ -53,7 +52,7 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 
 					damage({
 						damage: dmg,
-						player: socket.id,
+						player: thisPlayer.id,
 						sentBy: cmp.sender,
 						id: compound
 					}, room, socket)
@@ -77,7 +76,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 							if (distance < cmp.blueprint.params.size + othercmp.blueprint.params.size) {
 								// Damage indcator
 								socket.emit('serverSendDamageIndicator', {
-									damage: 1,
+									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
+									posX: cmp.posX,
+									posY: cmp.posY
+								})
+								socket.to(room).emit('serverSendDamageIndicator', {
+									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 									posX: cmp.posX,
 									posY: cmp.posY
 								})
@@ -97,6 +101,11 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 						posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 					}) < GLOBAL.STRONGHOLD_RADIUS && cmp.blueprint.type !== 'block' && cmp.sendingTeam !== getField(['rooms', room, 'tiles', tileID, 'owner'])) {
 						socket.emit('serverSendDamageIndicator', {
+							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
+							posX: cmp.posX,
+							posY: cmp.posY
+						})
+						socket.to(room).emit('serverSendDamageIndicator', {
 							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 							posX: cmp.posX,
 							posY: cmp.posY

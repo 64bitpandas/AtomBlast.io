@@ -74,7 +74,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
@@ -103,6 +102,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initRoom">initRoom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -116,6 +116,7 @@ import { MAP_LAYOUT, TILES, TILE_NAMES } from &apos;../../client/js/obj/tiles&ap
 import { generateID, GLOBAL } from &apos;../../client/js/global&apos;
 import { spawnAtomAtVent } from &apos;./atoms&apos;
 import colors from &apos;colors&apos; // Console colors :D
+import { frameSync } from &apos;./framesync&apos;
 
 /**
  * Methods to run on server initialization and player connect initialization.
@@ -164,7 +165,7 @@ export function initGlobal() {
 
 /**
  * Run on every player join.
- * @param {*} socket The socket.io instance
+ * @param {*} socket The socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  * @param {string} room The name of the room that the player belongs to
  * @param {string} team The name of the team that the player belongs to
  */
@@ -225,6 +226,34 @@ export function initPlayer(socket, room, team) {
 		shield: 0,
 		isSpectating: false
 	}, [&apos;rooms&apos;, room, &apos;players&apos;, socket.id])
+}
+
+/**
+ * Run when the first person joins a new room that has not been initialized yet.
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
+ * @param {string} roomName The name of the room
+ */
+export function initRoom(socket, roomName) {
+	console.log(&apos;[Server] &apos;.bold.blue + &apos;Setting up room &apos;.yellow + (&apos;&apos; + roomName).bold.red + &apos; as type &apos; + socket.handshake.query.roomType)
+	setField({
+		joinable: true,
+		teams: [],
+		atoms: {},
+		compounds: {},
+		type: socket.handshake.query.roomType,
+		time: {
+			frames: 0,
+			minutes: 0,
+			seconds: 0,
+			formattedTime: &apos;0:00&apos;
+		}
+	}, [&apos;rooms&apos;, roomName])
+
+	// Start frame sync
+	// Setup room sync- once a frame
+	setInterval(() =&gt; {
+		frameSync(socket, roomName)
+	}, 1000 / 60)
 }
 </code></pre>
 

@@ -3,6 +3,7 @@ import { MAP_LAYOUT, TILES, TILE_NAMES } from '../../client/js/obj/tiles'
 import { generateID, GLOBAL } from '../../client/js/global'
 import { spawnAtomAtVent } from './atoms'
 import colors from 'colors' // Console colors :D
+import { frameSync } from './framesync'
 
 /**
  * Methods to run on server initialization and player connect initialization.
@@ -51,7 +52,7 @@ export function initGlobal() {
 
 /**
  * Run on every player join.
- * @param {*} socket The socket.io instance
+ * @param {*} socket The socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  * @param {string} room The name of the room that the player belongs to
  * @param {string} team The name of the team that the player belongs to
  */
@@ -112,4 +113,32 @@ export function initPlayer(socket, room, team) {
 		shield: 0,
 		isSpectating: false
 	}, ['rooms', room, 'players', socket.id])
+}
+
+/**
+ * Run when the first person joins a new room that has not been initialized yet.
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
+ * @param {string} roomName The name of the room
+ */
+export function initRoom(socket, roomName) {
+	console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + roomName).bold.red + ' as type ' + socket.handshake.query.roomType)
+	setField({
+		joinable: true,
+		teams: [],
+		atoms: {},
+		compounds: {},
+		type: socket.handshake.query.roomType,
+		time: {
+			frames: 0,
+			minutes: 0,
+			seconds: 0,
+			formattedTime: '0:00'
+		}
+	}, ['rooms', roomName])
+
+	// Start frame sync
+	// Setup room sync- once a frame
+	setInterval(() => {
+		frameSync(socket, roomName)
+	}, 1000 / 60)
 }

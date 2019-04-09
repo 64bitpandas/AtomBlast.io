@@ -151,8 +151,10 @@ function setupSocketObjectRetrieval () {
 								objects[objType][obj].shield = objRef.shield
 								objects[objType][obj].stronghold = objRef.stronghold
 
-								for (let atom in objRef.atomList) {
-									updateAtomList(atom)
+								if (objRef.id === socket.id) {
+									for (let atom in objRef.atomList) {
+										updateAtomList(atom)
+									}
 								}
 							}
 							if (objType === 'compounds' && objRef.ignited) {

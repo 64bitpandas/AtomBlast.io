@@ -19,7 +19,7 @@ import { addExperience } from './experience'
   *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
   * @param {string} room - The name of the room
   * @param thisPlayer - The current player instance
-  * @param socket - Socket.io instance
+  * @param socket - socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
   */
 export function createCompound (data, room, thisPlayer, socket) {
 	if (!canCraft(thisPlayer, room, data.blueprint)) {
@@ -47,7 +47,7 @@ export function createCompound (data, room, thisPlayer, socket) {
 	else if (data.blueprint.type === 'health') {
 		damage({
 			damage: -data.blueprint.params.healthModifier,
-			sender: socket.id
+			sender: thisPlayer.id
 		}, room, socket)
 		if (thisPlayer.health > GLOBAL.MAX_HEALTH) {
 			setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', thisPlayer.id, 'health'])
@@ -56,12 +56,12 @@ export function createCompound (data, room, thisPlayer, socket) {
 	else if (data.blueprint.type === 'defense') {
 		setField(data.blueprint.params.defenseModifier, ['rooms', room, 'players', thisPlayer.id, 'shield'])
 	}
-	else if (data.blueprint.type === 'block') {
+	else if (data.blueprint.type === 'block' || data.blueprint.type === 'acid') {
 		newCompound.vx = newCompound.vy = 0
 	}
 
 	// Emits the crafting event to update experience
-	addExperience('CRAFT', socket, room, thisPlayer.id)
+	// addExperience('CRAFT', socket, room, thisPlayer.id)
 
 	// Remove atoms from inventory
 	if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
@@ -77,7 +77,7 @@ export function createCompound (data, room, thisPlayer, socket) {
  * Checks compound behavior based on compound type. Runs once a frame.
  * @param {number} compound compound object
  * @param {string} room Name of room
- * @param socket - Socket.io instance
+ * @param socket - socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  */
 export function tickCompound (compound, room, socket) {
 	// TODO

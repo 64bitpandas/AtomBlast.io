@@ -1,7 +1,7 @@
 {
-  "coverage": "48.66%",
+  "coverage": "49.19%",
   "expectCount": 187,
-  "actualCount": 91,
+  "actualCount": 92,
   "files": {
     "src/client/js/app.js": {
       "expectCount": 23,
@@ -72,11 +72,10 @@
       ]
     },
     "src/client/js/obj/create.js": {
-      "expectCount": 5,
+      "expectCount": 4,
       "actualCount": 3,
       "undocumentLines": [
-        43,
-        104
+        106
       ]
     },
     "src/client/js/obj/damageindicator.js": {
@@ -174,7 +173,7 @@
       "undocumentLines": [
         19,
         34,
-        403
+        405
       ]
     },
     "src/server/server.js": {
@@ -187,8 +186,8 @@
         4,
         14,
         16,
-        45,
-        238
+        46,
+        234
       ]
     },
     "src/server/utils/atoms.js": {
@@ -228,12 +227,12 @@
       "expectCount": 3,
       "actualCount": 2,
       "undocumentLines": [
-        236
+        242
       ]
     },
     "src/server/utils/serverinit.js": {
-      "expectCount": 2,
-      "actualCount": 2,
+      "expectCount": 3,
+      "actualCount": 3,
       "undocumentLines": []
     },
     "src/server/utils/serverutils.js": {

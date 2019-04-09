@@ -74,7 +74,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
@@ -103,6 +102,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initRoom">initRoom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -148,6 +148,7 @@ app.use(express.static(`${__dirname}/../client`))
 //         compounds: {	id, posX, posY, vx, vy, blueprint, sendingTeam, sender },
 //		   tiles: { id, type, globalX, globalY, captured, owner, health }
 //         time: {
+//			   frames: 0,
 //             minutes: 0,
 //             seconds: 0,
 //             formattedTime: &apos;0:00&apos;
@@ -173,7 +174,7 @@ let rooms = {}
  */
 let teams = {}
 
-// Initializize Server. Includes atom spawning and timer mechanics
+// Initialize Server. Includes atom spawning and timer mechanics
 initGlobal()
 
 // Initialize all socket listeners when a request is established
@@ -200,11 +201,6 @@ io.on(&apos;connection&apos;, socket =&gt; {
 	// Announce colors
 	socket.emit(&apos;serverSendTeamColors&apos;, getTeamColors(room))
 	socket.to(room).emit(&apos;serverSendTeamColors&apos;, getTeamColors(room))
-
-	// Setup player array sync- once a frame
-	setInterval(() =&gt; {
-		frameSync(socket, room, thisPlayer)
-	}, 1000 / 60)
 
 	// Receives a chat from a player, then broadcasts it to other players
 	socket.to(room).on(&apos;playerChat&apos;, data =&gt; {
@@ -423,7 +419,7 @@ export function getField (path) {
  * @param {string} type Either players, atoms, compounds
  * @param {*} id ID of the object to delete
  * @param {string} room Room name to delete in
- * @param {*} socket socket.io instance
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  */
 export function deleteObject (type, id, room, socket) {
 	delete rooms[room][type][id]

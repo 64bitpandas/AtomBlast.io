@@ -35,6 +35,7 @@ app.use(express.static(`${__dirname}/../client`))
 //         compounds: {	id, posX, posY, vx, vy, blueprint, sendingTeam, sender },
 //		   tiles: { id, type, globalX, globalY, captured, owner, health }
 //         time: {
+//			   frames: 0,
 //             minutes: 0,
 //             seconds: 0,
 //             formattedTime: '0:00'
@@ -60,7 +61,7 @@ let rooms = {}
  */
 let teams = {}
 
-// Initializize Server. Includes atom spawning and timer mechanics
+// Initialize Server. Includes atom spawning and timer mechanics
 initGlobal()
 
 // Initialize all socket listeners when a request is established
@@ -87,11 +88,6 @@ io.on('connection', socket => {
 	// Announce colors
 	socket.emit('serverSendTeamColors', getTeamColors(room))
 	socket.to(room).emit('serverSendTeamColors', getTeamColors(room))
-
-	// Setup player array sync- once a frame
-	setInterval(() => {
-		frameSync(socket, room, thisPlayer)
-	}, 1000 / 60)
 
 	// Receives a chat from a player, then broadcasts it to other players
 	socket.to(room).on('playerChat', data => {
@@ -310,7 +306,7 @@ export function getField (path) {
  * @param {string} type Either players, atoms, compounds
  * @param {*} id ID of the object to delete
  * @param {string} room Room name to delete in
- * @param {*} socket socket.io instance
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  */
 export function deleteObject (type, id, room, socket) {
 	delete rooms[room][type][id]

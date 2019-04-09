@@ -1,10 +1,11 @@
 import { generateID, GLOBAL } from '../../client/js/global'
 import { getField, setField } from '../server'
 import { getTeamColors } from './serverutils'
+import { initRoom } from './serverinit'
 
 /**
  * Matchmaking system for public matches. Runs after initial socket.io server connection, but before connecting to a server.
- * @param {*} socket Socket.io instance
+ * @param {*} socket socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  * @param {string} room Name of room
  * @param {string} team Name of team
  * @returns The new room that has been assigned
@@ -105,19 +106,7 @@ export function roomMatchmaker (socket, room, team) {
 	if (validJoin) {
 		// Set up room if it does not exist
 		if (getField(['rooms', room]) === undefined || getField(['rooms', room]) === null) {
-			console.log('[Server] '.bold.blue + 'Setting up room '.yellow + ('' + room).bold.red + ' as type ' + socket.handshake.query.roomType)
-			setField({
-				joinable: true,
-				teams: [],
-				atoms: {},
-				compounds: {},
-				type: socket.handshake.query.roomType,
-				time: {
-					minutes: 0,
-					seconds: 0,
-					formattedTime: '0:00'
-				}
-			}, ['rooms', room])
+			initRoom(socket, room)
 		}
 
 		// Add player to team

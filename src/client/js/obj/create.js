@@ -40,10 +40,6 @@ export function createRenderAtom (data) {
 	return result
 }
 
-export function createPlayer (data) {
-
-}
-
 /**
  * Recreates an already spawned compound on the clientside based on server data.
  * @param {*} data Data sent from server:
@@ -59,6 +55,12 @@ export function createPlayer (data) {
 export function createRenderCompound (data) {
 	let texture = spritesheet.textures[data.blueprint.texture]
 	let result = new GameObject(texture, data.id, data.posX, data.posY, data.vx, data.vy)
+
+	// Make transparent if acid
+	if (data.blueprint.type === 'acid') {
+		result.filters = [new PIXI.filters.AlphaFilter(0.8)]
+	}
+
 	result.blueprint = data.blueprint
 	result.sendingTeam = data.sendingTeam
 	result.sender = data.sender

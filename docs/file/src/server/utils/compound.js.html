@@ -74,7 +74,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createTiles">createTiles</a></span></span></li>
@@ -103,6 +102,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initRoom">initRoom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
@@ -132,7 +132,7 @@ import { addExperience } from &apos;./experience&apos;
   *  - streamID: number indicating the consecutive compounds requested on this current mouse hold.
   * @param {string} room - The name of the room
   * @param thisPlayer - The current player instance
-  * @param socket - Socket.io instance
+  * @param socket - socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
   */
 export function createCompound (data, room, thisPlayer, socket) {
 	if (!canCraft(thisPlayer, room, data.blueprint)) {
@@ -160,7 +160,7 @@ export function createCompound (data, room, thisPlayer, socket) {
 	else if (data.blueprint.type === &apos;health&apos;) {
 		damage({
 			damage: -data.blueprint.params.healthModifier,
-			sender: socket.id
+			sender: thisPlayer.id
 		}, room, socket)
 		if (thisPlayer.health &gt; GLOBAL.MAX_HEALTH) {
 			setField(GLOBAL.MAX_HEALTH, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;health&apos;])
@@ -169,12 +169,12 @@ export function createCompound (data, room, thisPlayer, socket) {
 	else if (data.blueprint.type === &apos;defense&apos;) {
 		setField(data.blueprint.params.defenseModifier, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer.id, &apos;shield&apos;])
 	}
-	else if (data.blueprint.type === &apos;block&apos;) {
+	else if (data.blueprint.type === &apos;block&apos; || data.blueprint.type === &apos;acid&apos;) {
 		newCompound.vx = newCompound.vy = 0
 	}
 
 	// Emits the crafting event to update experience
-	addExperience(&apos;CRAFT&apos;, socket, room, thisPlayer.id)
+	// addExperience(&apos;CRAFT&apos;, socket, room, thisPlayer.id)
 
 	// Remove atoms from inventory
 	if (!data.streamID || data.streamID % data.blueprint.params.compoundsPerCraft === 0 || data.streamID === 1) {
@@ -190,7 +190,7 @@ export function createCompound (data, room, thisPlayer, socket) {
  * Checks compound behavior based on compound type. Runs once a frame.
  * @param {number} compound compound object
  * @param {string} room Name of room
- * @param socket - Socket.io instance
+ * @param socket - socket.io instance. INDEPENDENT OF PLAYER (any valid socket connection can go here!!!!!)
  */
 export function tickCompound (compound, room, socket) {
 	// TODO

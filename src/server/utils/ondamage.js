@@ -76,10 +76,16 @@ export function damage (data, room, socket) {
 			setField(GLOBAL.MAX_HEALTH, ['rooms', room, 'players', data.player, 'health'])
 			setField(true, ['rooms', room, 'players', data.player, 'dead']) // This will be reset when it has been verified that the player has been placed at the proper spawnpoint
 
-			// Send player death info to client
-			if (socket.id === data.player) {
+			// Send player death info to client only if the player being checked is equal to the player dying
+			if (thisPlayer.id === data.player) {
 				let pl = getField(['rooms', room, 'players', data.player])
-				socket.emit('serverSendPlayerDeath', { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+
+				if (socket.id === thisPlayer.id) {
+					socket.emit('serverSendPlayerDeath', { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+				}
+				else {
+					socket.to(thisPlayer.id).emit('serverSendPlayerDeath', { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
+				}
 
 				// Announce death. TODO make some cool messages
 				socket.emit('serverAnnouncement', {
