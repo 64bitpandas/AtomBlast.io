@@ -106,6 +106,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-smartEmit">smartEmit</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -113,7 +114,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">src/server/utils/ondamage.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { GLOBAL } from &apos;../../client/js/global&apos;
 import { getField, setField, incrementField } from &apos;../server&apos;
-import { getTeamNumber } from &apos;./serverutils&apos;
+import { getTeamNumber, smartEmit } from &apos;./serverutils&apos;
 import { tmpdir } from &apos;os&apos;
 import { spawnAtom } from &apos;./atoms&apos;
 
@@ -145,15 +146,15 @@ export function damage (data, room, socket) {
 		if (data.damage &gt; thisPlayer.shield) {
 			setField(thisPlayer.health - data.damage + thisPlayer.shield, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;health&apos;])
 			// Send damage indicator data
-			socket.emit(&apos;serverSendDamageIndicator&apos;, {
+			smartEmit(socket, room, &apos;serverSendDamageIndicator&apos;, {
 				damage: data.damage - thisPlayer.shield,
 				posX: thisPlayer.posX,
 				posY: thisPlayer.posY
 			})
 		}
 		else {
-			socket.emit(&apos;serverSendDamageIndicator&apos;, {
-				damage: 0,
+			smartEmit(socket, room, &apos;serverSendDamageIndicator&apos;, {
+				damage: data.damage - thisPlayer.shield,
 				posX: thisPlayer.posX,
 				posY: thisPlayer.posY
 			})
@@ -173,11 +174,11 @@ export function damage (data, room, socket) {
 			// Releases atoms and deletes the entire atoms array in player
 			for (let at in thisPlayer.atomList) {
 				for (let i = 0; i &lt; GLOBAL.MAX_DEATH_ATOMS &amp;&amp; i &lt; thisPlayer.atomList[at]; i++) {
-					spawnAtom(thisPlayer.posX, thisPlayer.posY, at, room, false)
+					spawnAtom(thisPlayer.posX, thisPlayer.posY, at, room, &apos;all&apos;, false)
 				}
 			}
 			for (let at in thisPlayer.atomList) {
-				setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, thisPlayer, &apos;atomList&apos;, at])
+				setField(0, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;atomList&apos;, at])
 			}
 
 			// Set defense to 0
@@ -190,40 +191,25 @@ export function damage (data, room, socket) {
 			setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;dead&apos;]) // This will be reset when it has been verified that the player has been placed at the proper spawnpoint
 
 			// Send player death info to client only if the player being checked is equal to the player dying
-			if (thisPlayer.id === data.player) {
-				let pl = getField([&apos;rooms&apos;, room, &apos;players&apos;, data.player])
+			let pl = getField([&apos;rooms&apos;, room, &apos;players&apos;, data.player])
 
-				if (socket.id === thisPlayer.id) {
-					socket.emit(&apos;serverSendPlayerDeath&apos;, { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
-				}
-				else {
-					socket.to(thisPlayer.id).emit(&apos;serverSendPlayerDeath&apos;, { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy })
-				}
+			smartEmit(socket, room, &apos;serverSendPlayerDeath&apos;, { posX: pl.posX, posY: pl.posY, vx: pl.vx, vy: pl.vy }, data.player)
 
-				// Announce death. TODO make some cool messages
-				socket.emit(&apos;serverAnnouncement&apos;, {
-					message: pl.name + &apos; was obliterated by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, data.sentBy, &apos;name&apos;]),
+			// Announce death. TODO make some cool messages
+			smartEmit(socket, room, &apos;serverAnnouncement&apos;, {
+				message: pl.name + &apos; was obliterated by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, data.sentBy, &apos;name&apos;]),
+				sendingTeam: pl.team
+			})
+
+			// Check if the nucleus has died
+			if (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, &apos;n&apos; + getTeamNumber(room, pl.team), &apos;captured&apos;])) {
+				// Announce final death
+				smartEmit(socket, room, &apos;serverAnnouncement&apos;, {
+					message: &apos;FINAL KILL!!!&apos;,
 					sendingTeam: pl.team
 				})
-				socket.to(room).emit(&apos;serverAnnouncement&apos;, {
-					message: pl.name + &apos; was obliterated by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, data.sentBy, &apos;name&apos;]),
-					sendingTeam: pl.team
-				})
 
-				// Check if the nucleus has died
-				if (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, &apos;n&apos; + getTeamNumber(room, pl.team), &apos;captured&apos;])) {
-					// Announce final death
-					socket.emit(&apos;serverAnnouncement&apos;, {
-						message: &apos;FINAL KILL!!!&apos;,
-						sendingTeam: pl.team
-					})
-					socket.to(room).emit(&apos;serverAnnouncement&apos;, {
-						message: &apos;FINAL KILL!!!&apos;,
-						sendingTeam: pl.team
-					})
-
-					setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;spectating&apos;])
-				}
+				setField(true, [&apos;rooms&apos;, room, &apos;players&apos;, data.player, &apos;spectating&apos;])
 			}
 
 			// Check if a team was eliminated
@@ -240,11 +226,7 @@ export function damage (data, room, socket) {
 						if (!stillAlive) {
 							// Announce elimination of team
 							team.dead = true
-							socket.to(room).emit(&apos;serverAnnouncement&apos;, {
-								message: team.name + &apos; has been eliminated!&apos;,
-								sendingTeam: team.name
-							})
-							socket.emit(&apos;serverAnnouncement&apos;, {
+							smartEmit(socket, room, &apos;serverAnnouncement&apos;, {
 								message: team.name + &apos; has been eliminated!&apos;,
 								sendingTeam: team.name
 							})
@@ -271,8 +253,7 @@ export function damage (data, room, socket) {
 									// teamScore: thisRoom.teams[dataToSend.teamSlot].score
 									// other data here TODO post ranking
 								}
-								socket.to(room).broadcast.emit(&apos;serverSendWinner&apos;, dataToSend)
-								socket.emit(&apos;serverSendWinner&apos;, dataToSend)
+								smartEmit(socket, room, &apos;serverSendWinner&apos;, dataToSend)
 							}
 						}
 					}
@@ -361,8 +342,8 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 		tileX: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalX&apos;]),
 		tileY: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalY&apos;])
 	}
-	socket.to(room).emit(&apos;serverSendTileHealth&apos;, hpData)
-	socket.emit(&apos;serverSendTileHealth&apos;, hpData)
+
+	smartEmit(socket, room, &apos;serverSendTileHealth&apos;, hpData)
 
 	// Check if tile is fully captured
 	if (getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;health&apos;]) &lt;= 0) {
@@ -374,14 +355,12 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 					tileX: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalX&apos;]),
 					tileY: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalY&apos;])
 				}
-				socket.to(room).emit(&apos;serverSendTileCapture&apos;, data)
-				socket.emit(&apos;serverSendTileCapture&apos;, data)
+				smartEmit(socket, room, &apos;serverSendTileCapture&apos;, data)
 				let tileCaptureMSG = {
 					message: &apos;A &apos; + getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;type&apos;]) + &apos; has been captured by &apos; + getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;name&apos;]),
 					sendingTeam: getField([&apos;rooms&apos;, room, &apos;players&apos;, player, &apos;team&apos;])
 				}
-				socket.to(room).emit(&apos;serverAnnouncement&apos;, tileCaptureMSG)
-				socket.emit(&apos;serverAnnouncement&apos;, tileCaptureMSG)
+				smartEmit(socket, room, &apos;serverAnnouncement&apos;, tileCaptureMSG)
 
 				// Set capture status
 				setField(true, [&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;captured&apos;])
@@ -397,8 +376,7 @@ export function damageTile (tileID, damageAmount, player, room, socket) {
 					tileX: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalX&apos;]),
 					tileY: getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;globalY&apos;])
 				}
-				socket.to(room).emit(&apos;serverSendTileHealth&apos;, hpData)
-				socket.emit(&apos;serverSendTileHealth&apos;, hpData)
+				smartEmit(socket, room, &apos;serverSendTileHealth&apos;, hpData)
 				return true
 			}
 		}

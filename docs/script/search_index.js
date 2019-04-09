@@ -402,6 +402,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/serverutils.js~smartemit",
+    "function/index.html#static-function-smartEmit",
+    "<span>smartEmit</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/atoms.js~spawnatom",
     "function/index.html#static-function-spawnAtom",
     "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",

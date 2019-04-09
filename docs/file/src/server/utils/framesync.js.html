@@ -106,6 +106,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-smartEmit">smartEmit</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -116,6 +117,7 @@ import { deleteObject, getField, setField, incrementField } from &apos;../server
 import { collisionDetect } from &apos;./collision&apos;
 import { tickCompound } from &apos;./compound&apos;
 import { Socket } from &apos;net&apos;
+import { smartEmit } from &apos;./serverutils&apos;
 
 /**
  * Runs once a frame, per ROOM. Refactored 4/8/19 from player to room.
@@ -184,9 +186,6 @@ export function frameSync(socket, room) {
 						if (distanceBetween(thisRoom[objType][obj], thisPlayer) &lt; GLOBAL.DRAW_RADIUS) {
 							tempObjects[objType][obj] = thisRoom[objType][obj]
 						}
-						// else if (objType === &apos;players&apos;) { // Player left view
-						// 	socket.emit(&apos;serverSendObjectRemoval&apos;, { id: obj, type: objType })
-						// }
 					}
 				}
 
@@ -209,17 +208,11 @@ export function frameSync(socket, room) {
 				// Collision detection
 				collisionDetect(socket, room, thisPlayer, tempObjects)
 
-				if (socket.id === thisPlayer.id) {
-					socket.emit(&apos;objectSync&apos;, tempObjects)
-				}
-				else {
-					socket.to(thisPlayer.id).emit(&apos;objectSync&apos;, tempObjects)
-				}
+				smartEmit(socket, room, &apos;objectSync&apos;, tempObjects, thisPlayer.id)
 			}
 
 			if (thisRoom.started) {
-				socket.to(room).emit(&apos;time&apos;, { time: thisRoom.time.formattedTime })
-				socket.emit(&apos;time&apos;, { time: thisRoom.time.formattedTime })
+				smartEmit(socket, room, &apos;time&apos;, { time: thisRoom.time.formattedTime })
 			}
 
 			if (thisRoom !== undefined &amp;&amp; !thisRoom.started) {
@@ -231,8 +224,7 @@ export function frameSync(socket, room) {
 						(thisRoom.type === &apos;4v4v4v4&apos; &amp;&amp; Object.keys(thisRoom.players).length === 16) ||
 						thisRoom.type === &apos;private&apos;
 				}
-				socket.emit(&apos;roomInfo&apos;, roomInfo)
-				socket.to(room).emit(&apos;roomInfo&apos;, roomInfo)
+				smartEmit(socket, room, &apos;roomInfo&apos;, roomInfo)
 			}
 		}
 	}

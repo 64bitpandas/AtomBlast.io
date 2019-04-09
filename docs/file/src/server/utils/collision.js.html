@@ -106,6 +106,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamColors">getTeamColors</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTileID">getTileID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-smartEmit">smartEmit</a></span></span></li>
 </ul>
 </div>
 </nav>
@@ -116,7 +117,7 @@ import { deleteObject, getField, setField } from &apos;../server&apos;
 import { damage, damageTile } from &apos;./ondamage&apos;
 import { incrementAtom } from &apos;./atoms&apos;
 import { TILE_NAMES, TILES } from &apos;../../client/js/obj/tiles&apos;
-import { getTileID } from &apos;./serverutils&apos;
+import { getTileID, smartEmit } from &apos;./serverutils&apos;
 
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
@@ -188,16 +189,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 
 							if (distance &lt; cmp.blueprint.params.size + othercmp.blueprint.params.size) {
 								// Damage indcator
-								socket.emit(&apos;serverSendDamageIndicator&apos;, {
+								smartEmit(socket, room, &apos;serverSendDamageIndicator&apos;, {
 									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 									posX: cmp.posX,
 									posY: cmp.posY
 								})
-								socket.to(room).emit(&apos;serverSendDamageIndicator&apos;, {
-									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
-									posX: cmp.posX,
-									posY: cmp.posY
-								})
+
 								// Delete both compounds. TODO deal damage to higher level barrier blocks
 								deleteObject(&apos;compounds&apos;, compound, room, socket)
 								deleteObject(&apos;compounds&apos;, otherCompound, room, socket)
@@ -213,18 +210,14 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 						posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
 						posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 					}) &lt; GLOBAL.STRONGHOLD_RADIUS &amp;&amp; cmp.blueprint.type !== &apos;block&apos; &amp;&amp; cmp.sendingTeam !== getField([&apos;rooms&apos;, room, &apos;tiles&apos;, tileID, &apos;owner&apos;])) {
-						socket.emit(&apos;serverSendDamageIndicator&apos;, {
-							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
-							posX: cmp.posX,
-							posY: cmp.posY
-						})
-						socket.to(room).emit(&apos;serverSendDamageIndicator&apos;, {
+						// Damage indcator
+						smartEmit(socket, room, &apos;serverSendDamageIndicator&apos;, {
 							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 							posX: cmp.posX,
 							posY: cmp.posY
 						})
 						deleteObject(&apos;compounds&apos;, compound, room, socket)
-						damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, socket.id, room, socket)
+						damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, thisPlayer.id, room, socket)
 					}
 				}
 			}
