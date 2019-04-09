@@ -3,6 +3,7 @@ import { deleteObject, getField, setField, incrementField } from '../server'
 import { collisionDetect } from './collision'
 import { tickCompound } from './compound'
 import { Socket } from 'net'
+import { smartEmit } from './serverutils'
 
 /**
  * Runs once a frame, per ROOM. Refactored 4/8/19 from player to room.
@@ -71,9 +72,6 @@ export function frameSync(socket, room) {
 						if (distanceBetween(thisRoom[objType][obj], thisPlayer) < GLOBAL.DRAW_RADIUS) {
 							tempObjects[objType][obj] = thisRoom[objType][obj]
 						}
-						// else if (objType === 'players') { // Player left view
-						// 	socket.emit('serverSendObjectRemoval', { id: obj, type: objType })
-						// }
 					}
 				}
 
@@ -96,17 +94,11 @@ export function frameSync(socket, room) {
 				// Collision detection
 				collisionDetect(socket, room, thisPlayer, tempObjects)
 
-				if (socket.id === thisPlayer.id) {
-					socket.emit('objectSync', tempObjects)
-				}
-				else {
-					socket.to(thisPlayer.id).emit('objectSync', tempObjects)
-				}
+				smartEmit(socket, room, 'objectSync', tempObjects, thisPlayer.id)
 			}
 
 			if (thisRoom.started) {
-				socket.to(room).emit('time', { time: thisRoom.time.formattedTime })
-				socket.emit('time', { time: thisRoom.time.formattedTime })
+				smartEmit(socket, room, 'time', { time: thisRoom.time.formattedTime })
 			}
 
 			if (thisRoom !== undefined && !thisRoom.started) {
@@ -118,8 +110,7 @@ export function frameSync(socket, room) {
 						(thisRoom.type === '4v4v4v4' && Object.keys(thisRoom.players).length === 16) ||
 						thisRoom.type === 'private'
 				}
-				socket.emit('roomInfo', roomInfo)
-				socket.to(room).emit('roomInfo', roomInfo)
+				smartEmit(socket, room, 'roomInfo', roomInfo)
 			}
 		}
 	}

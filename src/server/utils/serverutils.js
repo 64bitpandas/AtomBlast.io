@@ -52,3 +52,25 @@ export function getTileID (globalLocation, room) {
 
 	return false
 }
+
+/**
+ * @param {*} socket The socket.io instance (independent)
+ * @param {string} room Name of the room to emit to.
+ * @param {string} emitName Name of the emit event, used to match on the clientside.
+ * @param {*} emitContent What content to send over. This can be any object.
+ * @param {string} to (OPTIONAL) What ID to send the emit to. Default: sends to all players.
+ */
+export function smartEmit(socket, room, emitName, emitContent, to = '_ALL') {
+	if (to === '_ALL') {
+		socket.to(room).emit(emitName, emitContent)
+		socket.emit(emitName, emitContent)
+	}
+	else {
+		if (to === socket.id) {
+			socket.emit(emitName, emitContent)
+		}
+		else {
+			socket.to(to).emit(emitName, emitContent)
+		}
+	}
+}

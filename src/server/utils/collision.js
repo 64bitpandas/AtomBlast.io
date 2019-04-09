@@ -3,7 +3,7 @@ import { deleteObject, getField, setField } from '../server'
 import { damage, damageTile } from './ondamage'
 import { incrementAtom } from './atoms'
 import { TILE_NAMES, TILES } from '../../client/js/obj/tiles'
-import { getTileID } from './serverutils'
+import { getTileID, smartEmit } from './serverutils'
 
 /**
  * Runs once a frame, checks for collisions between objects and handles them accordingly.
@@ -75,16 +75,12 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 
 							if (distance < cmp.blueprint.params.size + othercmp.blueprint.params.size) {
 								// Damage indcator
-								socket.emit('serverSendDamageIndicator', {
+								smartEmit(socket, room, 'serverSendDamageIndicator', {
 									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 									posX: cmp.posX,
 									posY: cmp.posY
 								})
-								socket.to(room).emit('serverSendDamageIndicator', {
-									damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
-									posX: cmp.posX,
-									posY: cmp.posY
-								})
+
 								// Delete both compounds. TODO deal damage to higher level barrier blocks
 								deleteObject('compounds', compound, room, socket)
 								deleteObject('compounds', otherCompound, room, socket)
@@ -100,18 +96,14 @@ export function collisionDetect (socket, room, thisPlayer, tempObjects) {
 						posX: getGlobalLocation(cmp).globalX * GLOBAL.GRID_SPACING * 2 + GLOBAL.GRID_SPACING,
 						posY: getGlobalLocation(cmp).globalY * GLOBAL.GRID_SPACING * 2 - GLOBAL.GRID_SPACING
 					}) < GLOBAL.STRONGHOLD_RADIUS && cmp.blueprint.type !== 'block' && cmp.sendingTeam !== getField(['rooms', room, 'tiles', tileID, 'owner'])) {
-						socket.emit('serverSendDamageIndicator', {
-							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
-							posX: cmp.posX,
-							posY: cmp.posY
-						})
-						socket.to(room).emit('serverSendDamageIndicator', {
+						// Damage indcator
+						smartEmit(socket, room, 'serverSendDamageIndicator', {
 							damage: (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage,
 							posX: cmp.posX,
 							posY: cmp.posY
 						})
 						deleteObject('compounds', compound, room, socket)
-						damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, socket.id, room, socket)
+						damageTile(tileID, (cmp.ignited) ? cmp.blueprint.params.splashDamage : cmp.blueprint.params.damage, thisPlayer.id, room, socket)
 					}
 				}
 			}
