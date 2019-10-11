@@ -18,7 +18,6 @@
     "update": "node node_modules/npm-check/bin/cli.js -u",
     "disableannoyinglineendingwarning": "git config --global core.safecrlf false && printf \"Annoying line ending warnings has been disabled.\"",
     "generate-spritesheet": "spritesheet-js src/client/assets/spritesheet/*/*/*.png src/client/assets/spritesheet/*/*.png --path src/client/assets/ --padding 5"
-
   },
   "repository": {
     "type": "git",
