@@ -111,10 +111,51 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="atomblast-io">AtomBlast.io</h1><p>Our first attempt at an multiplayer IO game.</p>
-<p><a href="https://inch-ci.org/github/BananiumLabs/AtomBlast.io"><img src="https://inch-ci.org/github/BananiumLabs/AtomBlast.io.svg?branch=pixi" alt="Inline docs"></a></p>
-<p><a href="https://docs.google.com/document/d/1WfPeLDOq0typScXC974l0_CQz-JU2uzMb1uliLe71E4/edit#">Click here</a> to view our concept doc. Contact us at <a href="mailto:admin@bananiumlabs.com">admin@bananiumlabs.com</a> to request access.</p>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="atomblast-io">AtomBlast.io</h1><p>A proof-of-concept multiplayer arena game where players battle at the atomic level, crafting elements to devastate opponents and capture their nucleus!</p>
+<h2 id="important-note">Important Note</h2><p>Due to the unsustainably large scope of this project, the massive amount of existing bugs/quirks/performance issues, and a lack of focus in regards to design, the AtomBlast project has been <strong>discontinued indefinitely</strong> with no plans to resume development in the future.</p>
+<p><strong>With that being said, however, I believe that what we achieved with this existing proof-of-concept is far from trivial, and we hope the code base can be used by other developers (maybe you??) to continue this game or use its code to create something altogether different.</strong> Some dev-related features we achieved with AtomBlast include:</p>
+<ul>
+<li>A client-server game system written in pure Javascript with Socket.io working together with PixiJS for a seamless websocket send/request callback system,</li>
+<li>A simple matchmmaking system for creating and populating an arbitrary amount of server rooms,</li>
+<li>A custom tiling manager that allows easy map generation given a simple 2D array of strings,</li>
+<li>A chat system with custom commands,</li>
+<li>An object abstraction in PixiJS for handling interactions, movement inputs, and inheritance structures,</li>
+<li>A webapp runnable by anyone to self-host game servers,</li>
+<li>And many more small but not insignificant features that are outlined in the document below.</li>
+</ul>
+<p><a href="https://docs.google.com/document/d/1ZGnYwhiIQsNdGobX5avQVrTenKA4hU-TRgqMUDB4ums/edit">Click here</a> to view our developer doc that describes the code design of the game.</p>
+<h2 id="setting-up-and-joining-your-own-atomblast-server">Setting up and joining your own AtomBlast server</h2><p>Since the project has been discontinued, we are no longer offering a demo server, so if you want to try the game for yourself we recommend you self-host. (It&apos;s actually really easy!)</p>
+<ol>
+<li><a href="https://github.com/BananiumLabs/AtomBlast.io/archive/master.zip">Download and extract the game files</a> or run <code>git clone https://github.com/BananiumLabs/AtomBlast.io.git</code>.</li>
+<li><a href="https://nodejs.org/en/">Download Node.js</a> if you haven&apos;t already.</li>
+<li>Using your terminal of choice, run <code>npm i</code> to install dependencies.</li>
+<li>Run <code>npm start</code>. You should see a message that the server has started on port 12002. (Customize this port in <code>src/server/config.json</code>.)</li>
+<li>Open your browser of choice and type <code>localhost:12002</code>.</li>
+<li>If you want to play with friends in the local network, run <code>ip addr</code> on Linux or <code>ipconfig</code> in Windows to see your local IP (should start with <code>192.168...</code>) and ask them to connect to <code>192.168.x.xxx:12002</code> replacing the x&apos;s with the numbers in your local IP.</li>
+<li>If you want to host an online server, look up how to port forward or host on a webserver. </li>
+</ol>
+<h2 id="game-features-in-this-proof-of-concept">Game Features in this Proof-Of-Concept</h2><p>Although the game is not complete, it is fully playable and has the following features implemented:</p>
+<ul>
+<li>Matchmmaking and multiplayer: autojoin a room/team, or make your own custom room/team!</li>
+<li>Chat: Send messages to the room, or view announcements for events such as tile captures.</li>
+<li>Atom spawning/collection/inventory: Head over to spawners to collect atoms for crafting!</li>
+<li>Tile capturing: Reduce a tile&apos;s HP to capture it for your own team!</li>
+<li>Customizable loadouts: Choose which compounds you want to play with!</li>
+<li>Crafting: Compounds require a certain number of compounds to craft!</li>
+<li>Compound types: Flammable, Health, Speed, Stream, Barrier. View the compound selection menu to learn more!</li>
+</ul>
+<h2 id="how-to-play">How to Play</h2><ul>
+<li>WASD to move</li>
+<li>Left click or Space to shoot/craft</li>
+<li>1,2,3,4 to select compound to craft</li>
+<li>Esc for menu</li>
+</ul>
+<h2 id="documentation">Documentation</h2><p>Coverage: <a href="https://inch-ci.org/github/BananiumLabs/AtomBlast.io"><img src="https://inch-ci.org/github/BananiumLabs/AtomBlast.io.svg?branch=pixi" alt="Inline docs"></a></p>
+<p><a href="https://docs.google.com/document/d/1WfPeLDOq0typScXC974l0_CQz-JU2uzMb1uliLe71E4/edit#">Click here</a> to view our concept doc. </p>
+<p><a href="https://docs.google.com/document/d/1ZGnYwhiIQsNdGobX5avQVrTenKA4hU-TRgqMUDB4ums/edit">Click here</a> to view our developer doc that describes the code design of the game.</p>
+<p><a href="https://bananiumlabs.github.io/AtomBlast.io/">Click here</a> to view the API reference.</p>
 <p><strong>If when running nodemon it gives an error <code>EADDRINUSE</code>, run this: <code>kill -9 $(lsof -t -i:12002)</code></strong></p>
+<h2 id="contact">Contact</h2><p>If you would like additional information about AtomBlast, have any questions/comments, or just would like to get in touch, shoot an email to <a href="mailto:hello@bencuan.me">hello@bencuan.me</a>.</p>
 </div>
 </div>
 
