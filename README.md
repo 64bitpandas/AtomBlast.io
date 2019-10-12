@@ -18,7 +18,7 @@ Due to the unsustainably large scope of this project, the massive amount of exis
 ## Setting up and joining your own AtomBlast server
 Since the project has been discontinued, we are no longer offering a demo server, so if you want to try the game for yourself we recommend you self-host. (It's actually really easy!)
 
-1. [Download and extract the game files](https://github.com/BananiumLabs/AtomBlast.io/archive/master.zip) or run `git clone https://github.com/BananiumLabs/AtomBlast.io.git`.
+1. [Download and extract the game files](https://github.com/64bitpandas/AtomBlast.io/archive/master.zip) or run `git clone https://github.com/64bitpandas/AtomBlast.io.git`.
 2. [Download Node.js](https://nodejs.org/en/) if you haven't already.
 3. Using your terminal of choice, run `npm i` to install dependencies.
 4. Run `npm start`. You should see a message that the server has started on port 12002. (Customize this port in `src/server/config.json`.)
@@ -52,7 +52,7 @@ Coverage: [![Inline docs](https://inch-ci.org/github/BananiumLabs/AtomBlast.io.s
 
 [Click here](https://docs.google.com/document/d/1ZGnYwhiIQsNdGobX5avQVrTenKA4hU-TRgqMUDB4ums/edit) to view our developer doc that describes the code design of the game.
 
-[Click here](https://bananiumlabs.github.io/AtomBlast.io/) to view the API reference.
+[Click here](https://64bitpandas.github.io/AtomBlast.io/) to view the API reference.
 
 
 **If when running nodemon it gives an error `EADDRINUSE`, run this: `kill -9 $(lsof -t -i:12002)`**

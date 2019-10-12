@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/BananiumLabs/AtomBlast.io.git"
+    "url": "https://github.com/64bitpandas/AtomBlast.io.git"
   },
   "keywords": [
     "io",
@@ -33,14 +33,14 @@
   "author": "Bananium Labs",
   "license": "MIT",
   "contributors": [
-    "Ben Cuan <ben@bananiumlabs.com> (https://github.com/dbqeo)",
+    "Ben Cuan <hello@bencuan.me> (https://github.com/64bitpandas)",
     "Vikram Peddinti <vikram@bananiumlabs.com> (https://github.com/darkflamex1)",
     "Eric Qian <eric@enumc.com> (https://github.com/EnumC)"
   ],
   "bugs": {
-    "url": "https://github.com/BananiumLabs/AtomBlast.io/issues"
+    "url": "https://github.com/64bitpandas/AtomBlast.io/issues"
   },
-  "homepage": "https://github.com/BananiumLabs/AtomBlast.io#readme",
+  "homepage": "https://github.com/64bitpandas/AtomBlast.io#readme",
   "dependencies": {
     "babel-preset-env": "^1.7.0",
     "babel-register": "^6.26.0",

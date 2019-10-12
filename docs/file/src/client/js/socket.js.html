@@ -24,7 +24,7 @@
   </span>
     <ul class="search-result"></ul>
   </div>
-<a style="position:relative; top:3px;" href="https://github.com/BananiumLabs/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
+<a style="position:relative; top:3px;" href="https://github.com/64bitpandas/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
 
 <nav class="navigation" data-ice="nav"><div>
   <ul>
@@ -159,30 +159,37 @@ export function beginConnection () {
 	let room = (cookieInputs[7].value === &apos;private&apos; ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER)
 	let teamInput = (document.querySelector(&apos;input[name=&quot;queue-type&quot;]:checked&apos;).id === &apos;team-option&apos;) ? cookieInputs[2].value : GLOBAL.NO_TEAM_IDENTIFIER
 
-	if (cookieInputs[1].value === &apos;test&apos;) {
-		console.info(&apos;Connecting to: &apos; + GLOBAL.TEST_IP)
-		// DEVELOPMENT server - auto deploy from pixi branch
-		socket = io.connect(GLOBAL.TEST_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else if (cookieInputs[1].value === &apos;jurassicexp&apos;) {
-		console.log(&apos;Dev Backdoor Initiated! Connecting to devserver&apos;)
-		// Local server
-		socket = io.connect(GLOBAL.LOCAL_HOST, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else {
-		// Production server
-		console.log(&apos;connecting to main server&apos;)
-		socket = io.connect(GLOBAL.SERVER_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
+	// if (cookieInputs[1].value === &apos;test&apos;) {
+	// 	console.info(&apos;Connecting to: &apos; + GLOBAL.TEST_IP)
+	// 	// DEVELOPMENT server - auto deploy from pixi branch
+	// 	socket = io.connect(GLOBAL.TEST_IP, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else if (cookieInputs[1].value === &apos;jurassicexp&apos;) {
+	// 	console.log(&apos;Dev Backdoor Initiated! Connecting to devserver&apos;)
+	// 	// Local server
+	// 	socket = io.connect(GLOBAL.LOCAL_HOST, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else {
+	// 	// Production server
+	// 	console.log(&apos;connecting to main server&apos;)
+	// 	socket = io.connect(GLOBAL.SERVER_IP, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+
+	console.log(&apos;Connecting to localhost&apos;)
+	// Local server
+	socket = io.connect(GLOBAL.LOCAL_HOST, {
+		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+		reconnectionAttempts: 3
+	})
 
 	socket.on(&apos;connect&apos;, () =&gt; {
 		setupSocket()

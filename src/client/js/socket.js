@@ -45,30 +45,37 @@ export function beginConnection () {
 	let room = (cookieInputs[7].value === 'private' ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER)
 	let teamInput = (document.querySelector('input[name="queue-type"]:checked').id === 'team-option') ? cookieInputs[2].value : GLOBAL.NO_TEAM_IDENTIFIER
 
-	if (cookieInputs[1].value === 'test') {
-		console.info('Connecting to: ' + GLOBAL.TEST_IP)
-		// DEVELOPMENT server - auto deploy from pixi branch
-		socket = io.connect(GLOBAL.TEST_IP, {
-			query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else if (cookieInputs[1].value === 'jurassicexp') {
-		console.log('Dev Backdoor Initiated! Connecting to devserver')
-		// Local server
-		socket = io.connect(GLOBAL.LOCAL_HOST, {
-			query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else {
-		// Production server
-		console.log('connecting to main server')
-		socket = io.connect(GLOBAL.SERVER_IP, {
-			query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
+	// if (cookieInputs[1].value === 'test') {
+	// 	console.info('Connecting to: ' + GLOBAL.TEST_IP)
+	// 	// DEVELOPMENT server - auto deploy from pixi branch
+	// 	socket = io.connect(GLOBAL.TEST_IP, {
+	// 		query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else if (cookieInputs[1].value === 'jurassicexp') {
+	// 	console.log('Dev Backdoor Initiated! Connecting to devserver')
+	// 	// Local server
+	// 	socket = io.connect(GLOBAL.LOCAL_HOST, {
+	// 		query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else {
+	// 	// Production server
+	// 	console.log('connecting to main server')
+	// 	socket = io.connect(GLOBAL.SERVER_IP, {
+	// 		query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+
+	console.log('Connecting to localhost')
+	// Local server
+	socket = io.connect(GLOBAL.LOCAL_HOST, {
+		query: `room=${room}&name=${cookieInputs[0].value}&team=${teamInput}&roomType=${cookieInputs[7].value}`,
+		reconnectionAttempts: 3
+	})
 
 	socket.on('connect', () => {
 		setupSocket()
