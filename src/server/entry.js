@@ -1,9 +1,9 @@
 /**
  * ENTRY POINT for server.js.
- * Uses babel to compile es6 into 
+ * Uses babel to compile es6 into
  */
 require('babel-register')({
-    presets: ['env']
-});
+	presets: ['env']
+})
 
-module.exports = require('./server.js');
+module.exports = require('./server.js')

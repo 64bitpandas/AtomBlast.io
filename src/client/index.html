@@ -9,7 +9,8 @@
     <link href="https://fonts.googleapis.com/css?family=Aldrich" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css" />
     <link rel="stylesheet" href="/css/simple-grid.min.css" />
-
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/logos/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/logos/favicon-16x16.png">
     <!-- Do not place scripts here! All scripts must be imported into app.js -->
 </head>
 
@@ -17,7 +18,7 @@
 
     <div id="gameAreaWrapper" style="display:none;">
         <!-- <div id="p5CanvasHolder"></div> -->
-        
+
 
         <canvas id="gameView"></canvas>
 
@@ -36,10 +37,10 @@
                 <div class="row" id="team-display">
 
                 </div>
-                <button class="button btn-primary" id="btn-start-game">Start Game</button>
-            </div>
+                <button class="button btn-primary" disabled id="btn-start-game">Waiting for Players...</button>
+            </div>Start G
         </div>
-        
+
 
         <div class="menubox box centered hidden" id="menubox">
             <h3 class="title">Menu</h3>
@@ -57,8 +58,12 @@
         <div id="hud" class="hidden">
             <div class="chatbox box" id="chatbox">
                 <ul id="chatList" class="chat-list"></ul>
-                <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50" spellcheck="false" />
+                <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="50"
+                    spellcheck="false" />
             </div>
+
+
+            <div id="zone_joystick" class="joystickbox"></div>
 
             <div id="bp-ingame">
                 <div class="btn-slot bp-ingame" id="bp-select-label">-Selected Element: -</div>
@@ -86,30 +91,55 @@
         </div>
 
     </div>
+    <!-- <div id="logoC">
+        <img src="assets\logos\centerfix.png" alt="Forest" >
+    </div> -->
     <div id="startMenuWrapper">
         <div id="logo">
-            <img src="assets/logo.svg">
+            <div style="display:table;text-align:center;margin:auto">
+                <div style="padding:0px;display:inline-block;" id="logoL">
+                    <img src="assets\logos\left.png" alt="Snow">
+                </div>
+                <div style="padding:0px;display:inline-block;" id="logoC">
+                    <img src="assets\logos\centerfix.png" alt="Forest">
+                </div>
+                <div style="padding:0px;display:inline-block;" id="logoR">
+                    <img src="assets\logos\right.png" alt="Mountains">
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-3 offset-top">
                 <div id="aBox" class="box offset-top">
-                    <p>Insert ad here</p>
+                    <p>News</p>
                 </div>
                 <div id="newsBox" class="box">
-                    <p>News</p>
+                    <p>More News</p>
                 </div>
             </div>
             <div id="startMenu" class="col-6 box">
                 <p>Join a Game</p>
+                
+                <div class="radio-group-wrapper">
+                    <div class="radio-group">
+                        <input type="radio" id="solo" name="queue-type">
+                        <label for="solo">Solo Queue</label>
+                        <input type="radio" id="team-option" name="queue-type" checked>
+                        <label for="team-option">Team Queue</label>
+                    </div>
+                </div>
+
                 <div class="row">
 
                     <div class="col-6">
-                        <select id="room-type">
-                            <option value="2v2v2v2">2v2v2v2</option>
+                            <select id="room-type">
+                            <!-- TODO: Most options Disabled until mid-beta. Default room is 2v2. -->
+                            <!-- <option value="2v2v2v2">2v2v2v2</option>
                             <option value="4v4v4v4">4v4v4v4</option>
-                            <option value="4v4v4v4">4v4</option>
+                            <option value="4v4v4v4">4v4</option> -->
+                            <option value="2v2">2v2</option>
                             <option value="private">Private Match</option>
-                        </select>  
+                        </select>
                     </div>
 
                     <div class="col-6">
@@ -117,14 +147,18 @@
                             <option value="na">North America</option>
                             <option value="eu">Europe</option>
                             <option value="oce">Oceania</option>
-                        </select>  
+                        </select>
                     </div>
                 </div>
-                
-                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here" id="name" spellcheck="false"/>
-                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team" spellcheck="false"/>
-                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room""0" placeholder="Enter room name here" id="room" spellcheck="false" style="display:none"/>
-                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
+
+                <input class="menuInputBox box" type="text" tabindex="0" autofocus placeholder="Enter your name here"
+                    id="name" spellcheck="false" />
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter team name here" id="team"
+                    spellcheck="false" />
+                <input class="menuInputBox box" type="text" tabindex="0" placeholder="Enter room name here" id="room""0"
+                    placeholder="Enter room name here" id="room" spellcheck="false" style="display:none" />
+                <b class="input-error" id="nickErrorText">Rooms, teams, and usernames must contain 2 to 16 characters
+                    and only contain alphanumeric, spaces, underscores, dashes, and punctuation</b>
                 <br />
                 <button id="startButton" class="button btn-primary">Play</button>
                 <!-- <button id="teamButton" class="button btn-secondary">Join A Team</button> -->
@@ -145,16 +179,18 @@
                 <p id="bp-select-header">
                     <!-- Auto-filled in script -->
                 </p>
+                <p id="bp-select-info">Press [SHIFT] to toggle compound stats!</p>
             </div>
             <div class="row blueprint-wrapper" id="blueprint-wrapper">
                 <!-- Auto filled in script -->
             </div>
-            
+
 
             <button class="button btn-error" id="btn-close">Close</button>
         </div>
 
     </div>
+
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/public/build.js"></script>

@@ -1,0 +1,3 @@
+12/31/18:
+
+* Fix relative speed of compounds fired

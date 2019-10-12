@@ -4,8 +4,8 @@
  */
 
 import {GLOBAL} from '../global.js';
-import { socket } from '../socket.js';
-import {devTest} from '../app.js';
+import { socket, teamColors } from '../socket.js';
+import { updateCompoundButtons } from '../app.js';
 
 let player, room, team;
 export default class ChatClient {
@@ -31,9 +31,8 @@ export default class ChatClient {
         });
     }
 
-    // TODO: Break out many of these GameControls into separate classes.
     /** 
-    * MISSING COMMENT
+    * Defines all commands and their behaviors.
     */
     registerFunctions() {
         const self = this;
@@ -44,7 +43,8 @@ export default class ChatClient {
 
         this.registerCommand('test', 'Gives 5000 of every element', () => {
             if(GLOBAL.DEBUG) {
-                devTest();
+                socket.emit('testCommand', {player: socket.id});
+                updateCompoundButtons();
                 self.addSystemLine("Developer Configurations Applied!");
             }
             else {
@@ -65,9 +65,6 @@ export default class ChatClient {
                 self.addSystemLine("Invalid Permission.");
             }
         });
-        this.registerCommand('spawnAtom', 'Spawns a Hydrogen atom at the bottom left vent.', () => {
-            socket.emit('spawnAtom', {row: 9, col: 0});
-        })
 
         // this.registerCommand('login', 'Login as an admin.', function (args) {
         //     self.socket.emit('pass', args);
@@ -82,16 +79,16 @@ export default class ChatClient {
     /**
      * Places the message DOM node into the chat box.
      * @param {string} innerHTML The message to be displayed.
-     * @param {string} styleClass How the message should be styled - see `main.css` for styles and to create more styles.
+     * @param {string} color How the message should be styled - see `main.css` for styles and to create more styles.
      */
-    appendMessage(innerHTML, styleClass) {
+    appendMessage(innerHTML, color) {
         if (this.mobile)
             return;
 
         const newline = document.createElement('li');
 
         // Colours the chat input correctly.
-        newline.className = styleClass;
+        newline.style.color = color;
         // Add content
         newline.innerHTML = innerHTML;
 
@@ -110,13 +107,30 @@ export default class ChatClient {
      * @param {string} name Name of the player who sent the message
      * @param {string} message Message that was sent
      * @param {boolean} me True if the sender matches the receiver
+     * @param {string} sendingTeam The name of the team that sent this message
      */
-    addChatLine(name, message, me) {
+    addChatLine(name, message, me, sendingTeam) {
        this.appendMessage(
-           `<b>${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name}</b>: ${message}`,
-           (me) ? 'me' : 'friend'
+           `<b style="color: ${'#' + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]}">${(name.length < 1) ? GLOBAL.PLACEHOLDER_NAME : name} ${(me) ? '(YOU)' : ''}</b>: ${message}`,
+           '#' + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]
         );
     }
+
+    /**
+     * Chat box implementation for event announcements (capturing, etc)
+     * @param {string} message What message was sent
+     * @param {string} sendingTeam Subject of the message.
+     */
+    addChatAnnouncement(message, sendingTeam) {
+       this.appendMessage(
+           message, '#' + GLOBAL.TEAM_COLORS[teamColors[sendingTeam]]
+        );
+    }
+
+    /**
+     * 
+     */
+
 
     /**
      * Chat box implementation for the users.
@@ -186,8 +200,8 @@ export default class ChatClient {
                     //Debug lines for messages - Remove on production
                     // console.log("This Player: " + this.player);
                     // console.log("This message: " + text);
-                    socket.emit('playerChat', { sender: this.player, message: text });
-                    this.addChatLine(this.player, text, true);
+                    socket.emit('playerChat', { sender: this.player, message: text, sendingTeam: this.team});
+                    this.addChatLine(this.player, text, true, this.team);
                 }
 
                 // Resets input.
