@@ -154,35 +154,42 @@ export var teamColors = {}
  *  - Loads textures
  *  - Loads pixi
  */
-export function beginConnection () {
+export function beginConnection() {
 	// Joins debug server if conditions are met
 	let room = (cookieInputs[7].value === &apos;private&apos; ? cookieInputs[1].value : GLOBAL.NO_ROOM_IDENTIFIER)
 	let teamInput = (document.querySelector(&apos;input[name=&quot;queue-type&quot;]:checked&apos;).id === &apos;team-option&apos;) ? cookieInputs[2].value : GLOBAL.NO_TEAM_IDENTIFIER
 
-	if (cookieInputs[1].value === &apos;test&apos;) {
-		console.info(&apos;Connecting to: &apos; + GLOBAL.TEST_IP)
-		// DEVELOPMENT server - auto deploy from pixi branch
-		socket = io.connect(GLOBAL.TEST_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else if (cookieInputs[1].value === &apos;jurassicexp&apos;) {
-		console.log(&apos;Dev Backdoor Initiated! Connecting to devserver&apos;)
-		// Local server
-		socket = io.connect(GLOBAL.LOCAL_HOST, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
-	else {
-		// Production server
-		console.log(&apos;connecting to main server&apos;)
-		socket = io.connect(GLOBAL.SERVER_IP, {
-			query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
-			reconnectionAttempts: 3
-		})
-	}
+	// if (cookieInputs[1].value === &apos;test&apos;) {
+	// 	console.info(&apos;Connecting to: &apos; + GLOBAL.TEST_IP)
+	// 	// DEVELOPMENT server - auto deploy from pixi branch
+	// 	socket = io.connect(GLOBAL.TEST_IP, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else if (cookieInputs[1].value === &apos;jurassicexp&apos;) {
+	// 	console.log(&apos;Dev Backdoor Initiated! Connecting to devserver&apos;)
+	// 	// Local server
+	// 	socket = io.connect(GLOBAL.LOCAL_HOST, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+	// else {
+	// 	// Production server
+	// 	console.log(&apos;connecting to main server&apos;)
+	// 	socket = io.connect(GLOBAL.SERVER_IP, {
+	// 		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+	// 		reconnectionAttempts: 3
+	// 	})
+	// }
+
+	console.log(&apos;Connecting to localhost&apos;)
+	// Local server
+	socket = io.connect(GLOBAL.LOCAL_HOST, {
+		query: `room=${room}&amp;name=${cookieInputs[0].value}&amp;team=${teamInput}&amp;roomType=${cookieInputs[7].value}`,
+		reconnectionAttempts: 3
+	})
 
 	socket.on(&apos;connect&apos;, () =&gt; {
 		setupSocket()
@@ -197,7 +204,7 @@ export function beginConnection () {
 /**
  * Run on disconnect to reset all server-based variables and connections
  */
-export function disconnect () {
+export function disconnect() {
 	app.stop()
 	socket.disconnect()
 
@@ -210,7 +217,7 @@ export function disconnect () {
 /**
  * First time setup when connection starts. Run on connect event to ensure that the socket is connected first.
  */
-function setupSocket () {
+function setupSocket() {
 	// Debug
 	console.log(&apos;Socket:&apos;, socket)
 
@@ -232,7 +239,7 @@ function setupSocket () {
  * Sets up socket object syncing.
  * Run in setupSocket().
  */
-function setupSocketObjectRetrieval () {
+function setupSocketObjectRetrieval() {
 	// Syncs all objects from server once a frame
 	socket.on(&apos;objectSync&apos;, (data) =&gt; {
 		for (let objType in data) {
@@ -339,7 +346,7 @@ function setupSocketObjectRetrieval () {
 		}
 		else {
 			// console.log(objects[data.type][data.id].destroyed);
-		// An object was removed
+			// An object was removed
 			if (!objects[data.type][data.id].destroyed) { // Only remove if not already
 				removeObject(data)
 			}
@@ -368,7 +375,7 @@ function setupSocketObjectRetrieval () {
  * Sets up socket connection listeners.
  * Run in setupSocket().
  */
-function setupSocketConnection () {
+function setupSocketConnection() {
 	// On Connection Failure
 	socket.on(&apos;reconnect_failed&apos;, () =&gt; {
 		alert(&apos;You have lost connection to the server!&apos;)
@@ -413,7 +420,7 @@ function setupSocketConnection () {
  * Run in setupSocket().
  * @param {*} chat The chat client instance to be used for notifications
  */
-function setupSocketInfo (chat) {
+function setupSocketInfo(chat) {
 	// Chat system receiver
 	socket.on(&apos;serverMSG&apos;, data =&gt; {
 		chat.addSystemLine(data)
@@ -516,7 +523,7 @@ function setupSocketInfo (chat) {
 */
 
 // Helper function for serverSendObjectRemoval
-function removeObject (data) {
+function removeObject(data) {
 	if (objects[data.type][data.id] !== undefined &amp;&amp; objects[data.type][data.id] !== null) {
 		objects[data.type][data.id].hide()
 		objects[data.type][data.id].destroy()
