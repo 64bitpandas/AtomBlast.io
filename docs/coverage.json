@@ -1,29 +1,34 @@
 {
-  "coverage": "50.63%",
-  "expectCount": 158,
-  "actualCount": 80,
+  "coverage": "49.46%",
+  "expectCount": 188,
+  "actualCount": 93,
   "files": {
     "src/client/js/app.js": {
-      "expectCount": 18,
-      "actualCount": 13,
+      "expectCount": 23,
+      "actualCount": 14,
       "undocumentLines": [
+        15,
         18,
-        21,
-        23,
-        29,
-        34
+        20,
+        26,
+        34,
+        36,
+        39,
+        321,
+        408
       ]
     },
     "src/client/js/global.js": {
-      "expectCount": 3,
-      "actualCount": 2,
+      "expectCount": 6,
+      "actualCount": 4,
       "undocumentLines": [
-        4
+        4,
+        176
       ]
     },
     "src/client/js/lib/chat-client.js": {
-      "expectCount": 15,
-      "actualCount": 4,
+      "expectCount": 16,
+      "actualCount": 5,
       "undocumentLines": [
         11,
         14,
@@ -31,11 +36,11 @@
         18,
         20,
         21,
-        135,
-        145,
-        165,
-        201,
-        209
+        149,
+        159,
+        179,
+        215,
+        223
       ]
     },
     "src/client/js/lib/cookies.js": {
@@ -47,75 +52,89 @@
       "expectCount": 1,
       "actualCount": 0,
       "undocumentLines": [
-        9
+        8
       ]
     },
-    "src/client/js/obj/atom.js": {
-      "expectCount": 9,
-      "actualCount": 4,
+    "src/client/js/lib/mobilejoystick.js": {
+      "expectCount": 3,
+      "actualCount": 0,
       "undocumentLines": [
-        29,
-        30,
-        31,
-        32,
-        77
+        11,
+        14,
+        15
       ]
     },
     "src/client/js/obj/blueprints.js": {
-      "expectCount": 1,
+      "expectCount": 2,
       "actualCount": 1,
-      "undocumentLines": []
+      "undocumentLines": [
+        257
+      ]
     },
-    "src/client/js/obj/compound.js": {
-      "expectCount": 14,
-      "actualCount": 5,
+    "src/client/js/obj/create.js": {
+      "expectCount": 4,
+      "actualCount": 3,
+      "undocumentLines": [
+        106
+      ]
+    },
+    "src/client/js/obj/damageindicator.js": {
+      "expectCount": 10,
+      "actualCount": 3,
       "undocumentLines": [
         16,
+        17,
         18,
         19,
-        20,
-        21,
-        25,
-        29,
-        30,
-        54
+        22,
+        39,
+        40
       ]
     },
     "src/client/js/obj/gameobject.js": {
-      "expectCount": 15,
-      "actualCount": 8,
+      "expectCount": 18,
+      "actualCount": 9,
       "undocumentLines": [
+        26,
         27,
         28,
         29,
         30,
         31,
         65,
-        66
+        66,
+        118
       ]
     },
     "src/client/js/obj/maptile.js": {
-      "expectCount": 10,
+      "expectCount": 14,
       "actualCount": 3,
       "undocumentLines": [
+        17,
         18,
         19,
         20,
         21,
-        22,
-        31,
-        32
+        24,
+        25,
+        29,
+        45,
+        46,
+        50
       ]
     },
     "src/client/js/obj/player.js": {
-      "expectCount": 20,
-      "actualCount": 5,
+      "expectCount": 24,
+      "actualCount": 4,
       "undocumentLines": [
-        8,
-        32,
-        33,
-        37,
-        38,
+        7,
+        29,
+        30,
+        34,
+        35,
+        42,
+        43,
+        44,
         45,
         46,
         47,
@@ -123,51 +142,76 @@
         49,
         50,
         51,
-        52,
+        53,
         54,
-        60
+        55,
+        144,
+        156
       ]
     },
     "src/client/js/obj/tiles.js": {
       "expectCount": 3,
-      "actualCount": 2,
+      "actualCount": 1,
       "undocumentLines": [
-        125
+        132,
+        142
       ]
     },
     "src/client/js/pixigame.js": {
       "expectCount": 19,
-      "actualCount": 14,
+      "actualCount": 15,
       "undocumentLines": [
-        19,
-        24,
-        25,
-        27,
-        206
+        17,
+        18,
+        20,
+        22
       ]
     },
     "src/client/js/socket.js": {
-      "expectCount": 5,
-      "actualCount": 3,
+      "expectCount": 9,
+      "actualCount": 6,
       "undocumentLines": [
-        21,
-        273
+        19,
+        34,
+        412
       ]
     },
     "src/server/server.js": {
       "expectCount": 13,
-      "actualCount": 4,
+      "actualCount": 5,
       "undocumentLines": [
         1,
         2,
         3,
         4,
-        13,
-        15,
+        14,
         16,
-        43,
-        261
+        46,
+        234
       ]
+    },
+    "src/server/utils/atoms.js": {
+      "expectCount": 4,
+      "actualCount": 2,
+      "undocumentLines": [
+        8,
+        13
+      ]
+    },
+    "src/server/utils/collision.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
+    },
+    "src/server/utils/compound.js": {
+      "expectCount": 2,
+      "actualCount": 2,
+      "undocumentLines": []
+    },
+    "src/server/utils/experience.js": {
+      "expectCount": 1,
+      "actualCount": 1,
+      "undocumentLines": []
     },
     "src/server/utils/framesync.js": {
       "expectCount": 1,
@@ -180,13 +224,15 @@
       "undocumentLines": []
     },
     "src/server/utils/ondamage.js": {
-      "expectCount": 1,
-      "actualCount": 1,
-      "undocumentLines": []
+      "expectCount": 3,
+      "actualCount": 2,
+      "undocumentLines": [
+        222
+      ]
     },
     "src/server/utils/serverinit.js": {
-      "expectCount": 2,
-      "actualCount": 2,
+      "expectCount": 3,
+      "actualCount": 3,
       "undocumentLines": []
     },
     "src/server/utils/serverutils.js": {

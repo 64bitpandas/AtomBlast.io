@@ -1,11 +1,5 @@
 window.esdocSearchIndex = [
   [
-    "atomblast.io/src/client/js/obj/atom.js~atom",
-    "class/src/client/js/obj/atom.js~Atom.html",
-    "<span>Atom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/atom.js</span>",
-    "class"
-  ],
-  [
     "atomblast.io/src/client/js/obj/blueprints.js~blueprints",
     "variable/index.html#static-variable-BLUEPRINTS",
     "<span>BLUEPRINTS</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/blueprints.js</span>",
@@ -18,9 +12,9 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "atomblast.io/src/client/js/obj/compound.js~compound",
-    "class/src/client/js/obj/compound.js~Compound.html",
-    "<span>Compound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
+    "atomblast.io/src/client/js/obj/damageindicator.js~damageindicator",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html",
+    "<span>DamageIndicator</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/damageindicator.js</span>",
     "class"
   ],
   [
@@ -66,6 +60,24 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "atomblast.io/src/client/js/obj/blueprints.js~tooltips",
+    "variable/index.html#static-variable-TOOLTIPS",
+    "<span>TOOLTIPS</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/blueprints.js</span>",
+    "variable"
+  ],
+  [
+    "atomblast.io/src/client/js/lib/mobilejoystick.js~virtualjoystick",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html",
+    "<span>VirtualJoystick</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/mobilejoystick.js</span>",
+    "class"
+  ],
+  [
+    "atomblast.io/src/server/utils/experience.js~addexperience",
+    "function/index.html#static-function-addExperience",
+    "<span>addExperience</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/experience.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/socket.js~beginconnection",
     "function/index.html#static-function-beginConnection",
     "<span>beginConnection</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/socket.js</span>",
@@ -78,9 +90,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~cancraft",
+    "atomblast.io/src/server/utils/atoms.js~cancraft",
     "function/index.html#static-function-canCraft",
-    "<span>canCraft</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "<span>canCraft</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/collision.js~collisiondetect",
+    "function/index.html#static-function-collisionDetect",
+    "<span>collisionDetect</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/collision.js</span>",
     "function"
   ],
   [
@@ -90,15 +108,9 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "atomblast.io/src/client/js/obj/compound.js~createcompound",
+    "atomblast.io/src/server/utils/compound.js~createcompound",
     "function/index.html#static-function-createCompound",
-    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/obj/compound.js~createnewcompound",
-    "function/index.html#static-function-createNewCompound",
-    "<span>createNewCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/compound.js</span>",
+    "<span>createCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/compound.js</span>",
     "function"
   ],
   [
@@ -108,15 +120,33 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/obj/create.js~createrenderatom",
+    "function/index.html#static-function-createRenderAtom",
+    "<span>createRenderAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~createrendercompound",
+    "function/index.html#static-function-createRenderCompound",
+    "<span>createRenderCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~createtiles",
+    "function/index.html#static-function-createTiles",
+    "<span>createTiles</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/ondamage.js~damage",
     "function/index.html#static-function-damage",
     "<span>damage</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~deductcraftmaterial",
-    "function/index.html#static-function-deductCraftMaterial",
-    "<span>deductCraftMaterial</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "atomblast.io/src/server/utils/ondamage.js~damagetile",
+    "function/index.html#static-function-damageTile",
+    "<span>damageTile</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
     "function"
   ],
   [
@@ -129,12 +159,6 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/pixigame.js~destroypixi",
     "function/index.html#static-function-destroyPIXI",
     "<span>destroyPIXI</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
-    "atomblast.io/src/client/js/app.js~devtest",
-    "function/index.html#static-function-devTest",
-    "<span>devTest</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
     "function"
   ],
   [
@@ -156,12 +180,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~elementstart",
-    "function/index.html#static-function-elementStart",
-    "<span>elementStart</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
-    "function"
-  ],
-  [
     "atomblast.io/src/client/js/lib/cookies.js~erasecookie",
     "function/index.html#static-function-eraseCookie",
     "<span>eraseCookie</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/lib/cookies.js</span>",
@@ -174,9 +192,9 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~generateid",
+    "atomblast.io/src/client/js/global.js~generateid",
     "function/index.html#static-function-generateID",
-    "<span>generateID</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>generateID</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
     "function"
   ],
   [
@@ -186,9 +204,21 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/client/js/global.js~getcurrtile",
+    "function/index.html#static-function-getCurrTile",
+    "<span>getCurrTile</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/server.js~getfield",
     "function/index.html#static-function-getField",
     "<span>getField</span> <span class=\"search-result-import-path\">atomblast.io/src/server/server.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/global.js~getgloballocation",
+    "function/index.html#static-function-getGlobalLocation",
+    "<span>getGlobalLocation</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
     "function"
   ],
   [
@@ -198,15 +228,39 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/serverutils.js~getteamcolors",
+    "function/index.html#static-function-getTeamColors",
+    "<span>getTeamColors</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/server/utils/serverutils.js~getteamnumber",
     "function/index.html#static-function-getTeamNumber",
     "<span>getTeamNumber</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/serverutils.js~gettileid",
+    "function/index.html#static-function-getTileID",
+    "<span>getTileID</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/app.js~hideelement",
     "function/index.html#static-function-hideElement",
     "<span>hideElement</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/atoms.js~incrementatom",
+    "function/index.html#static-function-incrementAtom",
+    "<span>incrementAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/server.js~incrementfield",
+    "function/index.html#static-function-incrementField",
+    "<span>incrementField</span> <span class=\"search-result-import-path\">atomblast.io/src/server/server.js</span>",
     "function"
   ],
   [
@@ -222,6 +276,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "atomblast.io/src/server/utils/serverinit.js~initroom",
+    "function/index.html#static-function-initRoom",
+    "<span>initRoom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverinit.js</span>",
+    "function"
+  ],
+  [
     "atomblast.io/src/client/js/pixigame.js~isfocused",
     "function/index.html#static-function-isFocused",
     "<span>isFocused</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
@@ -232,6 +292,12 @@ window.esdocSearchIndex = [
     "function/index.html#static-function-isInBounds",
     "<span>isInBounds</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/global.js</span>",
     "function"
+  ],
+  [
+    "atomblast.io/src/client/js/app.js~joystick",
+    "variable/index.html#static-variable-joystick",
+    "<span>joystick</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
+    "variable"
   ],
   [
     "atomblast.io/src/client/js/lib/keyboard.js~keyboard",
@@ -246,9 +312,27 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/pixigame.js~mouseclickhandler",
-    "function/index.html#static-function-mouseClickHandler",
-    "<span>mouseClickHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "atomblast.io/src/client/js/pixigame.js~mousedown",
+    "variable/index.html#static-variable-mouseDown",
+    "<span>mouseDown</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "variable"
+  ],
+  [
+    "atomblast.io/src/client/js/pixigame.js~mousedownhandler",
+    "function/index.html#static-function-mouseDownHandler",
+    "<span>mouseDownHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/pixigame.js~mouseuphandler",
+    "function/index.html#static-function-mouseUpHandler",
+    "<span>mouseUpHandler</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/pixigame.js~moveplayer",
+    "function/index.html#static-function-movePlayer",
+    "<span>movePlayer</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
     "function"
   ],
   [
@@ -261,6 +345,12 @@ window.esdocSearchIndex = [
     "atomblast.io/src/client/js/app.js~quitgame",
     "function/index.html#static-function-quitGame",
     "<span>quitGame</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/app.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/obj/create.js~requestcreatecompound",
+    "function/index.html#static-function-requestCreateCompound",
+    "<span>requestCreateCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/create.js</span>",
     "function"
   ],
   [
@@ -312,27 +402,45 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "atomblast.io/src/client/js/obj/atom.js~spawnatom",
-    "function/index.html#static-function-spawnAtom",
-    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/obj/atom.js</span>",
+    "atomblast.io/src/server/utils/serverutils.js~smartemit",
+    "function/index.html#static-function-smartEmit",
+    "<span>smartEmit</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~spawnatom",
+    "atomblast.io/src/server/utils/atoms.js~spawnatom",
     "function/index.html#static-function-spawnAtom",
-    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>spawnAtom</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
     "function"
   ],
   [
-    "atomblast.io/src/server/utils/serverutils.js~spawnatomatvent",
+    "atomblast.io/src/server/utils/atoms.js~spawnatomatvent",
     "function/index.html#static-function-spawnAtomAtVent",
-    "<span>spawnAtomAtVent</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/serverutils.js</span>",
+    "<span>spawnAtomAtVent</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/atoms.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/server/utils/ondamage.js~splash",
+    "function/index.html#static-function-splash",
+    "<span>splash</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/ondamage.js</span>",
     "function"
   ],
   [
     "atomblast.io/src/client/js/pixigame.js~startgame",
     "function/index.html#static-function-startGame",
     "<span>startGame</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/pixigame.js</span>",
+    "function"
+  ],
+  [
+    "atomblast.io/src/client/js/socket.js~teamcolors",
+    "variable/index.html#static-variable-teamColors",
+    "<span>teamColors</span> <span class=\"search-result-import-path\">atomblast.io/src/client/js/socket.js</span>",
+    "variable"
+  ],
+  [
+    "atomblast.io/src/server/utils/compound.js~tickcompound",
+    "function/index.html#static-function-tickCompound",
+    "<span>tickCompound</span> <span class=\"search-result-import-path\">atomblast.io/src/server/utils/compound.js</span>",
     "function"
   ],
   [
@@ -666,6 +774,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/lib/chat-client.js~chatclient#addchatannouncement",
+    "class/src/client/js/lib/chat-client.js~ChatClient.html#instance-method-addChatAnnouncement",
+    "src/client/js/lib/chat-client.js~ChatClient#addChatAnnouncement",
+    "method"
+  ],
+  [
     "src/client/js/lib/chat-client.js~chatclient#addchatline",
     "class/src/client/js/lib/chat-client.js~ChatClient.html#instance-method-addChatLine",
     "src/client/js/lib/chat-client.js~ChatClient#addChatLine",
@@ -762,51 +876,21 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/atom.js",
-    "file/src/client/js/obj/atom.js.html",
-    "src/client/js/obj/atom.js",
+    "src/client/js/lib/mobilejoystick.js",
+    "file/src/client/js/lib/mobilejoystick.js.html",
+    "src/client/js/lib/mobilejoystick.js",
     "file"
   ],
   [
-    "src/client/js/obj/atom.js~atom#checkcollision",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-method-checkCollision",
-    "src/client/js/obj/atom.js~Atom#checkCollision",
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#constructor",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-constructor-constructor",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#constructor",
     "method"
   ],
   [
-    "src/client/js/obj/atom.js~atom#constructor",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-constructor-constructor",
-    "src/client/js/obj/atom.js~Atom#constructor",
-    "method"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#height",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-height",
-    "src/client/js/obj/atom.js~Atom#height",
-    "member"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#isequipped",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-isEquipped",
-    "src/client/js/obj/atom.js~Atom#isEquipped",
-    "member"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#tick",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-method-tick",
-    "src/client/js/obj/atom.js~Atom#tick",
-    "method"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#typeid",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-typeID",
-    "src/client/js/obj/atom.js~Atom#typeID",
-    "member"
-  ],
-  [
-    "src/client/js/obj/atom.js~atom#width",
-    "class/src/client/js/obj/atom.js~Atom.html#instance-member-width",
-    "src/client/js/obj/atom.js~Atom#width",
+    "src/client/js/lib/mobilejoystick.js~virtualjoystick#mobilekey",
+    "class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html#instance-member-mobileKey",
+    "src/client/js/lib/mobilejoystick.js~VirtualJoystick#mobileKey",
     "member"
   ],
   [
@@ -816,75 +900,69 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/compound.js",
-    "file/src/client/js/obj/compound.js.html",
-    "src/client/js/obj/compound.js",
+    "src/client/js/obj/create.js",
+    "file/src/client/js/obj/create.js.html",
+    "src/client/js/obj/create.js",
     "file"
   ],
   [
-    "src/client/js/obj/compound.js~compound#[param]",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-[param]",
-    "src/client/js/obj/compound.js~Compound#[param]",
-    "member"
+    "src/client/js/obj/damageindicator.js",
+    "file/src/client/js/obj/damageindicator.js.html",
+    "src/client/js/obj/damageindicator.js",
+    "file"
   ],
   [
-    "src/client/js/obj/compound.js~compound#blueprint",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-blueprint",
-    "src/client/js/obj/compound.js~Compound#blueprint",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#checkcollision",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-method-checkCollision",
-    "src/client/js/obj/compound.js~Compound#checkCollision",
+    "src/client/js/obj/damageindicator.js~damageindicator#constructor",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-constructor-constructor",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#constructor",
     "method"
   ],
   [
-    "src/client/js/obj/compound.js~compound#constructor",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-constructor-constructor",
-    "src/client/js/obj/compound.js~Compound#constructor",
+    "src/client/js/obj/damageindicator.js~damageindicator#height",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-height",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#height",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#posx",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-posX",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#posX",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#posy",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-posY",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#posY",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#text",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-text",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#text",
+    "member"
+  ],
+  [
+    "src/client/js/obj/damageindicator.js~damageindicator#tick",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-method-tick",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#tick",
     "method"
   ],
   [
-    "src/client/js/obj/compound.js~compound#height",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-height",
-    "src/client/js/obj/compound.js~Compound#height",
+    "src/client/js/obj/damageindicator.js~damageindicator#width",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-width",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#width",
     "member"
   ],
   [
-    "src/client/js/obj/compound.js~compound#ignited",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-ignited",
-    "src/client/js/obj/compound.js~Compound#ignited",
+    "src/client/js/obj/damageindicator.js~damageindicator#x",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-x",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#x",
     "member"
   ],
   [
-    "src/client/js/obj/compound.js~compound#sender",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-sender",
-    "src/client/js/obj/compound.js~Compound#sender",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#sendingteam",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-sendingTeam",
-    "src/client/js/obj/compound.js~Compound#sendingTeam",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#texture",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-texture",
-    "src/client/js/obj/compound.js~Compound#texture",
-    "member"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#tick",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-method-tick",
-    "src/client/js/obj/compound.js~Compound#tick",
-    "method"
-  ],
-  [
-    "src/client/js/obj/compound.js~compound#width",
-    "class/src/client/js/obj/compound.js~Compound.html#instance-member-width",
-    "src/client/js/obj/compound.js~Compound#width",
+    "src/client/js/obj/damageindicator.js~damageindicator#y",
+    "class/src/client/js/obj/damageindicator.js~DamageIndicator.html#instance-member-y",
+    "src/client/js/obj/damageindicator.js~DamageIndicator#y",
     "member"
   ],
   [
@@ -898,6 +976,18 @@ window.esdocSearchIndex = [
     "class/src/client/js/obj/gameobject.js~GameObject.html#instance-constructor-constructor",
     "src/client/js/obj/gameobject.js~GameObject#constructor",
     "method"
+  ],
+  [
+    "src/client/js/obj/gameobject.js~gameobject#destroy",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-method-destroy",
+    "src/client/js/obj/gameobject.js~GameObject#destroy",
+    "method"
+  ],
+  [
+    "src/client/js/obj/gameobject.js~gameobject#destroyed",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-member-destroyed",
+    "src/client/js/obj/gameobject.js~GameObject#destroyed",
+    "member"
   ],
   [
     "src/client/js/obj/gameobject.js~gameobject#draw",
@@ -948,6 +1038,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/client/js/obj/gameobject.js~gameobject#texture",
+    "class/src/client/js/obj/gameobject.js~GameObject.html#instance-member-texture",
+    "src/client/js/obj/gameobject.js~GameObject#texture",
+    "member"
+  ],
+  [
     "src/client/js/obj/gameobject.js~gameobject#tick",
     "class/src/client/js/obj/gameobject.js~GameObject.html#instance-method-tick",
     "src/client/js/obj/gameobject.js~GameObject#tick",
@@ -984,6 +1080,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/client/js/obj/maptile.js~maptile#captured",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-captured",
+    "src/client/js/obj/maptile.js~MapTile#captured",
+    "member"
+  ],
+  [
     "src/client/js/obj/maptile.js~maptile#constructor",
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-constructor-constructor",
     "src/client/js/obj/maptile.js~MapTile#constructor",
@@ -993,6 +1095,18 @@ window.esdocSearchIndex = [
     "src/client/js/obj/maptile.js~maptile#height",
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-height",
     "src/client/js/obj/maptile.js~MapTile#height",
+    "member"
+  ],
+  [
+    "src/client/js/obj/maptile.js~maptile#hptext",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-hpText",
+    "src/client/js/obj/maptile.js~MapTile#hpText",
+    "member"
+  ],
+  [
+    "src/client/js/obj/maptile.js~maptile#owner",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-owner",
+    "src/client/js/obj/maptile.js~MapTile#owner",
     "member"
   ],
   [
@@ -1020,6 +1134,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/client/js/obj/maptile.js~maptile#updatehealth",
+    "class/src/client/js/obj/maptile.js~MapTile.html#instance-method-updateHealth",
+    "src/client/js/obj/maptile.js~MapTile#updateHealth",
+    "method"
+  ],
+  [
     "src/client/js/obj/maptile.js~maptile#width",
     "class/src/client/js/obj/maptile.js~MapTile.html#instance-member-width",
     "src/client/js/obj/maptile.js~MapTile#width",
@@ -1044,21 +1164,15 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/client/js/obj/player.js~player#addatom",
-    "class/src/client/js/obj/player.js~Player.html#instance-method-addAtom",
-    "src/client/js/obj/player.js~Player#addAtom",
+    "src/client/js/obj/player.js~player#beginspectate",
+    "class/src/client/js/obj/player.js~Player.html#instance-method-beginSpectate",
+    "src/client/js/obj/player.js~Player#beginSpectate",
     "method"
   ],
   [
-    "src/client/js/obj/player.js~player#atoms",
-    "class/src/client/js/obj/player.js~Player.html#instance-member-atoms",
-    "src/client/js/obj/player.js~Player#atoms",
-    "member"
-  ],
-  [
-    "src/client/js/obj/player.js~player#checkhealth",
-    "class/src/client/js/obj/player.js~Player.html#instance-method-checkHealth",
-    "src/client/js/obj/player.js~Player#checkHealth",
+    "src/client/js/obj/player.js~player#changesprite",
+    "class/src/client/js/obj/player.js~Player.html#instance-method-changeSprite",
+    "src/client/js/obj/player.js~Player#changeSprite",
     "method"
   ],
   [
@@ -1077,6 +1191,12 @@ window.esdocSearchIndex = [
     "src/client/js/obj/player.js~player#experience",
     "class/src/client/js/obj/player.js~Player.html#instance-member-experience",
     "src/client/js/obj/player.js~Player#experience",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#filters",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-filters",
+    "src/client/js/obj/player.js~Player#filters",
     "member"
   ],
   [
@@ -1104,6 +1224,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/client/js/obj/player.js~player#playersprite",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-playerSprite",
+    "src/client/js/obj/player.js~Player#playerSprite",
+    "member"
+  ],
+  [
     "src/client/js/obj/player.js~player#room",
     "class/src/client/js/obj/player.js~Player.html#instance-member-room",
     "src/client/js/obj/player.js~Player#room",
@@ -1116,9 +1242,27 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/client/js/obj/player.js~player#shield",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-shield",
+    "src/client/js/obj/player.js~Player#shield",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#spectating",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-spectating",
+    "src/client/js/obj/player.js~Player#spectating",
+    "member"
+  ],
+  [
     "src/client/js/obj/player.js~player#speedmult",
     "class/src/client/js/obj/player.js~Player.html#instance-member-speedMult",
     "src/client/js/obj/player.js~Player#speedMult",
+    "member"
+  ],
+  [
+    "src/client/js/obj/player.js~player#stronghold",
+    "class/src/client/js/obj/player.js~Player.html#instance-member-stronghold",
+    "src/client/js/obj/player.js~Player#stronghold",
     "member"
   ],
   [
@@ -1185,6 +1329,30 @@ window.esdocSearchIndex = [
     "src/server/server.js",
     "file/src/server/server.js.html",
     "src/server/server.js",
+    "file"
+  ],
+  [
+    "src/server/utils/atoms.js",
+    "file/src/server/utils/atoms.js.html",
+    "src/server/utils/atoms.js",
+    "file"
+  ],
+  [
+    "src/server/utils/collision.js",
+    "file/src/server/utils/collision.js.html",
+    "src/server/utils/collision.js",
+    "file"
+  ],
+  [
+    "src/server/utils/compound.js",
+    "file/src/server/utils/compound.js.html",
+    "src/server/utils/compound.js",
+    "file"
+  ],
+  [
+    "src/server/utils/experience.js",
+    "file/src/server/utils/experience.js.html",
+    "src/server/utils/experience.js",
     "file"
   ],
   [

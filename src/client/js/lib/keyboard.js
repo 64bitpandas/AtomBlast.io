@@ -3,8 +3,7 @@
  * Please refer to this link for extended documentation.
  * @param {number} keyCode ASCII key code for the key to listen. For best results declare the key codes in GLOBAL.js 
  */
-import { isFocused } from '../pixigame';
-
+import { isFocused, getIngame } from '../pixigame';
 
 export function keyboard(keyCode) {
   let key = {};
@@ -13,10 +12,12 @@ export function keyboard(keyCode) {
   key.isUp = true;
   key.press = undefined;
   key.release = undefined;
+  //If this is a mobile device & the joystick is being used, this will disable the handlers to stop interference.
+  key.mobile = false; 
   //The `downHandler`
   key.downHandler = event => {
-      if (event.keyCode === key.code) {
-        if (isFocused()) {
+      if (event.keyCode === key.code && !key.mobile) {
+        if (isFocused() && getIngame()) {
           if (key.isUp && key.press){
             key.press();
           }
@@ -34,8 +35,8 @@ export function keyboard(keyCode) {
 
   //The `upHandler`
   key.upHandler = event => {
-      if (event.keyCode === key.code) {
-        if(isFocused()){
+      if (event.keyCode === key.code && !key.mobile) {
+        if(isFocused() && getIngame()){
           if (key.isDown && key.release){
             key.release();
           }

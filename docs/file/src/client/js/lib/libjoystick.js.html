@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../../../">
+  <title data-ice="title">src/client/js/lib/libjoystick.js | atomblast.io</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="First attempt at multiplayer online io game"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="atomblast.io"><meta property="twitter:description" content="First attempt at multiplayer online io game"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/BananiumLabs/AtomBlast.io.git"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js">client/js</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-bindHandler">bindHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-displayWinner">displayWinner</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-hideElement">hideElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-quitGame">quitGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showElement">showElement</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateAtomList">updateAtomList</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateCompoundButtons">updateCompoundButtons</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateLobby">updateLobby</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-updateScores">updateScores</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-distanceBetween">distanceBetween</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCurrTile">getCurrTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isInBounds">isInBounds</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-destroyPIXI">destroyPIXI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getIngame">getIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isFocused">isFocused</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-loadTextures">loadTextures</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseDownHandler">mouseDownHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mouseUpHandler">mouseUpHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setIngame">setIngame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-showGameUI">showGameUI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-startGame">startGame</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-beginConnection">beginConnection</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-disconnect">disconnect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-cookieInputs">cookieInputs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedBlueprints">selectedBlueprints</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-selectedCompound">selectedCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-GLOBAL">GLOBAL</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-objects">objects</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-lib">client/js/lib</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/chat-client.js~ChatClient.html">ChatClient</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/lib/mobilejoystick.js~VirtualJoystick.html">VirtualJoystick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-eraseCookie">eraseCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getCookie">getCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setCookie">setCookie</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-keyboard">keyboard</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#client-js-obj">client/js/obj</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/gameobject.js~GameObject.html">GameObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/maptile.js~MapTile.html">MapTile</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/client/js/obj/player.js~Player.html">Player</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createPlayer">createPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderAtom">createRenderAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createRenderCompound">createRenderCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-requestCreateCompound">requestCreateCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-BLUEPRINTS">BLUEPRINTS</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-MAP_LAYOUT">MAP_LAYOUT</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILES">TILES</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-TILE_NAMES">TILE_NAMES</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server">server</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-deleteObject">deleteObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getField">getField</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-incrementField">incrementField</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-setField">setField</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#server-utils">server/utils</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-canCraft">canCraft</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-incrementAtom">incrementAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtom">spawnAtom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-spawnAtomAtVent">spawnAtomAtVent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-collisionDetect">collisionDetect</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-createCompound">createCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-tickCompound">tickCompound</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-addExperience">addExperience</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-frameSync">frameSync</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-roomMatchmaker">roomMatchmaker</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-damage">damage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-splash">splash</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initGlobal">initGlobal</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-initPlayer">initPlayer</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-generateID">generateID</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getTeamNumber">getTeamNumber</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/client/js/lib/libjoystick.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var VirtualJoystick	= function(opts)
+{
+	opts			= opts			|| {};
+	this._container		= opts.container	|| document.body;
+	this._strokeStyle	= opts.strokeStyle	|| &apos;cyan&apos;;
+	this._stickEl		= opts.stickElement	|| this._buildJoystickStick();
+	this._baseEl		= opts.baseElement	|| this._buildJoystickBase();
+	this._mouseSupport	= opts.mouseSupport !== undefined ? opts.mouseSupport : false;
+	this._stationaryBase	= opts.stationaryBase || false;
+	this._baseX		= this._stickX = opts.baseX || 0
+	this._baseY		= this._stickY = opts.baseY || 0
+	this._limitStickTravel	= opts.limitStickTravel || false
+	this._stickRadius	= opts.stickRadius !== undefined ? opts.stickRadius : 100
+	this._useCssTransform	= opts.useCssTransform !== undefined ? opts.useCssTransform : false
+
+	this._container.style.position	= &quot;relative&quot;
+
+	this._container.appendChild(this._baseEl)
+	this._baseEl.style.position	= &quot;absolute&quot;
+	this._baseEl.style.display	= &quot;none&quot;
+	this._container.appendChild(this._stickEl)
+	this._stickEl.style.position	= &quot;absolute&quot;
+	this._stickEl.style.display	= &quot;none&quot;
+
+	this._pressed	= false;
+	this._touchIdx	= null;
+	
+	if(this._stationaryBase === true){
+		this._baseEl.style.display	= &quot;&quot;;
+		this._baseEl.style.left		= (this._baseX - this._baseEl.width /2)+&quot;px&quot;;
+		this._baseEl.style.top		= (this._baseY - this._baseEl.height/2)+&quot;px&quot;;
+	}
+    
+	this._transform	= this._useCssTransform ? this._getTransformProperty() : false;
+	this._has3d	= this._check3D();
+	
+	var __bind	= function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+	this._$onTouchStart	= __bind(this._onTouchStart	, this);
+	this._$onTouchEnd	= __bind(this._onTouchEnd	, this);
+	this._$onTouchMove	= __bind(this._onTouchMove	, this);
+	this._container.addEventListener( &apos;touchstart&apos;	, this._$onTouchStart	, false );
+	this._container.addEventListener( &apos;touchend&apos;	, this._$onTouchEnd	, false );
+	this._container.addEventListener( &apos;touchmove&apos;	, this._$onTouchMove	, false );
+	if( this._mouseSupport ){
+		this._$onMouseDown	= __bind(this._onMouseDown	, this);
+		this._$onMouseUp	= __bind(this._onMouseUp	, this);
+		this._$onMouseMove	= __bind(this._onMouseMove	, this);
+		this._container.addEventListener( &apos;mousedown&apos;	, this._$onMouseDown	, false );
+		this._container.addEventListener( &apos;mouseup&apos;	, this._$onMouseUp	, false );
+		this._container.addEventListener( &apos;mousemove&apos;	, this._$onMouseMove	, false );
+	}
+}
+
+VirtualJoystick.prototype.destroy	= function()
+{
+	this._container.removeChild(this._baseEl);
+	this._container.removeChild(this._stickEl);
+
+	this._container.removeEventListener( &apos;touchstart&apos;	, this._$onTouchStart	, false );
+	this._container.removeEventListener( &apos;touchend&apos;		, this._$onTouchEnd	, false );
+	this._container.removeEventListener( &apos;touchmove&apos;	, this._$onTouchMove	, false );
+	if( this._mouseSupport ){
+		this._container.removeEventListener( &apos;mouseup&apos;		, this._$onMouseUp	, false );
+		this._container.removeEventListener( &apos;mousedown&apos;	, this._$onMouseDown	, false );
+		this._container.removeEventListener( &apos;mousemove&apos;	, this._$onMouseMove	, false );
+	}
+}
+
+/**
+ * @returns {Boolean} true if touchscreen is currently available, false otherwise
+*/
+VirtualJoystick.touchScreenAvailable	= function()
+{
+	return &apos;createTouch&apos; in document ? true : false;
+}
+
+/**
+ * microevents.js - https://github.com/jeromeetienne/microevent.js
+*/
+;(function(destObj){
+	destObj.addEventListener	= function(event, fct){
+		if(this._events === undefined) 	this._events	= {};
+		this._events[event] = this._events[event]	|| [];
+		this._events[event].push(fct);
+		return fct;
+	};
+	destObj.removeEventListener	= function(event, fct){
+		if(this._events === undefined) 	this._events	= {};
+		if( event in this._events === false  )	return;
+		this._events[event].splice(this._events[event].indexOf(fct), 1);
+	};
+	destObj.dispatchEvent		= function(event /* , args... */){
+		if(this._events === undefined) 	this._events	= {};
+		if( this._events[event] === undefined )	return;
+		var tmpArray	= this._events[event].slice(); 
+		for(var i = 0; i &lt; tmpArray.length; i++){
+			var result	= tmpArray[i].apply(this, Array.prototype.slice.call(arguments, 1))
+			if( result !== undefined )	return result;
+		}
+		return undefined
+	};
+})(VirtualJoystick.prototype);
+
+//////////////////////////////////////////////////////////////////////////////////
+//										//
+//////////////////////////////////////////////////////////////////////////////////
+
+VirtualJoystick.prototype.deltaX	= function(){ return this._stickX - this._baseX;	}
+VirtualJoystick.prototype.deltaY	= function(){ return this._stickY - this._baseY;	}
+
+VirtualJoystick.prototype.up	= function(){
+	if( this._pressed === false )	return false;
+	var deltaX	= this.deltaX();
+	var deltaY	= this.deltaY();
+	if( deltaY &gt;= 0 )				return false;
+	if( Math.abs(deltaX) &gt; 2*Math.abs(deltaY) )	return false;
+	return true;
+}
+VirtualJoystick.prototype.down	= function(){
+	if( this._pressed === false )	return false;
+	var deltaX	= this.deltaX();
+	var deltaY	= this.deltaY();
+	if( deltaY &lt;= 0 )				return false;
+	if( Math.abs(deltaX) &gt; 2*Math.abs(deltaY) )	return false;
+	return true;	
+}
+VirtualJoystick.prototype.right	= function(){
+	if( this._pressed === false )	return false;
+	var deltaX	= this.deltaX();
+	var deltaY	= this.deltaY();
+	if( deltaX &lt;= 0 )				return false;
+	if( Math.abs(deltaY) &gt; 2*Math.abs(deltaX) )	return false;
+	return true;	
+}
+VirtualJoystick.prototype.left	= function(){
+	if( this._pressed === false )	return false;
+	var deltaX	= this.deltaX();
+	var deltaY	= this.deltaY();
+	if( deltaX &gt;= 0 )				return false;
+	if( Math.abs(deltaY) &gt; 2*Math.abs(deltaX) )	return false;
+	return true;	
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//										//
+//////////////////////////////////////////////////////////////////////////////////
+
+VirtualJoystick.prototype._onUp	= function()
+{
+	this._pressed	= false; 
+	this._stickEl.style.display	= &quot;none&quot;;
+	
+	if(this._stationaryBase == false){	
+		this._baseEl.style.display	= &quot;none&quot;;
+	
+		this._baseX	= this._baseY	= 0;
+		this._stickX	= this._stickY	= 0;
+	}
+}
+
+VirtualJoystick.prototype._onDown	= function(x, y)
+{
+	this._pressed	= true; 
+	if(this._stationaryBase == false){
+		this._baseX	= x;
+		this._baseY	= y;
+		this._baseEl.style.display	= &quot;&quot;;
+		this._move(this._baseEl.style, (this._baseX - this._baseEl.width /2), (this._baseY - this._baseEl.height/2));
+	}
+	
+	this._stickX	= x;
+	this._stickY	= y;
+	
+	if(this._limitStickTravel === true){
+		var deltaX	= this.deltaX();
+		var deltaY	= this.deltaY();
+		var stickDistance = Math.sqrt( (deltaX * deltaX) + (deltaY * deltaY) );
+		if(stickDistance &gt; this._stickRadius){
+			var stickNormalizedX = deltaX / stickDistance;
+			var stickNormalizedY = deltaY / stickDistance;
+			
+			this._stickX = stickNormalizedX * this._stickRadius + this._baseX;
+			this._stickY = stickNormalizedY * this._stickRadius + this._baseY;
+		} 	
+	}
+	
+	this._stickEl.style.display	= &quot;&quot;;
+	this._move(this._stickEl.style, (this._stickX - this._stickEl.width /2), (this._stickY - this._stickEl.height/2));	
+}
+
+VirtualJoystick.prototype._onMove	= function(x, y)
+{
+	if( this._pressed === true ){
+		this._stickX	= x;
+		this._stickY	= y;
+		
+		if(this._limitStickTravel === true){
+			var deltaX	= this.deltaX();
+			var deltaY	= this.deltaY();
+			var stickDistance = Math.sqrt( (deltaX * deltaX) + (deltaY * deltaY) );
+			if(stickDistance &gt; this._stickRadius){
+				var stickNormalizedX = deltaX / stickDistance;
+				var stickNormalizedY = deltaY / stickDistance;
+			
+				this._stickX = stickNormalizedX * this._stickRadius + this._baseX;
+				this._stickY = stickNormalizedY * this._stickRadius + this._baseY;
+			} 		
+		}
+		
+        	this._move(this._stickEl.style, (this._stickX - this._stickEl.width /2), (this._stickY - this._stickEl.height/2));	
+	}	
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//		bind touch events (and mouse events for debug)			//
+//////////////////////////////////////////////////////////////////////////////////
+
+VirtualJoystick.prototype._onMouseUp	= function(event)
+{
+	return this._onUp();
+}
+
+VirtualJoystick.prototype._onMouseDown	= function(event)
+{
+	event.preventDefault();
+	var x	= event.clientX;
+	var y	= event.clientY;
+	return this._onDown(x, y);
+}
+
+VirtualJoystick.prototype._onMouseMove	= function(event)
+{
+	var x	= event.clientX;
+	var y	= event.clientY;
+	return this._onMove(x, y);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//		comment								//
+//////////////////////////////////////////////////////////////////////////////////
+
+VirtualJoystick.prototype._onTouchStart	= function(event)
+{
+	// if there is already a touch inprogress do nothing
+	if( this._touchIdx !== null )	return;
+
+	// notify event for validation
+	var isValid	= this.dispatchEvent(&apos;touchStartValidation&apos;, event);
+	if( isValid === false )	return;
+	
+	// dispatch touchStart
+	this.dispatchEvent(&apos;touchStart&apos;, event);
+
+	event.preventDefault();
+	// get the first who changed
+	var touch	= event.changedTouches[0];
+	// set the touchIdx of this joystick
+	this._touchIdx	= touch.identifier;
+
+	// forward the action
+	var x		= touch.pageX;
+	var y		= touch.pageY;
+	return this._onDown(x, y)
+}
+
+VirtualJoystick.prototype._onTouchEnd	= function(event)
+{
+	// if there is no touch in progress, do nothing
+	if( this._touchIdx === null )	return;
+
+	// dispatch touchEnd
+	this.dispatchEvent(&apos;touchEnd&apos;, event);
+
+	// try to find our touch event
+	var touchList	= event.changedTouches;
+	for(var i = 0; i &lt; touchList.length &amp;&amp; touchList[i].identifier !== this._touchIdx; i++);
+	// if touch event isnt found, 
+	if( i === touchList.length)	return;
+
+	// reset touchIdx - mark it as no-touch-in-progress
+	this._touchIdx	= null;
+
+//??????
+// no preventDefault to get click event on ios
+event.preventDefault();
+
+	return this._onUp()
+}
+
+VirtualJoystick.prototype._onTouchMove	= function(event)
+{
+	// if there is no touch in progress, do nothing
+	if( this._touchIdx === null )	return;
+
+	// try to find our touch event
+	var touchList	= event.changedTouches;
+	for(var i = 0; i &lt; touchList.length &amp;&amp; touchList[i].identifier !== this._touchIdx; i++ );
+	// if touch event with the proper identifier isnt found, do nothing
+	if( i === touchList.length)	return;
+	var touch	= touchList[i];
+
+	event.preventDefault();
+
+	var x		= touch.pageX;
+	var y		= touch.pageY;
+	return this._onMove(x, y)
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////
+//		build default stickEl and baseEl				//
+//////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * build the canvas for joystick base
+ */
+VirtualJoystick.prototype._buildJoystickBase	= function()
+{
+	var canvas	= document.createElement( &apos;canvas&apos; );
+	canvas.width	= 126;
+	canvas.height	= 126;
+	
+	var ctx		= canvas.getContext(&apos;2d&apos;);
+	ctx.beginPath(); 
+	ctx.strokeStyle = this._strokeStyle; 
+	ctx.lineWidth	= 6; 
+	ctx.arc( canvas.width/2, canvas.width/2, 40, 0, Math.PI*2, true); 
+	ctx.stroke();	
+
+	ctx.beginPath(); 
+	ctx.strokeStyle	= this._strokeStyle; 
+	ctx.lineWidth	= 2; 
+	ctx.arc( canvas.width/2, canvas.width/2, 60, 0, Math.PI*2, true); 
+	ctx.stroke();
+	
+	return canvas;
+}
+
+/**
+ * build the canvas for joystick stick
+ */
+VirtualJoystick.prototype._buildJoystickStick	= function()
+{
+	var canvas	= document.createElement( &apos;canvas&apos; );
+	canvas.width	= 86;
+	canvas.height	= 86;
+	var ctx		= canvas.getContext(&apos;2d&apos;);
+	ctx.beginPath(); 
+	ctx.strokeStyle	= this._strokeStyle; 
+	ctx.lineWidth	= 6; 
+	ctx.arc( canvas.width/2, canvas.width/2, 40, 0, Math.PI*2, true); 
+	ctx.stroke();
+	return canvas;
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+//		move using translate3d method with fallback to translate &gt; &apos;top&apos; and &apos;left&apos;		
+//      modified from https://github.com/component/translate and dependents
+//////////////////////////////////////////////////////////////////////////////////
+
+VirtualJoystick.prototype._move = function(style, x, y)
+{
+	if (this._transform) {
+		if (this._has3d) {
+			style[this._transform] = &apos;translate3d(&apos; + x + &apos;px,&apos; + y + &apos;px, 0)&apos;;
+		} else {
+			style[this._transform] = &apos;translate(&apos; + x + &apos;px,&apos; + y + &apos;px)&apos;;
+		}
+	} else {
+		style.left = x + &apos;px&apos;;
+		style.top = y + &apos;px&apos;;
+	}
+}
+
+VirtualJoystick.prototype._getTransformProperty = function() 
+{
+	var styles = [
+		&apos;webkitTransform&apos;,
+		&apos;MozTransform&apos;,
+		&apos;msTransform&apos;,
+		&apos;OTransform&apos;,
+		&apos;transform&apos;
+	];
+
+	var el = document.createElement(&apos;p&apos;);
+	var style;
+
+	for (var i = 0; i &lt; styles.length; i++) {
+		style = styles[i];
+		if (null != el.style[style]) {
+			return style;
+		}
+	}         
+}
+  
+VirtualJoystick.prototype._check3D = function() 
+{        
+	var prop = this._getTransformProperty();
+	// IE8&lt;= doesn&apos;t have `getComputedStyle`
+	if (!prop || !window.getComputedStyle) return module.exports = false;
+
+	var map = {
+		webkitTransform: &apos;-webkit-transform&apos;,
+		OTransform: &apos;-o-transform&apos;,
+		msTransform: &apos;-ms-transform&apos;,
+		MozTransform: &apos;-moz-transform&apos;,
+		transform: &apos;transform&apos;
+	};
+
+	// from: https://gist.github.com/lorenzopolidori/3794226
+	var el = document.createElement(&apos;div&apos;);
+	el.style[prop] = &apos;translate3d(1px,1px,1px)&apos;;
+	document.body.insertBefore(el, null);
+	var val = getComputedStyle(el).getPropertyValue(map[prop]);
+	document.body.removeChild(el);
+	var exports = null != val &amp;&amp; val.length &amp;&amp; &apos;none&apos; != val;
+	return exports;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
